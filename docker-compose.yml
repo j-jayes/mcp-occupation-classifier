@@ -1,0 +1,22 @@
+services:
+  mcp-server:
+    build: ./services/mcp_server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATA_DIR=/app/data
+      - FASTMCP_HOST=0.0.0.0
+      - FASTMCP_PORT=8000
+
+  adk-agent:
+    build: ./services/adk_agent
+    ports:
+      - "9090:9090"
+    environment:
+      - MCP_SERVER_URL=http://mcp-server:8000/sse
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    depends_on:
+      - mcp-server

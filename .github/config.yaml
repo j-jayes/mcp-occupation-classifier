@@ -1,0 +1,18 @@
+# Configuration file for docs scraper
+# Add the documentation URLs you want to scrape below
+# The scraper will download all pages from each root URL
+
+docs_to_scrape:
+  # Example:
+  # - url: "https://google.github.io/adk-docs/"
+  #   name: "adk-docs"  # This will create a folder .github/adk-docs/
+  
+  # Add your documentation URLs here:
+  - url: "https://google.github.io/adk-docs/"
+    name: "adk-docs"
+  - url: "https://modelcontextprotocol.info/docs/"
+    name: "mcp-docs"
+  - url: "https://github.com/google/adk-samples/tree/main/python/agents"
+    name: "adk-samples-python-agents"
+  - url: "https://gofastmcp.com/"
+    name: "fastmcp-docs"

@@ -1,0 +1,14 @@
+[project]
+name = "ssyk-pipelines"
+version = "0.1.0"
+description = "Data pipelines for SSYK"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "numpy",
+    "httpx",
+    "python-dotenv",
+    "openai",
+    "pyarrow",
+    "fastparquet"
+]

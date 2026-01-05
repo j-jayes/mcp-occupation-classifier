@@ -1,0 +1,47 @@
+name: Scrape Documentation
+
+on:
+  # Run manually
+  workflow_dispatch:
+  # Run on schedule (weekly on Mondays at 00:00 UTC)
+  schedule:
+    - cron: '0 0 * * 1'
+  # Run when config.yaml is updated
+  push:
+    paths:
+      - '.github/config.yaml'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to commit and push scraped docs
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Install PyYAML
+        run: pip install pyyaml
+      
+      - name: Run scraper
+        run: python .github/scraper.py
+      
+      - name: Commit and push scraped docs
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          # Only add files in the .github directory (excluding workflows and scraper code)
+          # This prevents accidentally committing unwanted files
+          git add .github/*/ 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update scraped documentation"
+            git push
+          fi
