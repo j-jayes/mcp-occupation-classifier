@@ -16,3 +16,8 @@ docs_to_scrape:
     name: "adk-samples-python-agents"
   - url: "https://gofastmcp.com/"
     name: "fastmcp-docs"
+  - url: "https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp"
+    name: "microsoft-copilot-studio-mcp"
+  - url: "https://modelcontextprotocol.io/docs/"
+    name: "mcp-official-docs"
+

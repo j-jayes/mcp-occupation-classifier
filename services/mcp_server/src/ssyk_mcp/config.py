@@ -25,5 +25,6 @@ SSYK_PARQUET_PATH = PROCESSED_DATA_DIR / "ssyk_data.parquet"
 SCB_API_URL = "https://api.scb.se/OV0104/v1/doris/sv/ssd/START/AM/AM0110/AM0110A/LoneSpridSektYrk4AN"
 
 # OpenAI
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+_raw_openai_api_key = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = _raw_openai_api_key.strip() if _raw_openai_api_key else None
 EMBEDDING_MODEL = "text-embedding-3-small"
