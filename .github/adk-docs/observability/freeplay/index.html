@@ -6766,10 +6766,10 @@ Freeplay in the Observability section.</p>
 <p>Freeplay's Observability feature gives you a clear view into how your agent is
 behaving in production. You can dig into individual agent traces to
 understand each step and diagnose issues:</p>
-<p><img alt="Trace detail" src="https://228labs.com/freeplay-google-demo/images/trace_detail.png" /></p>
+<p><img alt="Trace detail" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/trace_detail.png" /></p>
 <p>You can also use Freeplay's filtering functionality to search and filter the
 data across any segment of interest:</p>
-<p><img alt="Filter" src="https://228labs.com/freeplay-google-demo/images/filter.png" /></p>
+<p><img alt="Filter" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/filter.png" /></p>
 <h2 id="prompt-management-optional">Prompt Management (optional)<a class="headerlink" href="#prompt-management-optional" title="Permanent link">&para;</a></h2>
 <p>Freeplay offers
 <a href="https://docs.freeplay.ai/docs/managing-prompts">native prompt management</a>,
@@ -6782,7 +6782,7 @@ to use the Freeplay ADK agent wrapper. <code>FreeplayLLMAgent</code> extends ADK
 <code>LlmAgent</code> class, so instead of having to hard code your prompts as agent
 instructions, you can version prompts in the Freeplay application.</p>
 <p>First define a prompt in Freeplay by going to Prompts -&gt; Create prompt template:</p>
-<p><img alt="Prompt" src="https://228labs.com/freeplay-google-demo/images/prompt.png" /></p>
+<p><img alt="Prompt" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/prompt.png" /></p>
 <p>When creating your prompt template you'll need to add 3 elements, as described
 in the following sections:</p>
 <h3 id="system-message">System Message<a class="headerlink" href="#system-message" title="Permanent link">&para;</a></h3>
@@ -6795,7 +6795,7 @@ for the ongoing agent context to be passed through:</p>
 <h3 id="history-block">History Block<a class="headerlink" href="#history-block" title="Permanent link">&para;</a></h3>
 <p>Click new message and change the role to 'history'. This will ensure the past
 messages are passed through when present.</p>
-<p><img alt="Prompt Editor" src="https://228labs.com/freeplay-google-demo/images/prompt_editor.png" /></p>
+<p><img alt="Prompt Editor" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/prompt_editor.png" /></p>
 <p>Now in your code you can use the <code>FreeplayLLMAgent</code>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">freeplay_python_adk.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">FreeplayADK</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">freeplay_python_adk.freeplay_llm_agent</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -6816,7 +6816,7 @@ retrieved from Freeplay and formatted with the proper input variables.</p>
 <a href="https://docs.freeplay.ai/docs/evaluations">evaluations</a> from the Freeplay web
 application. You can define evaluations for any of your prompts or agents by
 going to Evaluations -&gt; "New evaluation".</p>
-<p><img alt="Creating a new evaluation in Freeplay" src="https://228labs.com/freeplay-google-demo/images/eval_create.png" /></p>
+<p><img alt="Creating a new evaluation in Freeplay" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/eval_create.png" /></p>
 <p>These evaluations can be configured to run for both online monitoring and
 offline evaluation. Datasets for offline evaluation can be uploaded to Freeplay
 or saved from log examples.</p>
@@ -6825,7 +6825,7 @@ or saved from log examples.</p>
 up <a href="https://docs.freeplay.ai/docs/datasets">datasets</a> to test against on a
 repeated basis. Use production logs to create golden datasets or collections of
 failure cases that you can use to test against as you make changes.</p>
-<p><img alt="Save test case" src="https://228labs.com/freeplay-google-demo/images/save_test_case.png" /></p>
+<p><img alt="Save test case" src="https://github.com/freeplayai/freeplay-google-demo/blob/main/docs/images/save_test_case.png" /></p>
 <h2 id="batch-testing">Batch Testing<a class="headerlink" href="#batch-testing" title="Permanent link">&para;</a></h2>
 <p>As you iterate on your agent, you can run batch tests (i.e., offline
 experiments) at both the
@@ -6833,11 +6833,10 @@ experiments) at both the
 <a href="https://docs.freeplay.ai/docs/end-to-end-test-runs">end-to-end</a> agent level.
 This allows you to compare multiple different models or prompt changes and
 quantify changes head to head across your full agent execution.</p>
-<p><a href="https://github.com/228Labs/freeplay-google-demo/blob/main/examples/example_test_run.py">Here</a>
-is a code example for executing a batch test on Freeplay with ADK.
-<a href="https://github.com/228Labs/freeplay-google-demo/blob/main/examples/example_test_run.py">Here</a> is a code example for executing a batch test on Freeplay with the Google ADK.</p>
+<p><a href="https://github.com/freeplayai/freeplay-google-demo/blob/main/examples/example_test_run.py">Here</a>
+is a code example for executing a batch test on Freeplay with ADK.</p>
 <h2 id="sign-up-now">Sign up now<a class="headerlink" href="#sign-up-now" title="Permanent link">&para;</a></h2>
-<p>Go to <a href="https://freeplay.ai/">Freeplay</a> to sign up for an account, and check out a full Freeplay &lt;&gt; ADK Integration <a href="https://github.com/228Labs/freeplay-google-demo">here</a>.</p>
+<p>Go to <a href="https://freeplay.ai/">Freeplay</a> to sign up for an account, and check out a full Freeplay &lt;&gt; ADK Integration <a href="https://github.com/freeplayai/freeplay-google-demo/tree/main">here</a></p>
 
 
 

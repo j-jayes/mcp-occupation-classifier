@@ -7419,7 +7419,7 @@
 <li><strong>Channels</strong>: Mono (single channel)</li>
 </ul>
 <p>ADK does not perform audio format conversion. Sending audio in incorrect formats will result in poor quality or errors.</p>
-<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L153-L156" target="_blank">main.py:153-156</a></span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">audio_blob</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span>
+<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L181-L184" target="_blank">main.py:181-184</a></span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">audio_blob</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;audio/pcm;rate=16000&quot;</span><span class="p">,</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">data</span><span class="o">=</span><span class="n">audio_data</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
@@ -7455,7 +7455,7 @@
 <li><strong>Format conversion</strong>: Convert Float32Array samples to 16-bit PCM</li>
 <li><strong>WebSocket streaming</strong>: Send PCM chunks to server via WebSocket</li>
 </ol>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/audio-recorder.js#L7-L58" target="_blank">audio-recorder.js:7-58</a></span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Start audio recorder worklet</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/audio-recorder.js#L7-L58" target="_blank">audio-recorder.js:7-58</a></span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Start audio recorder worklet</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">startAudioRecorderWorklet</span><span class="p">(</span><span class="nx">audioRecorderHandler</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="c1">// Create an AudioContext with 16kHz sample rate</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="c1">// This matches the Live API&#39;s required input format (16-bit PCM @ 16kHz)</span>
@@ -7506,7 +7506,7 @@
 </span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">pcm16</span><span class="p">.</span><span class="nx">buffer</span><span class="p">;</span>
 </span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/pcm-recorder-processor.js#L1-L19" target="_blank">pcm-recorder-processor.js:1-19</a></span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// pcm-recorder-processor.js - AudioWorklet processor for capturing audio</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/pcm-recorder-processor.js#L1-L18" target="_blank">pcm-recorder-processor.js:1-18</a></span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// pcm-recorder-processor.js - AudioWorklet processor for capturing audio</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">class</span><span class="w"> </span><span class="nx">PCMProcessor</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">AudioWorkletProcessor</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="k">super</span><span class="p">();</span>
@@ -7526,7 +7526,7 @@
 </span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
 </span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="nx">registerProcessor</span><span class="p">(</span><span class="s2">&quot;pcm-recorder-processor&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">PCMProcessor</span><span class="p">);</span>
 </span></code></pre></div>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L865-L874" target="_blank">app.js:865-874</a></span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Audio recorder handler - called for each audio chunk</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L977-L986" target="_blank">app.js:977-986</a></span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Audio recorder handler - called for each audio chunk</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">function</span><span class="w"> </span><span class="nx">audioRecorderHandler</span><span class="p">(</span><span class="nx">pcmData</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">websocket</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">websocket</span><span class="p">.</span><span class="nx">readyState</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">WebSocket</span><span class="p">.</span><span class="nx">OPEN</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">is_audio</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="c1">// Send audio as binary WebSocket frame (more efficient than base64 JSON)</span>
@@ -7605,7 +7605,7 @@
 </div>
 <h4 id="handling-audio-events-at-the-client">Handling Audio Events at the Client<a class="headerlink" href="#handling-audio-events-at-the-client" title="Permanent link">&para;</a></h4>
 <p>The bidi-demo uses a different architectural approach: instead of processing audio on the server, it forwards all events (including audio data) to the WebSocket client and handles audio playback in the browser. This pattern separates concerns—the server focuses on ADK event streaming while the client handles media playback using Web Audio API.</p>
-<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L197-L205" target="_blank">main.py:197-205</a></span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># The bidi-demo forwards all events (including audio) to the WebSocket client</span>
+<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L225-L233" target="_blank">main.py:225-233</a></span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># The bidi-demo forwards all events (including audio) to the WebSocket client</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
@@ -7617,7 +7617,7 @@
 </span></code></pre></div>
 <p><strong>Demo Implementation (Client - JavaScript):</strong></p>
 <p>The client-side implementation involves three components: WebSocket message handling, audio player setup with AudioWorklet, and the AudioWorklet processor itself.</p>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L544-L673" target="_blank">app.js:544-673</a></span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// 1. WebSocket Message Handler</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L638-L688" target="_blank">app.js:638-688</a></span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// 1. WebSocket Message Handler</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Handle content events (text or audio)</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">content</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">parts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">parts</span><span class="p">;</span>
@@ -7661,7 +7661,7 @@
 </span><span id="__span-6-42"><a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">bytes</span><span class="p">.</span><span class="nx">buffer</span><span class="p">;</span>
 </span><span id="__span-6-43"><a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/audio-player.js#L5-L24" target="_blank">audio-player.js:5-24</a></span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 2. Audio Player Setup</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/audio-player.js#L5-L24" target="_blank">audio-player.js:5-24</a></span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 2. Audio Player Setup</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// Start audio player worklet</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">startAudioPlayerWorklet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="c1">// Create an AudioContext with 24kHz sample rate</span>
@@ -7687,7 +7687,7 @@
 </span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">[</span><span class="nx">audioPlayerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">audioContext</span><span class="p">];</span>
 </span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/pcm-player-processor.js#L5-L76" target="_blank">pcm-player-processor.js:5-76</a></span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 3. AudioWorklet Processor (Ring Buffer)</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/pcm-player-processor.js#L5-L76" target="_blank">pcm-player-processor.js:5-76</a></span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 3. AudioWorklet Processor (Ring Buffer)</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// AudioWorklet processor that buffers and plays PCM audio</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">class</span><span class="w"> </span><span class="nx">PCMPlayerProcessor</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">AudioWorkletProcessor</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -7793,7 +7793,7 @@
 <li><strong>Frame rate</strong>: 1 frame per second (1 FPS) recommended maximum</li>
 <li><strong>Resolution</strong>: 768x768 pixels (recommended)</li>
 </ul>
-<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L174-L189" target="_blank">main.py:174-189</a></span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Decode base64 image data</span>
+<div class="language-python highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L202-L217" target="_blank">main.py:202-217</a></span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Decode base64 image data</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">image_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">json_message</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">mime_type</span> <span class="o">=</span> <span class="n">json_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mimeType&quot;</span><span class="p">,</span> <span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
@@ -7829,7 +7829,7 @@
 <li><strong>Base64 encoding</strong>: Convert canvas to base64 data URL for transmission</li>
 <li><strong>WebSocket transmission</strong>: Send as JSON message to server</li>
 </ol>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L689-731" target="_blank">app.js:689-731</a></span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// 1. Opening Camera Preview</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L801-L843" target="_blank">app.js:801-843</a></span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// 1. Opening Camera Preview</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">// Open camera modal and start preview</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">openCameraPreview</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
@@ -7869,7 +7869,7 @@
 </span><span id="__span-10-38"><a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">    </span><span class="nx">cameraModal</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">);</span>
 </span><span id="__span-10-39"><a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L734-L802" target="_blank">app.js:734-802</a></span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// 2. Capturing and Sending Image</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L846-L914" target="_blank">app.js:846-914</a></span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// 2. Capturing and Sending Image</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// Capture image from the live preview</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">captureImageFromPreview</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cameraStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -7984,13 +7984,13 @@
 <tr>
 <td>Native Audio</td>
 <td>Gemini Live API</td>
-<td><a href="https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-live">gemini-2.5-flash-native-audio-preview-09-2025</a></td>
+<td><a href="https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-live">gemini-2.5-flash-native-audio-preview-12-2025</a></td>
 <td>Publicly available</td>
 </tr>
 <tr>
 <td>Native Audio</td>
 <td>Vertex AI Live API</td>
-<td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api">gemini-live-2.5-flash-preview-native-audio-09-2025</a></td>
+<td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api">gemini-live-2.5-flash-native-audio</a></td>
 <td>Public preview</td>
 </tr>
 </tbody>
@@ -8024,7 +8024,7 @@
 <td>Half-Cascade</td>
 <td>Gemini Live API</td>
 <td><a href="https://ai.google.dev/gemini-api/docs/models#gemini-2.0-flash-live">gemini-2.0-flash-live-001</a></td>
-<td>Will be deprecated on December 09, 2025</td>
+<td>Deprecated on December 09, 2025</td>
 </tr>
 <tr>
 <td>Half-Cascade</td>
@@ -8051,24 +8051,24 @@
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Use environment variable with fallback to a sensible default</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DEMO_AGENT_MODEL&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">),</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DEMO_AGENT_MODEL&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">),</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;...&quot;</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">)</span>
 </span></code></pre></div>
 <p><strong>Why use environment variables:</strong></p>
 <ul>
-<li><strong>Model availability changes</strong>: Models are released, updated, and deprecated regularly (e.g., <code>gemini-2.0-flash-live-001</code> will be deprecated on December 09, 2025)</li>
+<li><strong>Model availability changes</strong>: Models are released, updated, and deprecated regularly (e.g., <code>gemini-2.0-flash-live-001</code> was deprecated on December 09, 2025)</li>
 <li><strong>Platform-specific names</strong>: Gemini Live API and Vertex AI Live API use different model naming conventions for the same functionality</li>
 <li><strong>Easy switching</strong>: Change models without modifying code by updating the <code>.env</code> file</li>
 <li><strong>Environment-specific configuration</strong>: Use different models for development, staging, and production</li>
 </ul>
 <p><strong>Configuration in <code>.env</code> file:</strong></p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># For Gemini Live API (publicly available)</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">DEMO_AGENT_MODEL</span><span class="o">=</span>gemini-2.5-flash-native-audio-preview-09-2025
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">DEMO_AGENT_MODEL</span><span class="o">=</span>gemini-2.5-flash-native-audio-preview-12-2025
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># For Vertex AI Live API (if using Vertex AI)</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># DEMO_AGENT_MODEL=gemini-live-2.5-flash-preview-native-audio-09-2025</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># DEMO_AGENT_MODEL=gemini-live-2.5-flash-native-audio</span>
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Environment Variable Loading Order</p>
@@ -8099,7 +8099,7 @@
 <li>Native Audio for natural conversational AI with advanced features</li>
 <li>Half-Cascade for production reliability with tool execution</li>
 <li><strong>Check current availability</strong>: Refer to the model tables above and official documentation</li>
-<li><strong>Configure environment variable</strong>: Set <code>DEMO_AGENT_MODEL</code> in your <code>.env</code> file (see <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16"><code>agent.py:11-16</code></a> and <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L86-L124"><code>main.py:86-124</code></a>)</li>
+<li><strong>Configure environment variable</strong>: Set <code>DEMO_AGENT_MODEL</code> in your <code>.env</code> file (see <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16"><code>agent.py:11-16</code></a> and <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L99-L152"><code>main.py:99-152</code></a>)</li>
 </ol>
 <h3 id="live-api-models-compatibility-and-availability">Live API Models Compatibility and Availability<a class="headerlink" href="#live-api-models-compatibility-and-availability" title="Permanent link">&para;</a></h3>
 <p>For the latest information on Live API model compatibility and availability:</p>
@@ -8219,7 +8219,7 @@
 <li><strong>Client side</strong>: Process <code>inputTranscription</code> and <code>outputTranscription</code> events from the WebSocket</li>
 <li><strong>UI rendering</strong>: Display partial transcriptions with typing indicators, finalize when <code>finished: true</code></li>
 </ol>
-<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L438-L525" target="_blank">app.js:438-525</a></span><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">// Handle input transcription (user&#39;s spoken words)</span>
+<div class="language-javascript highlight"><span class="filename">Demo implementation: <a href="https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L530-L653" target="_blank">app.js:530-653</a></span><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">// Handle input transcription (user&#39;s spoken words)</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">inputTranscription</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">inputTranscription</span><span class="p">.</span><span class="nx">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">transcriptionText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">inputTranscription</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">isFinished</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">inputTranscription</span><span class="p">.</span><span class="nx">finished</span><span class="p">;</span>
@@ -8354,7 +8354,7 @@
 - A <code>LiveRequestQueue</code> is provided (bidirectional streaming mode)</p>
 <div class="admonition note">
 <p class="admonition-title">Source</p>
-<p><a href="https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py#L1324-L1341"><code>runners.py:1324-1341</code></a></p>
+<p><a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py#L1359-L1374"><code>runners.py:1359-1374</code></a></p>
 </div>
 <h2 id="voice-configuration-speech-config">Voice Configuration (Speech Config)<a class="headerlink" href="#voice-configuration-speech-config" title="Permanent link">&para;</a></h2>
 <p>The Live API provides voice configuration capabilities that allow you to customize how the model sounds when generating audio responses. ADK supports voice configuration at two levels: <strong>agent-level</strong> (per-agent voice settings) and <strong>session-level</strong> (global voice settings via RunConfig). This enables sophisticated multi-agent scenarios where different agents can speak with different voices, as well as single-agent applications with consistent voice characteristics.</p>
@@ -8372,7 +8372,7 @@
 </span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
 </span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Create a Gemini instance with custom speech config</span>
 </span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="n">custom_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span>
-</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">,</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">,</span>
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
 </span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
@@ -8425,7 +8425,7 @@
 </span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
 </span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># Create Gemini instance with custom voice</span>
 </span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="n">custom_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span>
-</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">,</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">,</span>
 </span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
 </span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
@@ -8464,7 +8464,7 @@
 </span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>
 </span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="c1"># Customer service agent with a friendly voice</span>
 </span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="n">customer_service_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span>
-</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">,</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">,</span>
 </span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
 </span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
@@ -8482,7 +8482,7 @@
 </span><span id="__span-25-23"><a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>
 </span><span id="__span-25-24"><a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a><span class="c1"># Technical support agent with a professional voice</span>
 </span><span id="__span-25-25"><a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a><span class="n">technical_support_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span>
-</span><span id="__span-25-26"><a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">,</span>
+</span><span id="__span-25-26"><a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">,</span>
 </span><span id="__span-25-27"><a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
 </span><span id="__span-25-28"><a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-25-29"><a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
@@ -8501,7 +8501,7 @@
 </span><span id="__span-25-42"><a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a><span class="c1"># Root agent that coordinates the workflow</span>
 </span><span id="__span-25-43"><a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-25-44"><a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;root_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-25-45"><a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-09-2025&quot;</span><span class="p">,</span>
+</span><span id="__span-25-45"><a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">,</span>
 </span><span id="__span-25-46"><a id="__codelineno-25-46" name="__codelineno-25-46" href="#__codelineno-25-46"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;Coordinate customer service and technical support.&quot;</span><span class="p">,</span>
 </span><span id="__span-25-47"><a id="__codelineno-25-47" name="__codelineno-25-47" href="#__codelineno-25-47"></a>    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span><span class="n">customer_service_agent</span><span class="p">,</span> <span class="n">technical_support_agent</span><span class="p">]</span>
 </span><span id="__span-25-48"><a id="__codelineno-25-48" name="__codelineno-25-48" href="#__codelineno-25-48"></a><span class="p">)</span>
@@ -8855,7 +8855,7 @@
 <p>These features are <strong>model-specific</strong> and have platform implications:</p>
 <p><strong>Gemini Live API:</strong></p>
 <ul>
-<li>✅ Supported on <code>gemini-2.5-flash-native-audio-preview-09-2025</code> (native audio model)</li>
+<li>✅ Supported on <code>gemini-2.5-flash-native-audio-preview-12-2025</code> (native audio model)</li>
 <li>❌ Not supported on <code>gemini-live-2.5-flash-preview</code> (half-cascade model)</li>
 </ul>
 <p><strong>Vertex AI Live API:</strong></p>
@@ -8897,7 +8897,7 @@
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>In this part, you learned how to implement multimodal features in ADK Bidi-streaming applications, focusing on audio, image, and video capabilities. We covered audio specifications and format requirements, explored the differences between native audio and half-cascade architectures, examined how to send and receive audio streams through LiveRequestQueue and Events, and learned about advanced features like audio transcription, voice activity detection, and proactive/affective dialog. You now understand how to build natural voice-enabled AI experiences with proper audio handling, implement video streaming for visual context, and configure model-specific features based on platform capabilities. With this comprehensive understanding of ADK's multimodal streaming features, you're equipped to build production-ready applications that handle text, audio, image, and video seamlessly—creating rich, interactive AI experiences across diverse use cases.</p>
 <p><strong>Congratulations!</strong> You've completed the ADK Bidi-streaming Developer Guide. You now have a comprehensive understanding of how to build production-ready real-time streaming AI applications with Google's Agent Development Kit.</p>
-<p>← <a href="../part4/">Previous: Part 4 - Understanding RunConfig</a></p>
+<p>← <a href="../part4/">Previous: Part 4: Understanding RunConfig</a></p>
 
 
 

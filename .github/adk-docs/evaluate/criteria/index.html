@@ -4337,6 +4337,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#per_turn_user_simulator_quality_v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        per_turn_user_simulator_quality_v1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="per_turn_user_simulator_quality_v1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-this-criterion_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When To Use This Criterion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-this-criterion_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How To Use This Criterion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-and-how-to-interpret_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output And How To Interpret
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -7180,6 +7241,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#per_turn_user_simulator_quality_v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        per_turn_user_simulator_quality_v1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="per_turn_user_simulator_quality_v1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-this-criterion_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When To Use This Criterion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#details_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-this-criterion_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How To Use This Criterion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-and-how-to-interpret_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output And How To Interpret
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -7340,6 +7462,14 @@ performance, including tool use trajectory, response quality, and safety.</p>
 <tr>
 <td style="text-align: left;"><code>safety_v1</code></td>
 <td style="text-align: left;">Safety/harmlessness of agent response</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>per_turn_user_simulator_quality_v1</code></td>
+<td style="text-align: left;">LLM-judged user simulator quality</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: left;">No</td>
 <td style="text-align: left;">Yes</td>
@@ -7711,6 +7841,45 @@ representing the minimum safety score for a response to be considered passing.</
 <p>The criterion returns a score between 0.0 and 1.0. Scores closer to 1.0 indicate
 that the response is safe, while scores closer to 0.0 indicate potential safety
 issues.</p>
+<h2 id="per_turn_user_simulator_quality_v1">per_turn_user_simulator_quality_v1<a class="headerlink" href="#per_turn_user_simulator_quality_v1" title="Permanent link">&para;</a></h2>
+<p>This criterion evaluates whether a user simulator is faithful to a conversation
+plan.</p>
+<h4 id="when-to-use-this-criterion_7">When To Use This Criterion?<a class="headerlink" href="#when-to-use-this-criterion_7" title="Permanent link">&para;</a></h4>
+<p>Use this criterion when you need to evaluate a user simulator in a multi-turn
+conversation. It is designed to assess whether the simulator follows the
+conversation plan defined in the <code>ConversationScenario</code>.</p>
+<h4 id="details_7">Details<a class="headerlink" href="#details_7" title="Permanent link">&para;</a></h4>
+<p>This criterion determines whether the a user simulator follows a defined
+<code>ConversationScenario</code> in a multi-turn conversation.</p>
+<p>For the first turn, this criterion checks if user simulator response matches the
+<code>starting_prompt</code> in the <code>ConversationScenario</code>. For subsequent turns, it uses
+LLM-as-a-judge to evaluate if the user response follows the <code>conversation_plan</code>
+in the <code>ConversationScenario</code>.</p>
+<h4 id="how-to-use-this-criterion_7">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_7" title="Permanent link">&para;</a></h4>
+<p>This criterion allows you to configure the evaluation threshold, the judge model
+and the number of samples per invocation. The criterion also lets you specify a
+<code>stop_signal</code>, which signals the LLM judge that the conversation was completed.
+For best results, use the stop signal in <code>LlmBackedUserSimulator</code>.</p>
+<p>Example <code>EvalConfig</code> entry:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;criteria&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">&quot;per_turn_user_simulator_quality_v1&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">      </span><span class="nt">&quot;threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span><span class="nt">&quot;judge_model_options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="nt">&quot;judge_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="nt">&quot;num_samples&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">      </span><span class="p">},</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">      </span><span class="nt">&quot;stop_signal&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;/finished&gt;&quot;</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="output-and-how-to-interpret_7">Output And How To Interpret<a class="headerlink" href="#output-and-how-to-interpret_7" title="Permanent link">&para;</a></h4>
+<p>The criterion returns a score between 0.0 and 1.0, representing the fraction of
+turns in which the user simulator's response was judged to be valid according to
+the conversation scenario. A score of 1.0 indicates that the simulator behaved
+as expected in all turns, while a score closer to 0.0 indicates that the
+simulator deviated in many turns. Higher values are better.</p>
 
 
 

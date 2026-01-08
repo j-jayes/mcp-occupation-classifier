@@ -7128,7 +7128,7 @@
 </div>
 <ul>
 <li><strong><a href="../workflow-agents/loop-agents/"><code>LoopAgent</code></a>:</strong> Executes its <code>sub_agents</code> sequentially in a loop.<ul>
-<li><strong>Termination:</strong> The loop stops if the optional <code>max_iterations</code> is reached, or if any sub-agent returns an <a href="../../events/"><code>Event</code></a> with <code>escalate=True</code> in it's Event Actions.</li>
+<li><strong>Termination:</strong> The loop stops if the optional <code>max_iterations</code> is reached, or if any sub-agent returns an <a href="../../events/"><code>Event</code></a> with <code>escalate=True</code> in its Event Actions.</li>
 <li><strong>Context &amp; State:</strong> Passes the <em>same</em> <code>InvocationContext</code> in each iteration, allowing state changes (e.g., counters, flags) to persist across loops.</li>
 </ul>
 </li>
@@ -7780,7 +7780,7 @@
 <h3 id="sequential-pipeline-pattern">Sequential Pipeline Pattern<a class="headerlink" href="#sequential-pipeline-pattern" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Structure:</strong> A <a href="../workflow-agents/sequential-agents/"><code>SequentialAgent</code></a> contains <code>sub_agents</code> executed in a fixed order.</li>
-<li><strong>Goal:</strong> Implement a multi-step process where the output of one step feeds into the next.</li>
+<li><strong>Goal:</strong> Implement a multistep process where the output of one-step feeds into the next.</li>
 <li><strong>ADK Primitives Used:</strong><ul>
 <li><strong>Workflow:</strong> <code>SequentialAgent</code> defines the order.</li>
 <li><strong>Communication:</strong> Primarily uses <strong>Shared Session State</strong>. Earlier agents write results (often via <code>output_key</code>), later agents read those results from <code>context.state</code>.</li>

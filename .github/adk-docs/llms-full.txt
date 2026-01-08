@@ -5807,17 +5807,11 @@ async def call_agent_async(user_input_topic: str):
 
     session_service, runner = await setup_session_and_runner()
 
-    current_session = await session_service.get_session(app_name=APP_NAME, 
-                                                  user_id=USER_ID, 
-                                                  session_id=SESSION_ID)
-    if not current_session:
-        logger.error("Session not found!")
-        return
-
+    current_session = session_service.sessions[APP_NAME][USER_ID][SESSION_ID]
     current_session.state["topic"] = user_input_topic
     logger.info(f"Updated session state topic to: {user_input_topic}")
 
-    content = types.Content(role='user', parts=[types.Part(text=f"Generate a story about: {user_input_topic}")])
+    content = types.Content(role='user', parts=[types.Part(text=f"Generate a story about the preset topic.")])
     events = runner.run_async(user_id=USER_ID, session_id=SESSION_ID, new_message=content)
 
     final_response = "No final response captured."
@@ -6305,17 +6299,11 @@ async def call_agent_async(user_input_topic: str):
 
     session_service, runner = await setup_session_and_runner()
 
-    current_session = await session_service.get_session(app_name=APP_NAME, 
-                                                  user_id=USER_ID, 
-                                                  session_id=SESSION_ID)
-    if not current_session:
-        logger.error("Session not found!")
-        return
-
+    current_session = session_service.sessions[APP_NAME][USER_ID][SESSION_ID]
     current_session.state["topic"] = user_input_topic
     logger.info(f"Updated session state topic to: {user_input_topic}")
 
-    content = types.Content(role='user', parts=[types.Part(text=f"Generate a story about: {user_input_topic}")])
+    content = types.Content(role='user', parts=[types.Part(text=f"Generate a story about the preset topic.")])
     events = runner.run_async(user_id=USER_ID, session_id=SESSION_ID, new_message=content)
 
     final_response = "No final response captured."
@@ -10075,7 +10063,7 @@ ParallelAgent gatherer = ParallelAgent.builder()
 ```
 
 - **[`LoopAgent`](https://google.github.io/adk-docs/agents/workflow-agents/loop-agents/index.md):** Executes its `sub_agents` sequentially in a loop.
-  - **Termination:** The loop stops if the optional `max_iterations` is reached, or if any sub-agent returns an [`Event`](https://google.github.io/adk-docs/events/index.md) with `escalate=True` in it's Event Actions.
+  - **Termination:** The loop stops if the optional `max_iterations` is reached, or if any sub-agent returns an [`Event`](https://google.github.io/adk-docs/events/index.md) with `escalate=True` in its Event Actions.
   - **Context & State:** Passes the *same* `InvocationContext` in each iteration, allowing state changes (e.g., counters, flags) to persist across loops.
 
 ```python
@@ -10712,7 +10700,7 @@ LlmAgent coordinator = LlmAgent.builder()
 ### Sequential Pipeline Pattern
 
 - **Structure:** A [`SequentialAgent`](https://google.github.io/adk-docs/agents/workflow-agents/sequential-agents/index.md) contains `sub_agents` executed in a fixed order.
-- **Goal:** Implement a multi-step process where the output of one step feeds into the next.
+- **Goal:** Implement a multistep process where the output of one-step feeds into the next.
 - **ADK Primitives Used:**
   - **Workflow:** `SequentialAgent` defines the order.
   - **Communication:** Primarily uses **Shared Session State**. Earlier agents write results (often via `output_key`), later agents read those results from `context.state`.
@@ -24820,7 +24808,7 @@ This guide explains how to configure your ADK agent workflow to be resumable. If
 
 ## Add resumable configuration
 
-Enable the Resume function for an agent workflow by applying a Resumabiltiy configuration to the App object of your ADK workflow, as shown in the following code example:
+Enable the Resume function for an agent workflow by applying a Resumability configuration to the App object of your ADK workflow, as shown in the following code example:
 
 ```python
 app = App(
@@ -25522,7 +25510,7 @@ echo "<<put your GOOGLE_API_KEY here>>" | gcloud secrets create GOOGLE_API_KEY -
 
 ### Permissions to read
 
-You should give appropiate permissision for you service account to read this secret.
+You should give appropriate permission for you service account to read this secret.
 
 ```bash
 gcloud secrets add-iam-policy-binding GOOGLE_API_KEY --member="serviceAccount:1234567890-compute@developer.gserviceaccount.com" --role="roles/secretmanager.secretAccessor" --project=my-project
@@ -26741,7 +26729,7 @@ sessions.db
 
 Build the container image abd deploy the application again.
 
-### Insufficent Permission to Stream Logs `ERROR: (gcloud.builds.submit)`
+### Insufficient Permission to Stream Logs `ERROR: (gcloud.builds.submit)`
 
 This error can occur when you don't have sufficient permissions to stream build logs, or your VPC-SC security policy restricts access to the default logs bucket.
 
@@ -28397,11 +28385,11 @@ As you get data flowing into Freeplay, you can use these logs to start building 
 
 As you iterate on your agent, you can run batch tests (i.e., offline experiments) at both the [prompt](https://docs.freeplay.ai/docs/component-level-test-runs) and [end-to-end](https://docs.freeplay.ai/docs/end-to-end-test-runs) agent level. This allows you to compare multiple different models or prompt changes and quantify changes head to head across your full agent execution.
 
-[Here](https://github.com/228Labs/freeplay-google-demo/blob/main/examples/example_test_run.py) is a code example for executing a batch test on Freeplay with ADK. [Here](https://github.com/228Labs/freeplay-google-demo/blob/main/examples/example_test_run.py) is a code example for executing a batch test on Freeplay with the Google ADK.
+[Here](https://github.com/freeplayai/freeplay-google-demo/blob/main/examples/example_test_run.py) is a code example for executing a batch test on Freeplay with ADK.
 
 ## Sign up now
 
-Go to [Freeplay](https://freeplay.ai/) to sign up for an account, and check out a full Freeplay \<> ADK Integration [here](https://github.com/228Labs/freeplay-google-demo).
+Go to [Freeplay](https://freeplay.ai/) to sign up for an account, and check out a full Freeplay \<> ADK Integration [here](https://github.com/freeplayai/freeplay-google-demo/tree/main)
 
 # Logging in the Agent Development Kit (ADK)
 
@@ -41082,15 +41070,15 @@ from a2a.types import AgentCard
 
 # Define A2A agent card
 my_agent_card = AgentCard(
-    "name": "file_agent",
-    "url": "http://example.com",
-    "description": "Test agent from file",
-    "version": "1.0.0",
-    "capabilities": {},
-    "skills": [],
-    "defaultInputModes": ["text/plain"],
-    "defaultOutputModes": ["text/plain"],
-    "supportsAuthenticatedExtendedCard": False,
+    name="file_agent",
+    url="http://example.com",
+    description="Test agent from file",
+    version="1.0.0",
+    capabilities={},
+    skills=[],
+    defaultInputModes=["text/plain"],
+    defaultOutputModes=["text/plain"],
+    supportsAuthenticatedExtendedCard=False,
 )
 a2a_app = to_a2a(root_agent, port=8001, agent_card=my_agent_card)
 ```
@@ -41765,7 +41753,7 @@ graph TB
 
 | Developer provides:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | ADK provides:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Live API provide:                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Web / Mobile**: Frontend applications that users interact with, handling UI/UX, user input capture, and response display **[WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) / [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) Server**: Real-time communication server (such as [FastAPI](https://fastapi.tiangolo.com/)) that manages client connections, handles streaming protocols, and routes messages between clients and ADK **`Agent`**: Custom AI agent definition with specific instructions, tools, and behavior tailored to your application's needs | **[LiveRequestQueue](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/live_request_queue.py)**: Message queue that buffers and sequences incoming user messages (text content, audio blobs, control signals) for orderly processing by the agent **[Runner](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py)**: Execution engine that orchestrates agent sessions, manages conversation state, and provides the `run_live()` streaming interface **[RunConfig](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/run_config.py)**: Configuration for streaming behavior, modalities, and advanced features **Internal components** (managed automatically, not directly used by developers): [LLM Flow](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/base_llm_flow.py) for processing pipeline and [GeminiLlmConnection](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/models/gemini_llm_connection.py) for protocol translation | **[Gemini Live API](https://ai.google.dev/gemini-api/docs/live)** (via Google AI Studio) and **[Vertex AI Live API](https://cloud.google.com/vertex-ai/generative-ai/docs/live-api)** (via Google Cloud): Google's real-time language model services that process streaming input, generate responses, handle interruptions, support multimodal content (text, audio, video), and provide advanced AI capabilities like function calling and contextual understanding |
+| **Web / Mobile**: Frontend applications that users interact with, handling UI/UX, user input capture, and response display **[WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) / [SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) Server**: Real-time communication server (such as [FastAPI](https://fastapi.tiangolo.com/)) that manages client connections, handles streaming protocols, and routes messages between clients and ADK **`Agent`**: Custom AI agent definition with specific instructions, tools, and behavior tailored to your application's needs | **[LiveRequestQueue](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/live_request_queue.py)**: Message queue that buffers and sequences incoming user messages (text content, audio blobs, control signals) for orderly processing by the agent **[Runner](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py)**: Execution engine that orchestrates agent sessions, manages conversation state, and provides the `run_live()` streaming interface **[RunConfig](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/run_config.py)**: Configuration for streaming behavior, modalities, and advanced features **Internal components** (managed automatically, not directly used by developers): [LLM Flow](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/base_llm_flow.py) for processing pipeline and [GeminiLlmConnection](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/gemini_llm_connection.py) for protocol translation | **[Gemini Live API](https://ai.google.dev/gemini-api/docs/live)** (via Google AI Studio) and **[Vertex AI Live API](https://cloud.google.com/vertex-ai/generative-ai/docs/live-api)** (via Google Cloud): Google's real-time language model services that process streaming input, generate responses, handle interruptions, support multimodal content (text, audio, video), and provide advanced AI capabilities like function calling and contextual understanding |
 
 This architecture demonstrates ADK's clear separation of concerns: your application handles user interaction and transport protocols, ADK manages the streaming orchestration and state, and Live API provide the AI intelligence. By abstracting away the complexity of LLM-side streaming connection management, event loops, and protocol translation, ADK enables you to focus on building agent behavior and user experiences rather than streaming infrastructure.
 
@@ -41885,7 +41873,7 @@ These components are created once when your application starts and shared across
 
 The `Agent` is the core of your streaming application—it defines what your AI can do, how it should behave, and which AI model powers it. You configure your agent with a specific model, tools it can use (like Google Search or custom APIs), and instructions that shape its personality and behavior.
 
-Demo implementation: [agent.py:10-15](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/google_search_agent/agent.py#L10-L15)
+Demo implementation: [agent.py:10-15](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/google_search_agent/agent.py#L10-L15)
 
 ```python
 """Google Search Agent definition for ADK Bidi-streaming demo."""
@@ -41895,11 +41883,11 @@ from google.adk.agents import Agent
 from google.adk.tools import google_search
 
 # Default models for Live API with native audio support:
-# - Gemini Live API: gemini-2.5-flash-native-audio-preview-09-2025
-# - Vertex AI Live API: gemini-live-2.5-flash-preview-native-audio-09-2025
+# - Gemini Live API: gemini-2.5-flash-native-audio-preview-12-2025
+# - Vertex AI Live API: gemini-live-2.5-flash-native-audio
 agent = Agent(
     name="google_search_agent",
-    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-09-2025"),
+    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-12-2025"),
     tools=[google_search],
     instruction="You are a helpful assistant that can search the web."
 )
@@ -41921,7 +41909,7 @@ The ADK [Session](https://google.github.io/adk-docs/sessions/session/) manages c
 
 To create a `Session`, or get an existing one for a specified `session_id`, every ADK application needs to have a [SessionService](https://google.github.io/adk-docs/sessions/session/#managing-sessions-with-a-sessionservice). For development purpose, ADK provides a simple `InMemorySessionService` that will lose the `Session` state when the application shuts down.
 
-Demo implementation: [main.py:37](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L37)
+Demo implementation: [main.py:37](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L37)
 
 ```python
 from google.adk.sessions import InMemorySessionService
@@ -41935,19 +41923,11 @@ For production applications, choose a persistent session service based on your i
 **Use `DatabaseSessionService` if:**
 
 - You need persistent storage with SQLite, PostgreSQL, or MySQL
-
 - You're building single-server apps (SQLite) or multi-server deployments (PostgreSQL/MySQL)
-
 - You want full control over data storage and backups
-
 - Examples:
-
-  - SQLite: `DatabaseSessionService(db_url="sqlite+aiosqlite:///./sessions.db")`
+  - SQLite: `DatabaseSessionService(db_url="sqlite:///./sessions.db")`
   - PostgreSQL: `DatabaseSessionService(db_url="postgresql://user:pass@host/db")`
-
-  Note
-
-  For SQLite, use `sqlite+aiosqlite` instead of `sqlite` because `DatabaseSessionService` requires an async database driver.
 
 **Use `VertexAiSessionService` if:**
 
@@ -41956,13 +41936,13 @@ For production applications, choose a persistent session service based on your i
 - You need tight integration with Vertex AI features
 - Example: `VertexAiSessionService(project="my-project")`
 
-Both provide session persistence capabilities—choose based on your infrastructure and scale requirements. With persistent session services, the state of the `Session` will be preserved even after application shutdown. See the \[ADK Session Management documentation\](https://google.github.io/adk-docs/sessions/ for more details.
+Both provide session persistence capabilities—choose based on your infrastructure and scale requirements. With persistent session services, the state of the `Session` will be preserved even after application shutdown. See the [ADK Session Management documentation](https://google.github.io/adk-docs/sessions/) for more details.
 
 #### Define Your Runner
 
 The [Runner](https://google.github.io/adk-docs/runtime/) provides the runtime for the `Agent`. It manages the conversation flow, coordinates tool execution, handles events, and integrates with session storage. You create one runner instance at application startup and reuse it for all streaming sessions.
 
-Demo implementation: [main.py:50,53](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L50)
+Demo implementation: [main.py:50,53](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L50)
 
 ```python
 from google.adk.runners import Runner
@@ -42020,7 +42000,7 @@ This design enables scenarios like:
 
 The recommended production pattern is to check if a session exists first, then create it only if needed. This approach safely handles both new sessions and conversation resumption:
 
-Demo implementation: [main.py:127-133](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L127-L133)
+Demo implementation: [main.py:155-161](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L155-L161)
 
 ```python
 # Get or create session (handles both new sessions and reconnections)
@@ -42049,7 +42029,7 @@ This pattern works correctly in all scenarios:
 
 [RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/index.md) defines the streaming behavior for this specific session—which modalities to use (text or audio), whether to enable transcription, voice activity detection, proactivity, and other advanced features.
 
-Demo implementation: [main.py:98-104](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L98-L104)
+Demo implementation: [main.py:110-124](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L110-L124)
 
 ```python
 from google.adk.agents.run_config import RunConfig, StreamingMode
@@ -42072,7 +42052,7 @@ run_config = RunConfig(
 
 `LiveRequestQueue` is the communication channel for sending messages to the agent during streaming. It's a thread-safe async queue that buffers user messages (text content, audio blobs, activity signals) for orderly processing.
 
-Demo implementation: [main.py:135](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L135)
+Demo implementation: [main.py:163](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L163)
 
 ```python
 from google.adk.agents.live_request_queue import LiveRequestQueue
@@ -42086,7 +42066,7 @@ One Queue Per Session
 
 Never reuse a `LiveRequestQueue` across multiple streaming sessions. Each call to `run_live()` requires a fresh queue. Reusing queues can cause message ordering issues and state corruption.
 
-The close signal persists in the queue (see [`live_request_queue.py:59-60`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/live_request_queue.py#L59-L60)) and terminates the sender loop (see [`base_llm_flow.py:264-266`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/base_llm_flow.py#L264-L266)). Reusing a queue would carry over this signal and any remaining messages from the previous session.
+The close signal persists in the queue (see [`live_request_queue.py:59-60`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/live_request_queue.py#L59-L60)) and terminates the sender loop (see [`base_llm_flow.py:264-266`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/base_llm_flow.py#L264-L266)). Reusing a queue would carry over this signal and any remaining messages from the previous session.
 
 ### Phase 3: Bidi-streaming with `run_live()` event loop
 
@@ -42096,7 +42076,7 @@ Once the streaming loop is running, you can send messages to the agent and recei
 
 Use `LiveRequestQueue` methods to send different types of messages to the agent during the streaming session:
 
-Demo implementation: [main.py:141-189](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L141-L189)
+Demo implementation: [main.py:169-217](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L169-L217)
 
 ```python
 from google.genai import types
@@ -42121,7 +42101,7 @@ See [Part 2: Sending messages with LiveRequestQueue](https://google.github.io/ad
 
 The `run_live()` async generator continuously yields `Event` objects as the agent processes input and generates responses. Each event represents a discrete occurrence—partial text generation, audio chunks, tool execution, transcription, interruption, or turn completion.
 
-Demo implementation: [main.py:191-206](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L191-L206)
+Demo implementation: [main.py:219-234](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L219-L234)
 
 ```python
 async for event in runner.run_live(
@@ -42146,7 +42126,7 @@ When the streaming session should end (user disconnects, conversation completes,
 
 Send a close signal through the queue to terminate the streaming loop:
 
-Demo implementation: [main.py:225](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L225)
+Demo implementation: [main.py:253](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L253)
 
 ```python
 live_request_queue.close()
@@ -42160,7 +42140,7 @@ Here's a complete FastAPI WebSocket application showing all four phases integrat
 
 Complete Demo Implementation
 
-For the production-ready implementation with multimodal support (text, audio, image), see the complete [`main.py`](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py) file.
+For the production-ready implementation with multimodal support (text, audio, image), see the complete [`main.py`](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py) file.
 
 **Complete Implementation:**
 
@@ -42294,7 +42274,7 @@ All code examples in this guide assume you're running in an async context (e.g.,
 
 The upstream task continuously receives messages from the WebSocket client and forwards them to the `LiveRequestQueue`. This enables the user to send messages to the agent at any time, even while the agent is generating a response.
 
-Demo implementation: [main.py:141-189](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L141-L189)
+Demo implementation: [main.py:169-217](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L169-L217)
 
 ```python
 async def upstream_task() -> None:
@@ -42312,7 +42292,7 @@ async def upstream_task() -> None:
 
 The downstream task continuously receives `Event` objects from `run_live()` and sends them to the WebSocket client. This streams the agent's responses, tool executions, transcriptions, and other events to the user in real-time.
 
-Demo implementation: [main.py:191-206](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L191-L206)
+Demo implementation: [main.py:219-234](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L219-L234)
 
 ```python
 async def downstream_task() -> None:
@@ -42332,7 +42312,7 @@ async def downstream_task() -> None:
 
 Both tasks run concurrently using `asyncio.gather()`, enabling true Bidi-streaming. The `try/finally` block ensures `LiveRequestQueue.close()` is called even if exceptions occur, minimizing the session resource usage.
 
-Demo implementation: [main.py:210-225](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L210-L225)
+Demo implementation: [main.py:238-253](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L238-L253)
 
 ```python
 try:
@@ -42411,7 +42391,7 @@ In this introduction, you learned how ADK transforms complex real-time streaming
 
 ______________________________________________________________________
 
-[Next: Part 2 - Sending Messages with LiveRequestQueue](https://google.github.io/adk-docs/streaming/dev-guide/part2/index.md) →
+[Next: Part 2: Sending Messages with LiveRequestQueue](https://google.github.io/adk-docs/streaming/dev-guide/part2/index.md) →
 
 # Part 2: Sending messages with LiveRequestQueue
 
@@ -42430,7 +42410,7 @@ Understanding `LiveRequestQueue` is essential for building responsive streaming 
 
 The `LiveRequestQueue` is your primary interface for sending messages to the Agent in streaming conversations. Rather than managing separate channels for text, audio, and control signals, ADK provides a unified `LiveRequest` container that handles all message types through a single, elegant API:
 
-Source reference: [live_request_queue.py](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/live_request_queue.py)
+Source reference: [live_request_queue.py](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/live_request_queue.py)
 
 ```python
 class LiveRequest(BaseModel):
@@ -42490,7 +42470,7 @@ graph LR
 
 The `send_content()` method sends text messages in turn-by-turn mode, where each message represents a discrete conversation turn. This signals a complete turn to the model, triggering immediate response generation.
 
-Demo implementation: [main.py:166-171](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L166-L171)
+Demo implementation: [main.py:194-199](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L194-L199)
 
 ```python
 content = types.Content(parts=[types.Part(text=json_message["text"])])
@@ -42522,7 +42502,7 @@ While the Gemini API `Part` type supports many fields (`inline_data`, `file_data
 
 The `send_realtime()` method sends binary data streams—primarily audio, image and video—flow through the `Blob` type, which handles transmission in realtime mode. Unlike text content that gets processed in turn-by-turn mode, blobs are designed for continuous streaming scenarios where data arrives in chunks. You provide raw bytes, and Pydantic automatically handles base64 encoding during JSON serialization for safe network transmission (configured in `LiveRequest.model_config`). The MIME type helps the model understand the content format.
 
-Demo implementation: [main.py:153-156](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L153-L156)
+Demo implementation: [main.py:181-184](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L181-L184)
 
 ```python
 audio_blob = types.Blob(
@@ -42580,11 +42560,11 @@ The `close` signal provides graceful termination semantics for streaming session
 
 **Manual closure in BIDI mode:** When using `StreamingMode.BIDI` (Bidi-streaming), your application should manually call `close()` when the session terminates or when errors occur. This practice minimizes session resource usage.
 
-**Automatic closure in SSE mode:** When using the legacy `StreamingMode.SSE` (not Bidi-streaming), ADK automatically calls `close()` on the queue when it receives a `turn_complete=True` event from the model (see [`base_llm_flow.py:781`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/base_llm_flow.py#L781)).
+**Automatic closure in SSE mode:** When using the legacy `StreamingMode.SSE` (not Bidi-streaming), ADK automatically calls `close()` on the queue when it receives a `turn_complete=True` event from the model (see [`base_llm_flow.py:781`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/base_llm_flow.py#L781)).
 
 See [Part 4: Understanding RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/#streamingmode-bidi-or-sse) for detailed comparison and when to use each mode.
 
-Demo implementation: [main.py:210-225](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L210-L225)
+Demo implementation: [main.py:238-253](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L238-L253)
 
 ```python
 try:
@@ -42622,7 +42602,7 @@ Understanding how `LiveRequestQueue` handles concurrency is essential for buildi
 
 **Why synchronous send methods?** Convenience and simplicity. You can call them from anywhere in your async code without `await`:
 
-Demo implementation: [main.py:141-171](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L141-L171)
+Demo implementation: [main.py:169-199](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L169-L199)
 
 ```python
 async def upstream_task() -> None:
@@ -42686,7 +42666,7 @@ In this part, you learned how `LiveRequestQueue` provides a unified interface fo
 
 ______________________________________________________________________
 
-← [Previous: Part 1 - Introduction to ADK Bidi-streaming](https://google.github.io/adk-docs/streaming/dev-guide/part1/index.md) | [Next: Part 3 - Event Handling with run_live()](https://google.github.io/adk-docs/streaming/dev-guide/part3/index.md) →
+← [Previous: Part 1: Introduction to ADK Bidi-streaming](https://google.github.io/adk-docs/streaming/dev-guide/part1/index.md) | [Next: Part 3: Event Handling with run_live()](https://google.github.io/adk-docs/streaming/dev-guide/part3/index.md) →
 
 # Part 3: Event handling with run_live()
 
@@ -42706,7 +42686,7 @@ All `run_live()` code requires async context. See [Part 1: FastAPI Application E
 
 **Usage:**
 
-Source reference: [runners.py](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py)
+Source reference: [runners.py](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py)
 
 ```python
 # The method signature reveals the thoughtful design
@@ -42748,7 +42728,7 @@ end
 
 The simplest way to consume events from `run_live()` is to iterate over the async generator with a for-loop:
 
-Demo implementation: [main.py:197-205](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L197-L205)
+Demo implementation: [main.py:225-233](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L225-L233)
 
 ```python
 async for event in runner.run_live(
@@ -42793,7 +42773,7 @@ The `run_live()` method yields a stream of `Event` objects in real-time as the a
 
 Source Reference
 
-See the complete event type handling implementation in [`runners.py`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py)
+See the complete event type handling implementation in [`runners.py`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py)
 
 #### When run_live() Exits
 
@@ -42822,7 +42802,7 @@ Not all events yielded by `run_live()` are persisted to the ADK `Session`. When 
 
 Source Reference
 
-See session event persistence logic in [`runners.py`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py)
+See session event persistence logic in [`runners.py`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py)
 
 **Events Saved to the ADK `Session`:**
 
@@ -42855,7 +42835,7 @@ ADK's `Event` class is a Pydantic model that represents all communication in a s
 
 Source Reference
 
-See Event class implementation in [`event.py:30-128`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/events/event.py#L30-L128) and [`llm_response.py:28-193`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/models/llm_response.py#L28-L193)
+See Event class implementation in [`event.py:30-128`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/events/event.py#L30-L128) and [`llm_response.py:28-200`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L28-L200)
 
 #### Key Fields
 
@@ -42941,7 +42921,7 @@ This transformation ensures that transcribed user input is correctly attributed 
 
 Source Reference
 
-See author attribution logic in [`base_llm_flow.py:292-326`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/base_llm_flow.py#L292-L326)
+See author attribution logic in [`base_llm_flow.py:292-326`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/base_llm_flow.py#L292-L326)
 
 ### Event Types and Handling
 
@@ -43038,7 +43018,7 @@ When audio data is aggregated and saved as files in artifacts, ADK yields events
 
 Source Reference
 
-See audio file aggregation logic in [`audio_cache_manager.py:157-177`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/audio_cache_manager.py#L157-L177)
+See audio file aggregation logic in [`audio_cache_manager.py:156-178`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/audio_cache_manager.py#L156-L178)
 
 **Receiving Audio File References:**
 
@@ -43077,7 +43057,7 @@ Usage metadata events contain token usage information for monitoring costs and q
 
 Source Reference
 
-See usage metadata structure in [`llm_response.py:105`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/models/llm_response.py#L105)
+See usage metadata structure in [`llm_response.py:105`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L105)
 
 **Accessing Token Usage:**
 
@@ -43344,7 +43324,7 @@ Official Documentation
 
 - **FinishReason** (when model stops generating tokens): [Google AI for Developers](https://ai.google.dev/api/python/google/ai/generativelanguage/Candidate/FinishReason) | [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini)
 - **BlockedReason** (when prompts are blocked by content filters): [Google AI for Developers](https://ai.google.dev/api/python/google/ai/generativelanguage/GenerateContentResponse/PromptFeedback/BlockReason) | [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes)
-- **ADK Implementation**: [`llm_response.py:156-193`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/models/llm_response.py#L156-L193)
+- **ADK Implementation**: [`llm_response.py:145-200`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L145-L200)
 
 **Best practices for error handling:**
 
@@ -43533,7 +43513,7 @@ This provides a simple one-liner to convert ADK events into JSON format that can
 
 The `model_dump_json()` method serializes an `Event` object to a JSON string:
 
-Demo implementation: [main.py:191-206](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L191-L206)
+Demo implementation: [main.py:219-234](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L219-L234)
 
 ```python
 async def downstream_task() -> None:
@@ -43609,7 +43589,7 @@ This shows how to parse and handle serialized events on the client side, enablin
 
 On the client side (JavaScript/TypeScript), parse the JSON back to objects:
 
-Demo implementation: [app.js:297-576](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L297-L576)
+Demo implementation: [app.js:339-688](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L339-L688)
 
 ```javascript
 // Handle incoming messages
@@ -43687,7 +43667,7 @@ websocket.onmessage = function (event) {
 
 Demo Implementation
 
-See the complete WebSocket message handler in [`app.js:297-576`](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L297-L576)
+See the complete WebSocket message handler in [`app.js:339-688`](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L339-L688)
 
 ### Optimization for Audio Transmission
 
@@ -43727,7 +43707,7 @@ This approach reduces bandwidth by ~75% for audio-heavy streams while maintainin
 
 Source Reference
 
-See automatic tool execution implementation in [`functions.py`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/flows/llm_flows/functions.py)
+See automatic tool execution implementation in [`functions.py`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/functions.py)
 
 One of the most powerful features of ADK's `run_live()` is **automatic tool execution**. Unlike the raw Gemini Live API, which requires you to manually handle tool calls and responses, ADK abstracts this complexity entirely.
 
@@ -43746,7 +43726,7 @@ This creates significant implementation overhead, especially in streaming contex
 
 With ADK, tool execution becomes declarative. Simply define tools on your Agent:
 
-Demo implementation: [agent.py:11-16](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16)
+Demo implementation: [agent.py:11-16](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16)
 
 ```python
 import os
@@ -43755,7 +43735,7 @@ from google.adk.tools import google_search
 
 agent = Agent(
     name="google_search_agent",
-    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-09-2025"),
+    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-12-2025"),
     tools=[google_search],
     instruction="You are a helpful assistant that can search the web."
 )
@@ -43791,7 +43771,7 @@ You don't need to handle the execution yourself—ADK does it automatically. You
 
 Learn More
 
-The bidi-demo sends all events (including function calls and responses) directly to the WebSocket client without server-side filtering. This allows the client to observe tool execution in real-time through the event stream. See the downstream task in [`main.py:191-206`](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L191-L206)
+The bidi-demo sends all events (including function calls and responses) directly to the WebSocket client without server-side filtering. This allows the client to observe tool execution in real-time through the event stream. See the downstream task in [`main.py:219-234`](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L219-L234)
 
 ### Long-Running and Streaming Tools
 
@@ -43845,7 +43825,7 @@ This automatic handling is one of the core value propositions of ADK—it transf
 
 Source Reference
 
-See InvocationContext implementation in [`invocation_context.py`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/invocation_context.py)
+See InvocationContext implementation in [`invocation_context.py`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/invocation_context.py)
 
 While `run_live()` returns an AsyncGenerator for consuming events, internally it creates and manages an `InvocationContext`—ADK's unified state carrier that encapsulates everything needed for a complete conversation invocation. **One InvocationContext corresponds to one `run_live()` loop**—it's created when you call `run_live()` and persists for the entire streaming session.
 
@@ -43956,7 +43936,7 @@ When building multi-agent systems with ADK, understanding how agents transition 
 
 Source Reference
 
-See SequentialAgent implementation in [`sequential_agent.py:119-158`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/sequential_agent.py#L119-L158)
+See SequentialAgent implementation in [`sequential_agent.py:119-158`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/sequential_agent.py#L119-L158)
 
 **How it works:**
 
@@ -44193,7 +44173,7 @@ In this part, you mastered event handling in ADK's Bidi-streaming architecture. 
 
 ______________________________________________________________________
 
-← [Previous: Part 2 - Sending Messages with LiveRequestQueue](https://google.github.io/adk-docs/streaming/dev-guide/part2/index.md) | [Next: Part 4 - Understanding RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/index.md) →
+← [Previous: Part 2: Sending Messages with LiveRequestQueue](https://google.github.io/adk-docs/streaming/dev-guide/part2/index.md) | [Next: Part 4: Understanding RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/index.md) →
 
 # Part 4: Understanding RunConfig
 
@@ -44228,7 +44208,7 @@ This table provides a quick reference for all RunConfig parameters covered in th
 
 Source Reference
 
-[`run_config.py`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/run_config.py)
+[`run_config.py`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/run_config.py)
 
 **Platform Support Legend:**
 
@@ -44736,7 +44716,7 @@ For details on which events are saved to the ADK `Session` versus which are only
 
 ## Live API Context Window Compression
 
-**Problem:** Live API sessions face two critical constraints that limit conversation duration. First, **session duration limits** impose hard time caps: without compression, Gemini Live API limits audio-only sessions to 15 minutes and audio+video sessions to just 2 minutes, while Vertex AI limits all sessions to 10 minutes. Second, **context window limits** restrict conversation length: models have finite token capacities (128k tokens for `gemini-2.5-flash-native-audio-preview-09-2025`, 32k-128k for Vertex AI models). Long conversations—especially extended customer support sessions, tutoring interactions, or multi-hour voice dialogues—will hit either the time limit or the token limit, causing the session to terminate or lose critical conversation history.
+**Problem:** Live API sessions face two critical constraints that limit conversation duration. First, **session duration limits** impose hard time caps: without compression, Gemini Live API limits audio-only sessions to 15 minutes and audio+video sessions to just 2 minutes, while Vertex AI limits all sessions to 10 minutes. Second, **context window limits** restrict conversation length: models have finite token capacities (128k tokens for `gemini-2.5-flash-native-audio-preview-12-2025`, 32k-128k for Vertex AI models). Long conversations—especially extended customer support sessions, tutoring interactions, or multi-hour voice dialogues—will hit either the time limit or the token limit, causing the session to terminate or lose critical conversation history.
 
 **Solution:** [Context window compression](https://ai.google.dev/gemini-api/docs/live-session#context-window-compression) solves both constraints simultaneously. It uses a sliding-window approach to automatically compress or summarize earlier conversation history when the token count reaches a configured threshold. The Live API preserves recent context in full detail while compressing older portions. **Critically, enabling context window compression extends session duration to unlimited time**, removing the session duration limits (15 minutes for audio-only / 2 minutes for audio+video on Gemini Live API; 10 minutes for all sessions on Vertex AI) while also preventing token limit exhaustion. However, there is a trade-off: as the feature summarizes earlier conversation history rather than retaining it all, the detail of past context will be gradually lost over time. The model will have access to compressed summaries of older exchanges, not the full verbatim history.
 
@@ -44755,7 +44735,7 @@ ADK provides an easy way to configure context window compression through RunConf
 from google.genai import types
 from google.adk.agents.run_config import RunConfig
 
-# For gemini-2.5-flash-native-audio-preview-09-2025 (128k context window)
+# For gemini-2.5-flash-native-audio-preview-12-2025 (128k context window)
 run_config = RunConfig(
     context_window_compression=types.ContextWindowCompressionConfig(
         trigger_tokens=100000,  # Start compression at ~78% of 128k context
@@ -45171,9 +45151,9 @@ run_config = RunConfig(
 
 ADK validates CFC compatibility at session initialization and will raise an error if the model is unsupported:
 
-- ✅ **Supported**: `gemini-2.x` models (e.g., `gemini-2.5-flash-native-audio-preview-09-2025`)
+- ✅ **Supported**: `gemini-2.x` models (e.g., `gemini-2.5-flash-native-audio-preview-12-2025`)
 - ❌ **Not supported**: `gemini-1.5-x` models
-- **Validation**: ADK checks that the model name starts with `gemini-2` when `support_cfc=True` ([`runners.py:1288-1291`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py#L1288-L1291))
+- **Validation**: ADK checks that the model name starts with `gemini-2` when `support_cfc=True` ([`runners.py:1322-1328`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py#L1322-L1328))
 - **Code executor**: ADK automatically injects `BuiltInCodeExecutor` when CFC is enabled for safe parallel tool execution
 
 **CFC capabilities:**
@@ -45196,7 +45176,7 @@ CFC is designed for complex, multi-step workflows that benefit from intelligent 
 **Learn more:**
 
 - [Gemini Function Calling Guide](https://ai.google.dev/gemini-api/docs/function-calling) - Official documentation on compositional and parallel function calling
-- [ADK Parallel Functions Example](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/contributing/samples/parallel_functions/agent.py) - Working example with async tools
+- [ADK Parallel Functions Example](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/contributing/samples/parallel_functions/agent.py) - Working example with async tools
 - [ADK Performance Guide](https://google.github.io/adk-docs/tools/performance/) - Best practices for parallel-ready tools
 
 ## Summary
@@ -45205,7 +45185,7 @@ In this part, you learned how RunConfig enables sophisticated control over ADK B
 
 ______________________________________________________________________
 
-← [Previous: Part 3 - Event Handling with run_live()](https://google.github.io/adk-docs/streaming/dev-guide/part3/index.md) | [Next: Part 5 - How to Use Audio, Image and Video](https://google.github.io/adk-docs/streaming/dev-guide/part5/index.md) →
+← [Previous: Part 3: Event Handling with run_live()](https://google.github.io/adk-docs/streaming/dev-guide/part3/index.md) | [Next: Part 5: How to Use Audio, Image and Video](https://google.github.io/adk-docs/streaming/dev-guide/part5/index.md) →
 
 # Part 5: How to Use Audio, Image and Video
 
@@ -45227,7 +45207,7 @@ Before calling `send_realtime()`, ensure your audio data is already in the corre
 
 ADK does not perform audio format conversion. Sending audio in incorrect formats will result in poor quality or errors.
 
-Demo implementation: [main.py:153-156](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L153-L156)
+Demo implementation: [main.py:181-184](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L181-L184)
 
 ```python
 audio_blob = types.Blob(
@@ -45264,7 +45244,7 @@ In browser-based applications, capturing microphone audio and sending it to the 
 1. **Format conversion**: Convert Float32Array samples to 16-bit PCM
 1. **WebSocket streaming**: Send PCM chunks to server via WebSocket
 
-Demo implementation: [audio-recorder.js:7-58](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/audio-recorder.js#L7-L58)
+Demo implementation: [audio-recorder.js:7-58](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/audio-recorder.js#L7-L58)
 
 ```javascript
 // Start audio recorder worklet
@@ -45319,7 +45299,7 @@ function convertFloat32ToPCM(inputData) {
 }
 ```
 
-Demo implementation: [pcm-recorder-processor.js:1-19](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/pcm-recorder-processor.js#L1-L19)
+Demo implementation: [pcm-recorder-processor.js:1-18](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/pcm-recorder-processor.js#L1-L18)
 
 ```javascript
 // pcm-recorder-processor.js - AudioWorklet processor for capturing audio
@@ -45343,7 +45323,7 @@ class PCMProcessor extends AudioWorkletProcessor {
 registerProcessor("pcm-recorder-processor", PCMProcessor);
 ```
 
-Demo implementation: [app.js:865-874](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L865-L874)
+Demo implementation: [app.js:977-986](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L977-L986)
 
 ```javascript
 // Audio recorder handler - called for each audio chunk
@@ -45424,7 +45404,7 @@ The Live API wire protocol transmits audio data as base64-encoded strings. The g
 
 The bidi-demo uses a different architectural approach: instead of processing audio on the server, it forwards all events (including audio data) to the WebSocket client and handles audio playback in the browser. This pattern separates concerns—the server focuses on ADK event streaming while the client handles media playback using Web Audio API.
 
-Demo implementation: [main.py:197-205](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L197-L205)
+Demo implementation: [main.py:225-233](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L225-L233)
 
 ```python
 # The bidi-demo forwards all events (including audio) to the WebSocket client
@@ -45442,7 +45422,7 @@ async for event in runner.run_live(
 
 The client-side implementation involves three components: WebSocket message handling, audio player setup with AudioWorklet, and the AudioWorklet processor itself.
 
-Demo implementation: [app.js:544-673](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L544-L673)
+Demo implementation: [app.js:638-688](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L638-L688)
 
 ```javascript
 // 1. WebSocket Message Handler
@@ -45490,7 +45470,7 @@ function base64ToArray(base64) {
 }
 ```
 
-Demo implementation: [audio-player.js:5-24](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/audio-player.js#L5-L24)
+Demo implementation: [audio-player.js:5-24](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/audio-player.js#L5-L24)
 
 ```javascript
 // 2. Audio Player Setup
@@ -45520,7 +45500,7 @@ export async function startAudioPlayerWorklet() {
 }
 ```
 
-Demo implementation: [pcm-player-processor.js:5-76](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/pcm-player-processor.js#L5-L76)
+Demo implementation: [pcm-player-processor.js:5-76](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/pcm-player-processor.js#L5-L76)
 
 ```javascript
 // 3. AudioWorklet Processor (Ring Buffer)
@@ -45621,7 +45601,7 @@ Both images and video in ADK Bidi-streaming are processed as JPEG frames. Rather
 - **Frame rate**: 1 frame per second (1 FPS) recommended maximum
 - **Resolution**: 768x768 pixels (recommended)
 
-Demo implementation: [main.py:174-189](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L174-L189)
+Demo implementation: [main.py:202-217](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L202-L217)
 
 ```python
 # Decode base64 image data
@@ -45657,7 +45637,7 @@ In browser-based applications, capturing images from the user's webcam and sendi
 1. **Base64 encoding**: Convert canvas to base64 data URL for transmission
 1. **WebSocket transmission**: Send as JSON message to server
 
-Demo implementation: [app.js:689-731](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L689-731)
+Demo implementation: [app.js:801-843](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L801-L843)
 
 ```javascript
 // 1. Opening Camera Preview
@@ -45701,7 +45681,7 @@ function closeCameraPreview() {
 }
 ```
 
-Demo implementation: [app.js:734-802](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L734-L802)
+Demo implementation: [app.js:846-914](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L846-L914)
 
 ```javascript
 // 2. Capturing and Sending Image
@@ -45803,10 +45783,10 @@ Understanding these architectures helps you make informed model selection decisi
 
 A fully integrated end-to-end audio model architecture where the model processes audio input and generates audio output directly, without intermediate text conversion. This approach enables more human-like speech with natural prosody.
 
-| Audio Model Architecture | Platform           | Model                                                                                                                                        | Notes              |
-| ------------------------ | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Native Audio             | Gemini Live API    | [gemini-2.5-flash-native-audio-preview-09-2025](https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-live)                          | Publicly available |
-| Native Audio             | Vertex AI Live API | [gemini-live-2.5-flash-preview-native-audio-09-2025](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api) | Public preview     |
+| Audio Model Architecture | Platform           | Model                                                                                                                        | Notes              |
+| ------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Native Audio             | Gemini Live API    | [gemini-2.5-flash-native-audio-preview-12-2025](https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash-live)          | Publicly available |
+| Native Audio             | Vertex AI Live API | [gemini-live-2.5-flash-native-audio](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api) | Public preview     |
 
 **Key Characteristics:**
 
@@ -45826,10 +45806,10 @@ A hybrid architecture that combines native audio input processing with text-to-s
 
 Audio input is processed natively, but responses are first generated as text then converted to speech. This separation provides better reliability and more robust tool execution in production environments.
 
-| Audio Model Architecture | Platform           | Model                                                                                                            | Notes                                   |
-| ------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| Half-Cascade             | Gemini Live API    | [gemini-2.0-flash-live-001](https://ai.google.dev/gemini-api/docs/models#gemini-2.0-flash-live)                  | Will be deprecated on December 09, 2025 |
-| Half-Cascade             | Vertex AI Live API | [gemini-live-2.5-flash](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#2.5-flash) | Private GA, not publicly available      |
+| Audio Model Architecture | Platform           | Model                                                                                                            | Notes                              |
+| ------------------------ | ------------------ | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Half-Cascade             | Gemini Live API    | [gemini-2.0-flash-live-001](https://ai.google.dev/gemini-api/docs/models#gemini-2.0-flash-live)                  | Deprecated on December 09, 2025    |
+| Half-Cascade             | Vertex AI Live API | [gemini-live-2.5-flash](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#2.5-flash) | Private GA, not publicly available |
 
 **Key Characteristics:**
 
@@ -45852,7 +45832,7 @@ from google.adk.agents import Agent
 # Use environment variable with fallback to a sensible default
 agent = Agent(
     name="my_agent",
-    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-09-2025"),
+    model=os.getenv("DEMO_AGENT_MODEL", "gemini-2.5-flash-native-audio-preview-12-2025"),
     tools=[...],
     instruction="..."
 )
@@ -45860,7 +45840,7 @@ agent = Agent(
 
 **Why use environment variables:**
 
-- **Model availability changes**: Models are released, updated, and deprecated regularly (e.g., `gemini-2.0-flash-live-001` will be deprecated on December 09, 2025)
+- **Model availability changes**: Models are released, updated, and deprecated regularly (e.g., `gemini-2.0-flash-live-001` was deprecated on December 09, 2025)
 - **Platform-specific names**: Gemini Live API and Vertex AI Live API use different model naming conventions for the same functionality
 - **Easy switching**: Change models without modifying code by updating the `.env` file
 - **Environment-specific configuration**: Use different models for development, staging, and production
@@ -45869,10 +45849,10 @@ agent = Agent(
 
 ```bash
 # For Gemini Live API (publicly available)
-DEMO_AGENT_MODEL=gemini-2.5-flash-native-audio-preview-09-2025
+DEMO_AGENT_MODEL=gemini-2.5-flash-native-audio-preview-12-2025
 
 # For Vertex AI Live API (if using Vertex AI)
-# DEMO_AGENT_MODEL=gemini-live-2.5-flash-preview-native-audio-09-2025
+# DEMO_AGENT_MODEL=gemini-live-2.5-flash-native-audio
 ```
 
 Environment Variable Loading Order
@@ -45911,7 +45891,7 @@ This is a Python import behavior: when you import a module, its top-level code e
 1. Native Audio for natural conversational AI with advanced features
 1. Half-Cascade for production reliability with tool execution
 1. **Check current availability**: Refer to the model tables above and official documentation
-1. **Configure environment variable**: Set `DEMO_AGENT_MODEL` in your `.env` file (see [`agent.py:11-16`](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16) and [`main.py:86-124`](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/main.py#L86-L124))
+1. **Configure environment variable**: Set `DEMO_AGENT_MODEL` in your `.env` file (see [`agent.py:11-16`](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/google_search_agent/agent.py#L11-L16) and [`main.py:99-152`](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L99-L152))
 
 ### Live API Models Compatibility and Availability
 
@@ -46051,7 +46031,7 @@ In web applications, transcription events need to be forwarded from the server t
 1. **Client side**: Process `inputTranscription` and `outputTranscription` events from the WebSocket
 1. **UI rendering**: Display partial transcriptions with typing indicators, finalize when `finished: true`
 
-Demo implementation: [app.js:438-525](https://github.com/google/adk-samples/blob/4274c70ae3f4c68595f543ee504474747ea9f0da/python/agents/bidi-demo/app/static/js/app.js#L438-L525)
+Demo implementation: [app.js:530-653](https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/static/js/app.js#L530-L653)
 
 ```javascript
 // Handle input transcription (user's spoken words)
@@ -46197,7 +46177,7 @@ The automatic enablement happens in `Runner.run_live()` when both conditions are
 
 Source
 
-[`runners.py:1324-1341`](https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py#L1324-L1341)
+[`runners.py:1359-1374`](https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py#L1359-L1374)
 
 ## Voice Configuration (Speech Config)
 
@@ -46221,7 +46201,7 @@ from google.adk.tools import google_search
 
 # Create a Gemini instance with custom speech config
 custom_llm = Gemini(
-    model="gemini-2.5-flash-native-audio-preview-09-2025",
+    model="gemini-2.5-flash-native-audio-preview-12-2025",
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
             prebuilt_voice_config=types.PrebuiltVoiceConfig(
@@ -46284,7 +46264,7 @@ from google.adk.tools import google_search
 
 # Create Gemini instance with custom voice
 custom_llm = Gemini(
-    model="gemini-2.5-flash-native-audio-preview-09-2025",
+    model="gemini-2.5-flash-native-audio-preview-12-2025",
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
             prebuilt_voice_config=types.PrebuiltVoiceConfig(
@@ -46328,7 +46308,7 @@ from google.adk.agents.run_config import RunConfig
 
 # Customer service agent with a friendly voice
 customer_service_llm = Gemini(
-    model="gemini-2.5-flash-native-audio-preview-09-2025",
+    model="gemini-2.5-flash-native-audio-preview-12-2025",
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
             prebuilt_voice_config=types.PrebuiltVoiceConfig(
@@ -46346,7 +46326,7 @@ customer_service_agent = Agent(
 
 # Technical support agent with a professional voice
 technical_support_llm = Gemini(
-    model="gemini-2.5-flash-native-audio-preview-09-2025",
+    model="gemini-2.5-flash-native-audio-preview-12-2025",
     speech_config=types.SpeechConfig(
         voice_config=types.VoiceConfig(
             prebuilt_voice_config=types.PrebuiltVoiceConfig(
@@ -46365,7 +46345,7 @@ technical_support_agent = Agent(
 # Root agent that coordinates the workflow
 root_agent = Agent(
     name="root_agent",
-    model="gemini-2.5-flash-native-audio-preview-09-2025",
+    model="gemini-2.5-flash-native-audio-preview-12-2025",
     instruction="Coordinate customer service and technical support.",
     sub_agents=[customer_service_agent, technical_support_agent]
 )
@@ -46768,7 +46748,7 @@ These features are **model-specific** and have platform implications:
 
 **Gemini Live API:**
 
-- ✅ Supported on `gemini-2.5-flash-native-audio-preview-09-2025` (native audio model)
+- ✅ Supported on `gemini-2.5-flash-native-audio-preview-12-2025` (native audio model)
 - ❌ Not supported on `gemini-live-2.5-flash-preview` (half-cascade model)
 
 **Vertex AI Live API:**
@@ -46817,7 +46797,7 @@ In this part, you learned how to implement multimodal features in ADK Bidi-strea
 
 **Congratulations!** You've completed the ADK Bidi-streaming Developer Guide. You now have a comprehensive understanding of how to build production-ready real-time streaming AI applications with Google's Agent Development Kit.
 
-← [Previous: Part 4 - Understanding RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/index.md)
+← [Previous: Part 4: Understanding RunConfig](https://google.github.io/adk-docs/streaming/dev-guide/part4/index.md)
 
 # Understanding Google Search Grounding
 

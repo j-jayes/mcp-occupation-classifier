@@ -7384,7 +7384,7 @@
 </table>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p><a href="https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/agents/run_config.py"><code>run_config.py</code></a></p>
+<p><a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/run_config.py"><code>run_config.py</code></a></p>
 </div>
 <p><strong>Platform Support Legend:</strong></p>
 <ul>
@@ -7605,7 +7605,7 @@
 <li>❌ Video input</li>
 </ul>
 <h2 id="understanding-live-api-connections-and-sessions">Understanding Live API Connections and Sessions<a class="headerlink" href="#understanding-live-api-connections-and-sessions" title="Permanent link">&para;</a></h2>
-<p>When building ADK Bidi-streaming applications, it's essential to understand how ADK manages the communication layer between itself and the Live API backend. This section explores the fundamental distinction between <strong>connections</strong> (the WebSocket transport links that ADK establishes to Live API) and <strong>sessions</strong> (the logical conversation contexts maintained by Live API). Unlike traditional request-response APIs, the Bidi-streaming architecture introduces unique constraints: connection timeouts, session duration limits that vary by modality (audio-only vs audio+video), finite context windows, and concurrent session quotas that differ between Gemini Live API and Vertex AI Live API.</p>
+<p>When building ADK Bidi-streaming applications, it's essential to understand how ADK manages the communication layer between itself and the  Live API backend. This section explores the fundamental distinction between <strong>connections</strong> (the WebSocket transport links that ADK establishes to Live API) and <strong>sessions</strong> (the logical conversation contexts maintained by Live API). Unlike traditional request-response APIs, the Bidi-streaming architecture introduces unique constraints: connection timeouts, session duration limits that vary by modality (audio-only vs audio+video), finite context windows, and concurrent session quotas that differ between Gemini Live API and Vertex AI Live API.</p>
 <h3 id="adk-session-vs-live-api-session">ADK <code>Session</code> vs Live API Session<a class="headerlink" href="#adk-session-vs-live-api-session" title="Permanent link">&para;</a></h3>
 <p>Understanding the distinction between <strong>ADK <code>Session</code></strong> and <strong>Live API session</strong> is crucial for building reliable streaming applications with ADK Bidi-streaming.</p>
 <p><strong>ADK <code>Session</code></strong> (managed by SessionService):
@@ -7864,7 +7864,7 @@
 <p>For details on which events are saved to the ADK <code>Session</code> versus which are only yielded during streaming, see <a href="../part3/#events-saved-to-adk-session">Part 3: Events Saved to ADK Session</a>.</p>
 </div>
 <h2 id="live-api-context-window-compression">Live API Context Window Compression<a class="headerlink" href="#live-api-context-window-compression" title="Permanent link">&para;</a></h2>
-<p><strong>Problem:</strong> Live API sessions face two critical constraints that limit conversation duration. First, <strong>session duration limits</strong> impose hard time caps: without compression, Gemini Live API limits audio-only sessions to 15 minutes and audio+video sessions to just 2 minutes, while Vertex AI limits all sessions to 10 minutes. Second, <strong>context window limits</strong> restrict conversation length: models have finite token capacities (128k tokens for <code>gemini-2.5-flash-native-audio-preview-09-2025</code>, 32k-128k for Vertex AI models). Long conversations—especially extended customer support sessions, tutoring interactions, or multi-hour voice dialogues—will hit either the time limit or the token limit, causing the session to terminate or lose critical conversation history.</p>
+<p><strong>Problem:</strong> Live API sessions face two critical constraints that limit conversation duration. First, <strong>session duration limits</strong> impose hard time caps: without compression, Gemini Live API limits audio-only sessions to 15 minutes and audio+video sessions to just 2 minutes, while Vertex AI limits all sessions to 10 minutes. Second, <strong>context window limits</strong> restrict conversation length: models have finite token capacities (128k tokens for <code>gemini-2.5-flash-native-audio-preview-12-2025</code>, 32k-128k for Vertex AI models). Long conversations—especially extended customer support sessions, tutoring interactions, or multi-hour voice dialogues—will hit either the time limit or the token limit, causing the session to terminate or lose critical conversation history.</p>
 <p><strong>Solution:</strong> <a href="https://ai.google.dev/gemini-api/docs/live-session#context-window-compression">Context window compression</a> solves both constraints simultaneously. It uses a sliding-window approach to automatically compress or summarize earlier conversation history when the token count reaches a configured threshold. The Live API preserves recent context in full detail while compressing older portions. <strong>Critically, enabling context window compression extends session duration to unlimited time</strong>, removing the session duration limits (15 minutes for audio-only / 2 minutes for audio+video on Gemini Live API; 10 minutes for all sessions on Vertex AI) while also preventing token limit exhaustion. However, there is a trade-off: as the feature summarizes earlier conversation history rather than retaining it all, the detail of past context will be gradually lost over time. The model will have access to compressed summaries of older exchanges, not the full verbatim history.</p>
 <h3 id="platform-behavior-and-official-limits">Platform Behavior and Official Limits<a class="headerlink" href="#platform-behavior-and-official-limits" title="Permanent link">&para;</a></h3>
 <p>Session duration management and context window compression are <strong>Live API platform features</strong>. ADK configures these features via RunConfig and passes the configuration to the Live API, but the actual enforcement and implementation are handled by the Gemini/Vertex AI Live API backends.</p>
@@ -7877,7 +7877,7 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># For gemini-2.5-flash-native-audio-preview-09-2025 (128k context window)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># For gemini-2.5-flash-native-audio-preview-12-2025 (128k context window)</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">context_window_compression</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ContextWindowCompressionConfig</span><span class="p">(</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="n">trigger_tokens</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>  <span class="c1"># Start compression at ~78% of 128k context</span>
@@ -8342,9 +8342,9 @@
 <p><strong>Model requirements:</strong></p>
 <p>ADK validates CFC compatibility at session initialization and will raise an error if the model is unsupported:</p>
 <ul>
-<li>✅ <strong>Supported</strong>: <code>gemini-2.x</code> models (e.g., <code>gemini-2.5-flash-native-audio-preview-09-2025</code>)</li>
+<li>✅ <strong>Supported</strong>: <code>gemini-2.x</code> models (e.g., <code>gemini-2.5-flash-native-audio-preview-12-2025</code>)</li>
 <li>❌ <strong>Not supported</strong>: <code>gemini-1.5-x</code> models</li>
-<li><strong>Validation</strong>: ADK checks that the model name starts with <code>gemini-2</code> when <code>support_cfc=True</code> (<a href="https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/src/google/adk/runners.py#L1288-L1291"><code>runners.py:1288-1291</code></a>)</li>
+<li><strong>Validation</strong>: ADK checks that the model name starts with <code>gemini-2</code> when <code>support_cfc=True</code> (<a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py#L1322-L1328"><code>runners.py:1322-1328</code></a>)</li>
 <li><strong>Code executor</strong>: ADK automatically injects <code>BuiltInCodeExecutor</code> when CFC is enabled for safe parallel tool execution</li>
 </ul>
 <p><strong>CFC capabilities:</strong></p>
@@ -8365,13 +8365,13 @@
 <p><strong>Learn more:</strong></p>
 <ul>
 <li><a href="https://ai.google.dev/gemini-api/docs/function-calling">Gemini Function Calling Guide</a> - Official documentation on compositional and parallel function calling</li>
-<li><a href="https://github.com/google/adk-python/blob/960b206752918d13f127a9d6ed8d21d34bcbc7fa/contributing/samples/parallel_functions/agent.py">ADK Parallel Functions Example</a> - Working example with async tools</li>
+<li><a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/contributing/samples/parallel_functions/agent.py">ADK Parallel Functions Example</a> - Working example with async tools</li>
 <li><a href="https://google.github.io/adk-docs/tools/performance/">ADK Performance Guide</a> - Best practices for parallel-ready tools</li>
 </ul>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>In this part, you learned how RunConfig enables sophisticated control over ADK Bidi-streaming sessions through declarative configuration. We covered response modalities and their constraints, explored the differences between BIDI and SSE streaming modes, examined the relationship between ADK Sessions and Live API sessions, and learned how to manage session duration with session resumption and context window compression. You now understand how to handle concurrent session quotas, implement architectural patterns for quota management, configure cost controls through <code>max_llm_calls</code> and audio persistence options. With RunConfig mastery, you can build production-ready streaming applications that balance feature richness with operational constraints—enabling extended conversations, managing platform limits, controlling costs effectively, and monitoring resource consumption.</p>
 <hr />
-<p>← <a href="../part3/">Previous: Part 3 - Event Handling with run_live()</a> | <a href="../part5/">Next: Part 5 - How to Use Audio, Image and Video</a> →</p>
+<p>← <a href="../part3/">Previous: Part 3: Event Handling with run_live()</a> | <a href="../part5/">Next: Part 5: How to Use Audio, Image and Video</a> →</p>
 
 
 
