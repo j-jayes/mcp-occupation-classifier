@@ -6631,13 +6631,13 @@ package is present as part of <code>google-adk-dev</code>.</p>
 </span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">            </span><span class="nt">&lt;groupId&gt;</span>com.google.adk<span class="nt">&lt;/groupId&gt;</span>
 </span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>google-adk<span class="nt">&lt;/artifactId&gt;</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>0.3.0<span class="nt">&lt;/version&gt;</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>0.5.0<span class="nt">&lt;/version&gt;</span>
 </span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
 </span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">        </span><span class="cm">&lt;!-- The ADK dev web UI to debug your agent --&gt;</span>
 </span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
 </span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">            </span><span class="nt">&lt;groupId&gt;</span>com.google.adk<span class="nt">&lt;/groupId&gt;</span>
 </span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>google-adk-dev<span class="nt">&lt;/artifactId&gt;</span>
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>0.3.0<span class="nt">&lt;/version&gt;</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>0.5.0<span class="nt">&lt;/version&gt;</span>
 </span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
 </span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">    </span><span class="nt">&lt;/dependencies&gt;</span>
 </span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>
@@ -6646,8 +6646,8 @@ package is present as part of <code>google-adk-dev</code>.</p>
 <p>Here's a <a href="https://github.com/google/adk-docs/tree/main/examples/java/cloud-run/pom.xml">complete pom.xml</a> file for reference.</p>
 <p>If you are using gradle, add the dependency to your build.gradle:</p>
 <div class="language-text highlight"><span class="filename">build.gradle</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>dependencies {
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    implementation &#39;com.google.adk:google-adk:0.2.0&#39;
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    implementation &#39;com.google.adk:google-adk-dev:0.2.0&#39;
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    implementation &#39;com.google.adk:google-adk:0.5.0&#39;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    implementation &#39;com.google.adk:google-adk-dev:0.5.0&#39;
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>}
 </span></code></pre></div>
 <p>You should also configure Gradle to pass <code>-parameters</code> to <code>javac</code>. (Alternatively, use <code>@Schema(name = "...")</code>).</p>
