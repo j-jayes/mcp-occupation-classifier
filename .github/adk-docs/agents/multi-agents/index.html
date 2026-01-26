@@ -2314,6 +2314,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2540,6 +2544,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tools/google-cloud/data-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tools/google-cloud/gke-code-executor/" class="md-nav__link">
         
   
@@ -2576,6 +2608,34 @@
     
   
     MCP Toolbox for Databases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/google-cloud/pubsub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub/Sub
   
 
     
@@ -2744,6 +2804,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -2802,6 +2870,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tools/third-party/asana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Asana
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tools/third-party/atlassian/" class="md-nav__link">
         
   
@@ -2810,6 +2906,62 @@
     
   
     Atlassian
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/third-party/cartesia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cartesia
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/third-party/elevenlabs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ElevenLabs
   
 
     
@@ -2978,6 +3130,34 @@
     
   
     Notion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/third-party/postman/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Postman
   
 
     
@@ -4962,6 +5142,10 @@
     
       
         
+          
+        
+      
+        
       
         
       
@@ -4978,8 +5162,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_4_3_2" id="__nav_4_3_2_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sessions/session/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -4993,8 +5178,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3_2" id="__nav_4_3_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3_2">
@@ -5008,20 +5199,22 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../../sessions/session/" class="md-nav__link">
+      <a href="../../sessions/session/rewind/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Overview
+    Rewind sessions
   
 
     
@@ -5042,14 +5235,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sessions/rewind/" class="md-nav__link">
+      <a href="../../sessions/session/migrate/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Rewind sessions
+    Migrate sessions
   
 
     
@@ -7643,7 +7836,7 @@
 <h3 id="interaction-communication-mechanisms">1.3. Interaction &amp; Communication Mechanisms<a class="headerlink" href="#interaction-communication-mechanisms" title="Permanent link">&para;</a></h3>
 <p>Agents within a system often need to exchange data or trigger actions in one another. ADK facilitates this through:</p>
 <h4 id="a-shared-session-state-sessionstate">a) Shared Session State (<code>session.state</code>)<a class="headerlink" href="#a-shared-session-state-sessionstate" title="Permanent link">&para;</a></h4>
-<p>The most fundamental way for agents operating within the same invocation (and thus sharing the same <a href="../../sessions/session/"><code>Session</code></a> object via the <code>InvocationContext</code>) to communicate passively.</p>
+<p>The most fundamental way for agents operating within the same invocation (and thus sharing the same <a href="/adk-docs/sessions/session/"><code>Session</code></a> object via the <code>InvocationContext</code>) to communicate passively.</p>
 <ul>
 <li><strong>Mechanism:</strong> One agent (or its tool/callback) writes a value (<code>context.state['data_key'] = processed_data</code>), and a subsequent agent reads it (<code>data = context.state.get('data_key')</code>). State changes are tracked via <a href="../../callbacks/"><code>CallbackContext</code></a>.</li>
 <li><strong>Convenience:</strong> The <code>output_key</code> property on <a href="../llm-agents/"><code>LlmAgent</code></a> automatically saves the agent's final response text (or structured output) to the specified state key.</li>
