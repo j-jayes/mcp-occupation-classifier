@@ -5,6 +5,7 @@
 - [Changelog](https://gofastmcp.com/changelog.md)
 - [Bearer Token Authentication](https://gofastmcp.com/clients/auth/bearer.md): Authenticate your FastMCP client with a Bearer token.
 - [OAuth Authentication](https://gofastmcp.com/clients/auth/oauth.md): Authenticate your FastMCP client via OAuth 2.1.
+- [Client CLI](https://gofastmcp.com/clients/cli.md): Query and invoke MCP server tools directly from the terminal with fastmcp list and fastmcp call.
 - [The FastMCP Client](https://gofastmcp.com/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
 - [User Elicitation](https://gofastmcp.com/clients/elicitation.md): Handle server requests for structured user input.
 - [Server Logging](https://gofastmcp.com/clients/logging.md): Receive and handle log messages from MCP servers.
@@ -45,6 +46,7 @@
 - [Gemini CLI 🤝 FastMCP](https://gofastmcp.com/integrations/gemini-cli.md): Install and use FastMCP servers in Gemini CLI
 - [GitHub OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/github.md): Secure your FastMCP server with GitHub OAuth
 - [Google OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/google.md): Secure your FastMCP server with Google OAuth
+- [Goose 🤝 FastMCP](https://gofastmcp.com/integrations/goose.md): Install and use FastMCP servers in Goose
 - [MCP JSON Configuration 🤝 FastMCP](https://gofastmcp.com/integrations/mcp-json-configuration.md): Generate standard MCP configuration files for any compatible client
 - [OCI IAM OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/oci.md): Secure your FastMCP server with OCI IAM OAuth
 - [OpenAI API 🤝 FastMCP](https://gofastmcp.com/integrations/openai.md): Connect FastMCP servers to the OpenAI API

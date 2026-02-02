@@ -20,6 +20,7 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 - [Build your agent with ADK](https://google.github.io/adk-docs/tutorials/index.md)
 - [Agent team](https://google.github.io/adk-docs/tutorials/agent-team/index.md)
 - [Coding with AI](https://google.github.io/adk-docs/tutorials/coding-with-ai/index.md)
+- [Visual Builder](https://google.github.io/adk-docs/visual-builder/index.md)
 - [Agents](https://google.github.io/adk-docs/agents/index.md)
 - [Agent Config](https://google.github.io/adk-docs/agents/config/index.md)
 - [Custom agents](https://google.github.io/adk-docs/agents/custom-agents/index.md)
@@ -63,11 +64,14 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 - [Asana](https://google.github.io/adk-docs/tools/third-party/asana/index.md)
 - [Atlassian](https://google.github.io/adk-docs/tools/third-party/atlassian/index.md)
 - [Cartesia](https://google.github.io/adk-docs/tools/third-party/cartesia/index.md)
+- [Chroma](https://google.github.io/adk-docs/tools/third-party/chroma/index.md)
+- [Daytona](https://google.github.io/adk-docs/tools/third-party/daytona/index.md)
 - [ElevenLabs](https://google.github.io/adk-docs/tools/third-party/elevenlabs/index.md)
 - [GitHub](https://google.github.io/adk-docs/tools/third-party/github/index.md)
 - [GitLab](https://google.github.io/adk-docs/tools/third-party/gitlab/index.md)
 - [Hugging Face](https://google.github.io/adk-docs/tools/third-party/hugging-face/index.md)
 - [Linear](https://google.github.io/adk-docs/tools/third-party/linear/index.md)
+- [MongoDB](https://google.github.io/adk-docs/tools/third-party/mongodb/index.md)
 - [n8n](https://google.github.io/adk-docs/tools/third-party/n8n/index.md)
 - [Notion](https://google.github.io/adk-docs/tools/third-party/notion/index.md)
 - [PayPal](https://google.github.io/adk-docs/tools/third-party/paypal/index.md)
@@ -108,6 +112,9 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 - [Monocle](https://google.github.io/adk-docs/observability/monocle/index.md)
 - [Phoenix](https://google.github.io/adk-docs/observability/phoenix/index.md)
 - [W&B Weave](https://google.github.io/adk-docs/observability/weave/index.md)
+- [Why Evaluate Agents](https://google.github.io/adk-docs/evaluate/index.md)
+- [Criteria](https://google.github.io/adk-docs/evaluate/criteria/index.md)
+- [User Simulation](https://google.github.io/adk-docs/evaluate/user-sim/index.md)
 - [Safety and Security for AI Agents](https://google.github.io/adk-docs/safety/index.md)
 
 ## Components
@@ -149,6 +156,9 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 
 ## Reference
 
+- [Release Notes](https://google.github.io/adk-docs/release-notes/index.md)
 - [API Reference](https://google.github.io/adk-docs/api-reference/index.md)
 - [REST API](https://google.github.io/adk-docs/api-reference/rest/index.md)
+- [Community Resources](https://google.github.io/adk-docs/community/index.md)
+- [Contributing Guide](https://google.github.io/adk-docs/contributing-guide/index.md)
 
