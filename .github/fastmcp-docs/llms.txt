@@ -4,10 +4,12 @@
 
 - [Changelog](https://gofastmcp.com/changelog.md)
 - [Bearer Token Authentication](https://gofastmcp.com/clients/auth/bearer.md): Authenticate your FastMCP client with a Bearer token.
+- [CIMD Authentication](https://gofastmcp.com/clients/auth/cimd.md): Use Client ID Metadata Documents for verifiable, domain-based client identity.
 - [OAuth Authentication](https://gofastmcp.com/clients/auth/oauth.md): Authenticate your FastMCP client via OAuth 2.1.
 - [Client CLI](https://gofastmcp.com/clients/cli.md): Query and invoke MCP server tools directly from the terminal with fastmcp list and fastmcp call.
 - [The FastMCP Client](https://gofastmcp.com/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
 - [User Elicitation](https://gofastmcp.com/clients/elicitation.md): Handle server requests for structured user input.
+- [Generate CLI](https://gofastmcp.com/clients/generate-cli.md): Turn any MCP server into a standalone, typed command-line tool.
 - [Server Logging](https://gofastmcp.com/clients/logging.md): Receive and handle log messages from MCP servers.
 - [Notifications](https://gofastmcp.com/clients/notifications.md): Handle server-sent notifications for list changes and other events.
 - [Progress Monitoring](https://gofastmcp.com/clients/progress.md): Handle progress notifications from long-running server operations.
@@ -59,14 +61,20 @@
 - [Contrib Modules](https://gofastmcp.com/patterns/contrib.md): Community-contributed modules extending FastMCP
 - [Testing your FastMCP Server](https://gofastmcp.com/patterns/testing.md): How to test your FastMCP server.
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-cli-__init__.md)
+- [auth](https://gofastmcp.com/python-sdk/fastmcp-cli-auth.md)
+- [cimd](https://gofastmcp.com/python-sdk/fastmcp-cli-cimd.md)
 - [cli](https://gofastmcp.com/python-sdk/fastmcp-cli-cli.md)
+- [discovery](https://gofastmcp.com/python-sdk/fastmcp-cli-discovery.md)
+- [generate](https://gofastmcp.com/python-sdk/fastmcp-cli-generate.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-cli-install-__init__.md)
 - [claude_code](https://gofastmcp.com/python-sdk/fastmcp-cli-install-claude_code.md)
 - [claude_desktop](https://gofastmcp.com/python-sdk/fastmcp-cli-install-claude_desktop.md)
 - [cursor](https://gofastmcp.com/python-sdk/fastmcp-cli-install-cursor.md)
 - [gemini_cli](https://gofastmcp.com/python-sdk/fastmcp-cli-install-gemini_cli.md)
+- [goose](https://gofastmcp.com/python-sdk/fastmcp-cli-install-goose.md)
 - [mcp_json](https://gofastmcp.com/python-sdk/fastmcp-cli-install-mcp_json.md)
 - [shared](https://gofastmcp.com/python-sdk/fastmcp-cli-install-shared.md)
+- [stdio](https://gofastmcp.com/python-sdk/fastmcp-cli-install-stdio.md)
 - [run](https://gofastmcp.com/python-sdk/fastmcp-cli-run.md)
 - [tasks](https://gofastmcp.com/python-sdk/fastmcp-cli-tasks.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-client-__init__.md)
@@ -112,9 +120,11 @@
 - [template](https://gofastmcp.com/python-sdk/fastmcp-resources-template.md)
 - [types](https://gofastmcp.com/python-sdk/fastmcp-resources-types.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-__init__.md)
+- [apps](https://gofastmcp.com/python-sdk/fastmcp-server-apps.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-auth-__init__.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-server-auth-auth.md)
 - [authorization](https://gofastmcp.com/python-sdk/fastmcp-server-auth-authorization.md)
+- [cimd](https://gofastmcp.com/python-sdk/fastmcp-server-auth-cimd.md)
 - [jwt_issuer](https://gofastmcp.com/python-sdk/fastmcp-server-auth-jwt_issuer.md)
 - [middleware](https://gofastmcp.com/python-sdk/fastmcp-server-auth-middleware.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-auth-oauth_proxy-__init__.md)
@@ -140,6 +150,7 @@
 - [supabase](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-supabase.md)
 - [workos](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-workos.md)
 - [redirect_validation](https://gofastmcp.com/python-sdk/fastmcp-server-auth-redirect_validation.md)
+- [ssrf](https://gofastmcp.com/python-sdk/fastmcp-server-auth-ssrf.md)
 - [context](https://gofastmcp.com/python-sdk/fastmcp-server-context.md)
 - [dependencies](https://gofastmcp.com/python-sdk/fastmcp-server-dependencies.md)
 - [elicitation](https://gofastmcp.com/python-sdk/fastmcp-server-elicitation.md)
@@ -155,6 +166,7 @@
 - [middleware](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-middleware.md)
 - [ping](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-ping.md)
 - [rate_limiting](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-rate_limiting.md)
+- [response_limiting](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-response_limiting.md)
 - [timing](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-timing.md)
 - [tool_injection](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-tool_injection.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-__init__.md)
@@ -196,6 +208,7 @@
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-__init__.md)
 - [capabilities](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-capabilities.md)
 - [config](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-config.md)
+- [elicitation](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-elicitation.md)
 - [handlers](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-handlers.md)
 - [keys](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-keys.md)
 - [requests](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-requests.md)
