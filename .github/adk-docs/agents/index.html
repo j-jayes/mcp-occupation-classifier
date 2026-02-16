@@ -552,6 +552,8 @@
       
         
       
+        
+      
     
     
     
@@ -2195,6 +2197,73 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills for Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills for Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2824,6 +2893,10 @@
     
       
         
+          
+        
+      
+        
       
     
     
@@ -2838,8 +2911,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../observability/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2853,8 +2927,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_3">
@@ -2866,6 +2946,8 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -5401,10 +5483,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-next" class="md-nav__link">
+  <a href="#extend-agent-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's Next?
+        Extend Agent Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
       
     </span>
   </a>
@@ -5572,8 +5665,50 @@
 <li><strong>Custom Agents</strong> provide specialized capabilities or rules needed for unique integrations.</li>
 </ul>
 <p>Understanding these core types is the first step toward building sophisticated, capable AI applications with ADK.</p>
-<hr />
-<h2 id="whats-next">What's Next?<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
+<h2 id="extend-agent-capabilities">Extend Agent Capabilities<a class="headerlink" href="#extend-agent-capabilities" title="Permanent link">&para;</a></h2>
+<p>Beyond the core agent types, ADK allows you to significantly expand what your
+agents can do through several key mechanisms:</p>
+<ul>
+<li>
+<p><a href="/adk-docs/agents/models/"><strong>AI Models</strong></a>:
+    Swap the underlying intelligence of your agents by integrating with
+    different generative AI models from Google and other providers.</p>
+</li>
+<li>
+<p><a href="/adk-docs/artifacts/"><strong>Artifacts</strong></a>:
+    Enable agents to create and manage persistent outputs like files, code, or
+    documents that exist beyond the conversation lifecycle.</p>
+</li>
+<li>
+<p><a href="/adk-docs/integrations/"><strong>Pre-built tools and integrations</strong></a>:
+    Equip your agents with a wide array tools, plugins, and other integrations
+    to interact with the world, including web sites, MCP tools, applications,
+    databases, programming interfaces, and more.</p>
+</li>
+<li>
+<p><a href="/adk-docs/tools-custom/"><strong>Custom tools</strong></a>:
+    Create your own, task-specific tools for solving specific problems with
+    precision and control.</p>
+</li>
+<li>
+<p><a href="/adk-docs/plugins/"><strong>Plugins</strong></a>:
+    Integrate complex, pre-packaged behaviors and third-party services directly
+    into your agent's workflow.</p>
+</li>
+<li>
+<p><a href="/adk-docs/skills/"><strong>Skills</strong></a>:
+    Use prebuilt or custom <a href="https://agentskills.io/">Agent Skills</a> to extend
+    agent capabilities in a way that works efficiently inside AI context window
+    limits.</p>
+</li>
+<li>
+<p><a href="/adk-docs/callbacks/"><strong>Callbacks</strong></a>:
+    Hook into specific events during an agent's execution lifecycle to add
+    logging, monitoring, or custom side-effects without altering core agent
+    logic.</p>
+</li>
+</ul>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>Now that you have an overview of the different agent types available in ADK, dive deeper into how they work and how to use them effectively:</p>
 <ul>
 <li><a href="llm-agents/"><strong>LLM Agents:</strong></a> Explore how to configure agents powered by large language models, including setting instructions, providing tools, and enabling advanced features like planning and code execution.</li>
@@ -5661,7 +5796,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright Google 2025&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
+      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
     </div>
   
   

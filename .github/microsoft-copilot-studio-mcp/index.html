@@ -111,6 +111,8 @@
 		<meta name="previous_tlsh_hash" content="FFFC914144040922F7C394DF71DEFB1410F090CD19A1A2CA48367AB2E8453DB2219D2F66DF1B920022DF531102502501A5D8A7B860E6B3A0586D7C59823673E93FDD2FBBF4" />
 	
 		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
+	
+		<meta name="markdown_url" content="https://learn.microsoft.com/en-us/microsoft-copilot-studio/agent-extend-action-mcp?accept=text/markdown" />
 	 
 		<meta name="cmProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/46e3c7c4-fe77-4a6e-b40a-44c569819fa5" data-source="generated" />
 	
@@ -123,7 +125,7 @@
 
 			<!-- assets and js globals -->
 			
-			<link rel="stylesheet" href="/static/assets/0.4.03315.7455-a02a2ade/styles/site-ltr.css" />
+			<link rel="stylesheet" href="/static/assets/0.4.03328.7487-9240e9e5/styles/site-ltr.css" />
 			
 			<link rel="preconnect" href="//mscom.demdex.net" crossorigin />
 						<link rel="dns-prefetch" href="//target.microsoft.com" />
@@ -210,7 +212,7 @@
 	</script>
 
 			<!-- base scripts, msdocs global should be before this -->
-			<script src="/static/assets/0.4.03315.7455-a02a2ade/scripts/en-us/index-docs.js"></script>
+			<script src="/static/assets/0.4.03328.7487-9240e9e5/scripts/en-us/index-docs.js"></script>
 			
 
 			<!-- json-ld -->
@@ -346,7 +348,7 @@
 				>
 					<div
 						id="ms--collapsible-toc-header"
-						class="display-flex justify-content-flex-end margin-bottom-xxs"
+						class="display-flex flex-direction-row-reverse justify-content-space-between align-items-center margin-bottom-xxs"
 					>
 						<button
 							type="button"
@@ -360,6 +362,7 @@
 								<span class="docon docon-panel-left-contract"></span>
 							</span>
 						</button>
+						<div id="ms--collapsible-toc-moniker-slot" class="flex-grow-1"></div>
 					</div>
 				</nav>
 			</div>
@@ -647,20 +650,39 @@
 			  
 	 
 		<hr class="margin-block-xxs" />
-		<button
-			class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
-			type="button"
-			data-bi-name="print"
-			data-page-action-item="overflow-all"
-			data-popover-close
-			data-print-page
-			data-check-hidden="true"
-		>
-			<span class="icon color-primary" aria-hidden="true">
-				<span class="docon docon-print"></span>
-			</span>
-			<span>Print</span>
-		</button>
+		
+				<button
+					class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+					type="button"
+					data-bi-name="copy-markdown"
+					data-page-action-item="overflow-all"
+					data-copy-markdown
+					data-copy-state="idle"
+					data-check-hidden="true"
+				>
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader" hidden></span>
+						<span data-show-when="success" class="docon docon-check-mark" hidden></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button
+					class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+					type="button"
+					data-bi-name="print"
+					data-page-action-item="overflow-all"
+					data-popover-close
+					data-print-page
+					data-check-hidden="true"
+				>
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
 	
 				</div>
 			</details>

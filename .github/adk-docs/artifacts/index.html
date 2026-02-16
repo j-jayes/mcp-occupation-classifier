@@ -550,6 +550,8 @@
       
         
       
+        
+      
     
     
     
@@ -2191,6 +2193,73 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills for Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills for Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2820,6 +2889,10 @@
     
       
         
+          
+        
+      
+        
       
     
     
@@ -2834,8 +2907,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../observability/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2849,8 +2923,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_3">
@@ -2862,6 +2942,8 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -5892,19 +5974,20 @@ The chosen service implementation handles versioning automatically when you save
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">// Example: Configuring the Runner with an Artifact Service</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">myAgent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;artifact_user_agent&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">});</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">artifactService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="p">();</span><span class="w"> </span><span class="c1">// Choose an implementation</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="p">();</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="p">({</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="nx">agent</span><span class="o">:</span><span class="w"> </span><span class="kt">myAgent</span><span class="p">,</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my_artifact_app&quot;</span><span class="p">,</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">sessionService</span><span class="o">:</span><span class="w"> </span><span class="kt">sessionService</span><span class="p">,</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nx">artifactService</span><span class="o">:</span><span class="w"> </span><span class="kt">artifactService</span><span class="p">,</span><span class="w"> </span><span class="c1">// Provide the service instance here</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">});</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1">// Now, contexts within runs managed by this runner can use artifact methods</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">InMemorySessionService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">// Example: Configuring the Runner with an Artifact Service</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">myAgent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;artifact_user_agent&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">});</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">artifactService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="p">();</span><span class="w"> </span><span class="c1">// Choose an implementation</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemorySessionService</span><span class="p">();</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="kd">const</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="p">({</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nx">agent</span><span class="o">:</span><span class="w"> </span><span class="kt">myAgent</span><span class="p">,</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my_artifact_app&quot;</span><span class="p">,</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nx">sessionService</span><span class="o">:</span><span class="w"> </span><span class="kt">sessionService</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nx">artifactService</span><span class="o">:</span><span class="w"> </span><span class="kt">artifactService</span><span class="p">,</span><span class="w"> </span><span class="c1">// Provide the service instance here</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">});</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1">// Now, contexts within runs managed by this runner can use artifact methods</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -6219,7 +6302,7 @@ The chosen service implementation handles versioning automatically when you save
 If no <code>artifact_service</code> is configured in the <code>InvocationContext</code> (which happens if it's not passed to the <code>Runner</code>), calling <code>save_artifact</code>, <code>load_artifact</code>, or <code>list_artifacts</code> on the context objects will raise a <code>ValueError</code>.</p>
 </div>
 <div class="tabbed-block">
-<p><div class="language-typescript highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="p">,</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+<p><div class="language-typescript highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="p">,</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="p">,</span><span class="w"> </span><span class="nx">InMemorySessionService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c1">// Your agent definition</span>
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;my_agent&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">});</span>
@@ -6231,7 +6314,7 @@ If no <code>artifact_service</code> is configured in the <code>InvocationContext
 </span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">runner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">InMemoryRunner</span><span class="p">({</span>
 </span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span><span class="nx">agent</span><span class="o">:</span><span class="w"> </span><span class="kt">agent</span><span class="p">,</span>
 </span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="nx">appName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;artifact_app&quot;</span><span class="p">,</span>
-</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">    </span><span class="nx">sessionService</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">InMemoryArtifactService</span><span class="p">(),</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">    </span><span class="nx">sessionService</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">InMemorySessionService</span><span class="p">(),</span>
 </span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">    </span><span class="nx">artifactService</span><span class="o">:</span><span class="w"> </span><span class="kt">artifactService</span><span class="p">,</span><span class="w"> </span><span class="c1">// Service must be provided here</span>
 </span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="p">});</span>
 </span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1">// If no artifactService is configured, calling artifact methods on context objects will throw an error.</span>
@@ -7131,7 +7214,7 @@ In Java, if an <code>ArtifactService</code> instance is not available (e.g., <co
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright Google 2025&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
+      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
     </div>
   
   

@@ -554,6 +554,8 @@
       
         
       
+        
+      
     
     
     
@@ -2197,6 +2199,73 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills for Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills for Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2826,6 +2895,10 @@
     
       
         
+          
+        
+      
+        
       
     
     
@@ -2840,8 +2913,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../observability/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2855,8 +2929,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_3">
@@ -2868,6 +2948,8 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -5464,459 +5546,641 @@
 <h1 id="tools-and-integrations-for-agents">Tools and Integrations for Agents<a class="headerlink" href="#tools-and-integrations-for-agents" title="Permanent link">&para;</a></h1>
 <p>Check out the following pre-built tools and integrations that you can use with
 ADK agents. For information on building custom tools, see
-<a href="/adk-docs/tools-custom/">Custom Tools</a>.</p>
+<a href="/adk-docs/tools-custom/">Custom Tools</a>. For information on submitting
+integrations to the catalog, see the
+<a href="https://github.com/google/adk-docs/blob/main/CONTRIBUTING.md#integrations">Contribution Guide for Integrations</a>.</p>
+<div class="catalog-filter-bar" id="catalog-integrations-filters">
+<span class="catalog-filter-label">Filter:</span>
+<button class="catalog-filter-btn active" data-filter="all">All</button>
+<button class="catalog-filter-btn" data-filter="code">Code</button>
+<button class="catalog-filter-btn" data-filter="connectors">Connectors</button>
+<button class="catalog-filter-btn" data-filter="data">Data</button>
+<button class="catalog-filter-btn" data-filter="google">Google</button>
+<button class="catalog-filter-btn" data-filter="mcp">MCP</button>
+<button class="catalog-filter-btn" data-filter="observability">Observability</button>
+<button class="catalog-filter-btn" data-filter="search">Search</button>
+</div>
 <div class="tool-card-grid">
 
-  <a href="/adk-docs/integrations/ag-ui/" class="tool-card">
+<a href="/adk-docs/integrations/ag-ui/" class="tool-card" data-tags="">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/ag-ui.png" alt="AG-UI">
+        <img src="/adk-docs/integrations/assets/ag-ui.png" alt="AG-UI">
     </div>
     <div class="tool-card-content">
-      <h3>AG-UI</h3>
-      <p>Build interactive chat UIs with streaming, state sync, and agentic actions</p>
+        <h3>AG-UI</h3>
+        <p>Build interactive chat UIs with streaming, state sync, and agentic actions</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/agentops/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/agentops.png" alt="AgentOps">
-    </div>
-    <div class="tool-card-content">
-      <h3>AgentOps</h3>
-      <p>Session replays, metrics, and monitoring for ADK agents</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/api-registry/" class="tool-card">
+<a href="/adk-docs/integrations/agentmail/" class="tool-card" data-tags="mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/developer-tools-color.svg" alt="API Registry">
+        <img src="/adk-docs/integrations/assets/agentmail.png" alt="AgentMail">
     </div>
     <div class="tool-card-content">
-      <h3>API Registry</h3>
-      <p>Dynamically connect with Google Cloud services as MCP tools</p>
+        <h3>AgentMail</h3>
+        <p>Create email inboxes for AI agents to send, receive, and manage messages</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/apigee-api-hub/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/apigee.png" alt="Apigee API Hub">
-    </div>
-    <div class="tool-card-content">
-      <h3>Apigee API Hub</h3>
-      <p>Turn any documented API from Apigee API hub into a tool</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/application-integration/" class="tool-card">
+<a href="/adk-docs/integrations/agentops/" class="tool-card" data-tags="observability">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/apigee-integration.png" alt="Application Integration">
+        <img src="/adk-docs/integrations/assets/agentops.png" alt="AgentOps">
     </div>
     <div class="tool-card-content">
-      <h3>Application Integration</h3>
-      <p>Link your agents to enterprise apps using Integration Connectors</p>
+        <h3>AgentOps</h3>
+        <p>Session replays, metrics, and monitoring for ADK agents</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/arize-ax/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/arize.png" alt="Arize AX">
-    </div>
-    <div class="tool-card-content">
-      <h3>Arize AX</h3>
-      <p>Production-grade observability, debugging, and improvement of LLM applications</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/asana/" class="tool-card">
+<a href="/adk-docs/integrations/api-registry/" class="tool-card" data-tags="google mcp connectors">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/asana.png" alt="Asana">
+        <img src="/adk-docs/integrations/assets/developer-tools-color.svg" alt="Google Cloud API Registry">
     </div>
     <div class="tool-card-content">
-      <h3>Asana</h3>
-      <p>Manage projects, tasks, and goals for team collaboration</p>
+        <h3>Google Cloud API Registry</h3>
+        <p>Connect with Google Cloud services as MCP tools</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/atlassian/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/atlassian.png" alt="Atlassian">
-    </div>
-    <div class="tool-card-content">
-      <h3>Atlassian</h3>
-      <p>Manage issues, search pages, and update team content</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/bigquery-agent-analytics/" class="tool-card">
+<a href="/adk-docs/integrations/apigee-api-hub/" class="tool-card" data-tags="connectors google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/bigquery.png" alt="BigQuery Agent Analytics Plugin">
+        <img src="/adk-docs/integrations/assets/apigee.png" alt="Apigee API Hub">
     </div>
     <div class="tool-card-content">
-      <h3>BigQuery Agent Analytics Plugin</h3>
-      <p>In-depth agent analytics for behavior analysis and logging</p>
+        <h3>Apigee API Hub</h3>
+        <p>Turn any documented API from Apigee API hub into a tool</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/bigquery/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/bigquery.png" alt="BigQuery Tools">
-    </div>
-    <div class="tool-card-content">
-      <h3>BigQuery Tools</h3>
-      <p>Connect with BigQuery to retrieve data and perform analysis</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/bigtable/" class="tool-card">
+<a href="/adk-docs/integrations/application-integration/" class="tool-card" data-tags="google connectors">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/bigtable.png" alt="Bigtable Tools">
+        <img src="/adk-docs/integrations/assets/apigee-integration.png" alt="Application Integration">
     </div>
     <div class="tool-card-content">
-      <h3>Bigtable Tools</h3>
-      <p>Interact with Bigtable to retrieve data and execute SQL</p>
+        <h3>Application Integration</h3>
+        <p>Link your agents to enterprise apps using Integration Connectors</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/cartesia/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/cartesia.png" alt="Cartesia">
-    </div>
-    <div class="tool-card-content">
-      <h3>Cartesia</h3>
-      <p>Generate speech, localize voices, and create audio content</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/chroma/" class="tool-card">
+<a href="/adk-docs/integrations/arize-ax/" class="tool-card" data-tags="observability">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/chroma.png" alt="Chroma">
+        <img src="/adk-docs/integrations/assets/arize.png" alt="Arize AX">
     </div>
     <div class="tool-card-content">
-      <h3>Chroma</h3>
-      <p>Store and retrieve information using semantic vector search</p>
+        <h3>Arize AX</h3>
+        <p>Production-grade observability, debugging, and improvement of LLM applications</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/cloud-trace/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/cloud-trace.svg" alt="Google Cloud Trace">
-    </div>
-    <div class="tool-card-content">
-      <h3>Google Cloud Trace</h3>
-      <p>Monitor, debug, and trace ADK agent interactions</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/code-exec-agent-engine/" class="tool-card">
+<a href="/adk-docs/integrations/asana/" class="tool-card" data-tags="mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Code Execution Tool with Agent Engine">
+        <img src="/adk-docs/integrations/assets/asana.png" alt="Asana">
     </div>
     <div class="tool-card-content">
-      <h3>Code Execution Tool with Agent Engine</h3>
-      <p>Run AI-generated code in a secure and scalable GKE environment</p>
+        <h3>Asana</h3>
+        <p>Manage projects, tasks, and goals for team collaboration</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/code-execution/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/gemini-spark.svg" alt="Code Execution">
-    </div>
-    <div class="tool-card-content">
-      <h3>Code Execution</h3>
-      <p>Execute code and debug using Gemini models</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/computer-use/" class="tool-card">
+<a href="/adk-docs/integrations/atlassian/" class="tool-card" data-tags="mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/gemini-spark.svg" alt="Computer Use">
+        <img src="/adk-docs/integrations/assets/atlassian.png" alt="Atlassian">
     </div>
     <div class="tool-card-content">
-      <h3>Computer Use</h3>
-      <p>Operate computer user interfaces using Gemini models</p>
+        <h3>Atlassian</h3>
+        <p>Manage issues, search pages, and update team content</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/data-agent/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Data Agents">
-    </div>
-    <div class="tool-card-content">
-      <h3>Data Agents</h3>
-      <p>Analyze data with AI-powered agents</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/daytona/" class="tool-card">
+<a href="/adk-docs/integrations/bigquery-agent-analytics/" class="tool-card" data-tags="observability google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/daytona.png" alt="Daytona">
+        <img src="/adk-docs/integrations/assets/bigquery.png" alt="BigQuery Agent Analytics Plugin">
     </div>
     <div class="tool-card-content">
-      <h3>Daytona</h3>
-      <p>Execute code, run shell commands, and manage files in secure sandboxes</p>
+        <h3>BigQuery Agent Analytics Plugin</h3>
+        <p>In-depth agent analytics for behavior analysis and logging</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/elevenlabs/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/elevenlabs.png" alt="ElevenLabs">
-    </div>
-    <div class="tool-card-content">
-      <h3>ElevenLabs</h3>
-      <p>Generate speech, clone voices, transcribe audio, and create sound effects</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/express-mode/" class="tool-card">
+<a href="/adk-docs/integrations/bigquery/" class="tool-card" data-tags="data google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI express mode">
+        <img src="/adk-docs/integrations/assets/bigquery.png" alt="BigQuery Tools">
     </div>
     <div class="tool-card-content">
-      <h3>Vertex AI express mode</h3>
-      <p>Try development with Vertex AI services at no cost</p>
+        <h3>BigQuery Tools</h3>
+        <p>Connect with BigQuery to retrieve data and perform analysis</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/freeplay/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/freeplay.png" alt="Freeplay">
-    </div>
-    <div class="tool-card-content">
-      <h3>Freeplay</h3>
-      <p>Use Freeplay to build, optimize, and evaluate AI agents with end-to-end observability</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/github/" class="tool-card">
+<a href="/adk-docs/integrations/bigtable/" class="tool-card" data-tags="data google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/github.png" alt="GitHub">
+        <img src="/adk-docs/integrations/assets/bigtable.png" alt="Bigtable Tools">
     </div>
     <div class="tool-card-content">
-      <h3>GitHub</h3>
-      <p>Analyze code, manage issues and PRs, and automate workflows</p>
+        <h3>Bigtable Tools</h3>
+        <p>Interact with Bigtable to retrieve data and execute SQL</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/gitlab/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/gitlab.png" alt="GitLab">
-    </div>
-    <div class="tool-card-content">
-      <h3>GitLab</h3>
-      <p>Perform semantic code search, inspect pipelines, manage merge requests</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/gke-code-executor/" class="tool-card">
+<a href="/adk-docs/integrations/cartesia/" class="tool-card" data-tags="mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/gke.png" alt="GKE Code Executor">
+        <img src="/adk-docs/integrations/assets/cartesia.png" alt="Cartesia">
     </div>
     <div class="tool-card-content">
-      <h3>GKE Code Executor</h3>
-      <p>Run AI-generated code in a secure and scalable GKE environment</p>
+        <h3>Cartesia</h3>
+        <p>Generate speech, localize voices, and create audio content</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/google-search/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/google-search.png" alt="Google Search">
-    </div>
-    <div class="tool-card-content">
-      <h3>Google Search</h3>
-      <p>Perform web searches using Google Search with Gemini</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/hugging-face/" class="tool-card">
+<a href="/adk-docs/integrations/chroma/" class="tool-card" data-tags="data mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/hugging-face.png" alt="Hugging Face">
+        <img src="/adk-docs/integrations/assets/chroma.png" alt="Chroma">
     </div>
     <div class="tool-card-content">
-      <h3>Hugging Face</h3>
-      <p>Access models, datasets, research papers, and AI tools</p>
+        <h3>Chroma</h3>
+        <p>Store and retrieve information using semantic vector search</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/linear/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/linear.png" alt="Linear">
-    </div>
-    <div class="tool-card-content">
-      <h3>Linear</h3>
-      <p>Manage issues, track projects, and streamline development</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/mcp-toolbox-for-databases/" class="tool-card">
+<a href="/adk-docs/integrations/cloud-trace/" class="tool-card" data-tags="observability google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/mcp-toolbox-for-databases.png" alt="MCP Toolbox for Databases">
+        <img src="/adk-docs/integrations/assets/cloud-trace.svg" alt="Google Cloud Trace">
     </div>
     <div class="tool-card-content">
-      <h3>MCP Toolbox for Databases</h3>
-      <p>Connect over 30 different data sources to your agents</p>
+        <h3>Google Cloud Trace</h3>
+        <p>Monitor, debug, and trace ADK agent interactions</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/mlflow/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/mlflow.png" alt="MLflow">
-    </div>
-    <div class="tool-card-content">
-      <h3>MLflow</h3>
-      <p>Ingest OpenTelemetry traces for agent runs, tool calls, and model requests</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/mongodb/" class="tool-card">
+<a href="/adk-docs/integrations/code-exec-agent-engine/" class="tool-card" data-tags="code google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/mongodb.png" alt="MongoDB">
+        <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Code Execution Tool with Agent Engine">
     </div>
     <div class="tool-card-content">
-      <h3>MongoDB</h3>
-      <p>Query collections, manage databases, and analyze schemas</p>
+        <h3>Code Execution Tool with Agent Engine</h3>
+        <p>Run AI-generated code in a secure and scalable GKE environment</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/monocle/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/monocle.png" alt="Monocle">
-    </div>
-    <div class="tool-card-content">
-      <h3>Monocle</h3>
-      <p>Open-source observability, tracing, and debugging of LLM applications</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/n8n/" class="tool-card">
+<a href="/adk-docs/integrations/code-execution/" class="tool-card" data-tags="code google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/n8n.png" alt="n8n">
+        <img src="/adk-docs/integrations/assets/gemini-spark.svg" alt="Code Execution">
     </div>
     <div class="tool-card-content">
-      <h3>n8n</h3>
-      <p>Trigger automated workflows, connect apps, and process data</p>
+        <h3>Code Execution</h3>
+        <p>Execute code and debug using Gemini models</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/notion/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/notion.png" alt="Notion">
-    </div>
-    <div class="tool-card-content">
-      <h3>Notion</h3>
-      <p>Search workspaces, create pages, and manage tasks and databases</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/paypal/" class="tool-card">
+<a href="/adk-docs/integrations/computer-use/" class="tool-card" data-tags="google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/paypal.png" alt="Paypal">
+        <img src="/adk-docs/integrations/assets/gemini-spark.svg" alt="Computer Use">
     </div>
     <div class="tool-card-content">
-      <h3>Paypal</h3>
-      <p>Manage payments, send invoices, and handle subscriptions</p>
+        <h3>Computer Use</h3>
+        <p>Operate computer user interfaces using Gemini models</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/phoenix/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/phoenix.png" alt="Phoenix">
-    </div>
-    <div class="tool-card-content">
-      <h3>Phoenix</h3>
-      <p>Open-source, self-hosted observability, tracing, and evaluation of LLM applications</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/postman/" class="tool-card">
+<a href="/adk-docs/integrations/data-agent/" class="tool-card" data-tags="data google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/postman.png" alt="Postman">
+        <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Data Agents">
     </div>
     <div class="tool-card-content">
-      <h3>Postman</h3>
-      <p>Manage API collections, workspaces, and generate client code</p>
+        <h3>Data Agents</h3>
+        <p>Analyze data with AI-powered agents</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/pubsub/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/pubsub.png" alt="Pub/Sub Tools">
-    </div>
-    <div class="tool-card-content">
-      <h3>Pub/Sub Tools</h3>
-      <p>Publish, pull, and acknowledge messages from Google Cloud Pub/Sub</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/qdrant/" class="tool-card">
+<a href="/adk-docs/integrations/daytona/" class="tool-card" data-tags="code">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/qdrant.png" alt="Qdrant">
+        <img src="/adk-docs/integrations/assets/daytona.png" alt="Daytona">
     </div>
     <div class="tool-card-content">
-      <h3>Qdrant</h3>
-      <p>Store and retrieve information using semantic vector search</p>
+        <h3>Daytona</h3>
+        <p>Execute code, run shell commands, and manage files in secure sandboxes</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/reflect-and-retry/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/adk.png" alt="Reflect and Retry Plugin">
-    </div>
-    <div class="tool-card-content">
-      <h3>Reflect and Retry Plugin</h3>
-      <p>Automatically retry tool calls that fail</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/spanner/" class="tool-card">
+<a href="/adk-docs/integrations/elevenlabs/" class="tool-card" data-tags="mcp">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/spanner.png" alt="Spanner Tools">
+        <img src="/adk-docs/integrations/assets/elevenlabs.png" alt="ElevenLabs">
     </div>
     <div class="tool-card-content">
-      <h3>Spanner Tools</h3>
-      <p>Interact with Spanner to retrieve data, search, and execute SQL</p>
+        <h3>ElevenLabs</h3>
+        <p>Generate speech, clone voices, transcribe audio, and create sound effects</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/stripe/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/stripe.png" alt="Stripe">
-    </div>
-    <div class="tool-card-content">
-      <h3>Stripe</h3>
-      <p>Manage payments, customers, subscriptions, and invoices</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/vertex-ai-rag-engine/" class="tool-card">
+<a href="/adk-docs/integrations/express-mode/" class="tool-card" data-tags="google">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI RAG Engine">
+        <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI express mode">
     </div>
     <div class="tool-card-content">
-      <h3>Vertex AI RAG Engine</h3>
-      <p>Perform private data retrieval using Vertex AI RAG Engine</p>
+        <h3>Vertex AI express mode</h3>
+        <p>Try development with Vertex AI services at no cost</p>
     </div>
-  </a>
+</a>
 
-  <a href="/adk-docs/integrations/vertex-ai-search/" class="tool-card">
-    <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI Search">
-    </div>
-    <div class="tool-card-content">
-      <h3>Vertex AI Search</h3>
-      <p>Search across your private, configured data stores in Vertex AI Search</p>
-    </div>
-  </a>
 
-  <a href="/adk-docs/integrations/weave/" class="tool-card">
+<a href="/adk-docs/integrations/freeplay/" class="tool-card" data-tags="observability">
     <div class="tool-card-image-wrapper">
-      <img src="/adk-docs/integrations/assets/weave.png" alt="W&B Weave">
+        <img src="/adk-docs/integrations/assets/freeplay.png" alt="Freeplay">
     </div>
     <div class="tool-card-content">
-      <h3>W&B Weave</h3>
-      <p>Log, visualize, and analyze model calls and agent performance</p>
+        <h3>Freeplay</h3>
+        <p>Use Freeplay to build, optimize, and evaluate AI agents with end-to-end observability</p>
     </div>
-  </a>
+</a>
+
+
+<a href="/adk-docs/integrations/github/" class="tool-card" data-tags="code mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/github.png" alt="GitHub">
+    </div>
+    <div class="tool-card-content">
+        <h3>GitHub</h3>
+        <p>Analyze code, manage issues and PRs, and automate workflows</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/gitlab/" class="tool-card" data-tags="code mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/gitlab.png" alt="GitLab">
+    </div>
+    <div class="tool-card-content">
+        <h3>GitLab</h3>
+        <p>Perform semantic code search, inspect pipelines, manage merge requests</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/gke-code-executor/" class="tool-card" data-tags="code google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/gke.png" alt="GKE Code Executor">
+    </div>
+    <div class="tool-card-content">
+        <h3>GKE Code Executor</h3>
+        <p>Run AI-generated code in a secure and scalable GKE environment</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/goodmem/" class="tool-card" data-tags="data">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/goodmem.svg" alt="GoodMem">
+    </div>
+    <div class="tool-card-content">
+        <h3>GoodMem</h3>
+        <p>Add persistent semantic memory to agents across conversations</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/google-search/" class="tool-card" data-tags="search google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/google-search.png" alt="Google Search">
+    </div>
+    <div class="tool-card-content">
+        <h3>Google Search</h3>
+        <p>Perform web searches using Google Search with Gemini</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/hugging-face/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/hugging-face.png" alt="Hugging Face">
+    </div>
+    <div class="tool-card-content">
+        <h3>Hugging Face</h3>
+        <p>Access models, datasets, research papers, and AI tools</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/linear/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/linear.png" alt="Linear">
+    </div>
+    <div class="tool-card-content">
+        <h3>Linear</h3>
+        <p>Manage issues, track projects, and streamline development</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/mailgun/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/mailgun.png" alt="Mailgun">
+    </div>
+    <div class="tool-card-content">
+        <h3>Mailgun</h3>
+        <p>Send emails, track delivery metrics, and manage mailing lists</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/mcp-toolbox-for-databases/" class="tool-card" data-tags="mcp data google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/mcp-toolbox-for-databases.png" alt="MCP Toolbox for Databases">
+    </div>
+    <div class="tool-card-content">
+        <h3>MCP Toolbox for Databases</h3>
+        <p>Connect over 30 different data sources to your agents</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/mlflow/" class="tool-card" data-tags="observability">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/mlflow.png" alt="MLflow">
+    </div>
+    <div class="tool-card-content">
+        <h3>MLflow</h3>
+        <p>Ingest OpenTelemetry traces for agent runs, tool calls, and model requests</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/mongodb/" class="tool-card" data-tags="data mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/mongodb.png" alt="MongoDB">
+    </div>
+    <div class="tool-card-content">
+        <h3>MongoDB</h3>
+        <p>Query collections, manage databases, and analyze schemas</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/monocle/" class="tool-card" data-tags="observability">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/monocle.png" alt="Monocle">
+    </div>
+    <div class="tool-card-content">
+        <h3>Monocle</h3>
+        <p>Open-source observability, tracing, and debugging of LLM applications</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/n8n/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/n8n.png" alt="n8n">
+    </div>
+    <div class="tool-card-content">
+        <h3>n8n</h3>
+        <p>Trigger automated workflows, connect apps, and process data</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/notion/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/notion.png" alt="Notion">
+    </div>
+    <div class="tool-card-content">
+        <h3>Notion</h3>
+        <p>Search workspaces, create pages, and manage tasks and databases</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/paypal/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/paypal.png" alt="Paypal">
+    </div>
+    <div class="tool-card-content">
+        <h3>Paypal</h3>
+        <p>Manage payments, send invoices, and handle subscriptions</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/phoenix/" class="tool-card" data-tags="observability">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/phoenix.png" alt="Phoenix">
+    </div>
+    <div class="tool-card-content">
+        <h3>Phoenix</h3>
+        <p>Open-source, self-hosted observability, tracing, and evaluation of LLM applications</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/pinecone/" class="tool-card" data-tags="data mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/pinecone.png" alt="Pinecone">
+    </div>
+    <div class="tool-card-content">
+        <h3>Pinecone</h3>
+        <p>Store data, perform semantic search, and rerank results</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/postman/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/postman.png" alt="Postman">
+    </div>
+    <div class="tool-card-content">
+        <h3>Postman</h3>
+        <p>Manage API collections, workspaces, and generate client code</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/pubsub/" class="tool-card" data-tags="google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/pubsub.png" alt="Pub/Sub Tools">
+    </div>
+    <div class="tool-card-content">
+        <h3>Pub/Sub Tools</h3>
+        <p>Publish, pull, and acknowledge messages from Google Cloud Pub/Sub</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/qdrant/" class="tool-card" data-tags="data mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/qdrant.png" alt="Qdrant">
+    </div>
+    <div class="tool-card-content">
+        <h3>Qdrant</h3>
+        <p>Store and retrieve information using semantic vector search</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/reflect-and-retry/" class="tool-card" data-tags="google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/adk.png" alt="Reflect and Retry Plugin">
+    </div>
+    <div class="tool-card-content">
+        <h3>Reflect and Retry Plugin</h3>
+        <p>Automatically retry tool calls that fail</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/restate/" class="tool-card" data-tags="">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/restate.svg" alt="Restate">
+    </div>
+    <div class="tool-card-content">
+        <h3>Restate</h3>
+        <p>Resilient agent execution and orchestration with durable sessions and human approvals</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/spanner/" class="tool-card" data-tags="data google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/spanner.png" alt="Spanner Tools">
+    </div>
+    <div class="tool-card-content">
+        <h3>Spanner Tools</h3>
+        <p>Interact with Spanner to retrieve data, search, and execute SQL</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/stripe/" class="tool-card" data-tags="mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/stripe.png" alt="Stripe">
+    </div>
+    <div class="tool-card-content">
+        <h3>Stripe</h3>
+        <p>Manage payments, customers, subscriptions, and invoices</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/vertex-ai-rag-engine/" class="tool-card" data-tags="data google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI RAG Engine">
+    </div>
+    <div class="tool-card-content">
+        <h3>Vertex AI RAG Engine</h3>
+        <p>Perform private data retrieval using Vertex AI RAG Engine</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/vertex-ai-search/" class="tool-card" data-tags="search google">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/vertex-ai.png" alt="Vertex AI Search">
+    </div>
+    <div class="tool-card-content">
+        <h3>Vertex AI Search</h3>
+        <p>Search across your private, configured data stores in Vertex AI Search</p>
+    </div>
+</a>
+
+
+<a href="/adk-docs/integrations/weave/" class="tool-card" data-tags="observability">
+    <div class="tool-card-image-wrapper">
+        <img src="/adk-docs/integrations/assets/weave.png" alt="W&amp;B Weave">
+    </div>
+    <div class="tool-card-content">
+        <h3>W&amp;B Weave</h3>
+        <p>Log, visualize, and analyze model calls and agent performance</p>
+    </div>
+</a>
+
 </div>
+
+<script>
+    (function() {
+        function initCatalog() {
+            const filterContainer = document.getElementById('catalog-integrations-filters');
+            if (!filterContainer) return;
+
+            const buttons = filterContainer.querySelectorAll('.catalog-filter-btn');
+            const cards = document.querySelectorAll('.tool-card');
+
+            function filterCards(filterValue) {
+                // Update buttons
+                buttons.forEach(btn => {
+                    if (btn.getAttribute('data-filter') === filterValue) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                // Filter cards
+                cards.forEach(card => {
+                    const cardTags = (card.getAttribute('data-tags') || '').split(' ');
+                    if (filterValue === 'all' || cardTags.includes(filterValue)) {
+                        card.style.display = 'flex'; // Restore flex display
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Click handlers
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter');
+                    filterCards(filter);
+
+                    // Optional: Update URL without reload
+                    const url = new URL(window.location);
+                    if (filter === 'all') {
+                        url.searchParams.delete('topic');
+                    } else {
+                        url.searchParams.set('topic', filter);
+                    }
+                    window.history.pushState({}, '', url);
+                });
+            });
+
+            // Check URL param on load
+            const urlParams = new URLSearchParams(window.location.search);
+            const topic = urlParams.get('topic');
+            if (topic) {
+                // Validate topic exists in buttons to avoid empty states if possible
+                // or just try to filter
+                const matchingBtn = Array.from(buttons).find(btn => btn.getAttribute('data-filter') === topic);
+                if (matchingBtn) {
+                    filterCards(topic.toLowerCase());
+                }
+            }
+        }
+
+        // Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCatalog);
+        } else {
+            initCatalog();
+        }
+    })();
+</script>
 
 
 
@@ -6003,7 +6267,7 @@ ADK agents. For information on building custom tools, see
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright Google 2025&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
+      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
     </div>
   
   

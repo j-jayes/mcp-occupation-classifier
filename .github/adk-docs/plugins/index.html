@@ -550,6 +550,8 @@
       
         
       
+        
+      
     
     
     
@@ -2191,6 +2193,73 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills for Agents
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills for Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2820,6 +2889,10 @@
     
       
         
+          
+        
+      
+        
       
     
     
@@ -2834,8 +2907,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../observability/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2849,8 +2923,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_3">
@@ -2862,6 +2942,8 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
             
               
                 
@@ -5719,17 +5801,15 @@ Some typical applications of Plugins are as follows:</p>
     model prompts or standardize tool output responses.</li>
 </ul>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
+<p class="admonition-title">Tip: Use Plugins for safety features</p>
 <p>When implementing security guardrails and policies, use ADK Plugins for
 better modularity and flexibility than Callbacks. For more details, see
 <a href="/adk-docs/safety/#callbacks-and-plugins-for-security-guardrails">Callbacks and Plugins for Security Guardrails</a>.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Caution</p>
-<p>Plugins are not supported by the
-<a href="../evaluate/#1-adk-web-run-evaluations-via-the-web-ui">ADK web interface</a>.
-If your ADK workflow uses Plugins, you must run your workflow without the
-web interface.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip: ADK Integrations</p>
+<p>For a list of pre-built plugins and other integrations for ADK, see
+<a href="/adk-docs/integrations/">Tools and Integrations</a>.</p>
 </div>
 <h2 id="how-do-plugins-work">How do Plugins work?<a class="headerlink" href="#how-do-plugins-work" title="Permanent link">&para;</a></h2>
 <p>An ADK Plugin extends the <code>BasePlugin</code> class and contains one or more
@@ -5846,7 +5926,7 @@ methods, as shown in the following code example:</p>
 </span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[Plugin] LLM request count: </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">llmRequestCount</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
 </span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
 </span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="p">}</span><span class="w">    </span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -6003,10 +6083,6 @@ command line:</p>
 </div>
 </div>
 </div>
-<p>Plugins are not supported by the
-<a href="../evaluate/#1-adk-web-run-evaluations-via-the-web-ui">ADK web interface</a>.
-If your ADK workflow uses Plugins, you must run your workflow without the web
-interface.</p>
 <p>The output of this previously described agent should look similar to the
 following:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>[Plugin] Agent run count: 1
@@ -6258,7 +6334,7 @@ normally.****</p>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">Error</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">LlmResponse</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="c1">// Your implementation here</span>
-</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">}</span><span class="w">  </span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -6316,7 +6392,7 @@ works as follows:</p>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">Error</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="nx">key</span><span class="o">:</span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="c1">// Your implementation here</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">}</span><span class="w">    </span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -6349,7 +6425,7 @@ before it's streamed to the client.</p>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nx">event</span><span class="o">:</span><span class="w"> </span><span class="kt">Event</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Event</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="c1">// Your implementation here</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">}</span><span class="w">    </span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -6379,7 +6455,7 @@ cleanup and final reporting.</p>
 <div class="tabbed-block">
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">async</span><span class="w"> </span><span class="nx">afterRunCallback</span><span class="p">(</span><span class="nx">invocationContext</span><span class="o">:</span><span class="w"> </span><span class="kt">InvocationContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="ow">void</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="c1">// Your implementation here</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">}</span><span class="w">    </span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -6390,7 +6466,7 @@ projects:</p>
 <ul>
 <li>For more ADK Plugin code examples, see the
     <a href="https://github.com/google/adk-python/tree/main/src/google/adk/plugins">ADK Python repository</a>.</li>
-<li>For information on applying Plugins for security purposes, see 
+<li>For information on applying Plugins for security purposes, see
     <a href="/adk-docs/safety/#callbacks-and-plugins-for-security-guardrails">Callbacks and Plugins for Security Guardrails</a>.</li>
 </ul>
 
@@ -6472,7 +6548,7 @@ projects:</p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright Google 2025&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
+      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
     </div>
   
   
