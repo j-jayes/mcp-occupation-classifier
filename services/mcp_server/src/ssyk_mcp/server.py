@@ -25,6 +25,8 @@ mcp = FastMCP("SSYK MCP Server", auth=auth)
 search_engine = SearchEngine()
 scb_client = SCBClient()
 
+MAX_DESCRIPTION_CHARS = 4000
+
 @mcp.tool()
 def classify_occupation(title: str, description: str | None = None) -> List[Dict[str, Any]]:
     """
@@ -37,7 +39,14 @@ def classify_occupation(title: str, description: str | None = None) -> List[Dict
     """
     # Avoid punctuation that can hurt simple BM25 tokenization; the search engine
     # will handle more robust tokenization internally.
+    title = (title or "").strip()
+    if title == "":
+        raise ValueError("title must be a non-empty string")
+
     description = (description or "").strip()
+    if len(description) > MAX_DESCRIPTION_CHARS:
+        raise ValueError(f"description must be <= {MAX_DESCRIPTION_CHARS} characters")
+
     query = f"{title} {description}".strip() if description else title
     results = search_engine.search(query)
     return results

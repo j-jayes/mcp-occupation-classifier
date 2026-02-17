@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head:*)",
+      "WebFetch(domain:google.github.io)",
+      "Bash(grep:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.litellm.ai)",
+      "Bash(uv sync:*)",
+      "Bash(docker compose build:*)"
+    ]
+  }
+}

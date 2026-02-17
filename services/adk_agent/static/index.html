@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSYK Occupation Advisor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>SSYK Occupation Advisor</h1>
+            <p>Ask about Swedish occupations, SSYK codes, and salary statistics.</p>
+        </header>
+        <div id="content">
+            <main id="chat">
+                <div id="messages"></div>
+                <form id="chat-form">
+                    <input
+                        type="text"
+                        id="user-input"
+                        placeholder="e.g. What SSYK code is a backend developer?"
+                        autocomplete="off"
+                    />
+                    <button type="submit" id="send-btn">Send</button>
+                </form>
+            </main>
+
+            <aside id="trace">
+                <div id="trace-header">
+                    <h2>MCP Trace</h2>
+                    <p>Requests sent to the MCP server and responses returned.</p>
+                </div>
+                <div id="trace-items"></div>
+            </aside>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

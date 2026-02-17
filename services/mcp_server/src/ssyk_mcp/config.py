@@ -27,4 +27,35 @@ SCB_API_URL = "https://api.scb.se/OV0104/v1/doris/sv/ssd/START/AM/AM0110/AM0110A
 # OpenAI
 _raw_openai_api_key = os.getenv("OPENAI_API_KEY")
 OPENAI_API_KEY = _raw_openai_api_key.strip() if _raw_openai_api_key else None
-EMBEDDING_MODEL = "text-embedding-3-small"
+
+# Allow override for local testing / upgrades.
+EMBEDDING_MODEL = (os.getenv("EMBEDDING_MODEL") or "text-embedding-3-small").strip()
+
+# Azure OpenAI (preferred when set)
+#
+# Notes:
+# - Azure OpenAI uses a *deployment name* in the `model=` field.
+# - The ADK agent (LiteLLM) commonly expects AZURE_API_* env vars; we accept both.
+_raw_azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT") or os.getenv("AZURE_API_BASE")
+AZURE_OPENAI_ENDPOINT = _raw_azure_endpoint.strip() if _raw_azure_endpoint else None
+
+_raw_azure_key = os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("AZURE_API_KEY")
+AZURE_OPENAI_API_KEY = _raw_azure_key.strip() if _raw_azure_key else None
+
+_raw_azure_version = os.getenv("AZURE_OPENAI_API_VERSION") or os.getenv("AZURE_API_VERSION")
+AZURE_OPENAI_API_VERSION = _raw_azure_version.strip() if _raw_azure_version else None
+
+_raw_azure_embed_deployment = os.getenv("AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT")
+AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT = (
+    _raw_azure_embed_deployment.strip() if _raw_azure_embed_deployment else None
+)
+
+_raw_azure_chat_deployment = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT")
+AZURE_OPENAI_CHAT_DEPLOYMENT = _raw_azure_chat_deployment.strip() if _raw_azure_chat_deployment else None
+
+AZURE_OPENAI_ENABLED = bool(
+    AZURE_OPENAI_ENDPOINT
+    and AZURE_OPENAI_API_KEY
+    and AZURE_OPENAI_API_VERSION
+    and AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT
+)

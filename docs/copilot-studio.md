@@ -31,7 +31,20 @@ Copilot Studio supports:
 - **API key** (header or query)
 - **OAuth 2.0**
 
-## 3) OAuth 2.0 (recommended) using Dynamic discovery (DCR)
+## 3) API key (Bearer token)
+
+This repo supports a simple bearer-token mode for production: set `MCP_API_KEY` on the server.
+
+In Copilot Studio:
+
+1. Choose **API key**
+2. Use a **header** (not query)
+3. Set header name to `Authorization`
+4. Set header value to `Bearer <your MCP_API_KEY>`
+
+Server-side (Cloud Run): set `MCP_API_KEY` (ideally from Secret Manager).
+
+## 4) OAuth 2.0 (optional) using Dynamic discovery (DCR)
 
 This repo is set up to use FastMCP’s `RemoteAuthProvider` (OAuth 2.0 + Dynamic Client Registration).
 

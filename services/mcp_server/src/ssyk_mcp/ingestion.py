@@ -9,9 +9,24 @@ import httpx
 import pandas as pd
 import numpy as np
 from openai import OpenAI
-from typing import List, Dict, Any
+from typing import Any, List, Dict
 import time
-from ssyk_mcp.config import SSYK_JSON_PATH, SSYK_PARQUET_PATH, OPENAI_API_KEY, EMBEDDING_MODEL
+from ssyk_mcp.config import (
+    AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_API_VERSION,
+    AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT,
+    AZURE_OPENAI_ENABLED,
+    AZURE_OPENAI_ENDPOINT,
+    EMBEDDING_MODEL,
+    OPENAI_API_KEY,
+    SSYK_JSON_PATH,
+    SSYK_PARQUET_PATH,
+)
+
+try:
+    from openai import AzureOpenAI  # type: ignore
+except Exception:  # pragma: no cover
+    AzureOpenAI = None  # type: ignore
 
 def download_ssyk_taxonomy():
     """Downloads the SSYK taxonomy JSON if it doesn't exist."""
@@ -46,8 +61,8 @@ def extract_ssyk_level_4(concepts: List[Dict[str, Any]]) -> List[Dict[str, str]]
             results.extend(extract_ssyk_level_4(concept["narrower"]))
     return results
 
-def generate_embeddings(texts: List[str], client: OpenAI) -> List[List[float]]:
-    """Generates embeddings for a list of texts using OpenAI."""
+def generate_embeddings(texts: List[str], client: Any, model_name: str) -> List[List[float]]:
+    """Generates embeddings for a list of texts."""
     # Batching to be safe, though OpenAI handles large batches well
     batch_size = 100
     embeddings = []
@@ -58,7 +73,7 @@ def generate_embeddings(texts: List[str], client: OpenAI) -> List[List[float]]:
         try:
             response = client.embeddings.create(
                 input=batch,
-                model=EMBEDDING_MODEL
+                model=model_name,
             )
             # Ensure the embeddings are in the same order as the input
             batch_embeddings = [data.embedding for data in response.data]
@@ -90,12 +105,28 @@ def run_ingestion():
     texts_to_embed = [f"{item['title']}: {item['description']}" for item in ssyk_items]
     
     # 4. Generate Embeddings
-    if not OPENAI_API_KEY:
-        raise ValueError("OPENAI_API_KEY not found in environment variables.")
-    
-    client = OpenAI(api_key=OPENAI_API_KEY)
-    print(f"Generating embeddings using {EMBEDDING_MODEL}...")
-    embeddings = generate_embeddings(texts_to_embed, client)
+    if AZURE_OPENAI_ENABLED:
+        if AzureOpenAI is None:
+            raise RuntimeError(
+                "Azure OpenAI is configured but AzureOpenAI client is not available in the installed openai package."
+            )
+        client: Any = AzureOpenAI(
+            api_key=AZURE_OPENAI_API_KEY,
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_version=AZURE_OPENAI_API_VERSION,
+        )
+        model_name = AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT
+        print(f"Generating embeddings using Azure OpenAI deployment {model_name}...")
+    else:
+        if not OPENAI_API_KEY:
+            raise ValueError(
+                "No embeddings provider configured. Set Azure OpenAI vars (preferred) or OPENAI_API_KEY."
+            )
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        model_name = EMBEDDING_MODEL
+        print(f"Generating embeddings using OpenAI model {model_name}...")
+
+    embeddings = generate_embeddings(texts_to_embed, client, model_name)
     
     # 5. Create DataFrame and Save
     df = pd.DataFrame(ssyk_items)

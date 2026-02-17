@@ -9,6 +9,7 @@ This repo is being refocused to be **MCP server only** (Copilot Studio as the cl
 - [x] Update docker-compose to only run MCP server
 - [x] Bake `data/` into the MCP server image
 - [x] Update README and add Copilot Studio onboarding guide
+- [x] Run MCP smoke test (`scripts/mcp_smoke_test.py`) against Cloud Run `/mcp`
 
 ## Next
 - [ ] Confirm FastMCP version compatibility and dependency install (`uv sync`)

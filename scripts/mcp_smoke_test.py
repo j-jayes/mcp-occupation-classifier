@@ -1,31 +1,46 @@
 import anyio
+import httpx
+import os
 from mcp.client.streamable_http import streamable_http_client
 from mcp import ClientSession
 
-URL = "https://ssyk-mcp-420199586073.europe-west1.run.app/mcp"
+URL = os.getenv("MCP_SERVER_URL", "http://localhost:8000/mcp").strip()
+API_KEY = (os.getenv("MCP_API_KEY") or "").strip()
 
 
 async def main() -> None:
-    async with streamable_http_client(URL, terminate_on_close=False) as (
-        read,
-        write,
-        get_session_id,
-    ):
-        async with ClientSession(read, write) as session:
-            info = await session.initialize()
-            print("initialized", info)
+    headers: dict[str, str] = {}
+    if API_KEY:
+        headers["Authorization"] = f"Bearer {API_KEY}"
 
-            tools = await session.list_tools()
-            print("tools", [t.name for t in tools.tools])
+    http_client = httpx.AsyncClient(headers=headers, timeout=httpx.Timeout(60.0, connect=10.0))
+    try:
+        async with streamable_http_client(
+            URL,
+            http_client=http_client,
+            terminate_on_close=False,
+        ) as (
+            read,
+            write,
+            get_session_id,
+        ):
+            async with ClientSession(read, write) as session:
+                info = await session.initialize()
+                print("initialized", info)
 
-            result = await session.call_tool(
-                "classify_occupation",
-                {
-                    "title": "Software engineer",
-                    "description": "Builds backend APIs in Python",
-                },
-            )
-            print("call_tool result", result)
+                tools = await session.list_tools()
+                print("tools", [t.name for t in tools.tools])
+
+                result = await session.call_tool(
+                    "classify_occupation",
+                    {
+                        "title": "Systemutvecklare",
+                        "description": "Utvecklar backend-API:er i Python",
+                    },
+                )
+                print("call_tool result", result)
+    finally:
+        await http_client.aclose()
 
 
 if __name__ == "__main__":

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import hmac
 import os
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from pydantic import AnyHttpUrl
 
 from fastmcp.server.auth import RemoteAuthProvider
+from fastmcp.server.auth.providers.debug import DebugTokenVerifier
 from fastmcp.server.auth.providers.jwt import JWTVerifier
 
 
@@ -22,7 +24,7 @@ def _is_truthy(value: Optional[str]) -> bool:
     return (value or "").strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
-def build_auth(*, base_url: str) -> Optional[RemoteAuthProvider]:
+def build_auth(*, base_url: str) -> Optional[Any]:
     """Build RemoteAuthProvider (OAuth 2.0 / DCR) from environment.
 
     Environment variables:
@@ -38,6 +40,22 @@ def build_auth(*, base_url: str) -> Optional[RemoteAuthProvider]:
       - If AUTH_ALLOWED_REDIRECT_URIS is set but empty (""), we pass an empty list,
         which allows all redirect URIs (not recommended for production).
     """
+
+    # Production requirement: static Bearer token auth via MCP_API_KEY.
+    # Copilot Studio can be configured to send `Authorization: Bearer <token>`.
+    api_key = (os.getenv("MCP_API_KEY") or "").strip()
+    if api_key:
+        def _validate(token: str) -> bool:
+            # Constant-time comparison.
+            return bool(token) and hmac.compare_digest(token, api_key)
+
+        # DebugTokenVerifier supports custom validation callables (sync/async).
+        # We use it here for a simple opaque token check.
+        return DebugTokenVerifier(
+            validate=_validate,
+            client_id="mcp-api-key",
+            scopes=["api:access"],
+        )  # type: ignore[return-value]
 
     if not _is_truthy(os.getenv("AUTH_ENABLED")):
         return None

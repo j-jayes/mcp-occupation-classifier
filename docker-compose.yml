@@ -6,8 +6,45 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Azure OpenAI (preferred)
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-}
+      - AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT=${AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT:-}
+
+      # OpenAI (fallback)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-}
+
       - DATA_DIR=/app/data
       - FASTMCP_HOST=0.0.0.0
       - FASTMCP_PORT=8000
+      - MCP_API_KEY=${MCP_API_KEY:-}
 
+  adk-agent:
+    build:
+      context: .
+      dockerfile: services/adk_agent/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      # Azure OpenAI for LiteLLM (preferred)
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-}
+      - AZURE_OPENAI_CHAT_DEPLOYMENT=${AZURE_OPENAI_CHAT_DEPLOYMENT:-}
+
+      # LiteLLM commonly uses these env var names.
+      - AZURE_API_BASE=${AZURE_API_BASE:-}
+      - AZURE_API_KEY=${AZURE_API_KEY:-}
+      - AZURE_API_VERSION=${AZURE_API_VERSION:-}
+
+      # OpenAI fallback
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MCP_SERVER_URL=http://mcp-server:8000/mcp
+      - MCP_API_KEY=${MCP_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-azure/gpt-41}
+      - ADK_HOST=0.0.0.0
+      - ADK_PORT=8080
+    depends_on:
+      - mcp-server

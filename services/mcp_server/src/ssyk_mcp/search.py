@@ -4,10 +4,25 @@ import httpx
 from openai import OpenAI
 from rank_bm25 import BM25Okapi
 import re
+import threading
 from typing import Any, Dict, List
 import socket
 
-from .config import EMBEDDING_MODEL, OPENAI_API_KEY, SSYK_PARQUET_PATH
+from .config import (
+    AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_API_VERSION,
+    AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT,
+    AZURE_OPENAI_ENABLED,
+    AZURE_OPENAI_ENDPOINT,
+    EMBEDDING_MODEL,
+    OPENAI_API_KEY,
+    SSYK_PARQUET_PATH,
+)
+
+try:
+    from openai import AzureOpenAI  # type: ignore
+except Exception:  # pragma: no cover
+    AzureOpenAI = None  # type: ignore
 
 class SearchEngine:
     def __init__(self):
@@ -17,6 +32,8 @@ class SearchEngine:
         self.is_ready = False
         self._warned_embedding_disabled = False
         self._warned_vector_failure = False
+        self._load_lock = threading.Lock()
+        self._embedding_matrix = None
 
     _TOKEN_RE = re.compile(r"[0-9a-zA-ZåäöÅÄÖ]+", re.UNICODE)
 
@@ -26,6 +43,13 @@ class SearchEngine:
 
     def load_data(self):
         """Loads data and initializes indexes."""
+        if self.is_ready:
+            return
+
+        with self._load_lock:
+            if self.is_ready:
+                return
+
         if not SSYK_PARQUET_PATH.exists():
             print(f"Data file not found at {SSYK_PARQUET_PATH}. Please run ingestion.")
             return
@@ -42,15 +66,44 @@ class SearchEngine:
 
         tokenized_corpus = [self._tokenize(doc) for doc in corpus_texts]
         self.bm25 = BM25Okapi(tokenized_corpus)
+
+        # Pre-build embedding matrix (if present) once.
+        self._embedding_matrix = None
+        if "embedding" in self.df.columns:
+            try:
+                raw_embeddings = self.df["embedding"].tolist()
+                matrix = np.asarray(raw_embeddings, dtype=np.float32)
+                if matrix.ndim != 2:
+                    raise ValueError(f"Expected 2D embedding matrix, got shape={matrix.shape}")
+
+                norms = np.linalg.norm(matrix, axis=1, keepdims=True)
+                norms[norms == 0] = 1.0
+                self._embedding_matrix = matrix / norms
+            except Exception as e:
+                print(f"Failed to initialize embedding matrix ({type(e).__name__}): {e}")
+                self._embedding_matrix = None
         
-        # Initialize OpenAI Client (optional)
-        if OPENAI_API_KEY:
-            # Use an explicit httpx client to control timeouts and avoid any
-            # environment-dependent defaults.
-            http_client = httpx.Client(
-                timeout=httpx.Timeout(30.0, connect=10.0),
-                http2=False,
+        # Initialize embeddings client (optional)
+        # Prefer Azure OpenAI when configured, else fallback to OpenAI.
+        http_client = httpx.Client(
+            timeout=httpx.Timeout(30.0, connect=10.0),
+            http2=False,
+        )
+
+        self._using_azure_openai = False
+        if AZURE_OPENAI_ENABLED:
+            if AzureOpenAI is None:
+                raise RuntimeError(
+                    "Azure OpenAI is configured but AzureOpenAI client is not available in the installed openai package."
+                )
+            self.client = AzureOpenAI(
+                api_key=AZURE_OPENAI_API_KEY,
+                azure_endpoint=AZURE_OPENAI_ENDPOINT,
+                api_version=AZURE_OPENAI_API_VERSION,
+                http_client=http_client,
             )
+            self._using_azure_openai = True
+        elif OPENAI_API_KEY:
             self.client = OpenAI(api_key=OPENAI_API_KEY, http_client=http_client)
         
         self.is_ready = True
@@ -59,24 +112,25 @@ class SearchEngine:
     def _get_embedding(self, text: str) -> List[float]:
         if not self.client:
             raise ValueError("OpenAI client not initialized.")
+
+        model_name = (
+            AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT if getattr(self, "_using_azure_openai", False) else EMBEDDING_MODEL
+        )
         
         response = self.client.embeddings.create(
             input=text,
-            model=EMBEDDING_MODEL
+            model=model_name,
         )
         return response.data[0].embedding
 
     def _cosine_similarity(self, vec1, matrix):
         """Computes cosine similarity between a vector and a matrix of vectors."""
-        vec1 = np.array(vec1)
-        matrix = np.vstack(matrix)
-        
+        vec1 = np.asarray(vec1, dtype=np.float32)
         norm_vec1 = np.linalg.norm(vec1)
-        norm_matrix = np.linalg.norm(matrix, axis=1)
-        
-        dot_products = np.dot(matrix, vec1)
-        similarities = dot_products / (norm_vec1 * norm_matrix)
-        return similarities
+        if norm_vec1 == 0:
+            return np.zeros((matrix.shape[0],), dtype=np.float32)
+        vec1 = vec1 / norm_vec1
+        return matrix @ vec1
 
     def search(self, query: str, n: int = 5) -> List[Dict[str, Any]]:
         if not self.is_ready:
@@ -101,35 +155,40 @@ class SearchEngine:
                     "Falling back to BM25-only search."
                 )
                 self._warned_embedding_disabled = True
+        elif self._embedding_matrix is None:
+            # Embeddings aren't available in the dataset (or failed to load).
+            vector_scores = None
         else:
             try:
                 query_embedding = self._get_embedding(query)
-                vector_scores = self._cosine_similarity(query_embedding, self.df["embedding"].values)
+                vector_scores = self._cosine_similarity(query_embedding, self._embedding_matrix)
             except Exception as e:
                 # Keep this on one line for Cloud Run logs, but include the type for debugging.
                 print(f"Vector search failed ({type(e).__name__}): {e}")
                 if not self._warned_vector_failure:
                     self._warned_vector_failure = True
-                    try:
-                        addrs = socket.getaddrinfo("api.openai.com", 443)
-                        ips = sorted({a[4][0] for a in addrs})
-                        print(f"OpenAI DNS api.openai.com -> {ips[:8]}")
-                    except Exception as dns_e:
-                        print(f"OpenAI DNS check failed ({type(dns_e).__name__}): {dns_e}")
+                    # Avoid probing api.openai.com when running on Azure OpenAI.
+                    if not getattr(self, "_using_azure_openai", False):
+                        try:
+                            addrs = socket.getaddrinfo("api.openai.com", 443)
+                            ips = sorted({a[4][0] for a in addrs})
+                            print(f"OpenAI DNS api.openai.com -> {ips[:8]}")
+                        except Exception as dns_e:
+                            print(f"OpenAI DNS check failed ({type(dns_e).__name__}): {dns_e}")
 
-                    try:
-                        resp = httpx.get(
-                            "https://api.openai.com/v1/models",
-                            timeout=httpx.Timeout(10.0, connect=5.0),
-                            follow_redirects=False,
-                            headers={"Accept": "application/json"},
-                        )
-                        print(
-                            "OpenAI HTTP probe ok "
-                            f"status={resp.status_code} content_type={resp.headers.get('content-type')}"
-                        )
-                    except Exception as http_e:
-                        print(f"OpenAI HTTP probe failed ({type(http_e).__name__}): {http_e}")
+                        try:
+                            resp = httpx.get(
+                                "https://api.openai.com/v1/models",
+                                timeout=httpx.Timeout(10.0, connect=5.0),
+                                follow_redirects=False,
+                                headers={"Accept": "application/json"},
+                            )
+                            print(
+                                "OpenAI HTTP probe ok "
+                                f"status={resp.status_code} content_type={resp.headers.get('content-type')}"
+                            )
+                        except Exception as http_e:
+                            print(f"OpenAI HTTP probe failed ({type(http_e).__name__}): {http_e}")
                 vector_scores = None
 
         # 3. Hybrid Fusion (Weighted Sum or RRF)

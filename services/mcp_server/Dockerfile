@@ -7,13 +7,14 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 # Copy server project files
 COPY services/mcp_server/pyproject.toml ./pyproject.toml
+COPY services/mcp_server/uv.lock ./uv.lock
 COPY services/mcp_server/src ./src
 
 # Bake data into the image (small dataset)
 COPY data ./data
 
 # Install dependencies
-RUN uv sync
+RUN uv sync --frozen
 
 # Expose port
 EXPOSE 8000

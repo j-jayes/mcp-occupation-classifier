@@ -5,9 +5,19 @@ This repo hosts a **FastMCP server** that provides tools for:
 - Classifying Swedish occupations into **SSYK** codes via hybrid search.
 - Returning income statistics for an SSYK code (from pre-processed SCB-derived data).
 
-The primary client is **Microsoft Copilot Studio**, connected over **Streamable HTTP** (SSE is not used).
+It also includes a **Google ADK chatbot** that uses the MCP server as a tool,
+powered by OpenAI GPT-4o via LiteLLM.
 
-## Server
+## Architecture
+
+```
+Browser --> ADK Agent (port 8080) --> MCP Server (port 8000)
+               |                          |
+         OpenAI GPT-4o             OpenAI Embeddings
+         (chat completion)         (vector search)
+```
+
+## MCP Server
 
 Tools are implemented in [services/mcp_server/src/ssyk_mcp/server.py](services/mcp_server/src/ssyk_mcp/server.py):
 
@@ -16,22 +26,46 @@ Tools are implemented in [services/mcp_server/src/ssyk_mcp/server.py](services/m
 
 The server runs Streamable HTTP at `GET/POST <base>/mcp` (configurable).
 
-## Run locally (Docker)
+## ADK Chatbot
 
-`docker compose up --build`
+The ADK agent ([services/adk_agent/](services/adk_agent/)) connects to the MCP
+server over Streamable HTTP and exposes a simple chat UI.
 
-Tip: copy `.env.example` to `.env` and fill `OPENAI_API_KEY` if you want semantic (embedding) search.
+## Run locally (Docker Compose)
 
-Defaults:
-- `http://localhost:8000/mcp`
+```bash
+cp .env.example .env
+# Fill OPENAI_API_KEY (required for chat + semantic search)
+docker compose up --build
+```
+
+- MCP server: `http://localhost:8000/mcp`
+- Chat UI: `http://localhost:8080`
+- Chat API: `http://localhost:8080/api/chat`
 
 ## Run locally (Python)
 
-- From the MCP server project: `cd services/mcp_server`
-- Install deps: `uv sync`
-- Run: `uv run python -m ssyk_mcp.server`
+**MCP server:**
+```bash
+cd services/mcp_server
+uv sync
+uv run python -m ssyk_mcp.server
+```
 
-## OAuth 2.0 (RemoteAuthProvider)
+**ADK agent:**
+```bash
+cd services/adk_agent
+uv sync
+uv run python -m adk_agent.app
+```
+
+## API key auth (Bearer token)
+
+Set `MCP_API_KEY` to enable bearer-token auth.
+
+Clients must send: `Authorization: Bearer <MCP_API_KEY>`
+
+## OAuth 2.0 (RemoteAuthProvider) (optional)
 
 OAuth is implemented using FastMCP `RemoteAuthProvider` + `JWTVerifier` in [services/mcp_server/src/ssyk_mcp/auth.py](services/mcp_server/src/ssyk_mcp/auth.py).
 
@@ -64,4 +98,4 @@ See the Microsoft Learn article mirrored in [.github/microsoft-copilot-studio-mc
 
 ## Deployment
 
-- Google Cloud Run guide: [deploy/cloudrun.md](deploy/cloudrun.md)
+- Azure Container Apps: [deploy/azure/README.md](deploy/azure/README.md)
