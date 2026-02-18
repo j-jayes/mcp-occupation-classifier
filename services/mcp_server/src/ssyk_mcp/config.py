@@ -20,6 +20,7 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 # Files
 SSYK_JSON_PATH = RAW_DATA_DIR / "the-ssyk-hierarchy-with-occupations.json"
 SSYK_PARQUET_PATH = PROCESSED_DATA_DIR / "ssyk_data.parquet"
+SSYK_META_PATH = PROCESSED_DATA_DIR / "ssyk_data.meta.json"
 
 # SCB API
 SCB_API_URL = "https://api.scb.se/OV0104/v1/doris/sv/ssd/START/AM/AM0110/AM0110A/LoneSpridSektYrk4AN"
@@ -30,6 +31,11 @@ OPENAI_API_KEY = _raw_openai_api_key.strip() if _raw_openai_api_key else None
 
 # Allow override for local testing / upgrades.
 EMBEDDING_MODEL = (os.getenv("EMBEDDING_MODEL") or "text-embedding-3-small").strip()
+
+# Embedding dimensionality contract.
+# We intentionally lock this to 1536 so the vector index stays small (and compatible
+# with future storage backends that may impose limits).
+EMBEDDING_DIM = 1536
 
 # Azure OpenAI (preferred when set)
 #

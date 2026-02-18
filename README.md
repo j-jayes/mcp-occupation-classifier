@@ -15,6 +15,15 @@ Browser --> ADK Agent (port 8080) --> MCP Server (port 8000)
                |                          |
          OpenAI GPT-4o             OpenAI Embeddings
          (chat completion)         (vector search)
+
+## Embedding dimensionality (1536)
+
+This project intentionally standardizes on **1536-dimensional** embeddings (i.e. `text-embedding-3-small`).
+
+- If you use **Azure OpenAI**, ensure `AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT` points to a deployment backed by `text-embedding-3-small`.
+- If you use **OpenAI** directly, keep `EMBEDDING_MODEL=text-embedding-3-small`.
+
+Mixing 1536-dim and 3072-dim embeddings will disable vector search (BM25-only fallback) and ingestion will refuse to write incompatible vectors.
 ```
 
 ## MCP Server

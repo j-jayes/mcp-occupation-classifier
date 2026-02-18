@@ -55,10 +55,23 @@ def generate_embeddings(texts: List[str], client: OpenAI) -> List[List[float]]:
         batch = texts[i:i + batch_size]
         print(f"Generating embeddings for batch {i // batch_size + 1}/{(len(texts) + batch_size - 1) // batch_size}...")
         try:
-            response = client.embeddings.create(
-                input=batch,
-                model=EMBEDDING_MODEL
-            )
+            create_kwargs = {
+                "input": batch,
+                "model": EMBEDDING_MODEL,
+                "dimensions": 1536,
+            }
+            try:
+                response = client.embeddings.create(**create_kwargs)
+            except TypeError:
+                create_kwargs.pop("dimensions", None)
+                response = client.embeddings.create(**create_kwargs)
+            except Exception as e:
+                msg = str(e).lower()
+                if "dimensions" in msg and ("unknown" in msg or "unrecognized" in msg or "unsupported" in msg):
+                    create_kwargs.pop("dimensions", None)
+                    response = client.embeddings.create(**create_kwargs)
+                else:
+                    raise
             batch_embeddings = [data.embedding for data in response.data]
             embeddings.extend(batch_embeddings)
         except Exception as e:

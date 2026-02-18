@@ -14,9 +14,11 @@ from .config import (
     AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT,
     AZURE_OPENAI_ENABLED,
     AZURE_OPENAI_ENDPOINT,
+    EMBEDDING_DIM,
     EMBEDDING_MODEL,
     OPENAI_API_KEY,
     SSYK_PARQUET_PATH,
+    SSYK_META_PATH,
 )
 
 try:
@@ -34,6 +36,9 @@ class SearchEngine:
         self._warned_vector_failure = False
         self._load_lock = threading.Lock()
         self._embedding_matrix = None
+        self._index_embedding_dim: int | None = None
+        self._index_embedding_model_or_deployment: str | None = None
+        self._warned_embedding_dim_mismatch = False
 
     _TOKEN_RE = re.compile(r"[0-9a-zA-ZåäöÅÄÖ]+", re.UNICODE)
 
@@ -69,12 +74,30 @@ class SearchEngine:
 
         # Pre-build embedding matrix (if present) once.
         self._embedding_matrix = None
+        self._index_embedding_dim = None
+        self._index_embedding_model_or_deployment = None
         if "embedding" in self.df.columns:
             try:
                 raw_embeddings = self.df["embedding"].tolist()
                 matrix = np.asarray(raw_embeddings, dtype=np.float32)
                 if matrix.ndim != 2:
                     raise ValueError(f"Expected 2D embedding matrix, got shape={matrix.shape}")
+
+                self._index_embedding_dim = int(matrix.shape[1])
+
+                if SSYK_META_PATH.exists():
+                    try:
+                        import json
+
+                        meta = json.loads(SSYK_META_PATH.read_text(encoding="utf-8"))
+                        if isinstance(meta, dict):
+                            model_or_deployment = meta.get("model_or_deployment")
+                            if isinstance(model_or_deployment, str) and model_or_deployment.strip():
+                                self._index_embedding_model_or_deployment = model_or_deployment.strip()
+                    except Exception as meta_e:
+                        print(
+                            f"Warning: failed to read embedding metadata ({type(meta_e).__name__}): {meta_e}"
+                        )
 
                 norms = np.linalg.norm(matrix, axis=1, keepdims=True)
                 norms[norms == 0] = 1.0
@@ -117,11 +140,36 @@ class SearchEngine:
             AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT if getattr(self, "_using_azure_openai", False) else EMBEDDING_MODEL
         )
         
-        response = self.client.embeddings.create(
-            input=text,
-            model=model_name,
-        )
-        return response.data[0].embedding
+        # Enforce embedding dimensionality at request-time when supported.
+        # (OpenAI supports `dimensions` for v3 embedding models; Azure support depends on API version.)
+        create_kwargs: dict[str, Any] = {
+            "input": text,
+            "model": model_name,
+            "dimensions": EMBEDDING_DIM,
+        }
+        try:
+            response = self.client.embeddings.create(**create_kwargs)
+        except TypeError:
+            # Older clients/backends may not accept `dimensions`.
+            create_kwargs.pop("dimensions", None)
+            response = self.client.embeddings.create(**create_kwargs)
+        except Exception as e:
+            # Some backends reject unknown fields with a 400; retry without dimensions.
+            msg = str(e).lower()
+            if "dimensions" in msg and ("unknown" in msg or "unrecognized" in msg or "unsupported" in msg):
+                create_kwargs.pop("dimensions", None)
+                response = self.client.embeddings.create(**create_kwargs)
+            else:
+                raise
+        embedding = response.data[0].embedding
+        if len(embedding) != EMBEDDING_DIM:
+            provider = "azure_openai" if getattr(self, "_using_azure_openai", False) else "openai"
+            raise ValueError(
+                "Embedding dimension mismatch: expected "
+                f"{EMBEDDING_DIM} but got {len(embedding)} from {provider}/{model_name}. "
+                "Use a text-embedding-3-small (1536-dim) model/deployment consistently for both ingestion and search."
+            )
+        return embedding
 
     def _cosine_similarity(self, vec1, matrix):
         """Computes cosine similarity between a vector and a matrix of vectors."""
@@ -161,7 +209,28 @@ class SearchEngine:
         else:
             try:
                 query_embedding = self._get_embedding(query)
-                vector_scores = self._cosine_similarity(query_embedding, self._embedding_matrix)
+                query_dim = len(query_embedding)
+                index_dim = self._embedding_matrix.shape[1]
+                if query_dim != index_dim:
+                    if not self._warned_embedding_dim_mismatch:
+                        self._warned_embedding_dim_mismatch = True
+
+                        provider = "azure_openai" if getattr(self, "_using_azure_openai", False) else "openai"
+                        query_model = (
+                            AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT
+                            if getattr(self, "_using_azure_openai", False)
+                            else EMBEDDING_MODEL
+                        )
+                        index_model = self._index_embedding_model_or_deployment or "(unknown)"
+                        print(
+                            "Vector search disabled due to embedding dimension mismatch "
+                            f"(query_dim={query_dim} index_dim={index_dim}). "
+                            f"Query provider/model={provider}/{query_model}; index built with {index_model}. "
+                            "Re-run ingestion to rebuild embeddings with the same model/deployment."
+                        )
+                    vector_scores = None
+                else:
+                    vector_scores = self._cosine_similarity(query_embedding, self._embedding_matrix)
             except Exception as e:
                 # Keep this on one line for Cloud Run logs, but include the type for debugging.
                 print(f"Vector search failed ({type(e).__name__}): {e}")
@@ -205,9 +274,29 @@ class SearchEngine:
             # BM25-only fallback
             final_scores = norm_bm25
         else:
+            # Cosine similarity can be negative; for retrieval we treat negative similarity as no-signal.
+            vector_scores = np.maximum(vector_scores, 0)
             norm_vector = normalize(vector_scores)
-            # Weighting: 0.3 BM25 + 0.7 Vector (Semantic is usually better for descriptions)
-            final_scores = 0.3 * norm_bm25 + 0.7 * norm_vector
+
+            # Adaptive weighting based on retriever confidence.
+            # - Short (title-like) queries tend to benefit more from embeddings.
+            # - When BM25 is confident (e.g., exact synonym match), it should dominate.
+            conf_bm25 = float(np.max(norm_bm25)) if norm_bm25.size else 0.0
+            conf_vec = float(np.max(norm_vector)) if norm_vector.size else 0.0
+
+            token_count = len(tokenized_query)
+            vec_floor = 0.35 if token_count <= 3 else 0.20
+            if conf_bm25 >= 0.85:
+                vec_floor = 0.05
+            elif conf_bm25 >= 0.70:
+                vec_floor = min(vec_floor, 0.15)
+            vec_cap = 0.80
+            eps = 1e-6
+            w_vec = conf_vec / (conf_vec + conf_bm25 + eps)
+            w_vec = float(np.clip(w_vec, vec_floor, vec_cap))
+            w_bm25 = 1.0 - w_vec
+
+            final_scores = w_bm25 * norm_bm25 + w_vec * norm_vector
 
         # If everything is zero, avoid returning arbitrary tail rows.
         if np.max(final_scores) <= 0:

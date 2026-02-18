@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Any, Dict, List
 
 from fastmcp import FastMCP
@@ -48,7 +49,23 @@ def classify_occupation(title: str, description: str | None = None) -> List[Dict
         raise ValueError(f"description must be <= {MAX_DESCRIPTION_CHARS} characters")
 
     query = f"{title} {description}".strip() if description else title
+    start_t = time.perf_counter()
     results = search_engine.search(query)
+    # Keep tool payload small to reduce downstream LLM token usage.
+    # The UI/agent can request more details later if needed.
+    results = [
+        {
+            "ssyk_code": r.get("ssyk_code"),
+            "title": r.get("title"),
+            "score": r.get("score"),
+        }
+        for r in results
+    ]
+    elapsed_ms = (time.perf_counter() - start_t) * 1000.0
+    print(
+        "classify_occupation "
+        f"query_len={len(query)} results={len(results)} elapsed_ms={elapsed_ms:.1f}"
+    )
     return results
 
 @mcp.tool()
@@ -60,7 +77,11 @@ def get_income_statistics(ssyk_code: str) -> Dict[str, Any]:
     Args:
         ssyk_code: The 4-digit SSYK code (e.g., "2512").
     """
-    return scb_client.get_income_statistics(ssyk_code)
+    start_t = time.perf_counter()
+    result = scb_client.get_income_statistics(ssyk_code)
+    elapsed_ms = (time.perf_counter() - start_t) * 1000.0
+    print(f"get_income_statistics ssyk_code={ssyk_code} elapsed_ms={elapsed_ms:.1f}")
+    return result
 
 if __name__ == "__main__":
     # Preload data if running directly

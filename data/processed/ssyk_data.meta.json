@@ -1,0 +1,5 @@
+{
+  "provider": "azure_openai",
+  "model_or_deployment": "embed-3-small",
+  "embedding_dim": 1536
+}

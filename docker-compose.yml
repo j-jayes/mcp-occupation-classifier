@@ -32,7 +32,7 @@ services:
       - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-}
       - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
       - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-}
-      - AZURE_OPENAI_CHAT_DEPLOYMENT=${AZURE_OPENAI_CHAT_DEPLOYMENT:-}
+      - AZURE_OPENAI_CHAT_DEPLOYMENT=${AZURE_OPENAI_CHAT_DEPLOYMENT:-gpt-4o-mini}
 
       # LiteLLM commonly uses these env var names.
       - AZURE_API_BASE=${AZURE_API_BASE:-}
@@ -43,7 +43,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - MCP_SERVER_URL=http://mcp-server:8000/mcp
       - MCP_API_KEY=${MCP_API_KEY:-}
-      - OPENAI_MODEL=${OPENAI_MODEL:-azure/gpt-41}
+      - OPENAI_MODEL=azure/${AZURE_OPENAI_CHAT_DEPLOYMENT:-gpt-4o-mini}
       - ADK_HOST=0.0.0.0
       - ADK_PORT=8080
     depends_on:

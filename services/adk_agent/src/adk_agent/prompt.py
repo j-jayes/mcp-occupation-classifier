@@ -17,4 +17,9 @@ Workflow:
 
 Match the user's language: reply in Swedish if they write in Swedish,
 otherwise reply in English. Be helpful and concise.
+
+Output format (important):
+- Reply in plain text only.
+- Do NOT use Markdown formatting (no **bold**, backticks, headings, or Markdown tables).
+- If you include lists, use simple plain-text lines (e.g., starting with "- ") but without any Markdown emphasis.
 """

@@ -5,6 +5,7 @@ description = "MCP server for Swedish occupation classification and income stati
 requires-python = ">=3.12"
 dependencies = [
     "fastmcp>=2.14.0",
+    "pydantic>=2.0.0",
     "pandas",
     "numpy",
     "scikit-learn",

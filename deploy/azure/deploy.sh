@@ -22,7 +22,11 @@ ACR_NAME="${AZURE_ACR_NAME:-ssykclassifieracr}"
 MCP_IMAGE="ssyk-mcp-server"
 ADK_IMAGE="ssyk-adk-agent"
 
-: "${OPENAI_API_KEY:?Set OPENAI_API_KEY before running this script}"
+: "${AZURE_OPENAI_ENDPOINT:?Set AZURE_OPENAI_ENDPOINT before running this script}"
+: "${AZURE_OPENAI_API_KEY:?Set AZURE_OPENAI_API_KEY before running this script}"
+: "${AZURE_OPENAI_API_VERSION:?Set AZURE_OPENAI_API_VERSION before running this script}"
+: "${AZURE_OPENAI_CHAT_DEPLOYMENT:?Set AZURE_OPENAI_CHAT_DEPLOYMENT before running this script}"
+: "${AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT:?Set AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT before running this script}"
 MCP_API_KEY="${MCP_API_KEY:-}"
 # -----------------------------------
 
@@ -84,13 +88,17 @@ az containerapp create \
   --cpu 0.5 \
   --memory 1.0Gi \
   --env-vars \
-    "OPENAI_API_KEY=secretref:openai-api-key" \
+    "AZURE_OPENAI_ENDPOINT=secretref:azure-openai-endpoint" \
+    "AZURE_OPENAI_API_KEY=secretref:azure-openai-api-key" \
+    "AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}" \
+    "AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT=${AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT}" \
     "MCP_API_KEY=secretref:mcp-api-key" \
     "FASTMCP_HOST=0.0.0.0" \
     "FASTMCP_PORT=8000" \
     "DATA_DIR=/app/data" \
   --secrets \
-    "openai-api-key=${OPENAI_API_KEY}" \
+    "azure-openai-endpoint=${AZURE_OPENAI_ENDPOINT}" \
+    "azure-openai-api-key=${AZURE_OPENAI_API_KEY}" \
     "mcp-api-key=${MCP_API_KEY}" \
   --output none 2>/dev/null || \
 az containerapp update \
@@ -122,14 +130,21 @@ az containerapp create \
   --cpu 0.5 \
   --memory 1.0Gi \
   --env-vars \
-    "OPENAI_API_KEY=secretref:openai-api-key" \
+    "AZURE_OPENAI_ENDPOINT=secretref:azure-openai-endpoint" \
+    "AZURE_OPENAI_API_KEY=secretref:azure-openai-api-key" \
+    "AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}" \
+    "AZURE_OPENAI_CHAT_DEPLOYMENT=${AZURE_OPENAI_CHAT_DEPLOYMENT}" \
+    "AZURE_API_BASE=secretref:azure-openai-endpoint" \
+    "AZURE_API_KEY=secretref:azure-openai-api-key" \
+    "AZURE_API_VERSION=${AZURE_OPENAI_API_VERSION}" \
     "MCP_SERVER_URL=https://${MCP_FQDN}/mcp" \
     "MCP_API_KEY=secretref:mcp-api-key" \
-    "OPENAI_MODEL=openai/gpt-4o" \
+    "OPENAI_MODEL=azure/${AZURE_OPENAI_CHAT_DEPLOYMENT}" \
     "ADK_HOST=0.0.0.0" \
     "ADK_PORT=8080" \
   --secrets \
-    "openai-api-key=${OPENAI_API_KEY}" \
+    "azure-openai-endpoint=${AZURE_OPENAI_ENDPOINT}" \
+    "azure-openai-api-key=${AZURE_OPENAI_API_KEY}" \
     "mcp-api-key=${MCP_API_KEY}" \
   --output none 2>/dev/null || \
 az containerapp update \

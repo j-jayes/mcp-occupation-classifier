@@ -1,6 +1,7 @@
 import json
 from typing import Dict, Any, Optional
 from .config import PROCESSED_DATA_DIR
+from .models import normalize_income_statistics
 
 INCOME_STATS_PATH = PROCESSED_DATA_DIR / "income_stats.json"
 
@@ -32,9 +33,9 @@ class SCBClient:
             
         stats = self.data.get(ssyk_code)
         if not stats:
-            return {"error": f"No income data found for SSYK code {ssyk_code}"}
-            
-        return {
-            "ssyk_code": ssyk_code,
-            **stats
-        }
+            return {"ok": False, "error": f"No income data found for SSYK code {ssyk_code}", "ssyk_code": ssyk_code}
+
+        # Ensure the raw dict includes year/metrics. We keep the raw keys as-is
+        # but also provide a normalized view for stable downstream rendering.
+        result = normalize_income_statistics(ssyk_code=ssyk_code, stats=dict(stats))
+        return result.model_dump()

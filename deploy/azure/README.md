@@ -18,16 +18,35 @@ Internet --> ADK Agent (external, port 8080) --> MCP Server (internal, port 8000
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed
 - Logged in: `az login`
 - Subscription access: `e9b64842-3c87-4665-ad56-86ae7c20fe4b`
-- `OPENAI_API_KEY` set in your environment
+- Azure CLI logged in: `az login`
+- Azure OpenAI configured in your environment (or `.env`):
+  - `AZURE_OPENAI_ENDPOINT`
+  - `AZURE_OPENAI_API_KEY`
+  - `AZURE_OPENAI_API_VERSION`
+  - `AZURE_OPENAI_CHAT_DEPLOYMENT` (e.g. `gpt-4o-mini`)
+  - `AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT` (e.g. `embed-3-small`)
 
 ## Deploy
 
 ```bash
-export OPENAI_API_KEY="sk-..."
 export MCP_API_KEY="your-secret"   # optional
+
+# Azure OpenAI (required)
+export AZURE_OPENAI_ENDPOINT="https://<resource>.openai.azure.com/"
+export AZURE_OPENAI_API_KEY="..."
+export AZURE_OPENAI_API_VERSION="2024-12-01-preview"
+export AZURE_OPENAI_CHAT_DEPLOYMENT="gpt-4o-mini"
+export AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT="embed-3-small"
 
 # Run from the repo root
 bash deploy/azure/deploy.sh
+```
+
+Windows PowerShell alternative:
+
+```powershell
+# From the repo root
+./deploy/azure/deploy.ps1
 ```
 
 The script will:
@@ -54,6 +73,13 @@ Override defaults via environment variables:
 | `AZURE_LOCATION` | `swedencentral` | Azure region |
 | `AZURE_CONTAINER_ENV` | `ssyk-env` | Container Apps environment |
 | `AZURE_ACR_NAME` | `ssykclassifieracr` | Container Registry name |
+
+## Notes
+
+- This deployment uses Azure Container Apps:
+  - `ssyk-mcp` is deployed with **internal** ingress.
+  - `ssyk-adk` is deployed with **external** ingress.
+- Both services read Azure OpenAI settings from environment variables (matching `docker-compose.yml`).
 
 ## Tear down
 

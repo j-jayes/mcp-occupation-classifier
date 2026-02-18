@@ -148,6 +148,34 @@ header p {
     border-bottom-left-radius: 0.25rem;
 }
 
+.msg.salary-chart {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-bottom-left-radius: 0.25rem;
+    max-width: 95%;
+}
+
+.salary-chart-title {
+    font-size: 0.9rem;
+    color: #222;
+    margin-bottom: 0.5rem;
+}
+
+.salary-chart-subtitle {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: -0.3rem;
+    margin-bottom: 0.6rem;
+}
+
+.salary-chart svg {
+    width: 520px;
+    max-width: 100%;
+    height: 140px;
+    display: block;
+}
+
 .msg.loading {
     align-self: flex-start;
     background: #fff;
