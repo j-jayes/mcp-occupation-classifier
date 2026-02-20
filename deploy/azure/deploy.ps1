@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 function Import-DotEnvIfNeeded {
-  $dotenvPath = Join-Path $PSScriptRoot '..\..\..\.env'
+  # This script lives in deploy/azure; repo root is two levels up.
+  $dotenvPath = Join-Path $PSScriptRoot '..\..\.env'
   if (-not (Test-Path $dotenvPath)) { return }
 
     foreach ($raw in Get-Content $dotenvPath) {
