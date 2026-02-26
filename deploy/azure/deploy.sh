@@ -3,8 +3,8 @@
 #
 # Prerequisites:
 #   - Azure CLI (az) installed and logged in
-#   - OPENAI_API_KEY set in environment (or in .env)
-#   - Optionally MCP_API_KEY set for bearer-token auth
+#   - AZURE_OPENAI_* set in environment (or in .env)
+#   - MCP_API_KEY set for bearer-token auth
 #
 # Usage:
 #   export OPENAI_API_KEY="sk-..."
@@ -27,7 +27,7 @@ ADK_IMAGE="ssyk-adk-agent"
 : "${AZURE_OPENAI_API_VERSION:?Set AZURE_OPENAI_API_VERSION before running this script}"
 : "${AZURE_OPENAI_CHAT_DEPLOYMENT:?Set AZURE_OPENAI_CHAT_DEPLOYMENT before running this script}"
 : "${AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT:?Set AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT before running this script}"
-MCP_API_KEY="${MCP_API_KEY:-}"
+: "${MCP_API_KEY:?Set MCP_API_KEY before running this script}"
 # -----------------------------------
 
 echo "=== Setting subscription ==="
@@ -95,6 +95,7 @@ az containerapp create \
     "MCP_API_KEY=secretref:mcp-api-key" \
     "FASTMCP_HOST=0.0.0.0" \
     "FASTMCP_PORT=8000" \
+    "FASTMCP_PATH=/mcp" \
     "DATA_DIR=/app/data" \
   --secrets \
     "azure-openai-endpoint=${AZURE_OPENAI_ENDPOINT}" \

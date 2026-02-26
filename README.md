@@ -6,15 +6,31 @@ This repo hosts a **FastMCP server** that provides tools for:
 - Returning income statistics for an SSYK code (from pre-processed SCB-derived data).
 
 It also includes a **Google ADK chatbot** that uses the MCP server as a tool,
-powered by OpenAI GPT-4o via LiteLLM.
+powered by **LiteLLM** (Azure OpenAI preferred; OpenAI fallback).
 
 ## Architecture
 
 ```
 Browser --> ADK Agent (port 8080) --> MCP Server (port 8000)
                |                          |
-         OpenAI GPT-4o             OpenAI Embeddings
-         (chat completion)         (vector search)
+             LiteLLM (chat model)        Embeddings (vector search)
+             Azure OpenAI / OpenAI       Azure OpenAI / OpenAI
+```
+
+## Deployed URLs (Azure Container Apps)
+
+Current deployment endpoints (these can change if you delete/recreate the Container Apps):
+
+- Frontend / ADK agent (public): https://ssyk-adk.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io
+- ADK API (non-streaming): https://ssyk-adk.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io/api/chat
+- ADK API (streaming/SSE): https://ssyk-adk.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io/api/chat/stream
+- ADK health: https://ssyk-adk.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io/health
+- MCP server (internal ingress): https://ssyk-mcp.internal.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io/mcp
+
+Notes:
+
+- The MCP server is deployed with **internal ingress** in the Azure setup in this repo, so it is not reachable from the public internet.
+- The MCP endpoint is **Streamable HTTP** at `/mcp` (FastMCP `transport="http"`), which is the transport Copilot Studio expects.
 
 ## Embedding dimensionality (1536)
 
@@ -24,7 +40,7 @@ This project intentionally standardizes on **1536-dimensional** embeddings (i.e.
 - If you use **OpenAI** directly, keep `EMBEDDING_MODEL=text-embedding-3-small`.
 
 Mixing 1536-dim and 3072-dim embeddings will disable vector search (BM25-only fallback) and ingestion will refuse to write incompatible vectors.
-```
+
 
 ## MCP Server
 
@@ -35,22 +51,47 @@ Tools are implemented in [services/mcp_server/src/ssyk_mcp/server.py](services/m
 
 The server runs Streamable HTTP at `GET/POST <base>/mcp` (configurable).
 
+### API key auth (Bearer token)
+
+For the Azure MCP server deployment, `MCP_API_KEY` is required to enable bearer-token auth (local runs may omit it).
+
+Clients must send: `Authorization: Bearer <MCP_API_KEY>`
+
+This is compatible with Copilot Studio’s “API key” auth mode (use a header, not query).
+
+### Copilot Studio transport
+
+Copilot Studio uses MCP over **Streamable HTTP** at `/mcp`.
+
+- SSE transport is deprecated for Copilot Studio.
+- `/mcp` is not a normal REST endpoint; `GET /mcp` in a browser may return `406 Not Acceptable` unless you are speaking MCP.
+
 ## ADK Chatbot
 
 The ADK agent ([services/adk_agent/](services/adk_agent/)) connects to the MCP
 server over Streamable HTTP and exposes a simple chat UI.
 
+## Frontend
+
+The frontend is served by the ADK agent and is available at the ADK base URL:
+
+- https://ssyk-adk.wonderfultree-e1a11547.swedencentral.azurecontainerapps.io
+
+It streams responses from `POST /api/chat/stream` and shows an MCP request/response trace.
+Salary requests render a D3 chart and hovering shows percentile values.
+
 ## Run locally (Docker Compose)
 
 ```bash
 cp .env.example .env
-# Fill OPENAI_API_KEY (required for chat + semantic search)
+# Fill Azure OpenAI vars (preferred) OR OPENAI_API_KEY (fallback)
 docker compose up --build
 ```
 
 - MCP server: `http://localhost:8000/mcp`
 - Chat UI: `http://localhost:8080`
 - Chat API: `http://localhost:8080/api/chat`
+- Chat stream (SSE): `http://localhost:8080/api/chat/stream`
 
 ## Run locally (Python)
 
@@ -67,12 +108,6 @@ cd services/adk_agent
 uv sync
 uv run python -m adk_agent.app
 ```
-
-## API key auth (Bearer token)
-
-Set `MCP_API_KEY` to enable bearer-token auth.
-
-Clients must send: `Authorization: Bearer <MCP_API_KEY>`
 
 ## OAuth 2.0 (RemoteAuthProvider) (optional)
 
@@ -99,7 +134,9 @@ Pipelines to (re)build these live under [pipelines/](pipelines/).
 
 ## Copilot Studio
 
-In Copilot Studio, use the MCP onboarding wizard to connect to your deployed MCP server URL (Streamable HTTP) and configure OAuth.
+In Copilot Studio, use the MCP onboarding wizard to connect to your deployed MCP server URL (Streamable HTTP) and configure authentication.
+
+Important: Copilot Studio needs a **public HTTPS** MCP endpoint. The Azure Container Apps deployment in this repo deploys the MCP server with **internal ingress**, so Copilot Studio cannot connect to it directly.
 
 - Setup guide: [docs/copilot-studio.md](docs/copilot-studio.md)
 

@@ -41,7 +41,8 @@ $required = @(
   'AZURE_OPENAI_API_KEY',
   'AZURE_OPENAI_API_VERSION',
   'AZURE_OPENAI_CHAT_DEPLOYMENT',
-  'AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT'
+  'AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT',
+  'MCP_API_KEY'
 )
 
 $missing = @()
@@ -86,7 +87,7 @@ $acrLoginServer = az acr show --name $AcrName --query loginServer -o tsv
 $acrUsername = az acr credential show --name $AcrName --query username -o tsv
 $acrPassword = az acr credential show --name $AcrName --query "passwords[0].value" -o tsv
 
-$mcpApiKey = if ($env:MCP_API_KEY) { $env:MCP_API_KEY } else { "" }
+$mcpApiKey = $env:MCP_API_KEY
 
 Write-Host "=== Deploying MCP server (internal ingress) ==="
 try {
@@ -116,6 +117,7 @@ try {
       "MCP_API_KEY=secretref:mcp-api-key" `
       "FASTMCP_HOST=0.0.0.0" `
       "FASTMCP_PORT=8000" `
+      "FASTMCP_PATH=/mcp" `
       "DATA_DIR=/app/data" `
     --output none | Out-Null
 } catch {

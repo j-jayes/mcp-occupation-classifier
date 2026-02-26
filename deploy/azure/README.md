@@ -29,7 +29,7 @@ Internet --> ADK Agent (external, port 8080) --> MCP Server (internal, port 8000
 ## Deploy
 
 ```bash
-export MCP_API_KEY="your-secret"   # optional
+export MCP_API_KEY="your-secret"   # required (enables bearer-token auth)
 
 # Azure OpenAI (required)
 export AZURE_OPENAI_ENDPOINT="https://<resource>.openai.azure.com/"
