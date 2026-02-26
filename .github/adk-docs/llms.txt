@@ -1,6 +1,6 @@
-# Agent Development Kit
+# Agent Development Kit (ADK)
 
-> Build powerful multi-agent systems with Agent Development Kit
+> Build powerful multi-agent systems with Agent Development Kit (ADK)
 
 An open-source, code-first toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.
 
@@ -85,10 +85,12 @@ An open-source, code-first toolkit for building, evaluating, and deploying sophi
 - [Reflect and Retry plugin for ADK](https://google.github.io/adk-docs/integrations/reflect-and-retry/index.md)
 - [Restate plugin for ADK](https://google.github.io/adk-docs/integrations/restate/index.md)
 - [Google Cloud Spanner tool for ADK](https://google.github.io/adk-docs/integrations/spanner/index.md)
+- [StackOne plugin for ADK](https://google.github.io/adk-docs/integrations/stackone/index.md)
 - [Stripe MCP tool for ADK](https://google.github.io/adk-docs/integrations/stripe/index.md)
 - [Vertex AI RAG Engine tool for ADK](https://google.github.io/adk-docs/integrations/vertex-ai-rag-engine/index.md)
 - [Vertex AI Search tool for ADK](https://google.github.io/adk-docs/integrations/vertex-ai-search/index.md)
 - [W&amp;B Weave observability for ADK](https://google.github.io/adk-docs/integrations/weave/index.md)
+- [Windsor.ai MCP tool for ADK](https://google.github.io/adk-docs/integrations/windsor-ai/index.md)
 - [Tool limitations](https://google.github.io/adk-docs/tools/limitations/index.md)
 - [Custom Tools for ADK](https://google.github.io/adk-docs/tools-custom/index.md)
 - [Authentication](https://google.github.io/adk-docs/tools-custom/authentication/index.md)

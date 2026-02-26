@@ -2,6 +2,8 @@
 
 ## Docs
 
+- [Low-Level API](https://gofastmcp.com/apps/low-level.md): Integrate directly with the MCP Apps extension to build interactive tool UIs.
+- [Apps](https://gofastmcp.com/apps/overview.md): Give your tools interactive UIs rendered directly in the conversation.
 - [Changelog](https://gofastmcp.com/changelog.md)
 - [Bearer Token Authentication](https://gofastmcp.com/clients/auth/bearer.md): Authenticate your FastMCP client with a Bearer token.
 - [CIMD Authentication](https://gofastmcp.com/clients/auth/cimd.md): Use Client ID Metadata Documents for verifiable, domain-based client identity.
@@ -27,10 +29,12 @@
 - [Contributing](https://gofastmcp.com/development/contributing.md): Development workflow for FastMCP contributors
 - [Releases](https://gofastmcp.com/development/releases.md): FastMCP versioning and release process
 - [Tests](https://gofastmcp.com/development/tests.md): Testing patterns and requirements for FastMCP
-- [Upgrade Guide](https://gofastmcp.com/development/upgrade-guide.md): Migration instructions for upgrading between FastMCP versions
 - [Installation](https://gofastmcp.com/getting-started/installation.md): Install FastMCP and verify your setup
 - [Quickstart](https://gofastmcp.com/getting-started/quickstart.md)
-- [Welcome to FastMCP 3.0!](https://gofastmcp.com/getting-started/welcome.md): The fast, Pythonic way to build MCP servers and clients.
+- [Upgrading from FastMCP 2](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2.md): Migration instructions for upgrading between FastMCP versions
+- [Upgrading from the MCP Low-Level SDK](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk.md): Upgrade your MCP server from the low-level Python SDK's Server class to FastMCP
+- [Upgrading from the MCP SDK](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk.md): Upgrade from FastMCP in the MCP Python SDK to the standalone FastMCP framework
+- [Welcome to FastMCP](https://gofastmcp.com/getting-started/welcome.md): The fast, Pythonic way to build MCP servers, clients, and applications.
 - [Anthropic API 🤝 FastMCP](https://gofastmcp.com/integrations/anthropic.md): Connect FastMCP servers to the Anthropic API
 - [Auth0 OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/auth0.md): Secure your FastMCP server with Auth0 OAuth
 - [AuthKit 🤝 FastMCP](https://gofastmcp.com/integrations/authkit.md): Secure your FastMCP server with AuthKit by WorkOS
@@ -64,6 +68,7 @@
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-cli-auth.md)
 - [cimd](https://gofastmcp.com/python-sdk/fastmcp-cli-cimd.md)
 - [cli](https://gofastmcp.com/python-sdk/fastmcp-cli-cli.md)
+- [client](https://gofastmcp.com/python-sdk/fastmcp-cli-client.md)
 - [discovery](https://gofastmcp.com/python-sdk/fastmcp-cli-discovery.md)
 - [generate](https://gofastmcp.com/python-sdk/fastmcp-cli-generate.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-cli-install-__init__.md)
