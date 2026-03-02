@@ -5081,7 +5081,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -5103,7 +5103,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -5150,7 +5150,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -5166,7 +5166,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -5362,7 +5362,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -7017,18 +7017,19 @@ that the response is safe, while scores closer to 0.0 indicate potential safety
 issues.</p>
 <h2 id="per_turn_user_simulator_quality_v1">per_turn_user_simulator_quality_v1<a class="headerlink" href="#per_turn_user_simulator_quality_v1" title="Permanent link">&para;</a></h2>
 <p>This criterion evaluates whether a user simulator is faithful to a conversation
-plan.</p>
+plan and persona.</p>
 <h4 id="when-to-use-this-criterion_7">When To Use This Criterion?<a class="headerlink" href="#when-to-use-this-criterion_7" title="Permanent link">&para;</a></h4>
 <p>Use this criterion when you need to evaluate a user simulator in a multi-turn
 conversation. It is designed to assess whether the simulator follows the
-conversation plan defined in the <code>ConversationScenario</code>.</p>
+conversation plan and persona defined in the <code>ConversationScenario</code>.</p>
 <h4 id="details_7">Details<a class="headerlink" href="#details_7" title="Permanent link">&para;</a></h4>
 <p>This criterion determines whether the a user simulator follows a defined
 <code>ConversationScenario</code> in a multi-turn conversation.</p>
 <p>For the first turn, this criterion checks if user simulator response matches the
 <code>starting_prompt</code> in the <code>ConversationScenario</code>. For subsequent turns, it uses
 LLM-as-a-judge to evaluate if the user response follows the <code>conversation_plan</code>
-in the <code>ConversationScenario</code>.</p>
+and <code>user_persona</code> in the <code>ConversationScenario</code>. To check adherence to the
+persona, we use the <code>violation_rubrics</code> specified in the <code>UserPersona</code>.</p>
 <h4 id="how-to-use-this-criterion_7">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_7" title="Permanent link">&para;</a></h4>
 <p>This criterion allows you to configure the evaluation threshold, the judge model
 and the number of samples per invocation. The criterion also lets you specify a

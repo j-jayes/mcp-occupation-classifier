@@ -4538,7 +4538,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4560,7 +4560,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4607,7 +4607,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4623,7 +4623,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -4819,7 +4819,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -5610,6 +5610,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#hitl-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-in-the-Loop (HITL) Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#gcs-offloading-examples-multimodal-large-text" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5752,10 +5763,10 @@
 
 <div class="admonition important">
 <p class="admonition-title">Version Requirement</p>
-<p>Use ADK Python version 1.21.0 or higher to make full use of the features described in this document.</p>
+<p>Use ADK Python version 1.26.0 or higher to make full use of the features described in this document, including auto-schema-upgrade, tool provenance tracking, and HITL event tracing.</p>
 </div>
 <p>The BigQuery Agent Analytics Plugin significantly enhances the Agent Development Kit (ADK) by providing a robust solution for in-depth agent behavior analysis. Using the ADK Plugin architecture and the <strong>BigQuery Storage Write API</strong>, it captures and logs critical operational events directly into a Google BigQuery table, empowering you with advanced capabilities for debugging, real-time monitoring, and comprehensive offline performance evaluation.</p>
-<p>Version 1.21.0 introduces <strong>Hybrid Multimodal Logging</strong>, allowing you to log large payloads (images, audio, blobs) by offloading them to Google Cloud Storage (GCS) while keeping a structured reference (<code>ObjectRef</code>) in BigQuery.</p>
+<p>Version 1.26.0 adds <strong>Auto Schema Upgrade</strong> (safely add new columns to existing tables), <strong>Tool Provenance</strong> tracking (LOCAL, MCP, SUB_AGENT, A2A, TRANSFER_AGENT), and <strong>HITL Event Tracing</strong> for human-in-the-loop interactions.</p>
 <div class="admonition example">
 <p class="admonition-title">Preview release</p>
 <p>The BigQuery Agent Analytics Plugin is in Preview release. For more
@@ -5777,6 +5788,8 @@ For information on costs, see the
     asynchronously using the Storage Write API to allow high throughput and low latency.</li>
 <li><strong>Multimodal Analysis</strong>: Log and analyze text, images, and other modalities. Large files are offloaded to GCS, making them accessible to BigQuery ML via Object Tables.</li>
 <li><strong>Distributed Tracing</strong>: Built-in support for OpenTelemetry-style tracing (<code>trace_id</code>, <code>span_id</code>) to visualize agent execution flows.</li>
+<li><strong>Tool Provenance</strong>: Track the origin of each tool call (local function, MCP server, sub-agent, A2A remote agent, or transfer agent).</li>
+<li><strong>Human-in-the-Loop (HITL) Tracing</strong>: Dedicated event types for credential requests, confirmation prompts, and user input requests.</li>
 </ul>
 <p>The agent event data recorded varies based on the ADK event type. For more
 information, see <a href="#event-types">Event types and payloads</a>.</p>
@@ -5848,7 +5861,7 @@ agent with this plugin, including GCS offloading:</p>
 </span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="n">bq_logging_plugin</span> <span class="o">=</span> <span class="n">BigQueryAgentAnalyticsPlugin</span><span class="p">(</span>
 </span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="n">project_id</span><span class="o">=</span><span class="n">PROJECT_ID</span><span class="p">,</span>
 </span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    <span class="n">dataset_id</span><span class="o">=</span><span class="n">DATASET_ID</span><span class="p">,</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">table_id</span><span class="o">=</span><span class="s2">&quot;agent_events_v2&quot;</span><span class="p">,</span> <span class="c1"># default table name is agent_events_v2</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">table_id</span><span class="o">=</span><span class="s2">&quot;agent_events&quot;</span><span class="p">,</span> <span class="c1"># default table name is agent_events</span>
 </span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    <span class="n">config</span><span class="o">=</span><span class="n">bq_config</span><span class="p">,</span>
 </span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>    <span class="n">location</span><span class="o">=</span><span class="n">LOCATION</span>
 </span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="p">)</span>
@@ -5881,7 +5894,7 @@ interface, such as "tell me what you can do" or  "List datasets in my cloud proj
 recorded in your Google Cloud project BigQuery instance. Once these events have
 been processed, you can view the data for them in the <a href="https://console.cloud.google.com/bigquery">BigQuery Console</a>, using this query</p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="n">content</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">big</span><span class="o">-</span><span class="n">query</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">big</span><span class="o">-</span><span class="n">query</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
 </span></code></pre></div>
@@ -5896,7 +5909,7 @@ been processed, you can view the data for them in the <a href="https://console.c
 <p>You can customize the plugin using <code>BigQueryLoggerConfig</code>.</p>
 <ul>
 <li><strong><code>enabled</code></strong> (<code>bool</code>, default: <code>True</code>): To disable the plugin from logging agent data to the BigQuery table, set this parameter to False.</li>
-<li><strong><code>table_id</code></strong> (<code>str</code>, default: <code>"agent_events_v2"</code>): The BigQuery table ID within the dataset. Can also be overridden by the <code>table_id</code> parameter on the <code>BigQueryAgentAnalyticsPlugin</code> constructor, which takes precedence.</li>
+<li><strong><code>table_id</code></strong> (<code>str</code>, default: <code>"agent_events"</code>): The BigQuery table ID within the dataset. Can also be overridden by the <code>table_id</code> parameter on the <code>BigQueryAgentAnalyticsPlugin</code> constructor, which takes precedence.</li>
 <li><strong><code>clustering_fields</code></strong> (<code>List[str]</code>, default: <code>["event_type", "agent", "user_id"]</code>): The fields used to cluster the BigQuery table when it is automatically created.</li>
 <li><strong><code>gcs_bucket_name</code></strong> (<code>Optional[str]</code>, default: <code>None</code>): The name of the GCS bucket to offload large content (images, blobs, large text) to. If not provided, large content may be truncated or replaced with placeholders.</li>
 <li><strong><code>connection_id</code></strong> (<code>Optional[str]</code>, default: <code>None</code>): The BigQuery connection ID (e.g., <code>us.my-connection</code>) to use as the authorizer for <code>ObjectRef</code> columns. Required for using <code>ObjectRef</code> with BigQuery ML.</li>
@@ -5915,8 +5928,9 @@ been processed, you can view the data for them in the <a href="https://console.c
 <li><strong><code>log_multi_modal_content</code></strong> (<code>bool</code>, default: <code>True</code>): Whether to log detailed content parts (including GCS references).</li>
 <li><strong><code>queue_max_size</code></strong> (<code>int</code>, default: <code>10000</code>): The maximum number of events to hold in the in-memory queue before dropping new events.</li>
 <li><strong><code>retry_config</code></strong> (<code>RetryConfig</code>, default: <code>RetryConfig()</code>): Configuration for retrying failed BigQuery writes (attributes: <code>max_retries</code>, <code>initial_delay</code>, <code>multiplier</code>, <code>max_delay</code>).</li>
-<li><strong><code>log_session_metadata</code></strong> (<code>bool</code>, default: <code>True</code>): If True, logs metadata from the <code>session</code> object (e.g., <code>session.metadata</code>) into the <code>attributes</code> column.</li>
+<li><strong><code>log_session_metadata</code></strong> (<code>bool</code>, default: <code>True</code>): If True, logs session information into the <code>attributes</code> column, including <code>session_id</code>, <code>app_name</code>, <code>user_id</code>, and the session <code>state</code> dictionary (e.g., custom state like gchat thread-id, customer_id).</li>
 <li><strong><code>custom_tags</code></strong> (<code>Dict[str, Any]</code>, default: <code>{}</code>): A dictionary of static tags (e.g., <code>{"env": "prod", "version": "1.0"}</code>) to be included in the <code>attributes</code> column for every event.</li>
+<li><strong><code>auto_schema_upgrade</code></strong> (<code>bool</code>, default: <code>True</code>): When enabled, the plugin automatically adds new columns to an existing table when the plugin schema evolves. Only additive changes are made (columns are never dropped or altered). A version label (<code>adk_schema_version</code>) on the table ensures the diff runs at most once per schema version. Safe to leave enabled.</li>
 </ul>
 <p>The following code sample shows how to define a configuration for the
 BigQuery Agent Analytics plugin:</p>
@@ -5954,14 +5968,15 @@ BigQuery Agent Analytics plugin:</p>
 </span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    <span class="n">max_content_length</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="c1"># Truncate content to 500 chars</span>
 </span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>    <span class="n">content_formatter</span><span class="o">=</span><span class="n">redact_dollar_amounts</span><span class="p">,</span> <span class="c1"># Redact the dollar amounts in the logging content</span>
 </span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>    <span class="n">queue_max_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="c1"># Max events to hold in memory</span>
-</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>    <span class="c1"># retry_config=RetryConfig(max_retries=3), # Optional: Configure retries</span>
-</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="p">)</span>
-</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
-</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="n">plugin</span> <span class="o">=</span> <span class="n">BigQueryAgentAnalyticsPlugin</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>    <span class="n">auto_schema_upgrade</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1"># Automatically add new columns to existing tables</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>    <span class="c1"># retry_config=RetryConfig(max_retries=3), # Optional: Configure retries</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="p">)</span>
+</span><span id="__span-2-38"><a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+</span><span id="__span-2-39"><a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="n">plugin</span> <span class="o">=</span> <span class="n">BigQueryAgentAnalyticsPlugin</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="schema-and-production-setup">Schema and production setup<a class="headerlink" href="#schema-and-production-setup" title="Permanent link">&para;</a></h2>
 <h3 id="schema-reference">Schema Reference<a class="headerlink" href="#schema-reference" title="Permanent link">&para;</a></h3>
-<p>The events table (<code>agent_events_v2</code>) uses a flexible schema. The following table provides a comprehensive reference with example values.</p>
+<p>The events table (<code>agent_events</code>) uses a flexible schema. The following table provides a comprehensive reference with example values.</p>
 <table>
 <thead>
 <tr>
@@ -5977,14 +5992,14 @@ BigQuery Agent Analytics plugin:</p>
 <td style="text-align: left;"><strong>timestamp</strong></td>
 <td style="text-align: left;"><code>TIMESTAMP</code></td>
 <td style="text-align: left;"><code>REQUIRED</code></td>
-<td style="text-align: left;">UTC timestamp of event creation. Acts as the primary ordering key and often the daily partitioning key. Precision is microsecond.</td>
+<td style="text-align: left;">UTC timestamp of event creation. Acts as the primary ordering key and the daily partitioning key. Precision is microsecond.</td>
 <td style="text-align: left;"><code>2026-02-03 20:52:17 UTC</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>event_type</strong></td>
 <td style="text-align: left;"><code>STRING</code></td>
 <td style="text-align: left;"><code>NULLABLE</code></td>
-<td style="text-align: left;">The canonical event category. Standard values include <code>LLM_REQUEST</code>, <code>LLM_RESPONSE</code>, <code>LLM_ERROR</code>, <code>TOOL_STARTING</code>, <code>TOOL_COMPLETED</code>, <code>TOOL_ERROR</code>, <code>AGENT_STARTING</code>, <code>AGENT_COMPLETED</code>, <code>STATE_DELTA</code>. Used for high-level filtering.</td>
+<td style="text-align: left;">The canonical event category. Standard values include <code>LLM_REQUEST</code>, <code>LLM_RESPONSE</code>, <code>LLM_ERROR</code>, <code>TOOL_STARTING</code>, <code>TOOL_COMPLETED</code>, <code>TOOL_ERROR</code>, <code>AGENT_STARTING</code>, <code>AGENT_COMPLETED</code>, <code>STATE_DELTA</code>, <code>INVOCATION_STARTING</code>, <code>INVOCATION_COMPLETED</code>, <code>USER_MESSAGE_RECEIVED</code>, and HITL events (see <a href="#hitl-events">HITL events</a>). Used for high-level filtering.</td>
 <td style="text-align: left;"><code>LLM_REQUEST</code></td>
 </tr>
 <tr>
@@ -6047,8 +6062,8 @@ BigQuery Agent Analytics plugin:</p>
 <td style="text-align: left;"><strong>attributes</strong></td>
 <td style="text-align: left;"><code>JSON</code></td>
 <td style="text-align: left;"><code>NULLABLE</code></td>
-<td style="text-align: left;">Metadata/Enrichment (usage stats, model info, custom tags).</td>
-<td style="text-align: left;"><code>{"model": "gemini-2.5-flash", "usage_metadata": {"total_token_count": 15}, "state_delta": {"key": "val"}, "session_metadata": {"key": "val"}}</code></td>
+<td style="text-align: left;">Metadata/Enrichment (usage stats, model info, tool provenance, custom tags).</td>
+<td style="text-align: left;"><code>{"model": "gemini-2.5-flash", "usage_metadata": {"total_token_count": 15}, "session_metadata": {"session_id": "...", "app_name": "...", "user_id": "...", "state": {}}, "custom_tags": {"env": "prod"}}</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>latency_ms</strong></td>
@@ -6090,7 +6105,7 @@ BigQuery Agent Analytics plugin:</p>
 <p>The plugin automatically creates the table if it does not exist. However, for
 production, we recommend creating the table manually using the following DDL, which utilizes the <strong>JSON</strong> type for flexibility and <strong>REPEATED RECORD</strong>s for multimodal content.</p>
 <p><strong>Recommended DDL:</strong></p>
-<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">adk_agent_logs</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">adk_agent_logs</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="k">timestamp</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OPTIONS</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="ss">&quot;The UTC time at which the event was logged.&quot;</span><span class="p">),</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="n">STRING</span><span class="w"> </span><span class="k">OPTIONS</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="ss">&quot;Indicates the type of event being logged (e.g., &#39;LLM_REQUEST&#39;, &#39;TOOL_COMPLETED&#39;).&quot;</span><span class="p">),</span>
@@ -6153,12 +6168,13 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nt">&quot;attributes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">&quot;root_agent_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_bq_agent&quot;</span><span class="p">,</span>
 </span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="nt">&quot;llm_config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nt">&quot;temperature&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nt">&quot;top_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="p">}</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="nt">&quot;tools&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;list_dataset_ids&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;execute_sql&quot;</span><span class="p">],</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nt">&quot;llm_config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nt">&quot;temperature&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">      </span><span class="nt">&quot;top_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>2. LLM_RESPONSE</strong></p>
 <p>Captures the model's output and token usage statistics.</p>
@@ -6202,7 +6218,41 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">}</span>
 </span></code></pre></div>
 <h4 id="tool-usage-plugin-lifecycle">Tool usage (plugin lifecycle)<a class="headerlink" href="#tool-usage-plugin-lifecycle" title="Permanent link">&para;</a></h4>
-<p>These events track the execution of tools by the agent.</p>
+<p>These events track the execution of tools by the agent. Each tool event includes a <code>tool_origin</code> field that classifies the tool's provenance:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tool Origin</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>LOCAL</code></td>
+<td style="text-align: left;"><code>FunctionTool</code> instances (local Python functions)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MCP</code></td>
+<td style="text-align: left;">Model Context Protocol tools (<code>McpTool</code> instances)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SUB_AGENT</code></td>
+<td style="text-align: left;"><code>AgentTool</code> instances (sub-agents)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>A2A</code></td>
+<td style="text-align: left;">Remote Agent-to-Agent instances (<code>RemoteA2aAgent</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TRANSFER_AGENT</code></td>
+<td style="text-align: left;"><code>TransferToAgentTool</code> instances</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>UNKNOWN</code></td>
+<td style="text-align: left;">Unclassified tools</td>
+</tr>
+</tbody>
+</table>
 <p><strong>4. TOOL_STARTING</strong></p>
 <p>Logged when an agent begins executing a tool.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
@@ -6211,9 +6261,10 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_dataset_ids&quot;</span><span class="p">,</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">      </span><span class="nt">&quot;project_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bigquery-public-data&quot;</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">&quot;tool_origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LOCAL&quot;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>5. TOOL_COMPLETED</strong></p>
 <p>Logged when a tool execution finishes.</p>
@@ -6224,28 +6275,30 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">&quot;result&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="s2">&quot;austin_311&quot;</span><span class="p">,</span>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">      </span><span class="s2">&quot;austin_bikeshare&quot;</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p">]</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="nt">&quot;total_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">467</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">}</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p">],</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">&quot;tool_origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LOCAL&quot;</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nt">&quot;total_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">467</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>6. TOOL_ERROR</strong></p>
-<p>Logged when a tool execution fails with an exception. Captures the tool name, arguments, and error message.</p>
+<p>Logged when a tool execution fails with an exception. Captures the tool name, arguments, tool origin, and error message.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TOOL_ERROR&quot;</span><span class="p">,</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">&quot;tool&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;list_dataset_ids&quot;</span><span class="p">,</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">      </span><span class="nt">&quot;project_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nonexistent-project&quot;</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="nt">&quot;error_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Error 404: Dataset not found&quot;</span><span class="p">,</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="nt">&quot;total_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span>
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">}</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nt">&quot;tool_origin&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LOCAL&quot;</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="nt">&quot;error_message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Error 404: Dataset not found&quot;</span><span class="p">,</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="nt">&quot;total_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">}</span>
 </span></code></pre></div>
 <h4 id="state-management">State Management<a class="headerlink" href="#state-management" title="Permanent link">&para;</a></h4>
 <p>These events track changes to the agent's state, typically triggered by tools.</p>
@@ -6293,6 +6346,57 @@ The <code>content_parts</code> column provides a structured view of the content,
   </tbody>
 </table>
 
+<h4 id="hitl-events">Human-in-the-Loop (HITL) Events<a class="headerlink" href="#hitl-events" title="Permanent link">&para;</a></h4>
+<p>The plugin automatically detects calls to ADK's synthetic HITL tools and emits dedicated event types for them. These events are logged <strong>in addition to</strong> the normal <code>TOOL_STARTING</code> / <code>TOOL_COMPLETED</code> events.</p>
+<p>The following HITL tool names are recognized:</p>
+<ul>
+<li><code>adk_request_credential</code> — Request for user credentials (e.g., OAuth tokens)</li>
+<li><code>adk_request_confirmation</code> — Request for user confirmation before proceeding</li>
+<li><code>adk_request_input</code> — Request for free-form user input</li>
+</ul>
+<table>
+  <thead>
+    <tr>
+      <th><strong>Event Type</strong></th>
+      <th><strong>Trigger</strong></th>
+      <th><strong>Content (JSON) Structure</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><p><pre>HITL_CREDENTIAL_REQUEST</pre></p></td>
+      <td>Agent calls <code>adk_request_credential</code></td>
+      <td><p><pre>{"tool": "adk_request_credential", "args": {...}}</pre></p></td>
+    </tr>
+    <tr>
+      <td><p><pre>HITL_CREDENTIAL_REQUEST_COMPLETED</pre></p></td>
+      <td>User provides credential response</td>
+      <td><p><pre>{"tool": "adk_request_credential", "result": {...}}</pre></p></td>
+    </tr>
+    <tr>
+      <td><p><pre>HITL_CONFIRMATION_REQUEST</pre></p></td>
+      <td>Agent calls <code>adk_request_confirmation</code></td>
+      <td><p><pre>{"tool": "adk_request_confirmation", "args": {...}}</pre></p></td>
+    </tr>
+    <tr>
+      <td><p><pre>HITL_CONFIRMATION_REQUEST_COMPLETED</pre></p></td>
+      <td>User provides confirmation response</td>
+      <td><p><pre>{"tool": "adk_request_confirmation", "result": {...}}</pre></p></td>
+    </tr>
+    <tr>
+      <td><p><pre>HITL_INPUT_REQUEST</pre></p></td>
+      <td>Agent calls <code>adk_request_input</code></td>
+      <td><p><pre>{"tool": "adk_request_input", "args": {...}}</pre></p></td>
+    </tr>
+    <tr>
+      <td><p><pre>HITL_INPUT_REQUEST_COMPLETED</pre></p></td>
+      <td>User provides input response</td>
+      <td><p><pre>{"tool": "adk_request_input", "result": {...}}</pre></p></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>HITL request events are detected from <code>function_call</code> parts in <code>on_event_callback</code>. HITL completion events are detected from <code>function_response</code> parts in both <code>on_event_callback</code> and <code>on_user_message_callback</code>.</p>
 <h4 id="gcs-offloading-examples-multimodal-large-text">GCS Offloading Examples (Multimodal &amp; Large Text)<a class="headerlink" href="#gcs-offloading-examples-multimodal-large-text" title="Permanent link">&para;</a></h4>
 <p>When <code>gcs_bucket_name</code> is configured, large text and multimodal content (images, audio, etc.) are automatically offloaded to GCS. The <code>content</code> column will contain a summary or placeholder, while <code>content_parts</code> contains the <code>object_ref</code> pointing to the GCS URI.</p>
 <p><strong>Offloaded Text Example</strong></p>
@@ -6340,7 +6444,7 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="n">part</span><span class="p">.</span><span class="n">object_ref</span><span class="p">.</span><span class="n">uri</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">gcs_uri</span><span class="p">,</span>
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="c1">-- Generate a signed URL to read the content directly (requires connection_id configuration)</span>
 </span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="n">STRING</span><span class="p">(</span><span class="n">OBJ</span><span class="p">.</span><span class="n">GET_ACCESS_URL</span><span class="p">(</span><span class="n">part</span><span class="p">.</span><span class="n">object_ref</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;r&#39;</span><span class="p">).</span><span class="n">access_urls</span><span class="p">.</span><span class="n">read_url</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">signed_url</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span><span class="p">,</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span><span class="p">,</span>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">UNNEST</span><span class="p">(</span><span class="n">content_parts</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">part</span>
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">part</span><span class="p">.</span><span class="n">storage_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;GCS_REFERENCE&#39;</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
@@ -6349,14 +6453,14 @@ The <code>content_parts</code> column provides a structured view of the content,
 <h2 id="advanced-analysis-queries">Advanced analysis queries<a class="headerlink" href="#advanced-analysis-queries" title="Permanent link">&para;</a></h2>
 <p><strong>Trace a specific conversation turn using trace_id</strong></p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="n">agent</span><span class="p">,</span><span class="w"> </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.response&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">summary</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">trace_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-trace-id&#39;</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
 </span></code></pre></div>
 <p><strong>Token usage analysis (accessing JSON fields)</strong></p>
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">SELECT</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="k">AVG</span><span class="p">(</span><span class="k">CAST</span><span class="p">(</span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.usage.total&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">INT64</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_tokens</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;LLM_RESPONSE&#39;</span><span class="p">;</span>
 </span></code></pre></div>
 <p><strong>Querying Multimodal Content (using content_parts and ObjectRef)</strong></p>
@@ -6364,7 +6468,7 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="n">part</span><span class="p">.</span><span class="n">mime_type</span><span class="p">,</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="n">part</span><span class="p">.</span><span class="n">object_ref</span><span class="p">.</span><span class="n">uri</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">gcs_uri</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span><span class="p">,</span>
 </span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">UNNEST</span><span class="p">(</span><span class="n">content_parts</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">part</span>
 </span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">part</span><span class="p">.</span><span class="n">mime_type</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;image/%&#39;</span>
 </span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
@@ -6379,7 +6483,7 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">    </span><span class="p">(</span><span class="s1">&#39;Describe this image briefly. What company logo?&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">parts</span><span class="p">.</span><span class="n">object_ref</span><span class="p">)</span>
 </span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">generated_result</span>
 </span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="k">FROM</span>
-</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span><span class="w"> </span><span class="n">logs</span><span class="p">,</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span><span class="w"> </span><span class="n">logs</span><span class="p">,</span>
 </span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">  </span><span class="k">UNNEST</span><span class="p">(</span><span class="n">logs</span><span class="p">.</span><span class="n">content_parts</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">parts</span>
 </span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="k">WHERE</span>
 </span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">  </span><span class="n">parts</span><span class="p">.</span><span class="n">mime_type</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;image/%&#39;</span>
@@ -6390,7 +6494,7 @@ The <code>content_parts</code> column provides a structured view of the content,
 <div class="language-sql highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">SELECT</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="n">event_type</span><span class="p">,</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="k">AVG</span><span class="p">(</span><span class="k">CAST</span><span class="p">(</span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">latency_ms</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.total_ms&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">INT64</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_latency_ms</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;LLM_RESPONSE&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TOOL_COMPLETED&#39;</span><span class="p">)</span>
 </span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">event_type</span><span class="p">;</span>
 </span></code></pre></div>
@@ -6407,7 +6511,7 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">    </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.tool&#39;</span><span class="p">),</span>
 </span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">    </span><span class="s1">&#39;LLM_CALL&#39;</span>
 </span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">operation</span>
-</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">trace_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-trace-id&#39;</span>
 </span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;LLM_RESPONSE&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TOOL_COMPLETED&#39;</span><span class="p">)</span>
 </span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
@@ -6420,41 +6524,64 @@ The <code>content_parts</code> column provides a structured view of the content,
 </span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="n">error_message</span><span class="p">,</span>
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.tool&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">tool_name</span><span class="p">,</span>
 </span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="k">CAST</span><span class="p">(</span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">latency_ms</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.total_ms&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">INT64</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">latency_ms</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
 </span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;LLM_ERROR&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;TOOL_ERROR&#39;</span><span class="p">)</span>
 </span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
 </span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
 </span></code></pre></div>
+<p><strong>Tool Provenance Analysis</strong></p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">SELECT</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.tool_origin&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">tool_origin</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.tool&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">tool_name</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">call_count</span><span class="p">,</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="k">AVG</span><span class="p">(</span><span class="k">CAST</span><span class="p">(</span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">latency_ms</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.total_ms&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">INT64</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_latency_ms</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;TOOL_COMPLETED&#39;</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tool_origin</span><span class="p">,</span><span class="w"> </span><span class="n">tool_name</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">call_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>HITL Interaction Analysis</strong></p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">SELECT</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="k">timestamp</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="n">event_type</span><span class="p">,</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="n">session_id</span><span class="p">,</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="n">JSON_VALUE</span><span class="p">(</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;$.tool&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">hitl_tool</span><span class="p">,</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="n">content</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;HITL_%&#39;</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+</span></code></pre></div>
 <h3 id="7-ai-powered-root-cause-analysis-agent-ops">7. AI-Powered Root Cause Analysis (Agent Ops)<a class="headerlink" href="#7-ai-powered-root-cause-analysis-agent-ops" title="Permanent link">&para;</a></h3>
 <p>Automatically analyze failed sessions to determine the root cause of errors using BigQuery ML and Gemini.</p>
-<div class="language-sql highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">DECLARE</span><span class="w"> </span><span class="n">failed_session_id</span><span class="w"> </span><span class="n">STRING</span><span class="p">;</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1">-- Find a recent failed session</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">SET</span><span class="w"> </span><span class="n">failed_session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">session_id</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">error_message</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="p">);</span>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="c1">-- Reconstruct the full conversation context</span>
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="k">WITH</span><span class="w"> </span><span class="n">SessionContext</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">    </span><span class="k">SELECT</span>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">        </span><span class="n">session_id</span><span class="p">,</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">        </span><span class="n">STRING_AGG</span><span class="p">(</span><span class="n">CONCAT</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;: &#39;</span><span class="p">,</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">TO_JSON_STRING</span><span class="p">(</span><span class="n">content</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)),</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">full_history</span>
-</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events_v2</span><span class="o">`</span>
-</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">failed_session_id</span>
-</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">session_id</span>
-</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="p">)</span>
-</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="c1">-- Ask Gemini to diagnose the issue</span>
-</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="k">SELECT</span>
-</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="w">    </span><span class="n">session_id</span><span class="p">,</span>
-</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="w">    </span><span class="n">AI</span><span class="p">.</span><span class="n">GENERATE</span><span class="p">(</span>
-</span><span id="__span-21-24"><a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a><span class="w">        </span><span class="p">(</span><span class="s1">&#39;Analyze this conversation log and explain the root cause of the failure. Log: &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">full_history</span><span class="p">),</span>
-</span><span id="__span-21-25"><a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a><span class="w">        </span><span class="n">connection_id</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;your-gcp-project-id.us.my-connection&#39;</span><span class="p">,</span>
-</span><span id="__span-21-26"><a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="w">        </span><span class="n">endpoint</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;gemini-2.5-flash&#39;</span>
-</span><span id="__span-21-27"><a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a><span class="w">    </span><span class="p">).</span><span class="k">result</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">root_cause_explanation</span>
-</span><span id="__span-21-28"><a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a><span class="k">FROM</span><span class="w"> </span><span class="n">SessionContext</span><span class="p">;</span>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">DECLARE</span><span class="w"> </span><span class="n">failed_session_id</span><span class="w"> </span><span class="n">STRING</span><span class="p">;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1">-- Find a recent failed session</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">SET</span><span class="w"> </span><span class="n">failed_session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">session_id</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">error_message</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="w"> </span><span class="k">DESC</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="p">);</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="c1">-- Reconstruct the full conversation context</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="k">WITH</span><span class="w"> </span><span class="n">SessionContext</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="w">    </span><span class="k">SELECT</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="w">        </span><span class="n">session_id</span><span class="p">,</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="w">        </span><span class="n">STRING_AGG</span><span class="p">(</span><span class="n">CONCAT</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;: &#39;</span><span class="p">,</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">TO_JSON_STRING</span><span class="p">(</span><span class="n">content</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)),</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">timestamp</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">full_history</span>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="o">`</span><span class="n">your</span><span class="o">-</span><span class="n">gcp</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">your</span><span class="o">-</span><span class="n">dataset</span><span class="o">-</span><span class="n">id</span><span class="p">.</span><span class="n">agent_events</span><span class="o">`</span>
+</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">session_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">failed_session_id</span>
+</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">session_id</span>
+</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a><span class="p">)</span>
+</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="c1">-- Ask Gemini to diagnose the issue</span>
+</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="k">SELECT</span>
+</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="w">    </span><span class="n">session_id</span><span class="p">,</span>
+</span><span id="__span-23-23"><a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a><span class="w">    </span><span class="n">AI</span><span class="p">.</span><span class="n">GENERATE</span><span class="p">(</span>
+</span><span id="__span-23-24"><a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a><span class="w">        </span><span class="p">(</span><span class="s1">&#39;Analyze this conversation log and explain the root cause of the failure. Log: &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">full_history</span><span class="p">),</span>
+</span><span id="__span-23-25"><a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a><span class="w">        </span><span class="n">connection_id</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;your-gcp-project-id.us.my-connection&#39;</span><span class="p">,</span>
+</span><span id="__span-23-26"><a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="w">        </span><span class="n">endpoint</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;gemini-2.5-flash&#39;</span>
+</span><span id="__span-23-27"><a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a><span class="w">    </span><span class="p">).</span><span class="k">result</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">root_cause_explanation</span>
+</span><span id="__span-23-28"><a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a><span class="k">FROM</span><span class="w"> </span><span class="n">SessionContext</span><span class="p">;</span>
 </span></code></pre></div>
 <h2 id="conversational-analytics-in-bigquery">Conversational Analytics in BigQuery<a class="headerlink" href="#conversational-analytics-in-bigquery" title="Permanent link">&para;</a></h2>
 <p>You can also use
@@ -6468,7 +6595,7 @@ to analyze your agent logs using natural language. Use this tool to answer quest
 <h2 id="looker-studio-dashboard">Looker Studio Dashboard<a class="headerlink" href="#looker-studio-dashboard" title="Permanent link">&para;</a></h2>
 <p>You can visualize your agent's performance using our pre-built <a href="https://lookerstudio.google.com/c/reporting/f1c5b513-3095-44f8-90a2-54953d41b125/page/8YdhF">Looker Studio Dashboard template</a>.</p>
 <p>To connect this dashboard to your own BigQuery table, use the following link format, replacing the placeholders with your specific project, dataset, and table IDs:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>https://lookerstudio.google.com/reporting/create?c.reportId=f1c5b513-3095-44f8-90a2-54953d41b125&amp;ds.ds3.connector=bigQuery&amp;ds.ds3.type=TABLE&amp;ds.ds3.projectId=&lt;your-project-id&gt;&amp;ds.ds3.datasetId=&lt;your-dataset-id&gt;&amp;ds.ds3.tableId=&lt;your-table-id&gt;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>https://lookerstudio.google.com/reporting/create?c.reportId=f1c5b513-3095-44f8-90a2-54953d41b125&amp;ds.ds3.connector=bigQuery&amp;ds.ds3.type=TABLE&amp;ds.ds3.projectId=&lt;your-project-id&gt;&amp;ds.ds3.datasetId=&lt;your-dataset-id&gt;&amp;ds.ds3.tableId=&lt;your-table-id&gt;
 </span></code></pre></div>
 <h2 id="feedback">Feedback<a class="headerlink" href="#feedback" title="Permanent link">&para;</a></h2>
 <p>We welcome your feedback on BigQuery Agent Analytics. If you have questions, suggestions, or encounter any issues, please reach out to the team at bqaa-feedback@google.com.</p>

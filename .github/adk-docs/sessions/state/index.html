@@ -3766,10 +3766,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bypassing-state-injection-with-instructionprovider" class="md-nav__link">
+  <a href="#using-instructionprovider-for-full-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bypassing State Injection with InstructionProvider
+        Using InstructionProvider for Full Control
       
     </span>
   </a>
@@ -4715,7 +4715,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4737,7 +4737,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4784,7 +4784,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4800,7 +4800,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -4996,7 +4996,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -5687,10 +5687,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bypassing-state-injection-with-instructionprovider" class="md-nav__link">
+  <a href="#using-instructionprovider-for-full-control" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bypassing State Injection with InstructionProvider
+        Using InstructionProvider for Full Control
       
     </span>
   </a>
@@ -6005,11 +6005,15 @@
 <ul>
 <li>Key Existence: Ensure that the key you reference in the instruction string exists in the session.state. If the key is missing, the agent will throw an error. To use a key that may or may not be present, you can include a question mark (?) after the key (e.g. {topic?}).</li>
 <li>Data Types: The value associated with the key should be a string or a type that can be easily converted to a string.</li>
-<li>Escaping: If you need to use literal curly braces in your instruction (e.g., for JSON formatting), you'll need to escape them.</li>
+<li>Literal Curly Braces: The <code>{key}</code> syntax matches any valid Python identifier inside single curly braces. If you need literal curly braces in your instruction, such as for JSON formatting or templating syntax, use an <code>InstructionProvider</code> function instead of a string (see below).</li>
 </ul>
-<h4 id="bypassing-state-injection-with-instructionprovider">Bypassing State Injection with <code>InstructionProvider</code><a class="headerlink" href="#bypassing-state-injection-with-instructionprovider" title="Permanent link">&para;</a></h4>
-<p>In some cases, you might want to use <code>{{</code> and <code>}}</code> literally in your instructions without triggering the state injection mechanism. For example, you might be writing instructions for an agent that helps with a templating language that uses the same syntax.</p>
-<p>To achieve this, you can provide a function to the <code>instruction</code> parameter instead of a string. This function is called an <code>InstructionProvider</code>. When you use an <code>InstructionProvider</code>, the ADK will not attempt to inject state, and your instruction string will be passed to the model as-is.</p>
+<div class="admonition note">
+<p class="admonition-title">f-strings and double braces</p>
+<p>Some ADK examples use Python f-strings in instructions, such as <code>f"Topic: {{initial_topic}}"</code>. The <code>{{</code> and <code>}}</code> in those examples are <strong>Python f-string escaping</strong>, not ADK syntax. At runtime, Python converts <code>{{initial_topic}}</code> to <code>{initial_topic}</code>, which ADK then treats as a normal state variable placeholder. If you are not using f-strings, use single braces <code>{key}</code> directly.</p>
+</div>
+<h4 id="using-instructionprovider-for-full-control">Using <code>InstructionProvider</code> for Full Control<a class="headerlink" href="#using-instructionprovider-for-full-control" title="Permanent link">&para;</a></h4>
+<p>In some cases, you may need full control over the instruction string — for example, when your instructions contain literal curly braces (e.g., JSON examples, templating syntax) that would otherwise be interpreted as state variable placeholders.</p>
+<p>To achieve this, provide a function to the <code>instruction</code> parameter instead of a string. This function is called an <code>InstructionProvider</code>. When you use an <code>InstructionProvider</code>, the ADK will <strong>not</strong> attempt to inject state variables, and the returned string will be passed to the model as-is.</p>
 <p>The <code>InstructionProvider</code> function receives a <code>ReadonlyContext</code> object, which you can use to access session state or other contextual information if you need to build the instruction dynamically.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="typescript_1" name="__tabbed_2" type="radio" /><input id="go_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="typescript_1">TypeScript</label><label for="go_1">Go</label></div>
 <div class="tabbed-content">
@@ -6019,15 +6023,14 @@
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># This is an InstructionProvider</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_instruction_provider</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">ReadonlyContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="c1"># You can optionally use the context to build the instruction</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="c1"># For this example, we&#39;ll return a static string with literal braces.</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="k">return</span> <span class="s2">&quot;This is an instruction with {{literal_braces}} that will not be replaced.&quot;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;template_helper_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">instruction</span><span class="o">=</span><span class="n">my_instruction_provider</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="c1"># No state injection occurs — curly braces are treated as literal text.</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">return</span> <span class="s1">&#39;Format your output as JSON: {&quot;city&quot;: &quot;&lt;name&gt;&quot;, &quot;population&quot;: &lt;number&gt;}&#39;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;template_helper_agent&quot;</span><span class="p">,</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">instruction</span><span class="o">=</span><span class="n">my_instruction_provider</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -6035,16 +6038,15 @@
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">// This is an InstructionProvider</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kd">function</span><span class="w"> </span><span class="nx">myInstructionProvider</span><span class="p">(</span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">ReadonlyContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1">// You can optionally use the context to build the instruction</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="c1">// For this example, we&#39;ll return a static string with literal braces.</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s2">&quot;This is an instruction with {{literal_braces}} that will not be replaced.&quot;</span><span class="p">;</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;template_helper_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nx">instruction</span><span class="o">:</span><span class="w"> </span><span class="kt">myInstructionProvider</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">});</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1">// No state injection occurs — curly braces are treated as literal text.</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;Format your output as JSON: {&quot;city&quot;: &quot;&lt;name&gt;&quot;, &quot;population&quot;: &lt;number&gt;}&#39;</span><span class="p">;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;template_helper_agent&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nx">instruction</span><span class="o">:</span><span class="w"> </span><span class="kt">myInstructionProvider</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">});</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -6059,7 +6061,7 @@
 </div>
 </div>
 </div>
-<p>If you want to both use an <code>InstructionProvider</code> <em>and</em> inject state into your instructions, you can use the <code>inject_session_state</code> utility function.</p>
+<p>If you want to both use an <code>InstructionProvider</code> <em>and</em> inject state into your instructions, you can use the <code>inject_session_state</code> utility function. Only <code>{key}</code> placeholders matching valid state variable names will be replaced; other text (including curly braces that don't match valid identifiers) will be left as-is.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="python_2" name="__tabbed_3" type="radio" /><input id="go_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_2">Python</label><label for="go_2">Go</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -6068,15 +6070,16 @@
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">instructions_utils</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_dynamic_instruction_provider</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">ReadonlyContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;This is a </span><span class="si">{adjective}</span><span class="s2"> instruction with {{literal_braces}}.&quot;</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="c1"># This will inject the &#39;adjective&#39; state variable but leave the literal braces.</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">instructions_utils</span><span class="o">.</span><span class="n">inject_session_state</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dynamic_template_helper_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">instruction</span><span class="o">=</span><span class="n">my_dynamic_instruction_provider</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;This is a </span><span class="si">{adjective}</span><span class="s2"> instruction. Use JSON like: {</span><span class="se">\&quot;</span><span class="s2">key</span><span class="se">\&quot;</span><span class="s2">: </span><span class="se">\&quot;</span><span class="s2">value</span><span class="se">\&quot;</span><span class="s2">}.&quot;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="c1"># This will inject the &#39;adjective&#39; state variable.</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="c1"># The JSON braces are left alone because their content is not a valid identifier.</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">instructions_utils</span><span class="o">.</span><span class="n">inject_session_state</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dynamic_template_helper_agent&quot;</span><span class="p">,</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">instruction</span><span class="o">=</span><span class="n">my_dynamic_instruction_provider</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">

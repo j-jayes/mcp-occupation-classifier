@@ -4546,7 +4546,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4568,7 +4568,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4617,7 +4617,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4633,7 +4633,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -5526,7 +5526,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -6845,7 +6845,7 @@
         <a href="../../" class="md-path__link">
           
   <span class="md-ellipsis">
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   </span>
 
         </a>
@@ -6863,7 +6863,7 @@
         <a href="../part1/" class="md-path__link">
           
   <span class="md-ellipsis">
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   </span>
 
         </a>
@@ -6913,7 +6913,7 @@
 <p><code>run_live()</code> is an async generator that streams conversation events in real-time. It yields events immediately as they're generated—no buffering, no polling, no callbacks. Events are streamed without internal buffering. Overall memory depends on session persistence (e.g., in-memory vs database), making it suitable for both quick exchanges and extended sessions.</p>
 <h3 id="method-signature-and-flow">Method Signature and Flow<a class="headerlink" href="#method-signature-and-flow" title="Permanent link">&para;</a></h3>
 <p><strong>Usage:</strong></p>
-<div class="language-python highlight"><span class="filename">Source reference: <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py" target="_blank">runners.py</a></span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># The method signature reveals the thoughtful design</span>
+<div class="language-python highlight"><span class="filename">Source reference: <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/runners.py" target="_blank">runners.py</a></span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># The method signature reveals the thoughtful design</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_live</span><span class="p">(</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="bp">self</span><span class="p">,</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">*</span><span class="p">,</span>                                      <span class="c1"># Keyword-only arguments</span>
@@ -7008,7 +7008,7 @@ end</code></pre>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See the complete event type handling implementation in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py"><code>runners.py</code></a></p>
+<p>See the complete event type handling implementation in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/runners.py"><code>runners.py</code></a></p>
 </div>
 <h4 id="when-run_live-exits">When run_live() Exits<a class="headerlink" href="#when-run_live-exits" title="Permanent link">&para;</a></h4>
 <p>The <code>run_live()</code> event loop can exit under various conditions. Understanding these exit scenarios is crucial for proper resource cleanup and error handling:</p>
@@ -7072,7 +7072,7 @@ end</code></pre>
 <p>Not all events yielded by <code>run_live()</code> are persisted to the ADK <code>Session</code>. When <code>run_live()</code> exits, only certain events are saved to the session while others remain ephemeral. Understanding which events are saved versus which are ephemeral is crucial for applications that use session persistence, resumption, or need to review conversation history.</p>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See session event persistence logic in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/runners.py"><code>runners.py</code></a></p>
+<p>See session event persistence logic in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/runners.py"><code>runners.py</code></a></p>
 </div>
 <p><strong>Events Saved to the ADK <code>Session</code>:</strong></p>
 <p>These events are persisted to the ADK <code>Session</code> and available in session history:</p>
@@ -7094,12 +7094,12 @@ end</code></pre>
 <p>To save audio conversations to the ADK <code>Session</code> for review or resumption, enable <code>RunConfig.save_live_blob = True</code>. This persists audio streams to artifacts. See <a href="../part4/#save_live_blob">Part 4: save_live_blob</a> for configuration details.</p>
 </div>
 <h2 id="understanding-events">Understanding Events<a class="headerlink" href="#understanding-events" title="Permanent link">&para;</a></h2>
-<p>Events are the core communication mechanism in ADK's Bidi-streaming system. This section explores the complete lifecycle of events—from how they're generated through multiple pipeline layers, to concurrent processing patterns that enable true real-time interaction, to practical handling of interruptions and turn completion. You'll learn about event types (text, audio, transcriptions, tool calls), serialization strategies for network transport, and the connection lifecycle that manages streaming sessions across both Gemini Live API and Vertex AI Live API platforms.</p>
+<p>Events are the core communication mechanism in ADK Gemini Live API Toolkit's streaming system. This section explores the complete lifecycle of events—from how they're generated through multiple pipeline layers, to concurrent processing patterns that enable true real-time interaction, to practical handling of interruptions and turn completion. You'll learn about event types (text, audio, transcriptions, tool calls), serialization strategies for network transport, and the connection lifecycle that manages streaming sessions across both Gemini Live API and Vertex AI Live API platforms.</p>
 <h3 id="the-event-class">The Event Class<a class="headerlink" href="#the-event-class" title="Permanent link">&para;</a></h3>
 <p>ADK's <code>Event</code> class is a Pydantic model that represents all communication in a streaming conversation. It extends <code>LlmResponse</code> and serves as the unified container for model responses, user input, transcriptions, and control signals.</p>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See Event class implementation in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/events/event.py#L30-L128"><code>event.py:30-128</code></a> and <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L28-L200"><code>llm_response.py:28-200</code></a></p>
+<p>See Event class implementation in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/events/event.py#L30-L128"><code>event.py:30-128</code></a> and <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/models/llm_response.py#L28-L200"><code>llm_response.py:28-200</code></a></p>
 </div>
 <h4 id="key-fields">Key Fields<a class="headerlink" href="#key-fields" title="Permanent link">&para;</a></h4>
 <p><strong>Essential for all applications:</strong>
@@ -7167,12 +7167,12 @@ end</code></pre>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See author attribution logic in <a href="https://github.com/google/adk-python/blob/fd2c0f556b786417a9f6add744827b07e7a06b7d/src/google/adk/flows/llm_flows/base_llm_flow.py#L287-L321"><code>base_llm_flow.py:292-326</code></a></p>
+<p>See author attribution logic in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/flows/llm_flows/base_llm_flow.py#L674-L708"><code>base_llm_flow.py:674-708</code></a></p>
 </div>
 <h3 id="event-types-and-handling">Event Types and Handling<a class="headerlink" href="#event-types-and-handling" title="Permanent link">&para;</a></h3>
 <p>ADK streams distinct event types through <code>runner.run_live()</code> to support different interaction modalities: text responses for traditional chat, audio chunks for voice output, transcriptions for accessibility and logging, and tool call notifications for function execution. Each event includes metadata flags (<code>partial</code>, <code>turn_complete</code>, <code>interrupted</code>) that control UI state transitions and enable natural, human-like conversation flows. Understanding how to recognize and handle these event types is essential for building responsive streaming applications.</p>
 <h3 id="text-events">Text Events<a class="headerlink" href="#text-events" title="Permanent link">&para;</a></h3>
-<p>The most common event type, containing the model's text responses when you specify <code>response_modalities</code> in <code>RunConfig</code> to <code>["TEXT"]</code> mode:</p>
+<p>The most common event type, containing the model's text responses when you specifying <code>response_modalities</code> in <code>RunConfig</code> to <code>["TEXT"]</code> mode:</p>
 <p><strong>Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
@@ -7245,7 +7245,7 @@ end</code></pre>
 <p>When audio data is aggregated and saved as files in artifacts, ADK yields events containing <code>file_data</code> references instead of raw <code>inline_data</code>. This is useful for persisting audio to session history.</p>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See audio file aggregation logic in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/audio_cache_manager.py#L156-L178"><code>audio_cache_manager.py:156-178</code></a></p>
+<p>See audio file aggregation logic in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/flows/llm_flows/audio_cache_manager.py#L156-L178"><code>audio_cache_manager.py:156-178</code></a></p>
 </div>
 <p><strong>Receiving Audio File References:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
@@ -7278,7 +7278,7 @@ end</code></pre>
 <p>Usage metadata events contain token usage information for monitoring costs and quota consumption. The <code>run_live()</code> method yields these events separately from content events.</p>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See usage metadata structure in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L105"><code>llm_response.py:105</code></a></p>
+<p>See usage metadata structure in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/models/llm_response.py#L105"><code>llm_response.py:105</code></a></p>
 </div>
 <p><strong>Accessing Token Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
@@ -7569,7 +7569,7 @@ end</code></pre>
 <ul>
 <li><strong>FinishReason</strong> (when model stops generating tokens): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/Candidate/FinishReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini">Vertex AI</a></li>
 <li><strong>BlockedReason</strong> (when prompts are blocked by content filters): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/GenerateContentResponse/PromptFeedback/BlockReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes">Vertex AI</a></li>
-<li><strong>ADK Implementation</strong>: <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/models/llm_response.py#L145-L200"><code>llm_response.py:145-200</code></a></li>
+<li><strong>ADK Implementation</strong>: <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/models/llm_response.py#L145-L200"><code>llm_response.py:145-200</code></a></li>
 </ul>
 </div>
 <p><strong>Best practices for error handling:</strong></p>
@@ -7920,7 +7920,7 @@ end</code></pre>
 <h2 id="automatic-tool-execution-in-run_live">Automatic Tool Execution in run_live()<a class="headerlink" href="#automatic-tool-execution-in-run_live" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See automatic tool execution implementation in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/flows/llm_flows/functions.py"><code>functions.py</code></a></p>
+<p>See automatic tool execution implementation in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/flows/llm_flows/functions.py"><code>functions.py</code></a></p>
 </div>
 <p>One of the most powerful features of ADK's <code>run_live()</code> is <strong>automatic tool execution</strong>. Unlike the raw Gemini Live API, which requires you to manually handle tool calls and responses, ADK abstracts this complexity entirely.</p>
 <h3 id="the-challenge-with-raw-live-api">The Challenge with Raw Live API<a class="headerlink" href="#the-challenge-with-raw-live-api" title="Permanent link">&para;</a></h3>
@@ -8043,7 +8043,7 @@ end</code></pre>
 <h2 id="invocationcontext-the-execution-state-container">InvocationContext: The Execution State Container<a class="headerlink" href="#invocationcontext-the-execution-state-container" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See InvocationContext implementation in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/invocation_context.py"><code>invocation_context.py</code></a></p>
+<p>See InvocationContext implementation in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/agents/invocation_context.py"><code>invocation_context.py</code></a></p>
 </div>
 <p>While <code>run_live()</code> returns an AsyncGenerator for consuming events, internally it creates and manages an <code>InvocationContext</code>—ADK's unified state carrier that encapsulates everything needed for a complete conversation invocation. <strong>One InvocationContext corresponds to one <code>run_live()</code> loop</strong>—it's created when you call <code>run_live()</code> and persists for the entire streaming session.</p>
 <p>Think of it as a traveling notebook that accompanies a conversation from start to finish, collecting information, tracking progress, and providing context to every component along the way. It's ADK's runtime implementation of the Context concept, providing the execution-time state and services needed during a live conversation. For a broader overview of context in ADK, see <a href="https://google.github.io/adk-docs/context/">Context in ADK</a>.</p>
@@ -8139,7 +8139,7 @@ end</code></pre>
 <p><code>SequentialAgent</code> enables workflow pipelines where agents execute one after another. Each agent completes its task before the next one begins. The challenge with live streaming is determining when an agent has finished processing continuous audio or video input.</p>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p>See SequentialAgent implementation in <a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/sequential_agent.py#L119-L158"><code>sequential_agent.py:119-158</code></a></p>
+<p>See SequentialAgent implementation in <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/agents/sequential_agent.py#L120-L159"><code>sequential_agent.py:120-159</code></a></p>
 </div>
 <p><strong>How it works:</strong></p>
 <p>ADK automatically adds a <code>task_completed()</code> function to each agent in the sequence. When the model calls this function, it signals completion and triggers the transition to the next agent:</p>
@@ -8368,7 +8368,7 @@ end</code></pre>
 </table>
 <p>The SequentialAgent design ensures smooth transitions—your application simply sees a continuous stream of events from different agents in sequence, with automatic handoffs managed by ADK.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>In this part, you mastered event handling in ADK's Bidi-streaming architecture. We explored the different event types that agents generate—text responses, audio chunks, transcriptions, tool calls, and control signals—and learned how to process each event type effectively. You now understand how to handle interruptions and turn completion signals for natural conversation flow, serialize events for network transport using Pydantic's model serialization, leverage ADK's automatic tool execution to simplify agent workflows, and access InvocationContext for advanced state management scenarios. With these event handling patterns in place, you're equipped to build responsive streaming applications that provide real-time feedback to users. Next, you'll learn how to configure sophisticated streaming behaviors through RunConfig, including multimodal interactions, session resumption, and cost controls.</p>
+<p>In this part, you mastered event handling in ADK Gemini Live API Toolkit's streaming architecture. We explored the different event types that agents generate—text responses, audio chunks, transcriptions, tool calls, and control signals—and learned how to process each event type effectively. You now understand how to handle interruptions and turn completion signals for natural conversation flow, serialize events for network transport using Pydantic's model serialization, leverage ADK's automatic tool execution to simplify agent workflows, and access InvocationContext for advanced state management scenarios. With these event handling patterns in place, you're equipped to build responsive streaming applications that provide real-time feedback to users. Next, you'll learn how to configure sophisticated streaming behaviors through RunConfig, including multimodal interactions, session resumption, and cost controls.</p>
 <hr />
 <p>← <a href="../part2/">Previous: Part 2: Sending Messages with LiveRequestQueue</a> | <a href="../part4/">Next: Part 4: Understanding RunConfig</a> →</p>
 

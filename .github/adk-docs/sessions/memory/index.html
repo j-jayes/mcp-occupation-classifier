@@ -4760,7 +4760,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4782,7 +4782,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4829,7 +4829,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4845,7 +4845,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -5041,7 +5041,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -6324,20 +6324,21 @@
 <div class="tabbed-block"></div>
 </div>
 </div>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">VertexAiMemoryBankService</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">agent_engine_id</span> <span class="o">=</span> <span class="n">agent_engine</span><span class="o">.</span><span class="n">api_resource</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">memory_service</span> <span class="o">=</span> <span class="n">VertexAiMemoryBankService</span><span class="p">(</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;PROJECT_ID&quot;</span><span class="p">,</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">location</span><span class="o">=</span><span class="s2">&quot;LOCATION&quot;</span><span class="p">,</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">agent_engine_id</span><span class="o">=</span><span class="n">agent_engine_id</span>
-</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">)</span>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">runner</span> <span class="o">=</span> <span class="n">adk</span><span class="o">.</span><span class="n">Runner</span><span class="p">(</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="o">...</span>
-</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">memory_service</span><span class="o">=</span><span class="n">memory_service</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">adk</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">VertexAiMemoryBankService</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">agent_engine_id</span> <span class="o">=</span> <span class="n">agent_engine</span><span class="o">.</span><span class="n">api_resource</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">memory_service</span> <span class="o">=</span> <span class="n">VertexAiMemoryBankService</span><span class="p">(</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">project</span><span class="o">=</span><span class="s2">&quot;PROJECT_ID&quot;</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">location</span><span class="o">=</span><span class="s2">&quot;LOCATION&quot;</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">agent_engine_id</span><span class="o">=</span><span class="n">agent_engine_id</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">runner</span> <span class="o">=</span> <span class="n">adk</span><span class="o">.</span><span class="n">Runner</span><span class="p">(</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="o">...</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">memory_service</span><span class="o">=</span><span class="n">memory_service</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="using-memory-in-your-agent">Using Memory in Your Agent<a class="headerlink" href="#using-memory-in-your-agent" title="Permanent link">&para;</a></h2>
 <p>When a memory service is configured, your agent can use a tool or callback to retrieve memories. ADK includes two pre-built tools for retrieving memories:</p>
@@ -6367,19 +6368,20 @@
 <div class="tabbed-block"></div>
 </div>
 </div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">adk</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">auto_save_session_to_memory_callback</span><span class="p">(</span><span class="n">callback_context</span><span class="p">):</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="k">await</span> <span class="n">callback_context</span><span class="o">.</span><span class="n">_invocation_context</span><span class="o">.</span><span class="n">memory_service</span><span class="o">.</span><span class="n">add_session_to_memory</span><span class="p">(</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>        <span class="n">callback_context</span><span class="o">.</span><span class="n">_invocation_context</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Generic_QA_Agent&quot;</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;Answer the user&#39;s questions&quot;</span><span class="p">,</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">adk</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">preload_memory_tool</span><span class="o">.</span><span class="n">PreloadMemoryTool</span><span class="p">()],</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">after_agent_callback</span><span class="o">=</span><span class="n">auto_save_session_to_memory_callback</span><span class="p">,</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google</span><span class="w"> </span><span class="kn">import</span> <span class="n">adk</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">auto_save_session_to_memory_callback</span><span class="p">(</span><span class="n">callback_context</span><span class="p">):</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">await</span> <span class="n">callback_context</span><span class="o">.</span><span class="n">_invocation_context</span><span class="o">.</span><span class="n">memory_service</span><span class="o">.</span><span class="n">add_session_to_memory</span><span class="p">(</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="n">callback_context</span><span class="o">.</span><span class="n">_invocation_context</span><span class="o">.</span><span class="n">session</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">model</span><span class="o">=</span><span class="n">MODEL</span><span class="p">,</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Generic_QA_Agent&quot;</span><span class="p">,</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;Answer the user&#39;s questions&quot;</span><span class="p">,</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">adk</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">preload_memory_tool</span><span class="o">.</span><span class="n">PreloadMemoryTool</span><span class="p">()],</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">after_agent_callback</span><span class="o">=</span><span class="n">auto_save_session_to_memory_callback</span><span class="p">,</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="advanced-concepts">Advanced Concepts<a class="headerlink" href="#advanced-concepts" title="Permanent link">&para;</a></h2>
 <h3 id="how-memory-works-in-practice">How Memory Works in Practice<a class="headerlink" href="#how-memory-works-in-practice" title="Permanent link">&para;</a></h3>
