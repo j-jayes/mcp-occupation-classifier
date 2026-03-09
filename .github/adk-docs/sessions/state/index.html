@@ -1528,6 +1528,8 @@
       
         
       
+        
+      
     
     
     
@@ -1762,6 +1764,34 @@
     
   
     LiteLLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/litert-lm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiteRT-LM
   
 
     
@@ -6566,6 +6596,7 @@
 </div>
 </div>
 <p><strong>3. Via <code>CallbackContext</code> or <code>ToolContext</code> (Recommended for Callbacks and Tools)</strong></p>
+<p><em>(Note: In TypeScript, this is done via the unified <code>Context</code> type.)</em></p>
 <p>Modifying state within agent callbacks (e.g., <code>on_before_agent_call</code>, <code>on_after_agent_call</code>) or tool functions is best done using the <code>state</code> attribute of the <code>CallbackContext</code> or <code>ToolContext</code> provided to your function.</p>
 <ul>
 <li><code>callback_context.state['my_key'] = my_value</code></li>
@@ -6596,10 +6627,10 @@
 </div>
 <div class="tabbed-block">
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// In an agent callback or tool function</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">CallbackContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@google/adk&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// or ToolContext</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Context</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@google/adk&quot;</span><span class="p">;</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="kd">function</span><span class="w"> </span><span class="nx">myCallbackOrToolFunction</span><span class="p">(</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">CallbackContext</span><span class="p">,</span><span class="w"> </span><span class="c1">// Or ToolContext</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">Context</span><span class="p">,</span>
 </span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">    </span><span class="c1">// ... other parameters ...</span>
 </span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">    </span><span class="c1">// Update existing state</span>

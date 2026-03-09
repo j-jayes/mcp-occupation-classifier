@@ -1528,6 +1528,8 @@
       
         
       
+        
+      
     
     
     
@@ -1762,6 +1764,34 @@
     
   
     LiteLLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/models/litert-lm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiteRT-LM
   
 
     
@@ -4546,7 +4576,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4568,7 +4598,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4617,7 +4647,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4633,7 +4663,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -5293,7 +5323,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -6379,7 +6409,7 @@
         <a href="../../" class="md-path__link">
           
   <span class="md-ellipsis">
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   </span>
 
         </a>
@@ -6397,7 +6427,7 @@
         <a href="../part1/" class="md-path__link">
           
   <span class="md-ellipsis">
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   </span>
 
         </a>
@@ -6558,7 +6588,7 @@
 </table>
 <div class="admonition note">
 <p class="admonition-title">Source Reference</p>
-<p><a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/src/google/adk/agents/run_config.py"><code>run_config.py</code></a></p>
+<p><a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/agents/run_config.py"><code>run_config.py</code></a></p>
 </div>
 <p><strong>Platform Support Legend:</strong></p>
 <ul>
@@ -6715,33 +6745,22 @@
 
     Note over ADK,Gemini: Turn Detection: finish_reason</code></pre>
 <h3 id="progressive-sse-streaming">Progressive SSE Streaming<a class="headerlink" href="#progressive-sse-streaming" title="Permanent link">&para;</a></h3>
-<p><strong>Progressive SSE streaming</strong> is a feature that enhances how SSE mode delivers streaming responses. This feature improves response aggregation by:</p>
+<p><strong>Progressive SSE streaming</strong> is an experimental feature that enhances how SSE mode delivers streaming responses. When enabled, this feature improves response aggregation by:</p>
 <ul>
 <li><strong>Content ordering preservation</strong>: Maintains the original order of mixed content types (text, function calls, inline data)</li>
 <li><strong>Intelligent text merging</strong>: Only merges consecutive text parts of the same type (regular text vs thought text)</li>
 <li><strong>Progressive delivery</strong>: Marks all intermediate chunks as <code>partial=True</code>, with a single final aggregated response at the end</li>
-<li><strong>Deferred function execution</strong>: Skips executing function calls in partial events, only executing them in the final aggregated event to ensure parallel function calls are executed together rather than sequentially</li>
-<li><strong>Function call argument streaming</strong>: Supports progressive building of function call arguments through <code>partial_args</code>, enabling real-time display of function call construction</li>
+<li><strong>Deferred function execution</strong>: Skips executing function calls in partial events, only executing them in the final aggregated event to avoid duplicate executions</li>
 </ul>
-<p><strong>Default Behavior:</strong></p>
-<p>When you use <code>StreamingMode.SSE</code>, progressive SSE streaming is <strong>enabled by default</strong>. This means you automatically benefit from these improvements without any additional configuration.</p>
-<p><strong>Disabling the feature (if needed):</strong></p>
-<p>If you need to revert to the legacy SSE streaming behavior (simple text accumulation), you can disable it via environment variable:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ADK_DISABLE_PROGRESSIVE_SSE_STREAMING</span><span class="o">=</span><span class="m">1</span>
+<p><strong>Enabling the feature:</strong></p>
+<p>This is an experimental (WIP stage) feature disabled by default. Enable it via environment variable:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ADK_ENABLE_PROGRESSIVE_SSE_STREAMING</span><span class="o">=</span><span class="m">1</span>
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Legacy Behavior Trade-offs</p>
-<p>Disabling progressive SSE streaming reverts to simple text accumulation, which:
-- May lose original content ordering when mixing text and function calls
-- Does not support function call argument streaming via <code>partial_args</code>
-- Is provided for backward compatibility only—new applications should use the default progressive mode</p>
-</div>
-<p><strong>When progressive SSE streaming helps:</strong></p>
+<p><strong>When to use:</strong></p>
 <ul>
-<li>You're using <code>StreamingMode.SSE</code> and have mixed content types (text + function calls)</li>
+<li>You're using <code>StreamingMode.SSE</code> and need better handling of mixed content types (text + function calls)</li>
 <li>Your responses include thought text (extended thinking) mixed with regular text</li>
 <li>You want to ensure function calls execute only once after complete response aggregation</li>
-<li>You need to display function call construction in real-time as arguments stream in</li>
 </ul>
 <p><strong>Note:</strong> This feature only affects <code>StreamingMode.SSE</code>. It does not apply to <code>StreamingMode.BIDI</code> (the focus of this guide), which uses the Live API's native bidirectional protocol.</p>
 <h3 id="when-to-use-each-mode">When to Use Each Mode<a class="headerlink" href="#when-to-use-each-mode" title="Permanent link">&para;</a></h3>
@@ -6790,9 +6809,9 @@
 <li>❌ Video input</li>
 </ul>
 <h2 id="understanding-live-api-connections-and-sessions">Understanding Live API Connections and Sessions<a class="headerlink" href="#understanding-live-api-connections-and-sessions" title="Permanent link">&para;</a></h2>
-<p>When building ADK Bidi-streaming applications, it's essential to understand how ADK manages the communication layer between itself and the  Live API backend. This section explores the fundamental distinction between <strong>connections</strong> (the WebSocket transport links that ADK establishes to Live API) and <strong>sessions</strong> (the logical conversation contexts maintained by Live API). Unlike traditional request-response APIs, the Bidi-streaming architecture introduces unique constraints: connection timeouts, session duration limits that vary by modality (audio-only vs audio+video), finite context windows, and concurrent session quotas that differ between Gemini Live API and Vertex AI Live API.</p>
+<p>When building ADK Gemini Live API Toolkit applications, it's essential to understand how ADK manages the communication layer between itself and the  Live API backend. This section explores the fundamental distinction between <strong>connections</strong> (the WebSocket transport links that ADK establishes to Live API) and <strong>sessions</strong> (the logical conversation contexts maintained by Live API). Unlike traditional request-response APIs, the Bidi-streaming architecture introduces unique constraints: connection timeouts, session duration limits that vary by modality (audio-only vs audio+video), finite context windows, and concurrent session quotas that differ between Gemini Live API and Vertex AI Live API.</p>
 <h3 id="adk-session-vs-live-api-session">ADK <code>Session</code> vs Live API Session<a class="headerlink" href="#adk-session-vs-live-api-session" title="Permanent link">&para;</a></h3>
-<p>Understanding the distinction between <strong>ADK <code>Session</code></strong> and <strong>Live API session</strong> is crucial for building reliable streaming applications with ADK Bidi-streaming.</p>
+<p>Understanding the distinction between <strong>ADK <code>Session</code></strong> and <strong>Live API session</strong> is crucial for building reliable streaming applications with ADK Gemini Live API Toolkit.</p>
 <p><strong>ADK <code>Session</code></strong> (managed by SessionService):
 - Persistent conversation storage for conversation history, events, and state, created via <code>SessionService.create_session()</code> 
 - Storage options: in-memory, database (PostgreSQL/MySQL/SQLite), or Vertex AI
@@ -6865,7 +6884,7 @@
 - SessionService manages the persistence layer (in-memory, database, or Vertex AI)</p>
 <p>Now that we understand the difference between ADK <code>Session</code> objects and Live API sessions, let's focus on Live API connections and sessions—the backend infrastructure that powers real-time bidirectional streaming.</p>
 <h3 id="live-api-connections-and-sessions">Live API Connections and Sessions<a class="headerlink" href="#live-api-connections-and-sessions" title="Permanent link">&para;</a></h3>
-<p>Understanding the distinction between <strong>connections</strong> and <strong>sessions</strong> at the Live API level is crucial for building reliable ADK Bidi-streaming applications.</p>
+<p>Understanding the distinction between <strong>connections</strong> and <strong>sessions</strong> at the Live API level is crucial for building reliable ADK Gemini Live API Toolkit applications.</p>
 <p><strong>Connection</strong>: The physical WebSocket link between ADK and the Live API server. This is the network transport layer that carries bidirectional streaming data.</p>
 <p><strong>Session</strong>: The logical conversation context maintained by the Live API, including conversation history, tool call state, and model context. A session can span multiple connections.</p>
 <table>
@@ -7529,7 +7548,7 @@
 <ul>
 <li>✅ <strong>Supported</strong>: <code>gemini-2.x</code> models (e.g., <code>gemini-2.5-flash-native-audio-preview-12-2025</code>)</li>
 <li>❌ <strong>Not supported</strong>: <code>gemini-1.5-x</code> models</li>
-<li><strong>Validation</strong>: ADK checks that the model name starts with <code>gemini-2</code> when <code>support_cfc=True</code> (<a href="https://github.com/google/adk-python/blob/fd2c0f556b786417a9f6add744827b07e7a06b7d/src/google/adk/runners.py#L1361-L1367"><code>runners.py:1322-1328</code></a>)</li>
+<li><strong>Validation</strong>: ADK checks that the model name starts with <code>gemini-2</code> when <code>support_cfc=True</code> (<a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/runners.py#L1354-L1360"><code>runners.py:1354-1360</code></a>)</li>
 <li><strong>Code executor</strong>: ADK automatically injects <code>BuiltInCodeExecutor</code> when CFC is enabled for safe parallel tool execution</li>
 </ul>
 <p><strong>CFC capabilities:</strong></p>
@@ -7550,11 +7569,11 @@
 <p><strong>Learn more:</strong></p>
 <ul>
 <li><a href="https://ai.google.dev/gemini-api/docs/function-calling">Gemini Function Calling Guide</a> - Official documentation on compositional and parallel function calling</li>
-<li><a href="https://github.com/google/adk-python/blob/29c1115959b0084ac1169748863b35323da3cf50/contributing/samples/parallel_functions/agent.py">ADK Parallel Functions Example</a> - Working example with async tools</li>
+<li><a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/contributing/samples/parallel_functions/agent.py">ADK Parallel Functions Example</a> - Working example with async tools</li>
 <li><a href="https://google.github.io/adk-docs/tools/performance/">ADK Performance Guide</a> - Best practices for parallel-ready tools</li>
 </ul>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>In this part, you learned how RunConfig enables sophisticated control over ADK Bidi-streaming sessions through declarative configuration. We covered response modalities and their constraints, explored the differences between BIDI and SSE streaming modes, examined the relationship between ADK Sessions and Live API sessions, and learned how to manage session duration with session resumption and context window compression. You now understand how to handle concurrent session quotas, implement architectural patterns for quota management, configure cost controls through <code>max_llm_calls</code> and audio persistence options. With RunConfig mastery, you can build production-ready streaming applications that balance feature richness with operational constraints—enabling extended conversations, managing platform limits, controlling costs effectively, and monitoring resource consumption.</p>
+<p>In this part, you learned how RunConfig enables sophisticated control over ADK Gemini Live API Toolkit sessions through declarative configuration. We covered response modalities and their constraints, explored the differences between BIDI and SSE streaming modes, examined the relationship between ADK Sessions and Live API sessions, and learned how to manage session duration with session resumption and context window compression. You now understand how to handle concurrent session quotas, implement architectural patterns for quota management, configure cost controls through <code>max_llm_calls</code> and audio persistence options. With RunConfig mastery, you can build production-ready streaming applications that balance feature richness with operational constraints—enabling extended conversations, managing platform limits, controlling costs effectively, and monitoring resource consumption.</p>
 <hr />
 <p>← <a href="../part3/">Previous: Part 3: Event Handling with run_live()</a> | <a href="../part5/">Next: Part 5: How to Use Audio, Image and Video</a> →</p>
 

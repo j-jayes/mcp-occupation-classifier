@@ -1528,6 +1528,8 @@
       
         
       
+        
+      
     
     
     
@@ -1762,6 +1764,34 @@
     
   
     LiteLLM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/models/litert-lm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LiteRT-LM
   
 
     
@@ -4546,7 +4576,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
     
@@ -4568,7 +4598,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming (live)
+    Gemini Live API Toolkit
   
 
           </label>
@@ -4615,7 +4645,7 @@
   <span class="md-ellipsis">
     
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
     
@@ -4631,7 +4661,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Bidi-streaming development guide series
+    Gemini Live API Toolkit development guide series
   
 
           </label>
@@ -4827,7 +4857,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring Bidi-streaming behavior
+    Configuring streaming behavior
   
 
     
@@ -5786,7 +5816,7 @@
 <h4 id="in-tool-guardrails">In-tool guardrails<a class="headerlink" href="#in-tool-guardrails" title="Permanent link">&para;</a></h4>
 <p>Tools can be designed with security in mind: we can create tools that expose the actions we want the model to take and nothing else. By limiting the range of actions we provide to the agents, we can deterministically eliminate classes of rogue actions that we never want the agent to take.</p>
 <p>In-tool guardrails is an approach to create common and re-usable tools that expose deterministic controls that can be used by developers to set limits on each tool instantiation.</p>
-<p>This approach relies on the fact that tools receive two types of input: arguments,  which are set by the model, and <a href="../tools-custom/#tool-context"><strong><code>Tool Context</code></strong></a>, which can be set deterministically by the agent developer. We can rely on the deterministically set information to validate that the model is behaving as-expected.</p>
+<p>This approach relies on the fact that tools receive two types of input: arguments,  which are set by the model, and <a href="../tools-custom/#tool-context"><strong><code>Tool Context</code></strong></a>, which can be set deterministically by the agent developer. We can rely on the deterministically set information to validate that the model is behaving as-expected. <em>(Note: In TypeScript, <code>Tool Context</code> corresponds to the unified <code>Context</code> type.)</em></p>
 <p>For example, a query tool can be designed to expect a policy to be read from the Tool Context.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="typescript">TypeScript</label><label for="go">Go</label><label for="java">Java</label></div>
 <div class="tabbed-content">
@@ -5812,13 +5842,13 @@
 <div class="tabbed-block">
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Conceptual example: Setting policy data intended for tool context</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1">// In a real ADK app, this might be set in InvocationContext.session.state</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// or passed during tool initialization, then retrieved via ToolContext.</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// or passed during tool initialization, then retrieved via Context.</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">policy</span><span class="o">:</span><span class="w"> </span><span class="p">{[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span><span class="w"> </span><span class="c1">// Assuming policy is an object</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nx">policy</span><span class="p">[</span><span class="s1">&#39;select_only&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nx">policy</span><span class="p">[</span><span class="s1">&#39;tables&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;mytable1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;mytable2&#39;</span><span class="p">];</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">// Conceptual: Storing policy where the tool can access it via ToolContext later.</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">// Conceptual: Storing policy where the tool can access it via Context later.</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">// This specific line might look different in practice.</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">// For example, storing in session state:</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nx">invocationContext</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">state</span><span class="p">[</span><span class="s2">&quot;query_tool_policy&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">policy</span><span class="p">;</span>
@@ -5871,7 +5901,7 @@
 </div>
 </div>
 </div>
-<p>During the tool execution, <a href="../tools-custom/#tool-context"><strong><code>Tool Context</code></strong></a> will be passed to the tool:</p>
+<p>During the tool execution, <a href="../tools-custom/#tool-context"><strong><code>Tool Context</code></strong></a> will be passed to the tool <em>(Note: In TypeScript, this is passed as the unified <code>Context</code> type)</em>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="typescript_1" name="__tabbed_2" type="radio" /><input id="go_1" name="__tabbed_2" type="radio" /><input id="java_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="typescript_1">TypeScript</label><label for="go_1">Go</label><label for="java_1">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -5898,9 +5928,9 @@
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">query</span><span class="p">(</span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">toolContext</span><span class="o">:</span><span class="w"> </span><span class="kt">ToolContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">object</span><span class="w"> </span><span class="p">{</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">query</span><span class="p">(</span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">Context</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">object</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="c1">// Assume &#39;policy&#39; is retrieved from context, e.g., via session state:</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">toolContext</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;query_tool_policy&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">};</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;query_tool_policy&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">};</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="c1">// --- Placeholder Policy Enforcement ---</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">actual_tables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">explainQuery</span><span class="p">(</span><span class="nx">query</span><span class="p">);</span><span class="w"> </span><span class="c1">// Hypothetical function call</span>
@@ -6080,7 +6110,7 @@
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="p">{</span><span class="nx">tool</span><span class="p">,</span><span class="w"> </span><span class="nx">args</span><span class="p">,</span><span class="w"> </span><span class="nx">context</span><span class="p">}</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="nx">tool</span><span class="o">:</span><span class="w"> </span><span class="kt">BaseTool</span><span class="p">,</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">        </span><span class="nx">args</span><span class="o">:</span><span class="w"> </span><span class="p">{[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">},</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">ToolContext</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="nx">context</span><span class="o">:</span><span class="w"> </span><span class="kt">Context</span>
 </span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="p">{[</span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">any</span><span class="p">}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Callback triggered for tool: </span><span class="si">${</span><span class="nx">tool</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">, args: </span><span class="si">${</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
@@ -6232,7 +6262,7 @@
 <h3 id="sandboxed-code-execution">Sandboxed Code Execution<a class="headerlink" href="#sandboxed-code-execution" title="Permanent link">&para;</a></h3>
 <p>Code execution is a special tool that has extra security implications: sandboxing must be used to prevent model-generated code to compromise the local environment, potentially creating security issues.</p>
 <p>Google and the ADK provide several options for safe code execution. <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution-api">Vertex Gemini Enterprise API code execution feature</a> enables agents to take advantage of sandboxed code execution server-side by enabling the tool_execution tool. For code performing data analysis, you can use the <a href="/adk-docs/tools/gemini-api/code-execution/">Code Executor</a> tool in ADK to call the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/extensions/code-interpreter">Vertex Code Interpreter Extension</a>.</p>
-<p>If none of these options satisfy your requirements, you can build your own code executor using the building blocks provided by the ADK. We recommend creating execution environments that are hermetic: no network connections and API calls permitted to avoid uncontrolled data exfiltration; and full clean up of data across execution to not create cross-user exfiltration concerns.</p>
+<p>If none of these options satisfy your requirements, you can build your own code executor using the building blocks provided by the ADK. We recommend creating execution environments that are hermetic: no network connections and API calls permitted to avoid uncontrolled data exfiltration; and full cleanup of data across execution to not create cross-user exfiltration concerns.</p>
 <h3 id="evaluations">Evaluations<a class="headerlink" href="#evaluations" title="Permanent link">&para;</a></h3>
 <p>See <a href="../evaluate/">Evaluate Agents</a>.</p>
 <h3 id="vpc-sc-perimeters-and-network-controls">VPC-SC Perimeters and Network Controls<a class="headerlink" href="#vpc-sc-perimeters-and-network-controls" title="Permanent link">&para;</a></h3>
