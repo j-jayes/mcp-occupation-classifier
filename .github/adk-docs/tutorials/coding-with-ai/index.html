@@ -1152,10 +1152,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-llmstxt" class="md-nav__link">
+  <a href="#adk-dev-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is llms.txt?
+        ADK Dev Skills
       
     </span>
   </a>
@@ -1163,15 +1163,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-in-development-tools" class="md-nav__link">
+  <a href="#adk-docs-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage in Development Tools
+        ADK Docs MCP Server
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage in Development Tools">
+    <nav class="md-nav" aria-label="ADK Docs MCP Server">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1231,6 +1231,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adk-docs-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADK Docs Index
+      
+    </span>
+  </a>
   
 </li>
       
@@ -5610,10 +5621,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-llmstxt" class="md-nav__link">
+  <a href="#adk-dev-skills" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What is llms.txt?
+        ADK Dev Skills
       
     </span>
   </a>
@@ -5621,15 +5632,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-in-development-tools" class="md-nav__link">
+  <a href="#adk-docs-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage in Development Tools
+        ADK Docs MCP Server
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage in Development Tools">
+    <nav class="md-nav" aria-label="ADK Docs MCP Server">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5689,6 +5700,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adk-docs-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADK Docs Index
+      
+    </span>
+  </a>
   
 </li>
       
@@ -5787,175 +5809,159 @@
 
 
 <h1 id="coding-with-ai">Coding with AI<a class="headerlink" href="#coding-with-ai" title="Permanent link">&para;</a></h1>
-<p>The Agent Development Kit (ADK) documentation supports the
-<a href="https://llmstxt.org/"><code>/llms.txt</code> standard</a>, providing a machine-readable index
-of the documentation optimized for Large Language Models (LLMs). This allows you
-to easily use the ADK documentation as context in your AI-powered development
-environment.</p>
-<h2 id="what-is-llmstxt">What is llms.txt?<a class="headerlink" href="#what-is-llmstxt" title="Permanent link">&para;</a></h2>
-<p><code>llms.txt</code> is a standardized text file that acts as a map for LLMs, listing the
-most important documentation pages and their descriptions. This helps AI tools
-understand the structure of the ADK documentation and retrieve relevant
-information to answer your questions.</p>
-<p>The ADK documentation provides the following files that are automatically
-generated with every update:</p>
+<p>You can use AI coding assistants to build agents with Agent Development Kit
+(ADK). Give your coding agent ADK expertise by installing development skills
+into your project, or by connecting it to ADK documentation through an MCP
+server.</p>
+<ul>
+<li><a href="#adk-dev-skills"><strong>ADK Dev Skills</strong></a>: Install ADK development skills directly into
+  your project.</li>
+<li><a href="#adk-docs-mcp-server"><strong>ADK Docs MCP Server</strong></a>: Connect your coding tool to
+  ADK documentation through an MCP server.</li>
+<li><a href="#adk-docs-index"><strong>ADK Docs Index</strong></a>: Machine-readable documentation files
+  following the <code>llms.txt</code> standard.</li>
+</ul>
+<h2 id="adk-dev-skills">ADK Dev Skills<a class="headerlink" href="#adk-dev-skills" title="Permanent link">&para;</a></h2>
+<p>ADK provides a set of development <a href="https://agentskills.io/">skills</a> that cover
+APIs, coding patterns, deployment, and evaluation. The skills work with any
+compatible tool, including Gemini CLI, Antigravity, Claude Code, and Cursor.</p>
+<p>To install the ADK development skills, run the following in your project
+directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npx<span class="w"> </span>skills<span class="w"> </span>add<span class="w"> </span>google/adk-docs/skills<span class="w"> </span>-y<span class="w"> </span>-g
+</span></code></pre></div>
+<p>Browse the <a href="https://github.com/google/adk-docs/tree/main/skills">ADK Dev Skills on
+GitHub</a>, which include:</p>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>adk-cheatsheet</code></td>
+<td>Python API quick reference and docs index</td>
+</tr>
+<tr>
+<td><code>adk-deploy-guide</code></td>
+<td>Agent Engine and Cloud Run deployment</td>
+</tr>
+<tr>
+<td><code>adk-dev-guide</code></td>
+<td>Development lifecycle and coding guidelines</td>
+</tr>
+<tr>
+<td><code>adk-eval-guide</code></td>
+<td>Evaluation methodology and scoring</td>
+</tr>
+<tr>
+<td><code>adk-observability-guide</code></td>
+<td>Tracing, logging, and integrations</td>
+</tr>
+<tr>
+<td><code>adk-scaffold</code></td>
+<td>Project scaffolding</td>
+</tr>
+</tbody>
+</table>
+<h2 id="adk-docs-mcp-server">ADK Docs MCP Server<a class="headerlink" href="#adk-docs-mcp-server" title="Permanent link">&para;</a></h2>
+<p>You can configure your coding tool to search and read ADK documentation using an
+MCP server. Below are setup instructions for popular tools.</p>
+<h3 id="gemini-cli">Gemini CLI<a class="headerlink" href="#gemini-cli" title="Permanent link">&para;</a></h3>
+<p>To add the ADK docs MCP server to <a href="https://geminicli.com/">Gemini CLI</a>, install
+the <a href="https://github.com/derailed-dash/adk-docs-ext">ADK Docs Extension</a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gemini<span class="w"> </span>extensions<span class="w"> </span>install<span class="w"> </span>https://github.com/derailed-dash/adk-docs-ext
+</span></code></pre></div>
+<h3 id="antigravity">Antigravity<a class="headerlink" href="#antigravity" title="Permanent link">&para;</a></h3>
+<p>To add the ADK docs MCP server to <a href="https://antigravity.google/">Antigravity</a>
+(requires <a href="https://docs.astral.sh/uv/"><code>uv</code></a>):</p>
+<ol>
+<li>Open the MCP store via the <strong>...</strong> (more) menu at the top of the editor's
+   agent panel.</li>
+<li>Click on <strong>Manage MCP Servers</strong> then <strong>View raw config</strong>.</li>
+<li>
+<p>Add the following to <code>mcp_config.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;adk-docs-mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="s2">&quot;--from&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="s2">&quot;AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt&quot;</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="s2">&quot;--transport&quot;</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="s2">&quot;stdio&quot;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">}</span>
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="claude-code">Claude Code<a class="headerlink" href="#claude-code" title="Permanent link">&para;</a></h3>
+<p>To add the ADK docs MCP server to
+<a href="https://code.claude.com/docs/en/overview">Claude Code</a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>adk-docs<span class="w"> </span>--transport<span class="w"> </span>stdio<span class="w"> </span>--<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>mcpdoc<span class="w"> </span>mcpdoc<span class="w"> </span>--urls<span class="w"> </span>AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt<span class="w"> </span>--transport<span class="w"> </span>stdio
+</span></code></pre></div>
+<h3 id="cursor">Cursor<a class="headerlink" href="#cursor" title="Permanent link">&para;</a></h3>
+<p>To add the ADK docs MCP server to <a href="https://cursor.com/">Cursor</a> (requires
+<a href="https://docs.astral.sh/uv/"><code>uv</code></a>):</p>
+<ol>
+<li>Open <strong>Cursor Settings</strong> and navigate to the <strong>Tools &amp; MCP</strong> tab.</li>
+<li>Click on <strong>New MCP Server</strong>, which will open <code>mcp.json</code> for editing.</li>
+<li>
+<p>Add the following to <code>mcp.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;adk-docs-mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="s2">&quot;--from&quot;</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="s2">&quot;AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt&quot;</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="s2">&quot;--transport&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">        </span><span class="s2">&quot;stdio&quot;</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">}</span>
+</span></code></pre></div>
+</li>
+</ol>
+<h3 id="other-tools">Other Tools<a class="headerlink" href="#other-tools" title="Permanent link">&para;</a></h3>
+<p>Any coding tool that supports MCP servers can use the same server configuration
+shown above. Adapt the JSON example from the Antigravity or Cursor sections for
+your tool's MCP settings.</p>
+<h2 id="adk-docs-index">ADK Docs Index<a class="headerlink" href="#adk-docs-index" title="Permanent link">&para;</a></h2>
+<p>The ADK documentation is available as machine-readable files following the
+<a href="https://llmstxt.org/"><code>llms.txt</code> standard</a>. These files are generated with
+every documentation update and are always up to date.</p>
 <table>
 <thead>
 <tr>
 <th>File</th>
-<th>Best For...</th>
+<th>Description</th>
 <th>URL</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong><code>llms.txt</code></strong></td>
-<td>Tools that can fetch links dynamically</td>
-<td><a href="https://google.github.io/adk-docs/llms.txt"><code>https://google.github.io/adk-docs/llms.txt</code></a></td>
+<td><code>llms.txt</code></td>
+<td>Documentation index with links</td>
+<td><a href="https://google.github.io/adk-docs/llms.txt"><code>google.github.io/adk-docs/llms.txt</code></a></td>
 </tr>
 <tr>
-<td><strong><code>llms-full.txt</code></strong></td>
-<td>Tools that need a single, static text dump of the entire site</td>
-<td><a href="https://google.github.io/adk-docs/llms-full.txt"><code>https://google.github.io/adk-docs/llms-full.txt</code></a></td>
+<td><code>llms-full.txt</code></td>
+<td>Full documentation in a single file</td>
+<td><a href="https://google.github.io/adk-docs/llms-full.txt"><code>google.github.io/adk-docs/llms-full.txt</code></a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="usage-in-development-tools">Usage in Development Tools<a class="headerlink" href="#usage-in-development-tools" title="Permanent link">&para;</a></h2>
-<p>You can use these files to power your AI coding assistants with ADK knowledge.
-This functionality allows your agents to autonomously search and read the ADK
-documentation while planning tasks and generating code.</p>
-<h3 id="gemini-cli">Gemini CLI<a class="headerlink" href="#gemini-cli" title="Permanent link">&para;</a></h3>
-<p>The <a href="https://geminicli.com/">Gemini CLI</a> can be configured to query the ADK
-documentation using the
-<a href="https://github.com/derailed-dash/adk-docs-ext">ADK Docs Extension</a>.</p>
-<p><strong>Installation:</strong></p>
-<p>To install the extension, run the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gemini<span class="w"> </span>extensions<span class="w"> </span>install<span class="w"> </span>https://github.com/derailed-dash/adk-docs-ext
-</span></code></pre></div>
-<p><strong>Usage:</strong></p>
-<p>Once installed, the extension is automatically enabled. You can ask questions
-about ADK directly in the Gemini CLI, and it will use the <code>llms.txt</code> file and
-ADK documentation to provide accurate answers and generate code.</p>
-<p>For example, you can ask the following question from within Gemini CLI:</p>
-<blockquote>
-<p>How do I create a function tool using Agent Development Kit?</p>
-</blockquote>
-<hr />
-<h3 id="antigravity">Antigravity<a class="headerlink" href="#antigravity" title="Permanent link">&para;</a></h3>
-<p>The <a href="https://antigravity.google/">Antigravity</a> IDE can be configured to access
-the ADK documentation by running a custom MCP server that points to the
-<code>llms.txt</code> file for ADK.</p>
-<p><strong>Prerequisites:</strong></p>
-<p>Ensure you have the <a href="https://docs.astral.sh/uv/"><code>uv</code></a> tool installed, as this
-configuration uses <code>uvx</code> to run the documentation server without manual
-installation.</p>
-<p><strong>Configuration:</strong></p>
-<ol>
-<li>Open the MCP store via the <strong>...</strong> (more) menu at the top of the editor's
-   agent panel.</li>
-<li>Click on <strong>Manage MCP Servers</strong>.</li>
-<li>Click on <strong>View raw config</strong>.</li>
-<li>
-<p>Add the following entry to <code>mcp_config.json</code> with your custom MCP server
-   configuration. If this is your first MCP server, you can paste the entire
-   code block:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;adk-docs-mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="s2">&quot;--from&quot;</span><span class="p">,</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="s2">&quot;AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt&quot;</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="s2">&quot;--transport&quot;</span><span class="p">,</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="s2">&quot;stdio&quot;</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="p">]</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">}</span>
-</span></code></pre></div>
-</li>
-</ol>
-<p>Refer to the
-<a href="https://antigravity.google/docs/mcp">Antigravity MCP documentation</a> for more
-information on managing MCP servers.</p>
-<p><strong>Usage:</strong></p>
-<p>Once configured, you can prompt the coding agent with instructions like:</p>
-<blockquote>
-<p>Use the ADK docs to build a multi-tool agent that uses Gemini 2.5 Pro and
-includes a mock weather lookup tool and a custom calculator tool. Verify the
-agent using <code>adk run</code>.</p>
-</blockquote>
-<hr />
-<h3 id="claude-code">Claude Code<a class="headerlink" href="#claude-code" title="Permanent link">&para;</a></h3>
-<p><a href="https://code.claude.com/docs/en/overview">Claude Code</a> can be configured to
-query the ADK documentation by adding an
-<a href="https://code.claude.com/docs/en/mcp">MCP server</a>.</p>
-<p><strong>Installation:</strong></p>
-<p>To add an MCP server for the ADK docs to Claude Code, run the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>adk-docs<span class="w"> </span>--transport<span class="w"> </span>stdio<span class="w"> </span>--<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>mcpdoc<span class="w"> </span>mcpdoc<span class="w"> </span>--urls<span class="w"> </span>AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt<span class="w"> </span>--transport<span class="w"> </span>stdio
-</span></code></pre></div>
-<p><strong>Usage:</strong></p>
-<p>Once installed, the MCP server is automatically enabled. You can ask questions
-about ADK directly in Claude Code, and it will use the <code>llms.txt</code> file and ADK
-documentation to provide accurate answers and generate code.</p>
-<p>For example, you can ask the following question from within Claude Code:</p>
-<blockquote>
-<p>How do I create a function tool using Agent Development Kit?</p>
-</blockquote>
-<hr />
-<h3 id="cursor">Cursor<a class="headerlink" href="#cursor" title="Permanent link">&para;</a></h3>
-<p>The <a href="https://cursor.com/">Cursor</a> IDE can be configured to access the ADK
-documentation by running a custom MCP server that points to the <code>llms.txt</code> file
-for ADK.</p>
-<p><strong>Prerequisites:</strong></p>
-<p>Ensure you have the <a href="https://docs.astral.sh/uv/"><code>uv</code></a> tool installed, as this
-configuration uses <code>uvx</code> to run the documentation server without manual
-installation.</p>
-<p><strong>Configuration:</strong></p>
-<ol>
-<li>Open <strong>Cursor Settings</strong> and navigate to the <strong>Tools &amp; MCP</strong> tab.</li>
-<li>Click on <strong>New MCP Server</strong>, which will open <code>mcp.json</code> for editing.</li>
-<li>
-<p>Add the following entry to <code>mcp.json</code> with your custom MCP server
-   configuration. If this is your first MCP server, you can paste the entire
-   code block:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;adk-docs-mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="s2">&quot;--from&quot;</span><span class="p">,</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="s2">&quot;mcpdoc&quot;</span><span class="p">,</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="s2">&quot;--urls&quot;</span><span class="p">,</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="s2">&quot;AgentDevelopmentKit:https://google.github.io/adk-docs/llms.txt&quot;</span><span class="p">,</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="s2">&quot;--transport&quot;</span><span class="p">,</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="s2">&quot;stdio&quot;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="p">]</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
-</span></code></pre></div>
-</li>
-</ol>
-<p>Refer to the <a href="https://cursor.com/docs/context/mcp">Cursor MCP documentation</a> for
-more information on managing MCP servers.</p>
-<p><strong>Usage:</strong></p>
-<p>Once configured, you can prompt the coding agent with instructions like:</p>
-<blockquote>
-<p>Use the ADK docs to build a multi-tool agent that uses Gemini 2.5 Pro and
-includes a mock weather lookup tool and a custom calculator tool. Verify the
-agent using <code>adk run</code>.</p>
-</blockquote>
-<hr />
-<h3 id="other-tools">Other Tools<a class="headerlink" href="#other-tools" title="Permanent link">&para;</a></h3>
-<p>Any tool that supports the <code>llms.txt</code> standard or can ingest documentation from
-a URL can benefit from these files. You can provide the URL
-<code>https://google.github.io/adk-docs/llms.txt</code> (or <code>llms-full.txt</code>) to your tool's
-knowledge base configuration or MCP server configuration.</p>
 
 
 
@@ -6035,7 +6041,7 @@ knowledge base configuration or MCP server configuration.</p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/terms">Terms</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
+      Copyright Google 2026&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//github.com/google/adk-docs/blob/main/LICENSE">License</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="//policies.google.com/privacy">Privacy</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#__consent">Manage cookies</a>
     </div>
   
   

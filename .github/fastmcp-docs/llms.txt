@@ -405,3 +405,6 @@
 - [prefect-aws](https://gofastmcp.com/integrations/catalog/prefect-aws.yaml)
 - [prefect-alert](https://gofastmcp.com/integrations/catalog/prefect-alert.yaml)
 - [TEMPLATE](https://gofastmcp.com/integrations/catalog/TEMPLATE.yaml)
+
+
+Built with [Mintlify](https://mintlify.com).
