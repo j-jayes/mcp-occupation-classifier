@@ -64,8 +64,8 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Google Sans";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
     
@@ -156,11 +156,9 @@
 <!-- Determine classes -->
 
 
-  
-
 
 <!-- Header -->
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav
     class="md-header__inner md-grid"
     aria-label="Header"
@@ -229,7 +227,7 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="white" data-md-color-accent="white"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="grey" data-md-color-accent="grey"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
     
       <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
@@ -358,6 +356,201 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Home
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../get-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Build Agents
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../runtime/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Run Agents
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../get-started/about/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Components
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../integrations/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Integrations
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../2.0/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ADK 2.0
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -395,11 +588,13 @@
 <!-- Determine classes -->
 
 
+  
+
 
 
 <!-- Navigation -->
 <nav
-  class="md-nav md-nav--primary"
+  class="md-nav md-nav--primary md-nav--lifted"
   aria-label="Navigation"
   data-md-level="0"
 >
@@ -477,12 +672,12 @@
     
     
       
-        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
@@ -556,19 +751,19 @@
     
     
       
-        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -621,6 +816,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -818,6 +1016,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -941,6 +1142,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -1172,6 +1376,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -1269,6 +1476,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -1533,6 +1743,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -1830,6 +2043,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -1907,6 +2123,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -1972,6 +2191,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -2240,6 +2462,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -2320,19 +2545,19 @@
     
     
       
-        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -2389,6 +2614,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -2636,6 +2864,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -2705,6 +2936,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -2928,6 +3162,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -3031,6 +3268,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -3160,6 +3400,9 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -3259,6 +3502,9 @@
         
         
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
@@ -3346,9 +3592,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -3374,7 +3626,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -3480,9 +3732,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -3508,7 +3766,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -3547,6 +3805,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -3744,9 +4005,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -3772,7 +4039,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_4" id="__nav_4_4_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -3872,9 +4139,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -3939,9 +4212,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4006,9 +4285,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4073,9 +4358,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4140,9 +4431,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4211,13 +4508,21 @@
       
         
       
+        
+      
     
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4243,7 +4548,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -4308,6 +4613,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -4437,6 +4745,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#under-the-hood-to_a2a-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under the hood: to_a2a() method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#getting-the-sample-code" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4525,6 +4844,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#advanced-configuration-custom-converters-and-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Configuration: Custom Converters and Interceptors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Configuration: Custom Converters and Interceptors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#converters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Converters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execute Interceptors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-executor-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Executor V2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4596,6 +4965,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -4699,6 +5071,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../a2a-extension/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A2A Extension
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4730,9 +5130,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -4758,7 +5164,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_11" id="__nav_4_11_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_11" id="__nav_4_11_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -4799,6 +5205,9 @@
     
     
     
+      
+      
+        
       
     
     
@@ -5071,9 +5480,15 @@
     
     
       
+      
+        
+          
+          
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
@@ -5099,7 +5514,7 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_12" id="__nav_4_12_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_12" id="__nav_4_12_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -5199,30 +5614,99 @@
     
       
         
-      
-        
-      
-        
-      
+          
         
       
     
     
     
       
-        
+      
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <div class="md-nav__link md-nav__container">
+            <a href="../../integrations/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrations
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integrations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -5240,8 +5724,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5257,34 +5741,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../release-notes/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Release Notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -5310,13 +5766,16 @@
     
     
       
+      
+        
+      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5338,14 +5797,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5617,6 +6076,335 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../2.0/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADK 2.0
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ADK 2.0
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../workflows/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph-based workflows
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Graph-based workflows
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflows/graph-routes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph routes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflows/data-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflows/human-input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Human input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflows/collaboration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collaborative agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflows/dynamic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5672,6 +6460,17 @@
   
     <nav class="md-nav" aria-label="Exposing the Remote Agent with the to_a2a(root_agent) function">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#under-the-hood-to_a2a-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under the hood: to_a2a() method
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#getting-the-sample-code" class="md-nav__link">
@@ -5755,6 +6554,56 @@
     <span class="md-ellipsis">
       
         Example Interactions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-configuration-custom-converters-and-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Configuration: Custom Converters and Interceptors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Configuration: Custom Converters and Interceptors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#converters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Converters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execute-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execute Interceptors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-executor-v2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent Executor V2
       
     </span>
   </a>
@@ -5955,6 +6804,14 @@
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Load A2A agent card from a file</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">a2a_app</span> <span class="o">=</span> <span class="n">to_a2a</span><span class="p">(</span><span class="n">root_agent</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8001</span><span class="p">,</span> <span class="n">agent_card</span><span class="o">=</span><span class="s2">&quot;/path/to/your/agent-card.json&quot;</span><span class="p">)</span>
 </span></code></pre></div></p>
+<h3 id="under-the-hood-to_a2a-method">Under the hood: to_a2a() method<a class="headerlink" href="#under-the-hood-to_a2a-method" title="Permanent link">&para;</a></h3>
+<p>When you call <code>to_a2a()</code>, the ADK automatically handles several setup steps to expose your agent:</p>
+<ul>
+<li><strong><code>A2aAgentExecutor</code> setup:</strong> An <code>A2aAgentExecutor</code> is initialized to act as the bridge between the A2A protocol and your ADK agent. If you don't provide a custom <code>Runner</code>, it automatically creates a default one backed by in-memory services (for artifacts, sessions, memory, and credentials).</li>
+<li><strong>State Management:</strong> It creates an <code>InMemoryTaskStore</code> to track A2A tasks and an <code>InMemoryPushNotificationConfigStore</code> for handling push notifications.</li>
+<li><strong>Request Handling:</strong> A <code>DefaultRequestHandler</code> is created to route incoming A2A HTTP requests to the <code>A2aAgentExecutor</code> and the state stores.</li>
+<li><strong>Starlette App &amp; Agent Card:</strong> It creates a Starlette application. During the application's startup phase, it either loads your provided Agent Card or automatically builds one from your agent's configuration using an <code>AgentCardBuilder</code>. It then mounts all the necessary A2A API routes.</li>
+</ul>
 <p>Now let's dive into the sample code.</p>
 <h3 id="getting-the-sample-code">1. Getting the Sample Code<a class="headerlink" href="#getting-the-sample-code" title="Permanent link">&para;</a></h3>
 <p>First, make sure you have the necessary dependencies installed:</p>
@@ -6029,6 +6886,34 @@ This interaction uses a local agent, the Roll Agent:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>User: Roll a 10-sided die and check if it&#39;s prime
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Bot: I rolled an 8 for you.
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Bot: 8 is not a prime number.
+</span></code></pre></div>
+<h2 id="advanced-configuration-custom-converters-and-interceptors">Advanced Configuration: Custom Converters and Interceptors<a class="headerlink" href="#advanced-configuration-custom-converters-and-interceptors" title="Permanent link">&para;</a></h2>
+<p>In scenarios where you want more granular control than what <code>to_a2a()</code> provides, you may instantiate and pass an <a href="https://github.com/google/adk-python/blob/main/src/google/adk/a2a/executor/config.py"><code>A2aAgentExecutorConfig</code></a> directly to the <code>A2aAgentExecutor</code>. This allows you to override default data converters and inject execution middleware.</p>
+<h3 id="converters">Converters<a class="headerlink" href="#converters" title="Permanent link">&para;</a></h3>
+<p>Converters handle the bidirectional translation between A2A protocol payloads and ADK's native <code>Event</code> or <code>Part</code> objects. You can provide your own mapping functions for the following hooks:</p>
+<ul>
+<li><strong><code>a2a_part_converter</code></strong>: Converts A2A Message Parts into ADK <code>Part</code> objects.</li>
+<li><strong><code>gen_ai_part_converter</code></strong>: Converts native ADK <code>Part</code> objects into A2A Message Parts.</li>
+<li><strong><code>request_converter</code></strong>: Converts an incoming A2A request into an ADK <code>RunRequest</code>.</li>
+<li><strong><code>event_converter</code></strong>: <em>(Legacy)</em> Converts an ADK Event into an A2A Event, used by the legacy executor implementation.</li>
+<li><strong><code>adk_event_converter</code></strong>: <em>(New)</em> Converts an ADK Event into an A2A Event, used by the new, updated executor implementation.</li>
+</ul>
+<h3 id="execute-interceptors">Execute Interceptors<a class="headerlink" href="#execute-interceptors" title="Permanent link">&para;</a></h3>
+<p>You can inject a list of <code>execute_interceptors</code> to add middleware logic to the <code>A2aAgentExecutor</code> payload processing:</p>
+<ul>
+<li><strong><code>before_agent</code></strong>: Executed before the agent starts processing the request. It allows you to inspect or modify the incoming <code>RequestContext</code>.</li>
+<li><strong><code>after_event</code></strong>: Executed <em>after</em> an ADK event is converted to an A2A event. Allows you to mutate the outgoing event before it is enqueued, or return <code>None</code> to filter out and drop the event entirely.</li>
+<li><strong><code>after_agent</code></strong>: Executed after the agent finishes and the final event is prepared. Use this to inspect or modify the terminal status event (e.g., <code>completed</code> or <code>failed</code>) before it is sent.</li>
+</ul>
+<h2 id="agent-executor-v2">Agent Executor V2<a class="headerlink" href="#agent-executor-v2" title="Permanent link">&para;</a></h2>
+<p>The new version of the <a href="https://github.com/google/adk-python/blob/main/src/google/adk/a2a/executor/a2a_agent_executor_impl.py">agent executor</a> is typically enabled when a client sends the required <a href="../a2a-extension/">A2A extension</a>.</p>
+<p>However, you can also bypass the extension and force the server to use the new executor version by setting the <code>force_new_version=True</code> flag when instantiating the <code>A2aAgentExecutor</code>. This allows you to use the new executor logic without needing to modify existing clients to send the extension.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.a2a.executor</span><span class="w"> </span><span class="kn">import</span> <span class="n">A2aAgentExecutor</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">executor</span> <span class="o">=</span> <span class="n">A2aAgentExecutor</span><span class="p">(</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>            <span class="o">...</span><span class="p">,</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>            <span class="n">force_new_version</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        <span class="p">)</span>
 </span></code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>Now that you have created an agent that's exposing a remote agent via an A2A server, the next step is to learn how to consume it from another agent.</p>
@@ -6215,7 +7100,7 @@ This interaction uses a local agent, the Roll Agent:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.path", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.annotate", "content.code.copy", "content.code.select", "content.tabs.link", "content.tooltips", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.path", "navigation.sections", "navigation.top", "navigation.tracking", "navigation.tabs", "toc.follow"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
