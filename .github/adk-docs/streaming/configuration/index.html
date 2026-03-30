@@ -127,7 +127,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuring-streaming-behaviour" class="md-skip">
+        <a href="#configuring-streaming-behavior" class="md-skip">
           Skip to content
         </a>
       
@@ -3265,6 +3265,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -3362,6 +3366,62 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluate/custom_metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../optimize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimization
   
 
     
@@ -4606,6 +4666,8 @@
       
         
       
+        
+      
     
     
     
@@ -4707,6 +4769,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-exposing-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4723,6 +4813,8 @@
   
     
     
+      
+        
       
         
       
@@ -4816,6 +4908,34 @@
     
   
     Go
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
   
 
     
@@ -6294,14 +6414,17 @@
   </button>
 
 
-<h1 id="configuring-streaming-behaviour">Configuring streaming behaviour<a class="headerlink" href="#configuring-streaming-behaviour" title="Permanent link">&para;</a></h1>
+<h1 id="configuring-streaming-behavior">Configuring streaming behavior<a class="headerlink" href="#configuring-streaming-behavior" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.5.0</span><span class="lst-preview">Experimental</span>
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.5.0</span><span class="lst-java">Java v0.2.0</span><span class="lst-preview">Experimental</span>
 </div>
 
 <p>There are some configurations you can set for live(streaming) agents. </p>
 <p>It's set by <a href="https://github.com/google/adk-python/blob/main/src/google/adk/agents/run_config.py">RunConfig</a>. You should use RunConfig with your <a href="https://github.com/google/adk-python/blob/main/src/google/adk/runners.py">Runner.run_live(...)</a>. </p>
 <p>For example, if you want to set voice config, you can leverage speech_config. </p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="java">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">voice_config</span> <span class="o">=</span> <span class="n">genai_types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">genai_types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfigDict</span><span class="p">(</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">voice_name</span><span class="o">=</span><span class="s1">&#39;Aoede&#39;</span>
@@ -6311,10 +6434,31 @@
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">speech_config</span><span class="o">=</span><span class="n">speech_config</span><span class="p">)</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="o">...</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="c1"># ...,</span>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span><span class="p">,</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.PrebuiltVoiceConfig</span><span class="p">;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.SpeechConfig</span><span class="p">;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.VoiceConfig</span><span class="p">;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">VoiceConfig</span><span class="w"> </span><span class="n">voiceConfig</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="n">VoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="p">.</span><span class="na">prebuiltVoiceConfig</span><span class="p">(</span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">&quot;Aoede&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">SpeechConfig</span><span class="w"> </span><span class="n">speechConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpeechConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceConfig</span><span class="p">(</span><span class="n">voiceConfig</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">runConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">setSpeechConfig</span><span class="p">(</span><span class="n">speechConfig</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">runner</span><span class="p">.</span><span class="na">runLive</span><span class="p">(</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="c1">// ...,</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="n">runConfig</span><span class="p">);</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 
 
 
