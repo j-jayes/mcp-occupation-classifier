@@ -2,10 +2,21 @@
 
 ## Docs
 
+- [App Architecture](https://gofastmcp.com/apps/architecture.md): How FastMCP apps work under the hood — from Python to pixels.
+- [Development](https://gofastmcp.com/apps/development.md): Preview and test your app tools locally without a full MCP host.
+- [Examples](https://gofastmcp.com/apps/examples.md): Example apps you can run right now.
+- [Generative UI](https://gofastmcp.com/apps/generative.md): Let the LLM build custom Prefab UIs on the fly.
+- [FastMCPApp](https://gofastmcp.com/apps/interactive-apps.md): Managed tool binding, visibility, and composition for apps with heavy server interaction.
 - [Custom HTML Apps](https://gofastmcp.com/apps/low-level.md): Build apps with your own HTML, CSS, and JavaScript using the MCP Apps extension directly.
 - [Apps](https://gofastmcp.com/apps/overview.md): Give your tools interactive UIs rendered directly in the conversation.
-- [Patterns](https://gofastmcp.com/apps/patterns.md): Charts, tables, forms, and other common tool UIs.
-- [Prefab Apps](https://gofastmcp.com/apps/prefab.md): Build interactive tool UIs in pure Python — no HTML or JavaScript required.
+- [Patterns](https://gofastmcp.com/apps/patterns.md): Copy-paste examples for common tool UIs.
+- [Prefab UI](https://gofastmcp.com/apps/prefab.md): The component library behind FastMCP apps — charts, tables, dashboards, forms, and reactive displays.
+- [Approval](https://gofastmcp.com/apps/providers/approval.md): Human-in-the-loop approval gates for agent actions
+- [Choice](https://gofastmcp.com/apps/providers/choice.md): Present clickable options instead of free-text responses
+- [File Upload](https://gofastmcp.com/apps/providers/file-upload.md): Drag-and-drop file upload for any MCP server
+- [Form Input](https://gofastmcp.com/apps/providers/form.md): Collect structured data from users via Pydantic models
+- [Generative UI](https://gofastmcp.com/apps/providers/generative.md): Let the LLM generate custom UIs at runtime
+- [Quickstart](https://gofastmcp.com/apps/quickstart.md): Build your first MCP app in under a minute.
 - [Changelog](https://gofastmcp.com/changelog.md)
 - [Auth Utilities](https://gofastmcp.com/cli/auth.md): Create and validate CIMD documents for OAuth
 - [Client Commands](https://gofastmcp.com/cli/client.md): List tools, call them, and discover configured servers
@@ -69,8 +80,18 @@
 - [Scalekit 🤝 FastMCP](https://gofastmcp.com/integrations/scalekit.md): Secure your FastMCP server with Scalekit
 - [Supabase 🤝 FastMCP](https://gofastmcp.com/integrations/supabase.md): Secure your FastMCP server with Supabase Auth
 - [WorkOS 🤝 FastMCP](https://gofastmcp.com/integrations/workos.md): Authenticate FastMCP servers with WorkOS Connect
+- [Settings](https://gofastmcp.com/more/settings.md): Configure FastMCP behavior through environment variables or a .env file.
 - [Contrib Modules](https://gofastmcp.com/patterns/contrib.md): Community-contributed modules extending FastMCP
+- [__init__](https://gofastmcp.com/python-sdk/fastmcp-apps-__init__.md)
+- [app](https://gofastmcp.com/python-sdk/fastmcp-apps-app.md)
+- [approval](https://gofastmcp.com/python-sdk/fastmcp-apps-approval.md)
+- [choice](https://gofastmcp.com/python-sdk/fastmcp-apps-choice.md)
+- [config](https://gofastmcp.com/python-sdk/fastmcp-apps-config.md)
+- [file_upload](https://gofastmcp.com/python-sdk/fastmcp-apps-file_upload.md)
+- [form](https://gofastmcp.com/python-sdk/fastmcp-apps-form.md)
+- [generative](https://gofastmcp.com/python-sdk/fastmcp-apps-generative.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-cli-__init__.md)
+- [apps_dev](https://gofastmcp.com/python-sdk/fastmcp-cli-apps_dev.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-cli-auth.md)
 - [cimd](https://gofastmcp.com/python-sdk/fastmcp-cli-cimd.md)
 - [cli](https://gofastmcp.com/python-sdk/fastmcp-cli-cli.md)
@@ -129,14 +150,15 @@
 - [code_mode](https://gofastmcp.com/python-sdk/fastmcp-experimental-transforms-code_mode.md)
 - [mcp_config](https://gofastmcp.com/python-sdk/fastmcp-mcp_config.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-prompts-__init__.md)
+- [base](https://gofastmcp.com/python-sdk/fastmcp-prompts-base.md)
 - [function_prompt](https://gofastmcp.com/python-sdk/fastmcp-prompts-function_prompt.md)
-- [prompt](https://gofastmcp.com/python-sdk/fastmcp-prompts-prompt.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-resources-__init__.md)
+- [base](https://gofastmcp.com/python-sdk/fastmcp-resources-base.md)
 - [function_resource](https://gofastmcp.com/python-sdk/fastmcp-resources-function_resource.md)
-- [resource](https://gofastmcp.com/python-sdk/fastmcp-resources-resource.md)
 - [template](https://gofastmcp.com/python-sdk/fastmcp-resources-template.md)
 - [types](https://gofastmcp.com/python-sdk/fastmcp-resources-types.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-__init__.md)
+- [app](https://gofastmcp.com/python-sdk/fastmcp-server-app.md)
 - [apps](https://gofastmcp.com/python-sdk/fastmcp-server-apps.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-auth-__init__.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-server-auth-auth.md)
@@ -154,6 +176,7 @@
 - [auth0](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-auth0.md)
 - [aws](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-aws.md)
 - [azure](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-azure.md)
+- [clerk](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-clerk.md)
 - [debug](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-debug.md)
 - [descope](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-descope.md)
 - [discord](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-discord.md)
@@ -250,10 +273,11 @@
 - [settings](https://gofastmcp.com/python-sdk/fastmcp-settings.md)
 - [telemetry](https://gofastmcp.com/python-sdk/fastmcp-telemetry.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-tools-__init__.md)
+- [base](https://gofastmcp.com/python-sdk/fastmcp-tools-base.md)
 - [function_parsing](https://gofastmcp.com/python-sdk/fastmcp-tools-function_parsing.md)
 - [function_tool](https://gofastmcp.com/python-sdk/fastmcp-tools-function_tool.md)
-- [tool](https://gofastmcp.com/python-sdk/fastmcp-tools-tool.md)
 - [tool_transform](https://gofastmcp.com/python-sdk/fastmcp-tools-tool_transform.md)
+- [types](https://gofastmcp.com/python-sdk/fastmcp-types.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-utilities-__init__.md)
 - [async_utils](https://gofastmcp.com/python-sdk/fastmcp-utilities-async_utils.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-utilities-auth.md)
@@ -275,6 +299,7 @@
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-utilities-mcp_server_config-v1-sources-__init__.md)
 - [base](https://gofastmcp.com/python-sdk/fastmcp-utilities-mcp_server_config-v1-sources-base.md)
 - [filesystem](https://gofastmcp.com/python-sdk/fastmcp-utilities-mcp_server_config-v1-sources-filesystem.md)
+- [mime](https://gofastmcp.com/python-sdk/fastmcp-utilities-mime.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-utilities-openapi-__init__.md)
 - [director](https://gofastmcp.com/python-sdk/fastmcp-utilities-openapi-director.md)
 - [formatters](https://gofastmcp.com/python-sdk/fastmcp-utilities-openapi-formatters.md)
@@ -286,6 +311,7 @@
 - [skills](https://gofastmcp.com/python-sdk/fastmcp-utilities-skills.md)
 - [tests](https://gofastmcp.com/python-sdk/fastmcp-utilities-tests.md)
 - [timeout](https://gofastmcp.com/python-sdk/fastmcp-utilities-timeout.md)
+- [token_cache](https://gofastmcp.com/python-sdk/fastmcp-utilities-token_cache.md)
 - [types](https://gofastmcp.com/python-sdk/fastmcp-utilities-types.md)
 - [ui](https://gofastmcp.com/python-sdk/fastmcp-utilities-ui.md)
 - [version_check](https://gofastmcp.com/python-sdk/fastmcp-utilities-version_check.md)
@@ -333,78 +359,6 @@
 - [Versioning](https://gofastmcp.com/servers/versioning.md): Serve multiple API versions from a single codebase
 - [Component Visibility](https://gofastmcp.com/servers/visibility.md): Control which components are available to clients
 - [FastMCP Updates](https://gofastmcp.com/updates.md)
-
-## OpenAPI Specs
-
-- [schema](https://gofastmcp.com/v3/api-ref/rest-api/server/schema.json)
-- [meta](https://gofastmcp.com/styles/Google/meta.json)
-- [Will](https://gofastmcp.com/styles/Google/Will.yml)
-- [We](https://gofastmcp.com/styles/Google/We.yml)
-- [Units](https://gofastmcp.com/styles/Google/Units.yml)
-- [Spelling](https://gofastmcp.com/styles/Google/Spelling.yml)
-- [Spacing](https://gofastmcp.com/styles/Google/Spacing.yml)
-- [Slang](https://gofastmcp.com/styles/Google/Slang.yml)
-- [Semicolons](https://gofastmcp.com/styles/Google/Semicolons.yml)
-- [Ranges](https://gofastmcp.com/styles/Google/Ranges.yml)
-- [Quotes](https://gofastmcp.com/styles/Google/Quotes.yml)
-- [Periods](https://gofastmcp.com/styles/Google/Periods.yml)
-- [Passive](https://gofastmcp.com/styles/Google/Passive.yml)
-- [Parens](https://gofastmcp.com/styles/Google/Parens.yml)
-- [OxfordComma](https://gofastmcp.com/styles/Google/OxfordComma.yml)
-- [Ordinal](https://gofastmcp.com/styles/Google/Ordinal.yml)
-- [OptionalPlurals](https://gofastmcp.com/styles/Google/OptionalPlurals.yml)
-- [LyHyphens](https://gofastmcp.com/styles/Google/LyHyphens.yml)
-- [Latin](https://gofastmcp.com/styles/Google/Latin.yml)
-- [Headings](https://gofastmcp.com/styles/Google/Headings.yml)
-- [HeadingPunctuation](https://gofastmcp.com/styles/Google/HeadingPunctuation.yml)
-- [GenderBias](https://gofastmcp.com/styles/Google/GenderBias.yml)
-- [Gender](https://gofastmcp.com/styles/Google/Gender.yml)
-- [Exclamation](https://gofastmcp.com/styles/Google/Exclamation.yml)
-- [EmDash](https://gofastmcp.com/styles/Google/EmDash.yml)
-- [Ellipses](https://gofastmcp.com/styles/Google/Ellipses.yml)
-- [DateFormat](https://gofastmcp.com/styles/Google/DateFormat.yml)
-- [Contractions](https://gofastmcp.com/styles/Google/Contractions.yml)
-- [Colons](https://gofastmcp.com/styles/Google/Colons.yml)
-- [Acronyms](https://gofastmcp.com/styles/Google/Acronyms.yml)
-- [AMPM](https://gofastmcp.com/styles/Google/AMPM.yml)
-- [WordList](https://gofastmcp.com/styles/CustomStyles/WordList.yml)
-- [FirstPerson](https://gofastmcp.com/styles/CustomStyles/FirstPerson.yml)
-- [package-lock](https://gofastmcp.com/package-lock.json)
-- [prefect-vault](https://gofastmcp.com/integrations/catalog/prefect-vault.yaml)
-- [prefect-transform](https://gofastmcp.com/integrations/catalog/prefect-transform.yaml)
-- [prefect-stitch](https://gofastmcp.com/integrations/catalog/prefect-stitch.yaml)
-- [prefect-sqlalchemy](https://gofastmcp.com/integrations/catalog/prefect-sqlalchemy.yaml)
-- [prefect-spark-on-k8s-operator](https://gofastmcp.com/integrations/catalog/prefect-spark-on-k8s-operator.yaml)
-- [prefect-soda-core](https://gofastmcp.com/integrations/catalog/prefect-soda-core.yaml)
-- [prefect-soda-cloud](https://gofastmcp.com/integrations/catalog/prefect-soda-cloud.yaml)
-- [prefect-snowflake](https://gofastmcp.com/integrations/catalog/prefect-snowflake.yaml)
-- [prefect-slack](https://gofastmcp.com/integrations/catalog/prefect-slack.yaml)
-- [prefect-sifflet](https://gofastmcp.com/integrations/catalog/prefect-sifflet.yaml)
-- [prefect-shell](https://gofastmcp.com/integrations/catalog/prefect-shell.yaml)
-- [prefect-ray](https://gofastmcp.com/integrations/catalog/prefect-ray.yaml)
-- [prefect-planetary-computer](https://gofastmcp.com/integrations/catalog/prefect-planetary-computer.yaml)
-- [prefect-metricflow](https://gofastmcp.com/integrations/catalog/prefect-metricflow.yaml)
-- [prefect-kv](https://gofastmcp.com/integrations/catalog/prefect-kv.yaml)
-- [prefect-kubernetes](https://gofastmcp.com/integrations/catalog/prefect-kubernetes.yaml)
-- [prefect-google-sheets](https://gofastmcp.com/integrations/catalog/prefect-google-sheets.yaml)
-- [prefect-gitlab](https://gofastmcp.com/integrations/catalog/prefect-gitlab.yaml)
-- [prefect-github](https://gofastmcp.com/integrations/catalog/prefect-github.yaml)
-- [prefect-gcp](https://gofastmcp.com/integrations/catalog/prefect-gcp.yaml)
-- [prefect-fugue](https://gofastmcp.com/integrations/catalog/prefect-fugue.yaml)
-- [prefect-fivetran](https://gofastmcp.com/integrations/catalog/prefect-fivetran.yaml)
-- [prefect-email](https://gofastmcp.com/integrations/catalog/prefect-email.yaml)
-- [prefect-earthdata](https://gofastmcp.com/integrations/catalog/prefect-earthdata.yaml)
-- [prefect-docker](https://gofastmcp.com/integrations/catalog/prefect-docker.yaml)
-- [prefect-dbt](https://gofastmcp.com/integrations/catalog/prefect-dbt.yaml)
-- [prefect-databricks](https://gofastmcp.com/integrations/catalog/prefect-databricks.yaml)
-- [prefect-dask](https://gofastmcp.com/integrations/catalog/prefect-dask.yaml)
-- [prefect-cubejs](https://gofastmcp.com/integrations/catalog/prefect-cubejs.yaml)
-- [prefect-coiled](https://gofastmcp.com/integrations/catalog/prefect-coiled.yaml)
-- [prefect-bitbucket](https://gofastmcp.com/integrations/catalog/prefect-bitbucket.yaml)
-- [prefect-azure](https://gofastmcp.com/integrations/catalog/prefect-azure.yaml)
-- [prefect-aws](https://gofastmcp.com/integrations/catalog/prefect-aws.yaml)
-- [prefect-alert](https://gofastmcp.com/integrations/catalog/prefect-alert.yaml)
-- [TEMPLATE](https://gofastmcp.com/integrations/catalog/TEMPLATE.yaml)
 
 
 Built with [Mintlify](https://mintlify.com).
