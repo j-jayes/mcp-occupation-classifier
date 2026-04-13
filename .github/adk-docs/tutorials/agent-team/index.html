@@ -134,6 +134,26 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
     
@@ -366,20 +386,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../.." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,32 +702,9 @@
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../.." class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
@@ -724,26 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
+      </a>
     </li>
   
 
@@ -3475,6 +3450,8 @@
       
         
       
+        
+      
     
     
     
@@ -3572,6 +3549,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluate/environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -6628,9 +6633,26 @@
 
 
 
+  
+
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
       
       
         
@@ -6846,7 +6868,7 @@
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># --- Define Model Constants for easier use ---</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># More supported models can be referenced here: https://ai.google.dev/gemini-api/docs/models#model-variations</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">MODEL_GEMINI_2_5_FLASH</span> <span class="o">=</span> <span class="s2">&quot;gemini-2.5-flash&quot;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">MODEL_GEMINI_2_5_FLASH</span> <span class="o">=</span> <span class="s2">&quot;gemini-flash-latest&quot;</span>
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># More supported models can be referenced here: https://docs.litellm.ai/docs/providers/openai#openai-chat-completion-models</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">MODEL_GPT_4O</span> <span class="o">=</span> <span class="s2">&quot;openai/gpt-4.1&quot;</span> <span class="c1"># You can also try: gpt-4.1-mini, gpt-4o etc.</span>

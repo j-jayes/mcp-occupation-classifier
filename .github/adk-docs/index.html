@@ -41,7 +41,7 @@
     
     
       
-        <title>Index - Agent Development Kit (ADK)</title>
+        <title>Agent Development Kit (ADK) - Agent Development Kit (ADK)</title>
       
     
     
@@ -124,13 +124,28 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#learn-more" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
       
     </div>
     
@@ -199,7 +214,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              Agent Development Kit (ADK)
             
             </a>
           </span>
@@ -366,20 +381,17 @@
     
   
   
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="." class="md-tabs__link">
-          
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,35 +697,14 @@
   
   
   
-    
-    
+    <li class="md-nav__item md-nav__item--active">
       
-        
-          
-        
-      
-    
-    
-    
-      
-        
-        
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
+      <a href="." class="md-nav__link md-nav__link--active">
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="." class="md-nav__link md-nav__link--active">
-              
   
   
   <span class="md-ellipsis">
@@ -727,25 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
+      </a>
       
     </li>
   
@@ -3326,6 +3299,8 @@
       
         
       
+        
+      
     
     
     
@@ -3423,6 +3398,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="evaluate/environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -6381,25 +6384,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#learn-more" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Learn more
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -6415,6 +6399,8 @@
 
 
 
+  
+
 
               
               <article class="md-content__inner md-typeset">
@@ -6425,132 +6411,299 @@
 
 
 
-<div style="text-align: center;">
-  <div class="centered-logo-text-group">
-    <img src="assets/agent-development-kit.png" alt="Agent Development Kit Logo" width="100">
-    <h1>Agent Development Kit</h1>
+<p><link rel="stylesheet" type="text/css" href="stylesheets/homepage.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.css" /></p>
+<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.min.js"></script>
+<p><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></p>
+<script>document.body.classList.add('adk-landing-page');</script>
+
+<div class="adk-landing">
+
+<!-- Ambient Glows -->
+<div class="glow glow-tl"></div>
+<div class="glow glow-tr"></div>
+<div class="glow glow-mr"></div>
+
+<!-- Hero Section -->
+<!-- Hero Section -->
+<div class="hero-grid">
+  <div class="hero-content">
+    <h1>Build production agents, <span class="hero-punchline">not prototypes.</span></h1>
+    <p>ADK is the open-source agent development framework that lets you build, debug, and deploy reliable AI agents at enterprise scale. Available in Python, TypeScript, Go, and Java.</p>
+    <div class="hero-actions">
+      <a href="get-started/" class="btn btn-primary">Start building</a>
+      <!-- <a href="skills/" class="btn btn-accent">Agent skills</a> -->
+    </div>
+  </div>
+  <div class="hero-visual">
+    <!-- Tabbed Code Window -->
+    <div class="tabbed-area" id="tabbed-area">
+      <div class="mac-window">
+        <div class="iterm-tab-bar">
+          <div class="iterm-tab active" data-lang="python">Python</div>
+          <div class="iterm-tab" data-lang="typescript">TypeScript</div>
+          <div class="iterm-tab" data-lang="go">Go</div>
+          <div class="iterm-tab" data-lang="java">Java</div>
+        </div>
+<div class="code-content" id="code-python"><pre><span class="kw">from</span> google.adk <span class="kw">import</span> <span class="fn">Agent</span>
+<span class="kw">from</span> google.adk.tools <span class="kw">import</span> google_search
+
+agent = <span class="fn">Agent</span>(
+    name=<span class="str">"researcher"</span>,
+    model=<span class="str">"gemini-flash-latest"</span>,
+    instruction=<span class="str">"You help users research topics thoroughly."</span>,
+    tools=[google_search],
+)</pre></div>
+
+<div class="code-content" id="code-typescript" style="display:none"><pre><span class="kw">import</span> { <span class="fn">LlmAgent, GOOGLE_SEARCH</span> } <span class="kw">from</span> <span class="str">'@google/adk'</span>;
+
+<span class="kw">const</span> agent = <span class="kw">new</span> <span class="fn">LlmAgent</span>({
+  name: <span class="str">'researcher'</span>,
+  model: <span class="str">'gemini-flash-latest'</span>,
+  instruction: <span class="str">'You help users research topics thoroughly.'</span>,
+  tools: [GOOGLE_SEARCH],
+});
+
+</pre></div>
+
+<div class="code-content" id="code-go" style="display:none"><pre><span class="kw">import</span> <span class="str">"google.golang.org/adk/agent"</span>
+
+a := agent.<span class="fn">New</span>(<span class="str">"researcher"</span>,
+    agent.<span class="fn">WithModel</span>(<span class="str">"gemini-flash-latest"</span>),
+    agent.<span class="fn">WithInstruction</span>(<span class="str">"You help users research topics thoroughly."</span>),
+    agent.<span class="fn">WithTools</span>(googleSearch),
+)
+
+
+</pre></div>
+
+<div class="code-content" id="code-java" style="display:none"><pre><span class="kw">import</span> com.google.adk.agents.<span class="fn">LlmAgent</span>;
+<span class="kw">import</span> com.google.adk.tools.<span class="fn">GoogleSearchTool</span>;
+
+<span class="fn">LlmAgent</span> agent = <span class="fn">LlmAgent</span>.builder()
+    .name(<span class="str">"researcher"</span>)
+    .model(<span class="str">"gemini-flash-latest"</span>)
+    .instruction(<span class="str">"You help users research topics thoroughly."</span>)
+    .tools(<span class="kw">new</span> <span class="fn">GoogleSearchTool()</span>)
+    .build();</pre></div>
+
+</div>
+      <!-- Install info synced with tabs -->
+      <div class="install-info" id="install-python">
+        <div class="install-cmd">
+          <code>pip install google-adk</code>
+          <button class="copy-btn" data-copy="pip install google-adk" title="Copy to clipboard">📋</button>
+        </div>
+      </div>
+      <div class="install-info" id="install-typescript" style="display:none">
+        <div class="install-cmd">
+          <code>npm install @google/adk</code>
+          <button class="copy-btn" data-copy="npm install @google/adk" title="Copy to clipboard">📋</button>
+        </div>
+      </div>
+      <div class="install-info" id="install-go" style="display:none">
+        <div class="install-cmd">
+          <code>go get google.golang.org/adk</code>
+          <button class="copy-btn" data-copy="go get google.golang.org/adk" title="Copy to clipboard">📋</button>
+        </div>
+      </div>
+      <div class="install-info" id="install-java" style="display:none">
+        <div class="install-cmd">
+          <code>com.google.adk:google-adk</code>
+          <button class="copy-btn" data-copy="com.google.adk:google-adk" title="Copy to clipboard">📋</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<p>Agent Development Kit (ADK) is a flexible and modular framework for <strong>developing
-and deploying AI agents</strong>. While optimized for Gemini and the Google ecosystem,
-ADK is <strong>model-agnostic</strong>, <strong>deployment-agnostic</strong>, and is built for
-<strong>compatibility with other frameworks</strong>. ADK was designed to make agent
-development feel more like software development, to make it easier for
-developers to create, deploy, and orchestrate agentic architectures that range
-from simple tasks to complex workflows.</p>
-<details class="tip">
-<summary>News: ADK Go 1.0.0 released!</summary>
-<p>ADK Go 1.0.0 release adds several major features, including OpenTelemetry
-integration, self-healing logic using plugins, and improved human input support.
-For more details on this release, see the
-<a href="https://developers.googleblog.com/adk-go-10-arrives/">ADK Go v1.0 announcement</a>.</p>
-</details>
-<details class="tip">
-<summary>News: ADK Java 1.0.0 released!</summary>
-<p>ADK Java 1.0.0 is now available! This release includes several
-bug fixes and enhancements. Read more about it in the
-<a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/">blog announcement</a>.
-Upgrade to ADK Java 1.0.0 to take advantage of these enhancements
-and ensure optimal performance in your applications.</p>
-</details>
-<div class="install-command-container" id="centered-install-tabs">
-<p class="get-started-text" style="text-align: center;">Get started:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="typescript">TypeScript</label><label for="go">Go</label><label for="java">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><br>
-<p style="text-align: center;">
-<code>pip install google-adk</code>
-</p></p>
+<!-- Framework -->
+<!-- Developer Tools -->
+<div class="feature-split reverse">
+  <div class="feature-text">
+    <span class="feature-badge">Framework</span>
+    <h2>Powerful simplicity. Built for scale.</h2>
+    <p>Start building ADK agents with prompts and tool calls, then grow to multi-agent orchestration, graph-based workflows, performance evaluation, and deployment to world class enterprise services for scalability, reliability, and throughput.</p>
+    <a href="get-started/about/" class="btn btn-accent" style="margin-top:12px">Learn more</a>
+  </div>
+  <div class="feature-visual">
+    <div class="ui-wrapper">
+      <img src="assets/hp-adk-web1.png" alt="ADK Web Dev UI" class="devui-img">
+    </div>
+  </div>
 </div>
-<div class="tabbed-block">
-<p><br>
-<p style="text-align: center;">
-<code>npm install @google/adk</code>
-</p></p>
-</div>
-<div class="tabbed-block">
-<p><br>
-<p style="text-align: center;">
-<code>go get google.golang.org/adk</code>
-</p></p>
-</div>
-<div class="tabbed-block">
-<div class="language-xml highlight"><span class="filename">pom.xml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;dependency&gt;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.google.adk<span class="nt">&lt;/groupId&gt;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>google-adk<span class="nt">&lt;/artifactId&gt;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&lt;version&gt;</span>1.0.0<span class="nt">&lt;/version&gt;</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">&lt;/dependency&gt;</span>
-</span></code></pre></div>
-<div class="language-text highlight"><span class="filename">build.gradle</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dependencies {
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    implementation &#39;com.google.adk:google-adk:1.0.0&#39;
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>}
-</span></code></pre></div>
-</div>
-</div>
-</div>
-</div>
-<p style="text-align:center;">
-  <a href="/get-started/python/" class="md-button" style="margin:3px">Start with Python</a>
-  <a href="/get-started/typescript/" class="md-button" style="margin:3px">Start with TypeScript</a>
-  <a href="/get-started/go/" class="md-button" style="margin:3px">Start with Go</a>
-  <a href="/get-started/java/" class="md-button" style="margin:3px">Start with Java</a>
-</p>
 
-<hr />
-<h2 id="learn-more">Learn more<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h2>
-<p><a href="https://www.youtube.com/watch?v=zgrOwow_uTQ" rel="noopener noreferrer" target="_blank"><span class="twemoji youtube-red-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg></span> Watch "Introducing Agent Development Kit"!</a></p>
-<div class="grid cards">
-<ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 11h-3.18C14.4 9.84 13.3 9 12 9s-2.4.84-2.82 2H6c-.33 0-2-.1-2-2V8c0-1.83 1.54-2 2-2h10.18C16.6 7.16 17.7 8 19 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3c-1.3 0-2.4.84-2.82 2H6C4.39 4 2 5.06 2 8v1c0 2.94 2.39 4 4 4h3.18c.42 1.16 1.52 2 2.82 2s2.4-.84 2.82-2H18c.33 0 2 .1 2 2v1c0 1.83-1.54 2-2 2H7.82C7.4 16.84 6.3 16 5 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3c1.3 0 2.4-.84 2.82-2H18c1.61 0 4-1.07 4-4v-1c0-2.93-2.39-4-4-4m1-7a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M5 20a1 1 0 0 1-1-1 1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1"/></svg></span> <strong>Flexible Orchestration</strong></p>
-<hr />
-<p>Define workflows using workflow agents (<code>Sequential</code>, <code>Parallel</code>, <code>Loop</code>)
-for predictable pipelines, or leverage LLM-driven dynamic routing
-(<code>LlmAgent</code> transfer) for adaptive behavior.</p>
-<p><a href="agents/"><strong>Learn about agents</strong></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5 17c-.13 0-.26 0-.39.04l-1.61-3.25a2.5 2.5 0 0 0-1.75-4.29c-.13 0-.25 0-.39.04l-1.63-3.25c.48-.45.77-1.08.77-1.79a2.5 2.5 0 0 0-5 0c0 .71.29 1.34.76 1.79L8.64 9.54c-.14-.04-.26-.04-.39-.04a2.5 2.5 0 0 0-1.75 4.29l-1.61 3.25C4.76 17 4.63 17 4.5 17a2.5 2.5 0 0 0 0 5A2.5 2.5 0 0 0 7 19.5c0-.7-.29-1.34-.76-1.79l1.62-3.25c.14.04.26.04.39.04s.25 0 .39-.04l1.63 3.25c-.47.45-.77 1.09-.77 1.79a2.5 2.5 0 0 0 5 0A2.5 2.5 0 0 0 12 17c-.13 0-.26 0-.39.04L10 13.79c.46-.45.75-1.08.75-1.79s-.29-1.34-.75-1.79l1.61-3.25c.13.04.26.04.39.04s.26 0 .39-.04L14 10.21c-.45.45-.75 1.09-.75 1.79a2.5 2.5 0 0 0 2.5 2.5c.13 0 .25 0 .39-.04l1.63 3.25c-.47.45-.77 1.09-.77 1.79a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0-2.5-2.5"/></svg></span> <strong>Multi-Agent Architecture</strong></p>
-<hr />
-<p>Build modular and scalable applications by composing multiple specialized
-agents in a hierarchy. Enable complex coordination and delegation.</p>
-<p><a href="agents/multi-agents/"><strong>Explore multi-agent systems</strong></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 8h-3V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10h20V10c0-1.1-.9-2-2-2M9 6h6v2H9zm11 12H4v-3h2v1h2v-1h8v1h2v-1h2zm-2-5v-1h-2v1H8v-1H6v1H4v-3h16v3z"/></svg></span> <strong>Rich Tool Ecosystem</strong></p>
-<hr />
-<p>Equip agents with diverse capabilities: use pre-built tools (Search, Code
-Exec), create custom functions, integrate 3rd-party libraries, or even use
-other agents as tools.</p>
-<p><a href="integrations/"><strong>Browse tools and integrations</strong></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M19.22 4c.28 0 .53 0 .74.05.17 1.39-.02 4.25-3.3 7.53-1.7 1.71-3.73 3.02-6.01 3.89l-2.15-2.1c.92-2.31 2.23-4.34 3.92-6.03C15.18 4.58 17.64 4 19.22 4m0-2c-1.98 0-4.98.69-8.22 3.93-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.38.38.89.61 1.42.61.23 0 .47-.06.7-.15A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61S20.7 2 19.22 2m-4.68 7.46c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>Deployment Ready</strong></p>
-<hr />
-<p>Containerize and deploy your agents anywhere – run locally, scale with
-Vertex AI Agent Engine, or integrate into custom infrastructure using Cloud
-Run or Docker.</p>
-<p><a href="deploy/"><strong>Deploy agents</strong></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-7 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M7 7h10V5h2v14H5V5h2zm.5 6.5L9 12l2 2 4.5-4.5L17 11l-6 6z"/></svg></span> <strong>Built-in Evaluation</strong></p>
-<hr />
-<p>Systematically assess agent performance by evaluating both the final
-response quality and the step-by-step execution trajectory against
-predefined test cases.</p>
-<p><a href="evaluate/"><strong>Evaluate agents</strong></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 19v-3h8v3zm-4.5-6L2.47 7h4.24l4.96 4.95c.58.59.58 1.55 0 2.12L6.74 19H2.5z"/></svg></span> <strong>Building Safe and Secure Agents</strong></p>
-<hr />
-<p>Learn how to building powerful and trustworthy agents by implementing
-security and safety patterns and best practices into your agent's design.</p>
-<p><a href="safety/"><strong>Safety and Security</strong></a></p>
-</li>
-</ul>
+<!-- Ecosystem -->
+<!-- Ecosystem -->
+<div class="feature-split">
+  <div class="feature-text">
+    <span class="feature-badge">Ecosystem</span>
+    <h2>Open ecosystem. Connect everything.</h2>
+    <p>ADK's open integration partners connect your agents with existing apps, a wide range of AI models, and extend agent capabilities to access data, add resilience, and evaluate performance.</p>
+    <a href="integrations/" class="btn btn-accent" style="margin-top:12px">Learn more</a>
+  </div>
+  <div class="feature-visual">
+    <div class="ui-wrapper">
+      <img src="assets/integrations-list.png" alt="ADK Integrations List" class="devui-img">
+    </div>
+  </div>
 </div>
+
+<!-- AI Dev Tools -->
+<!-- Developer Tools -->
+<div class="feature-split reverse">
+  <div class="feature-text">
+    <span class="feature-badge">AI Dev Tools</span>
+    <h2>Build agents <i>with</i> agents.</h2>
+    <p>ADK agents are designed to be written by humans and AI. Connect your AI-powered development tools to our ADK coding resources and generate robust, capable agents in seconds.</p>
+    <a href="tutorials/coding-with-ai/" class="btn btn-accent" style="margin-top:12px">Code with AI</a>
+  </div>
+  <div class="feature-visual">
+    <div id="asciinema-demo"></div>
+  </div>
+</div>
+<!-- requires: Asciinema player script -->
+
+<!-- Eval Section -->
+<!-- Eval Section -->
+<div class="feature-split">
+  <div class="feature-text">
+    <span class="feature-badge">Evaluation</span>
+    <h2>Go beyond vibes. Evaluate everything.</h2>
+    <p>Engage ADK's visual debugging, open evaluation framework, and partner tools to test your entire agent execution trajectory. Simulate user interactions, build custom performance metrics, and optimize agents against your evaluation results.</p>
+    <a href="evaluate/" class="btn btn-accent" style="margin-top:12px">Learn more</a>
+  </div>
+  <div class="feature-visual">
+    <div class="ui-wrapper">
+      <img src="assets/adk-eval-case.gif" alt="ADK Web Eval UI" class="devui-img">
+    </div>
+  </div>
+</div>
+
+<!-- Ready to Build CTA Section -->
+<!-- Ready to Build CTA Section -->
+<div class="ceiling-section">
+  <h2>Ready to build agents?</h2>
+  <p class="section-subtitle">We think one of the best ways to learn is by building, so we've created guides that help you get your development environment set up and run an ADK agent in minutes.</p>
+  <a href="get-started/" class="btn btn-primary">Start building</a>
+</div>
+
+<!-- Community Section -->
+<!-- Community Section -->
+<div class="ceiling-section">
+  <h2>Developer Community</h2>
+  <p class="section-subtitle">Build alongside a growing community of developers engineering the next generation of production-ready AI agents. Whether you want to troubleshoot a graph workflow, share a custom Agent Skill, or shape the future of the framework, we want you involved.</p>
+  <div class="features-grid">
+
+<!-- FEATURED: uncomment/comment cards to control which appear -->
+    <a class="carousel-card" href="community/#adk-community-calls">
+      <span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#999999"><path d="M760-480q0-117-81.5-198.5T480-760v-80q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480h-80Zm-160 0q0-50-35-85t-85-35v-80q83 0 141.5 58.5T680-480h-80Zm198 360q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/></svg>
+      </span>
+      <h3>Community call</h3>
+      <p>Join the ADK core engineering team for live demos, technical deep dives, roadmap updates, and Q&A.</p>
+      <span class="card-learn-more">Learn more →</span>
+    </a>
+
+<!-- FEATURED: uncomment/comment cards to control which appear -->
+    <a class="carousel-card" href="community/">
+      <span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#999999"><path d="m226-559 78 33q14-28 29-54t33-52l-56-11-84 84Zm142 83 114 113q42-16 90-49t90-75q70-70 109.5-155.5T806-800q-72-5-158 34.5T492-656q-42 42-75 90t-49 90Zm155-121.5q0-33.5 23-56.5t57-23q34 0 57 23t23 56.5q0 33.5-23 56.5t-57 23q-34 0-57-23t-23-56.5ZM565-220l84-84-11-56q-26 18-52 32.5T532-299l33 79Zm313-653q19 121-23.5 235.5T708-419l20 99q4 20-2 39t-20 33L538-80l-84-197-171-171-197-84 167-168q14-14 33.5-20t39.5-2l99 20q104-104 218-147t235-24ZM157-321q35-35 85.5-35.5T328-322q35 35 34.5 85.5T327-151q-25 25-83.5 43T82-76q14-103 32-161.5t43-83.5Zm57 56q-10 10-20 36.5T180-175q27-4 53.5-13.5T270-208q12-12 13-29t-11-29q-12-12-29-11.5T214-265Z"/></svg>
+      </span>
+      <h3>Developer resources</h3>
+      <p>Skip the learning curve with comprehensive training, videos, and deep-dives from community members like you.</p>
+      <span class="card-learn-more">Learn more →</span>
+    </a>
+
+  </div>
+</div>
+
+<!-- FAQ Section -->
+<!-- FAQ Section -->
+<div class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <p class="section-subtitle">Still have questions about ADK? Here are some answers:</p>
+
+  <div class="faq-grid">
+
+  <details class="faq-item-arrow">
+    <summary>Can I vibe code agents with ADK?</summary>
+    <p>Yes! ADK is designed to be written by both humans and AI. Connect your favorite coding assistant to our ADK developer Skills and AI-aware developer resources, and generate agents in seconds. Find out more about AI-powered coding of agents in our <a href="tutorials/coding-with-ai/">Coding with AI</a> guide.</p>
+  </details>
+
+  <details class="faq-item-arrow">
+    <summary>What AI models can I use with ADK?</summary>
+    <p>ADK can work with almost any generative AI model. The framework provides easy access to Gemini as well as other leading models, and we provide adapters that let you connect with many other models and model providers, including locally running models. For enterprises, ADK can connect to models on hosted services, including Google Cloud which provides a wide range of models and lets you closely manage performance, reliability, security, access, safety, and costs.</p>
+  </details>
+
+  <details class="faq-item-arrow">
+    <summary>What makes ADK different?</summary>
+    <p>With ADK, we are focused on building an open development framework that lets you build professional, production grade agents, without requiring a pile of code to get started. Our goal is to get you building agents quickly, and let you add functionality and complexity as you need it. ADK provides a basic structure for agents that is easy to build, and that structure is designed with the flexibility to let you extend, expand, and build complex, robust, useful agentic systems. We've put a lot of effort into providing you with development tools for interacting with agents you build, and providing ways to use AI-powered tools for building ADK agents. We are also quite proud of our approach to agent context management and how we manage context to keep it efficient, and also let you tune context management to your needs. We could go on, and if you are interested, you can find more details in our <a href="get-started/about/">developer docs</a>.</p>
+  </details>
+
+  <details class="faq-item-arrow">
+    <summary>How does ADK handle context management?</summary>
+    <p>Unlike tools that simply paste strings together until the context window overflows, ADK <b>manages</b> your context. We treat context like source code—sessions, memory, tool outputs, and artifacts are assembled into a structured view where every token earns its place. ADK automatically filters irrelevant events, summarizes older conversational turns, lazy-loads artifacts, and tracks token usage. This approach keeps your agents fast, efficient, and reliable by default, while giving you the controls to fully customize how context is managed for complex tasks.</p>
+  </details>
+
+  <details class="faq-item-arrow">
+    <summary>How does ADK deploy to production?</summary>
+    <p>ADK is built for <em>deploy anywhere</em> flexibility. You can containerize and run ADK on your own infrastructure, or take advantage of our native, one-command deployment to Google Cloud. When deploying to Google Cloud via Agent Engine (Vertex AI), Cloud Run, or GKE, your agents instantly inherit managed infrastructure, built-in authentication, Cloud Trace observability, and enterprise-grade security—all without requiring you to change a single line of your agent code. Develop locally, scale globally.</p>
+  </details>
+
+  <details class="faq-item-arrow">
+    <summary>When should I use an agent framework to work with generative AI?</summary>
+    <p>AI chat conversations can accomplish many tasks, but when you need to accomplish complex, multi-step processes, an agent framework lets you create a managed, repeatable task structure that can run <em>hands-off</em> with minimal human input. Agent frameworks like ADK can automatically initiate tasks, make multiple iterative AI model requests, manage context, handle tool calls, record data, run parallel jobs, handle failures, and resume tasks if they get stopped.</p>
+  </details>
+
+  </div>
+</div>
+
+<script>
+// Tab switching logic
+document.addEventListener("DOMContentLoaded", function() {
+  var tabs = document.querySelectorAll('.iterm-tab');
+  var langs = ['python', 'go', 'java', 'typescript'];
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var lang = this.getAttribute('data-lang');
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      this.classList.add('active');
+      langs.forEach(function(l) {
+        document.getElementById('code-' + l).style.display = l === lang ? 'block' : 'none';
+        document.getElementById('install-' + l).style.display = l === lang ? 'flex' : 'none';
+      });
+    });
+  });
+
+  // Copy-to-clipboard buttons
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    var text = btn.getAttribute('data-copy');
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✅';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    });
+  });
+
+  // Asciinema player (for _agent-cli.md)
+  var playerEl = document.getElementById('asciinema-demo');
+  if (playerEl && typeof AsciinemaPlayer !== 'undefined') {
+    AsciinemaPlayer.create('assets/adk-demo.cast', playerEl, {
+      theme: 'monokai',
+      fit: 'width',
+      autoPlay: true,
+      loop: true,
+      speed: 1,
+      idleTimeLimit: 2,
+      cols: 85,
+      rows: 24,
+      poster: 'npt:0:18'
+    });
+  }
+});
+</script>
 
 
 

@@ -134,6 +134,26 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
     
@@ -366,20 +386,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../.." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,32 +702,9 @@
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../.." class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
@@ -724,26 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
+      </a>
     </li>
   
 
@@ -2527,21 +2502,110 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-initial-credential-types" class="md-nav__link">
+  <a href="#authentication-and-credential-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Initial Credential Types
+        Authentication and credential management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication and credential management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended: Authentication manager services
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-authentication-on-tools" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Authentication on Tools
+        Self-managed authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets manager services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-encrypted-secrets-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local encrypted secrets storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-memory secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#framework-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Framework components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-initial-credential-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported initial credential types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-and-integrations-quick-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools and integrations quick guide
       
     </span>
   </a>
@@ -3498,6 +3562,8 @@
       
         
       
+        
+      
     
     
     
@@ -3595,6 +3661,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluate/environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -6560,21 +6654,110 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-initial-credential-types" class="md-nav__link">
+  <a href="#authentication-and-credential-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Supported Initial Credential Types
+        Authentication and credential management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication and credential management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended: Authentication manager services
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-authentication-on-tools" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Authentication on Tools
+        Self-managed authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets manager services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-encrypted-secrets-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local encrypted secrets storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-memory secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#framework-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Framework components
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Framework components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-initial-credential-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported initial credential types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-and-integrations-quick-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools and integrations quick guide
       
     </span>
   </a>
@@ -6674,9 +6857,26 @@
 
 
 
+  
+
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
       
       
         
@@ -6758,43 +6958,141 @@
   <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span>
 </div>
 
-<p>Many tools need to access protected resources (like user data in Google Calendar, Salesforce records, etc.) and require authentication. ADK provides a system to handle various authentication methods securely.</p>
-<p>The key components involved are:</p>
-<ol>
-<li><strong><code>AuthScheme</code></strong>: Defines <em>how</em> an API expects authentication credentials (e.g., as an API Key in a header, an OAuth 2.0 Bearer token). ADK supports the same types of authentication schemes as OpenAPI 3.0. To know more about what each type of credential is, refer to <a href="https://swagger.io/docs/specification/v3_0/authentication/">OpenAPI doc: Authentication</a>. ADK uses specific classes like <code>APIKey</code>, <code>HTTPBearer</code>, <code>OAuth2</code>, <code>OpenIdConnectWithConfig</code>.</li>
-<li><strong><code>AuthCredential</code></strong>: Holds the <em>initial</em> information needed to <em>start</em> the authentication process (e.g., your application's OAuth Client ID/Secret, an API key value). It includes an <code>auth_type</code> (like <code>API_KEY</code>, <code>OAUTH2</code>, <code>SERVICE_ACCOUNT</code>) specifying the credential type.</li>
-</ol>
-<p>The general flow involves providing these details when configuring a tool. ADK then attempts to automatically exchange the initial credential for a usable one (like an access token) before the tool makes an API call. For flows requiring user interaction (like OAuth consent), a specific interactive process involving the Agent Client application is triggered.</p>
-<h2 id="supported-initial-credential-types">Supported Initial Credential Types<a class="headerlink" href="#supported-initial-credential-types" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>API_KEY:</strong> For simple key/value authentication. Usually requires no exchange.</li>
-<li><strong>HTTP:</strong> Can represent Basic Auth (not recommended/supported for exchange) or already obtained Bearer tokens. If it's a Bearer token, no exchange is needed.</li>
-<li><strong>OAUTH2:</strong> For standard OAuth 2.0 flows. Requires configuration (client ID, secret, scopes) and often triggers the interactive flow for user consent.</li>
-<li><strong>OPEN_ID_CONNECT:</strong> For authentication based on OpenID Connect. Similar to OAuth2, often requires configuration and user interaction.</li>
-<li><strong>SERVICE_ACCOUNT:</strong> For Google Cloud Service Account credentials (JSON key or Application Default Credentials). Typically exchanged for a Bearer token.</li>
-</ul>
-<h2 id="configuring-authentication-on-tools">Configuring Authentication on Tools<a class="headerlink" href="#configuring-authentication-on-tools" title="Permanent link">&para;</a></h2>
-<p>You set up authentication when defining your tool:</p>
-<ul>
-<li>
-<p><strong>RestApiTool / OpenAPIToolset</strong>: Pass <code>auth_scheme</code> and <code>auth_credential</code> during initialization</p>
-</li>
-<li>
-<p><strong>GoogleApiToolSet Tools</strong>: ADK has built-in 1st party tools like Google Calendar, BigQuery etc,. Use the toolset's specific method.</p>
-</li>
-<li>
-<p><strong>APIHubToolset / ApplicationIntegrationToolset</strong>: Pass <code>auth_scheme</code> and <code>auth_credential</code>during initialization, if the API managed in API Hub / provided by Application Integration requires authentication.</p>
-</li>
-</ul>
-<div class="admonition tip">
-<p class="admonition-title">WARNING</p>
-<p>Storing sensitive credentials like access tokens and especially refresh tokens directly in the session state might pose security risks depending on your session storage backend (<code>SessionService</code>) and overall application security posture.</p>
-<ul>
-<li><strong><code>InMemorySessionService</code>:</strong> Suitable for testing and development, but data is lost when the process ends. Less risk as it's transient.</li>
-<li><strong>Database/Persistent Storage:</strong> <strong>Strongly consider encrypting</strong> the token data before storing it in the database using a robust encryption library (like <code>cryptography</code>) and managing encryption keys securely (e.g., using a key management service).</li>
-<li><strong>Secure Secret Stores:</strong> For production environments, storing sensitive credentials in a dedicated secret manager (like Google Cloud Secret Manager or HashiCorp Vault) is the <strong>most recommended approach</strong>. Your tool could potentially store only short-lived access tokens or secure references (not the refresh token itself) in the session state, fetching the necessary secrets from the secure store when needed.</li>
-</ul>
+<p>The tools and services you use within ADK agents may require access to protected
+resources, such as user data in email or calendar applications, or sales records
+in databases. Getting access to these resources typically requires an
+authentication process that includes credentials and access keys which must
+be carefully managed and protected. The requirements for managing authentication
+data can also change if you are running your agent locally or deploying it
+to a hosted service. If multiple users, with potentially different access
+permissions, are interacting with the agent, this creates another layer of
+authentication management requirements.</p>
+<div class="admonition danger">
+<p class="admonition-title">WARNING: Credential storage and security risks</p>
+<p>Storing sensitive credentials such as access tokens and especially refresh
+tokens directly in the session state can pose security risks depending on
+your session storage backend, your <strong><em>SessionService</em></strong> implementation,
+and overall application security posture. Carefully consider how you manage
+credentials in ADK agents before deploying them for general use.</p>
 </div>
+<h2 id="authentication-and-credential-management">Authentication and credential management<a class="headerlink" href="#authentication-and-credential-management" title="Permanent link">&para;</a></h2>
+<p>There are several ways to manage authentication and credentials in ADK
+agents. Each of these methods carries some amount of risk, so you should
+carefully consider which approach best serves your application and customers.</p>
+<h3 id="authentication-manager">Recommended: Authentication manager services<a class="headerlink" href="#authentication-manager" title="Permanent link">&para;</a></h3>
+<p>When deploying agents to production hosted environments, your agent's ability to
+properly authenticate to restricted tools and services becomes more challenging
+and more important to properly manage. This authentication challenge can become
+even more complicated when users of your agent have varying levels of access to
+restricted tools and data. Rather than writing code to handle the authentication
+process and credential managment for various tools used by your agent, use an
+<em>authentication manager</em> service that manages <em>both</em> for you. This service
+should handle the storage of keys and secrets, as well as the acquisition,
+management, and storage of OAuth access or refresh tokens.</p>
+<h3 id="self-managed-authentication">Self-managed authentication<a class="headerlink" href="#self-managed-authentication" title="Permanent link">&para;</a></h3>
+<p>If you decide to manage your own authentication process with ADK helper functions
+and your own code, consider these recommendations:</p>
+<ul>
+<li><strong>API keys and client secrets:</strong> For any API keys and client secrets used
+    inside ADK code, when running on a local compute environment use a local
+    <code>.env</code> file excluded from version control. When your agent is hosted or
+    otherwise in a production environment, use a secrets manager. For more
+    details on secrets managers, see the <a href="#secrets-manager">next section</a>.</li>
+<li><strong>Interactive authentication:</strong> When using interactive three-legged auth
+    (3LO) OAuth or OpenID Connect (OIDC) for authentication to tools, write a
+    service on the client application to acquire, manage access, and refresh
+    tokens. Make sure to store these tokens against an authenticated user
+    identifier in an encrypted database.</li>
+</ul>
+<h3 id="secrets-manager">Secrets manager services<a class="headerlink" href="#secrets-manager" title="Permanent link">&para;</a></h3>
+<p>For production environments, if you are not using an
+<a href="#authentication-manager">authentication manager</a> service, you should store
+credentials in a dedicated secret manager service to protect that data. With
+this approach, a secret manager securely stores the credentials for any tools or
+services accessed by the agent as needed, and those secrets are not resident in
+agent's operating memory. For example, a custom ADK Tool using this method would
+have only short-lived access tokens or secure references in session memory, and
+retrieve longer-lived refresh tokens from the secrets manager when needed. When
+selecting a secrets manager, consider services from well-established providers,
+such as
+<a href="https://cloud.google.com/security/products/secret-manager">Google Cloud Secret Manager</a>
+or other secret management services.</p>
+<h3 id="local-encrypted-secrets-storage">Local encrypted secrets storage<a class="headerlink" href="#local-encrypted-secrets-storage" title="Permanent link">&para;</a></h3>
+<p>For agent applications that are less security sensitive, keeping credentials in
+local, encrypted storage can be a viable option. Consider using dedicated local
+secrets storage system or encrypting the data in a local database using a robust
+encryption library, and then managing the encryption keys securely using a key
+management service. Take care to only keep short-lived access tokens in
+operating memory and access long-lived credentials and refresh tokens from
+encrypted local storage only when needed.</p>
+<h3 id="in-memory-secrets">In-memory secrets<a class="headerlink" href="#in-memory-secrets" title="Permanent link">&para;</a></h3>
+<p>This method <em>should only be used in the early development</em> and testing of your
+agent. With this approach, credentials are stored in the current
+<strong><em>InMemorySessionService</em></strong> instance. The data exists only in session memory
+and is not persisted. However, you should carefully consider the risks of using
+this method based on how long an agent session may last, who has access to the
+agent, and the security of the environment where the agent is running.</p>
+<h2 id="framework-components">Framework components<a class="headerlink" href="#framework-components" title="Permanent link">&para;</a></h2>
+<p>Within the ADK framework, the <strong><em>AuthScheme</em></strong> and <strong><em>AuthCredential</em></strong> are the
+key components for handling authentication methods and managing credential data:</p>
+<ul>
+<li>
+<p><strong><em>AuthScheme</em></strong>: Defines <em>how</em> an API expects authentication credentials,
+    such as an API Key in a header or an OAuth 2.0 Bearer token. ADK supports
+    the same types of authentication schemes as OpenAPI 3.0 and uses specific
+    classes for credential types, including <strong><em>APIKey</em></strong>, <strong><em>HTTPBearer</em></strong>,
+    <strong><em>OAuth2</em></strong>, and <strong><em>OpenIdConnectWithConfig</em></strong>. For more details on each
+    OpenAPI credential type, see
+    <a href="https://swagger.io/docs/specification/v3_0/authentication/">OpenAPI doc: Authentication</a>.</p>
+</li>
+<li>
+<p><strong><em>AuthCredential</em></strong>: Holds the <em>initial</em> information needed to <em>start</em> the
+    authentication process, such as your application's OAuth Client ID or
+    Secret, or an API key value. An instance of this class includes an
+    <strong>auth_type</strong>, such as <code>API_KEY</code>, <code>OAUTH2</code>, <code>SERVICE_ACCOUNT</code>, specifying
+    the credential type.</p>
+</li>
+</ul>
+<p>The general authentication flow involves providing these details when
+configuring a tool. ADK then attempts to automatically exchange the initial
+credential, such as an access token, before the tool makes an API call. For
+flows requiring user interaction, including OAuth consent, ADK triggers a
+specific interactive process with your <strong><em>Agent Client</em></strong> application.</p>
+<h3 id="supported-initial-credential-types">Supported initial credential types<a class="headerlink" href="#supported-initial-credential-types" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>API_KEY:</strong> Provides simple key-value authentication, which usually
+    requires no authentication exchange.</li>
+<li><strong>HTTP:</strong> Provides Basic Auth which is not recommended and may not be
+    supported for exchange, or already obtained Bearer tokens. Bearer tokens do
+    not require an authentication exchange.</li>
+<li><strong>OAUTH2:</strong> Provides standard OAuth 2.0 authentication flows, and requires
+    configuration with client ID, secret, and scopes. This method often
+    triggers an interactive flow for user consent.</li>
+<li><strong>OPEN_ID_CONNECT:</strong> Provides authentication based on OpenID Connect.
+    Similar to OAuth2, this type often requires configuration and user
+    interaction.</li>
+<li><strong>SERVICE_ACCOUNT:</strong> Provides Google Cloud Service Account credentials as a
+    JSON key or Application Default Credentials. This type typically exchanges a
+    Bearer token.</li>
+</ul>
+<h2 id="tools-and-integrations-quick-guide">Tools and integrations quick guide<a class="headerlink" href="#tools-and-integrations-quick-guide" title="Permanent link">&para;</a></h2>
+<p>Here is a quick guide to authentication for key ADK toolsets:</p>
+<ul>
+<li><a href="/tools-custom/openapi-tools/"><strong><em>RestApiTool</em></strong></a>:
+    Set <code>auth_scheme</code> and <code>auth_credential</code> during initialization</li>
+<li><a href="/tools-custom/openapi-tools/"><strong><em>OpenAPIToolset</em></strong></a>:
+    Set <code>auth_scheme</code> and <code>auth_credential</code> during initialization</li>
+<li><a href="/integrations/apigee-api-hub/"><strong><em>APIHubToolset</em></strong></a>:
+    Set <code>auth_scheme</code> and <code>auth_credential</code> during initialization, <em>if</em> the API
+    requires authentication.</li>
+<li><a href="/integrations/application-integration/"><strong><em>ApplicationIntegrationToolset</em></strong></a>:
+    Set <code>auth_scheme</code> and <code>auth_credential</code> during initialization, <em>if</em> the API
+    requires authentication.</li>
+<li><a href="https://github.com/google/adk-python/blob/main/src/google/adk/tools/google_api_tool/google_api_toolset.py"><strong><em>GoogleApiToolSet</em></strong></a>:
+    Use this toolset's specific authentication method.</li>
+</ul>
+<p>For more authentication details for other pre-built tools and integrations
+see the <a href="/integrations">ADK Integrations</a> catalog.</p>
 <hr />
 <h2 id="journey-1-building-agentic-applications-with-authenticated-tools">Journey 1: Building Agentic Applications with Authenticated Tools<a class="headerlink" href="#journey-1-building-agentic-applications-with-authenticated-tools" title="Permanent link">&para;</a></h2>
 <p>This section focuses on using pre-existing tools (like those from <code>RestApiTool/ OpenAPIToolset</code>, <code>APIHubToolset</code>, <code>GoogleApiToolSet</code>) that require authentication within your agentic application. Your main responsibility is configuring the tools and handling the client-side part of interactive authentication flows (if required by the tool).</p>
@@ -6923,10 +7221,10 @@
 <p>The sequence diagram of auth request flow (where tools are requesting auth credentials) looks like below:</p>
 <p><img alt="Authentication" src="../../assets/auth_part1.svg" /></p>
 <h3 id="2-handling-the-interactive-oauthoidc-flow-client-side">2. Handling the Interactive OAuth/OIDC Flow (Client-Side)<a class="headerlink" href="#2-handling-the-interactive-oauthoidc-flow-client-side" title="Permanent link">&para;</a></h3>
-<p>If a tool requires user login/consent (typically OAuth 2.0 or OIDC), the ADK framework pauses execution and signals your <strong>Agent Client</strong> application. There are two cases:</p>
+<p>If a tool requires user login/consent (typically OAuth 2.0 or OIDC), the ADK framework pauses execution and signals your <strong><em>Agent Client</em></strong> application. There are two cases:</p>
 <ul>
-<li><strong>Agent Client</strong> application runs the agent directly (via <code>runner.run_async</code>) in the same process. e.g. UI backend, CLI app, or Spark job etc.</li>
-<li><strong>Agent Client</strong> application interacts with ADK's fastapi server via <code>/run</code> or <code>/run_sse</code> endpoint. While ADK's fastapi server could be setup on the same server or different server as <strong>Agent Client</strong> application</li>
+<li><strong><em>Agent Client</em></strong> application runs the agent directly (via <code>runner.run_async</code>) in the same process. e.g. UI backend, CLI app, or Spark job etc.</li>
+<li><strong><em>Agent Client</em></strong> application interacts with ADK's fastapi server via <code>/run</code> or <code>/run_sse</code> endpoint. While ADK's fastapi server could be setup on the same server or different server as <strong><em>Agent Client</em></strong> application</li>
 </ul>
 <p>The second case is a special case of first case, because <code>/run</code> or <code>/run_sse</code> endpoint also invokes <code>runner.run_async</code>. The only differences are:</p>
 <ul>
@@ -7014,7 +7312,7 @@
 </span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="c1"># Append redirect_uri (use urlencode in production)</span>
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="n">auth_request_uri</span> <span class="o">=</span> <span class="n">base_auth_uri</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;&amp;redirect_uri=</span><span class="si">{</span><span class="n">redirect_uri</span><span class="si">}</span><span class="s1">&#39;</span>
 </span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="c1"># Now you need to redirect your end user to this auth_request_uri or ask them to open this auth_request_uri in their browser</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="c1"># This auth_request_uri should be served by the corresponding auth provider and the end user should login and authorize your applicaiton to access their data</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="c1"># This auth_request_uri should be served by the corresponding auth provider and the end user should login and authorize your application to access their data</span>
 </span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="c1"># And then the auth provider will redirect the end user to the redirect_uri you provided</span>
 </span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="c1"># Next step: Get this callback URL from the user (or your web server handler)</span>
 </span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="k">else</span><span class="p">:</span>
@@ -7031,7 +7329,7 @@
 <p><strong>Step 4. Send Authentication Result Back to ADK (Client):</strong></p>
 <ul>
 <li>Once you have the full callback URL (containing the authorization code), retrieve the <code>auth_request_function_call_id</code> and the <code>auth_config</code> object saved in Client Step 1.</li>
-<li>Set the captured callback URL into the <code>exchanged_auth_credential.oauth2.auth_response_uri</code> field. Also ensure <code>exchanged_auth_credential.oauth2.redirect_uri</code> contains the redirect URI you used.</li>
+<li>Set the captured callback URL in the <code>exchanged_auth_credential.oauth2.auth_response_uri</code> field. Also ensure <code>exchanged_auth_credential.oauth2.redirect_uri</code> contains the redirect URI you used.</li>
 <li>Create a <code>types.Content</code> object containing a <code>types.Part</code> with a <code>types.FunctionResponse</code>.<ul>
 <li>Set <code>name</code> to <code>"adk_request_credential"</code>. (Note: This is a special name for ADK to proceed with authentication. Do not use other names.)</li>
 <li>Set <code>id</code> to the <code>auth_request_function_call_id</code> you saved.</li>
@@ -7103,13 +7401,13 @@ feature, see
 <ul>
 <li>ADK receives the <code>FunctionResponse</code> for <code>adk_request_credential</code>.</li>
 <li>It uses the information in the updated <code>AuthConfig</code> (including the callback URL containing the code) to perform the OAuth <strong>token exchange</strong> with the provider's token endpoint, obtaining the access token (and possibly refresh token).</li>
-<li>ADK internally makes these tokens available by setting them in the session state).</li>
+<li>ADK internally makes these tokens available by setting them in the session state.</li>
 <li>ADK <strong>automatically retries</strong> the original tool call (the one that initially failed due to missing auth).</li>
 <li>This time, the tool finds the valid tokens (via <code>tool_context.get_auth_response()</code>) and successfully executes the authenticated API call.</li>
 <li>The agent receives the actual result from the tool and generates its final response to the user.</li>
 </ul>
 <hr />
-<p>The sequence diagram of auth response flow (where Agent Client send back the auth response and ADK retries tool calling) looks like below:</p>
+<p>The sequence diagram of auth response flow, where the <strong><em>Agent Client</em></strong> sends back the auth response and ADK retries the tool, is as follows:</p>
 <p><img alt="Authentication" src="../../assets/auth_part2.svg" /></p>
 <h2 id="journey-2-building-custom-tools-functiontool-requiring-authentication">Journey 2: Building Custom Tools (<code>FunctionTool</code>) Requiring Authentication<a class="headerlink" href="#journey-2-building-custom-tools-functiontool-requiring-authentication" title="Permanent link">&para;</a></h2>
 <p>This section focuses on implementing the authentication logic <em>inside</em> your custom Python function when creating a new ADK Tool. We will implement a <code>FunctionTool</code> as an example.</p>
@@ -7170,7 +7468,7 @@ feature, see
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>  <span class="n">auth_scheme</span><span class="o">=</span><span class="n">auth_scheme</span><span class="p">,</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  <span class="n">raw_auth_credential</span><span class="o">=</span><span class="n">auth_credential</span><span class="p">,</span>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">))</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># If exchanged_credential is not None, then there is already an exchanged credetial from the auth response.</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># If exchanged_credential is not None, then there is already an exchanged credential from the auth response.</span>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">if</span> <span class="n">exchanged_credential</span><span class="p">:</span>
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>   <span class="c1"># ADK exchanged the access token already for us</span>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="n">access_token</span> <span class="o">=</span> <span class="n">exchanged_credential</span><span class="o">.</span><span class="n">oauth2</span><span class="o">.</span><span class="n">access_token</span>
@@ -7198,7 +7496,7 @@ feature, see
 </span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># By setting request_credential, ADK detects a pending authentication event. It pauses execution and ask end user to login.</span>
 </span></code></pre></div>
 <p><strong>Step 4: Exchange Authorization Code for Tokens</strong></p>
-<p>ADK automatically generates oauth authorization URL and presents it to your Agent Client application. your Agent Client application should follow the same way described in Journey 1 to redirect the user to the authorization URL (with <code>redirect_uri</code> appended). Once a user completes the login flow following the authorization URL and ADK extracts the authentication callback url from Agent Client applications, automatically parses the auth code, and generates auth token. At the next Tool call, <code>tool_context.get_auth_response</code> in step 2 will contain a valid credential to use in subsequent API calls.</p>
+<p>ADK automatically generates oauth authorization URL and presents it to your <strong><em>Agent Client</em></strong> application. your <strong><em>Agent Client</em></strong> application should follow the same way described in Journey 1 to redirect the user to the authorization URL (with <code>redirect_uri</code> appended). Once a user completes the login flow, ADK extracts the authentication callback url from <strong><em>Agent Client</em></strong> applications, automatically parses the auth code, and generates auth token. At the next Tool call, <code>tool_context.get_auth_response</code> in step 2 will contain a valid credential to use in subsequent API calls.</p>
 <p><strong>Step 5: Cache Obtained Credentials</strong></p>
 <p>After successfully obtaining the token from ADK (Step 2) or if the token is still valid (Step 1), <strong>immediately store</strong> the new <code>Credentials</code> object in <code>tool_context.state</code> (serialized, e.g., as JSON) using your cache key.</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Inside your tool function, after obtaining &#39;creds&#39; (either refreshed or newly exchanged)</span>

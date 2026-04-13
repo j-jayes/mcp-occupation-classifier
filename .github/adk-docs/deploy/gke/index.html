@@ -134,6 +134,26 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
     
@@ -366,20 +386,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../.." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,32 +702,9 @@
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../.." class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
@@ -724,26 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
+      </a>
     </li>
   
 
@@ -3796,6 +3771,8 @@
       
         
       
+        
+      
     
     
     
@@ -3896,6 +3873,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluate/environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -7288,9 +7293,26 @@
 
 
 
+  
+
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
       
       
         
@@ -7466,7 +7488,7 @@ unless you specify it as deployment setting, such as the <code>--with_ui</code> 
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Add the tool to the agent</span>
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">capital_agent</span> <span class="o">=</span> <span class="n">LlmAgent</span><span class="p">(</span>
-</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-flash-latest&quot;</span><span class="p">,</span>
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;capital_agent&quot;</span><span class="p">,</span> <span class="c1">#name of your agent</span>
 </span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Answers user questions about the capital city of a given country.&quot;</span><span class="p">,</span>
 </span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;You are an agent that provides the capital city of a country... (previous instruction text)&quot;&quot;&quot;</span><span class="p">,</span>
@@ -7871,7 +7893,7 @@ You should see output like <code>adk-default-service-name-xxxx-xxxx ... 1/1 Runn
 <p>You can also verify the image was built and pushed to the Artifact Registry using the command under the <a href="#build-the-container-image">Build the container image</a> section.</p>
 <h3 id="gemini-20-flash-not-supported-in-live-api">Gemini-2.0-Flash Not Supported in Live Api<a class="headerlink" href="#gemini-20-flash-not-supported-in-live-api" title="Permanent link">&para;</a></h3>
 <p>When using the ADK Dev UI for your deployed agent, text-based chat works, but voice (e.g., clicking the microphone button) fail. You might see a <code>websockets.exceptions.ConnectionClosedError</code> in the pod logs indicating that your model is "not supported in the live api".</p>
-<p>This error occurs because the agent is configured with a model (like <code>gemini-2.0-flash</code> in the example) that does not support the Gemini Live API. The Live API is required for real-time, bidirectional streaming of audio and video.</p>
+<p>This error occurs because the agent is configured with a model (like <code>gemini-flash-latest</code> in the example) that does not support the Gemini Live API. The Live API is required for real-time, bidirectional streaming of audio and video.</p>
 <h2 id="cleanup">Cleanup<a class="headerlink" href="#cleanup" title="Permanent link">&para;</a></h2>
 <p>To delete the GKE cluster and all associated resources, run:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>delete<span class="w"> </span>adk-cluster<span class="w"> </span><span class="se">\</span>

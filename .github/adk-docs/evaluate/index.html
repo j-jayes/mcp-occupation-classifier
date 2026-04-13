@@ -134,6 +134,26 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
     
@@ -366,20 +386,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href=".." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,32 +702,9 @@
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href=".." class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
@@ -724,26 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
+      </a>
     </li>
   
 
@@ -3339,6 +3314,8 @@
       
         
       
+        
+      
     
     
     
@@ -3439,6 +3416,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -6711,9 +6716,26 @@
 
 
 
+  
+
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href=".." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
       
       
         
@@ -7080,6 +7102,13 @@ detailed list of available criteria and guidance on when to use them, please see
 <li><strong>hallucinations_v1</strong>: LLM-judged groundedness of agent response against
     context.</li>
 <li><strong>safety_v1</strong>: Safety/harmlessness of agent response.</li>
+<li><strong>per_turn_user_simulator_quality_v1</strong>: LLM-judged user simulator quality.</li>
+<li><strong>multi_turn_task_success_v1</strong>: Evaluates if agent achieves goal(s) of
+    conversation.</li>
+<li><strong>multi_turn_trajectory_quality_v1</strong>: Evaluates the overall trajectory of
+    the conversation.</li>
+<li><strong>multi_turn_tool_use_quality_v1</strong>: Evaluates function calls made during a
+    conversation.</li>
 </ul>
 <p>If no evaluation criteria are provided, the following default configuration is used:</p>
 <ul>
@@ -7118,6 +7147,15 @@ detailed list of available criteria and guidance on when to use them, please see
     the information available to it (e.g., tool outputs).</li>
 <li><strong>Check for harmful content:</strong> Use <code>safety_v1</code> to ensure that agent
     responses are safe and do not violate safety policies.</li>
+<li><strong>Evaluate multi-turn goal completion:</strong> Use <code>multi_turn_task_success_v1</code> to
+    measure the overall success of a multi-turn conversation in achieving its
+    intended objectives.</li>
+<li><strong>Evaluate overall conversation trajectory:</strong> Use
+    <code>multi_turn_trajectory_quality_v1</code> to assess the efficiency, effectiveness,
+    and logic of the steps taken during the conversation.</li>
+<li><strong>Evaluate tool usage in multi-turn workflows:</strong> Use
+    <code>multi_turn_tool_use_quality_v1</code> to assess the quality, relevance, and
+    correctness of tool or function calls made across multiple turns.</li>
 </ul>
 <p>In addition, criteria which require information on expected agent tool use
 and/or responses are not supported in combination with

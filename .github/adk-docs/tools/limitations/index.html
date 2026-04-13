@@ -134,6 +134,26 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+<span class="announce-item">
+  <strong>New Releases!</strong> Check out our blog posts for
+  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
+    ADK Go 1.0
+  </a>
+  and
+  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
+    target="_blank" rel="noopener">
+    ADK Java 1.0
+  </a>
+</span>
+
+          </div>
+          
+        </aside>
+      
     </div>
     
     
@@ -366,20 +386,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../.." class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
   
   
     
   
   Home
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -685,32 +702,9 @@
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../.." class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
@@ -724,26 +718,7 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Home
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
+      </a>
     </li>
   
 
@@ -3437,6 +3412,8 @@
       
         
       
+        
+      
     
     
     
@@ -3534,6 +3511,34 @@
     
   
     User Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluate/environment_simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Simulation
   
 
     
@@ -6552,9 +6557,26 @@
 
 
 
+  
+
 
   <nav class="md-path" aria-label="Navigation" >
     <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
       
       
         
@@ -6657,7 +6679,7 @@ other tools, within a single agent, is <strong><em>not supported</em></strong>:<
 <div class="tabbed-block">
 <div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RootAgent&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-flash-latest&quot;</span><span class="p">,</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Code Agent&quot;</span><span class="p">,</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">custom_function</span><span class="p">],</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">code_executor</span><span class="o">=</span><span class="n">BuiltInCodeExecutor</span><span class="p">()</span> <span class="c1"># &lt;-- NOT supported when used with tools</span>
@@ -6692,7 +6714,7 @@ to use built-in tools with other tools by using multiple agents:</p>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.code_executors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BuiltInCodeExecutor</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">search_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-2.0-flash&#39;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SearchAgent&#39;</span><span class="p">,</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">    You&#39;re a specialist in Google Search</span>
@@ -6700,7 +6722,7 @@ to use built-in tools with other tools by using multiple agents:</p>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">google_search</span><span class="p">],</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">)</span>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">coding_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-2.0-flash&#39;</span><span class="p">,</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
 </span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CodeAgent&#39;</span><span class="p">,</span>
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">    You&#39;re a specialist in Code Execution</span>
@@ -6709,7 +6731,7 @@ to use built-in tools with other tools by using multiple agents:</p>
 </span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="p">)</span>
 </span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RootAgent&quot;</span><span class="p">,</span>
-</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.0-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-flash-latest&quot;</span><span class="p">,</span>
 </span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Root Agent&quot;</span><span class="p">,</span>
 </span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">AgentTool</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">search_agent</span><span class="p">),</span> <span class="n">AgentTool</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">coding_agent</span><span class="p">)],</span>
 </span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="p">)</span>
@@ -6725,7 +6747,7 @@ to use built-in tools with other tools by using multiple agents:</p>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">NestedAgentApp</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">MODEL_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;gemini-2.0-flash&quot;</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">MODEL_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">;</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
 </span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
@@ -6795,7 +6817,7 @@ is <strong>not supported</strong>:</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">url_context_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-2.5-flash&#39;</span><span class="p">,</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;UrlContextAgent&#39;</span><span class="p">,</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">    You&#39;re a specialist in URL Context</span>
@@ -6803,7 +6825,7 @@ is <strong>not supported</strong>:</p>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">url_context</span><span class="p">],</span>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">coding_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-2.5-flash&#39;</span><span class="p">,</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
 </span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;CodeAgent&#39;</span><span class="p">,</span>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">    You&#39;re a specialist in Code Execution</span>
@@ -6812,7 +6834,7 @@ is <strong>not supported</strong>:</p>
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">)</span>
 </span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RootAgent&quot;</span><span class="p">,</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-2.5-flash&quot;</span><span class="p">,</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-flash-latest&quot;</span><span class="p">,</span>
 </span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Root Agent&quot;</span><span class="p">,</span>
 </span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span>
 </span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="n">url_context_agent</span><span class="p">,</span>
@@ -6824,7 +6846,7 @@ is <strong>not supported</strong>:</p>
 <div class="tabbed-block">
 <div class="language-java highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">LlmAgent</span><span class="w"> </span><span class="n">searchAgent</span><span class="w"> </span><span class="o">=</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">LlmAgent</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-2.5-flash&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;SearchAgent&quot;</span><span class="p">)</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="p">.</span><span class="na">instruction</span><span class="p">(</span><span class="s">&quot;You&#39;re a specialist in Google Search&quot;</span><span class="p">)</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="p">.</span><span class="na">tools</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">GoogleSearchTool</span><span class="p">())</span>
@@ -6832,7 +6854,7 @@ is <strong>not supported</strong>:</p>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">LlmAgent</span><span class="w"> </span><span class="n">codingAgent</span><span class="w"> </span><span class="o">=</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="n">LlmAgent</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-2.5-flash&quot;</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;CodeAgent&quot;</span><span class="p">)</span>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="p">.</span><span class="na">instruction</span><span class="p">(</span><span class="s">&quot;You&#39;re a specialist in Code Execution&quot;</span><span class="p">)</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="p">.</span><span class="na">tools</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">BuiltInCodeExecutionTool</span><span class="p">())</span>
@@ -6842,7 +6864,7 @@ is <strong>not supported</strong>:</p>
 </span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="n">LlmAgent</span><span class="w"> </span><span class="n">rootAgent</span><span class="w"> </span><span class="o">=</span>
 </span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="n">LlmAgent</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
 </span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;RootAgent&quot;</span><span class="p">)</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-2.5-flash&quot;</span><span class="p">)</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
 </span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Root Agent&quot;</span><span class="p">)</span>
 </span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="p">.</span><span class="na">subAgents</span><span class="p">(</span><span class="n">searchAgent</span><span class="p">,</span><span class="w"> </span><span class="n">codingAgent</span><span class="p">)</span><span class="w"> </span><span class="c1">// Not supported, as the sub agents use built in tools.</span>
 </span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>

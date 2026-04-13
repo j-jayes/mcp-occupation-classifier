@@ -1,5 +1,7 @@
 # FastMCP
 
+> The fast, Pythonic way to build MCP servers and clients.
+
 ## Docs
 
 - [App Architecture](https://gofastmcp.com/apps/architecture.md): How FastMCP apps work under the hood — from Python to pixels.
