@@ -62,7 +62,7 @@
 	
 		<meta name="keywords" content="mcp, connector, tool" />
 	
-		<meta name="ms.date" content="2025-12-04T00:00:00Z" />
+		<meta name="ms.date" content="2026-04-17T00:00:00Z" />
 	
 		<meta name="ms.topic" content="how-to" />
 	
@@ -78,13 +78,13 @@
 	
 		<meta name="document_version_independent_id" content="8186e801-3422-0bae-681d-0d254c6d8618" />
 	
-		<meta name="updated_at" content="2025-12-05T01:00:00Z" />
+		<meta name="updated_at" content="2026-04-17T19:03:00Z" />
 	
 		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/455ddedd145815e45e69ac2c5802fa713f1a7a42/copilot-studio/agent-extend-action-mcp.md" />
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/9e036cc3de75e1d052098a1a3fcb5d26160e5571/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="git_commit_id" content="455ddedd145815e45e69ac2c5802fa713f1a7a42" />
+		<meta name="git_commit_id" content="9e036cc3de75e1d052098a1a3fcb5d26160e5571" />
 	
 		<meta name="site_name" content="Docs" />
 	
@@ -108,7 +108,7 @@
 	
 		<meta name="source_path" content="copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="previous_tlsh_hash" content="FFFC914144040922F7C394DF71DEFB1410F090CD19A1A2CA48367AB2E8453DB2219D2F66DF1B920022DF531102502501A5D8A7B860E6B3A0586D7C59823673E93FDD2FBBF4" />
+		<meta name="previous_tlsh_hash" content="ABA8BB4133080923F7C360DE71EEF72951F050CD19A5A6CA443179B1E4463DF522ED2F66EF2F9210129F431203402506A5A4E3BCA0D7B390542E7859C23663E93EDC1FBBF9" />
 	
 		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
@@ -125,7 +125,7 @@
 
 			<!-- assets and js globals -->
 			
-			<link rel="stylesheet" href="/static/assets/0.4.03385.7706-3b79c0e5/styles/site.css" />
+			<link rel="stylesheet" href="/static/assets/0.4.03393.7734-e9637cbf/styles/site.css" />
 			
 			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
 			<script src="https://js.monitor.azure.com/scripts/c/ms.jsll-4.min.js"></script>
@@ -200,7 +200,7 @@
 	</script>
 
 			<!-- base scripts, msdocs global should be before this -->
-			<script src="/static/assets/0.4.03385.7706-3b79c0e5/scripts/en-us/index-docs.js"></script>
+			<script src="/static/assets/0.4.03393.7734-e9637cbf/scripts/en-us/index-docs.js"></script>
 			
 
 			<!-- json-ld -->
@@ -408,7 +408,7 @@
 				class="button button-clear button-primary button-sm inner-focus"
 				aria-label="All breadcrumbs"
 			>
-				<span class="icon">
+				<span class="icon" aria-hidden="true">
 					<span class="docon docon-more"></span>
 				</span>
 			</summary>
@@ -479,19 +479,6 @@
 			<span>Ask Learn</span>
 		</button>
 	 
-		<button
-			type="button"
-			id="ms--focus-mode-button"
-			data-focus-mode
-			data-bi-name="focus-mode-entry"
-			class="button button-sm flex-shrink-0 margin-right-xxs display-none display-inline-flex-desktop"
-		>
-			<span class="icon font-size-lg" aria-hidden="true">
-				<span class="docon docon-glasses"></span>
-			</span>
-			<span>Focus mode</span>
-		</button>
-	 
 
 			<details class="popover popover-right" id="article-header-page-actions-overflow">
 				<summary
@@ -505,6 +492,21 @@
 				</summary>
 				<div class="popover-content">
 					
+		<button
+			type="button"
+			id="ms--focus-mode-button"
+			data-focus-mode
+			data-bi-name="focus-mode-entry"
+			data-page-action-item="overflow-all"
+			data-popover-close
+			class="button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus display-none display-inline-flex-tablet"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Reading mode</span>
+		</button>
+	 
 		<button
 			data-page-action-item="overflow-mobile"
 			type="button"
@@ -534,7 +536,8 @@
 			</span>
 			<span data-read-in-link-text>Read in English</span>
 		</a>
-	 
+	
+					
 		<button
 			type="button"
 			class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus"
@@ -549,8 +552,7 @@
 			</span>
 			<span class="collection-status">Add</span>
 		</button>
-	
-					
+	 
 		<button
 			type="button"
 			class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
@@ -566,7 +568,8 @@
 			</span>
 			<span class="plan-status">Add to plan</span>
 		</button>
-	  
+	 
+					
 		<a
 			data-contenteditbtn
 			class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none"
@@ -583,8 +586,7 @@
 			</span>
 			<span>Edit</span>
 		</a>
-	
-					
+	 
 		<hr class="margin-block-xxs" />
 		<h4 class="font-size-sm padding-left-xxs">Share via</h4>
 		
@@ -758,7 +760,7 @@
 	 
 		<nav
 			id="center-doc-outline"
-			class="doc-outline is-hidden-desktop display-none-print margin-bottom-sm"
+			class="doc-outline display-none-desktop display-none-print margin-bottom-sm"
 			data-bi-name="intopic toc"
 			aria-label="In this article"
 		>
@@ -767,12 +769,12 @@
 			</h2>
 		</nav>
 	
-					<div class="content"><p>Another way to extend your agent with tools is via Model Context Protocol (MCP).</p>
+					<div class="content"><p>You can extend your agent with tools by using Model Context Protocol (MCP).</p>
 <h2 id="what-is-model-context-protocol">What is Model Context Protocol?</h2>
-<p><a href="https://modelcontextprotocol.io/introduction" data-linktype="external">Model Context Protocol (MCP)</a> allows users to connect with existing knowledge servers and data sources directly within Copilot Studio. Connecting to an MCP server gives you access to:</p>
+<p><a href="https://modelcontextprotocol.io/introduction" data-linktype="external">Model Context Protocol (MCP)</a> helps you connect to existing knowledge servers and data sources directly within Copilot Studio. When you connect to an MCP server, you get access to:</p>
 <ul>
-<li>Resources: File-like data that an agent can read for more context (like API responses or file contents)</li>
-<li>Tools: Functions a language model can call to perform an action</li>
+<li>Resources: File-like data that an agent can read for more context, such as API responses or file contents</li>
+<li>Tools: Functions that a language model can call to perform an action</li>
 <li>Prompts: Predefined prompt templates to accomplish specific tasks</li>
 </ul>
 <div class="NOTE">
@@ -780,16 +782,16 @@
 <p>Copilot Studio currently supports MCP tools and resources.</p>
 </div>
 <h2 id="how-does-mcp-work">How does MCP work?</h2>
-<p>Each tool or resource published by a connected MCP server is automatically made available for use in Copilot Studio. Name, description, inputs, and outputs are inherited from the server. As tools and resources are updated or removed on the MCP server, Copilot Studio dynamically reflects these changes, ensuring users always have the latest versions and that obsolete tools and resources are removed. A single MCP server can integrate and manage multiple tools and resources, each accessible for use by Copilot Studio agents.</p>
-<p>When you connect to a Non-Microsoft Product, including an external MCP server, you're responsible for the tools and resources you access from within Copilot Studio.</p>
+<p>Each tool or resource that a connected MCP server publishes is automatically available for use in Copilot Studio. The server provides the name, description, inputs, and outputs. When you update or remove tools and resources on the MCP server, Copilot Studio dynamically reflects these changes. This process ensures users always have the latest versions and removes obsolete tools and resources. A single MCP server can integrate and manage multiple tools and resources. Copilot Studio agents can access each tool.</p>
+<p>When you connect to a non-Microsoft product, including an external MCP server, you're responsible for the tools and resources you access from within Copilot Studio.</p>
 <div class="NOTE">
 <p>Note</p>
-<p>Generative Orchestration must be enabled to use MCP.</p>
+<p>You must turn on <a href="advanced-generative-actions" data-linktype="relative-path">generative orchestration</a> to use MCP.</p>
 </div>
-<h2 id="what-is-the-process-to-extend-an-agent-using-mcp-in-copilot-studio">What is the process to extend an agent using MCP in Copilot Studio?</h2>
+<h2 id="how-do-you-extend-an-agent-by-using-mcp-in-copilot-studio">How do you extend an agent by using MCP in Copilot Studio?</h2>
 <p>To integrate MCP in Copilot Studio:</p>
 <ol>
-<li><a href="mcp-add-existing-server-to-agent" data-linktype="relative-path">Connect your agent to an existing MCP server</a> using the MCP onboarding wizard.</li>
+<li>Use the MCP onboarding wizard to <a href="mcp-add-existing-server-to-agent" data-linktype="relative-path">connect your agent to an existing MCP server</a>.</li>
 <li><a href="mcp-create-new-server" data-linktype="relative-path">Create an MCP server</a> if you don't already have an MCP server.</li>
 <li><a href="mcp-add-components-to-agent" data-linktype="relative-path">Add MCP server tools and resources to your agent</a> so that your Copilot Studio agent can use them.</li>
 <li>(Optional) <a href="/en-us/connectors/custom-connectors/submit-certification" data-linktype="absolute-path">Publish your MCP connector</a> to allow the connector to be used across tenants.</li>
@@ -1021,11 +1023,11 @@
 				<li class="visibility-hidden-visual-diff">
 			<span class="badge badge-sm text-wrap-pretty">
 				<span>Last updated on <local-time format="twoDigitNumeric"
-		datetime="2025-12-05T01:00:00.000Z"
+		datetime="2026-04-17T19:03:00.000Z"
 		data-article-date-source="calculated"
 		class="is-invisible"
 	>
-		2025-12-05
+		2026-04-17
 	</local-time></span>
 			</span>
 		</li>

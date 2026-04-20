@@ -2645,6 +2645,8 @@
       
         
       
+        
+      
     
     
     
@@ -2773,6 +2775,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -3519,6 +3549,56 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generating-evaluation-cases-via-user-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating Evaluation Cases via User Simulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generating Evaluation Cases via User Simulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6568,6 +6648,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#generating-evaluation-cases-via-user-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generating Evaluation Cases via User Simulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Generating Evaluation Cases via User Simulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#command-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6933,6 +7063,34 @@ the <code>ConversationScenario</code>.</p>
 </span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="p">}</span>
 </span></code></pre></div>
+<h2 id="generating-evaluation-cases-via-user-simulation">Generating Evaluation Cases via User Simulation<a class="headerlink" href="#generating-evaluation-cases-via-user-simulation" title="Permanent link">&para;</a></h2>
+<p>Writing evaluation cases manually can be time-consuming and may not cover all potential failure modes. ADK provides a command to automatically generate diverse and realistic conversation scenarios based on your agent's definition using the Vertex AI Eval SDK.</p>
+<div class="admonition warning">
+<p class="admonition-title">Prerequisites: Vertex AI Credentials</p>
+<p>Generating evaluation cases uses the <a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview">Vertex Gen AI Evaluation Service API</a>. You must have a Google Cloud project with the Vertex AI API enabled and valid Application Default Credentials (ADC) configured in your environment.</p>
+</div>
+<h3 id="command-syntax">Command Syntax<a class="headerlink" href="#command-syntax" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>adk<span class="w"> </span>eval_set<span class="w"> </span>generate_eval_cases<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>&lt;AGENT_MODULE_FILE_PATH&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>&lt;EVAL_SET_ID&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>--user_simulation_config_file<span class="o">=</span>&lt;PATH_TO_CONFIG_FILE&gt;
+</span></code></pre></div>
+<h3 id="configuration-file-format">Configuration File Format<a class="headerlink" href="#configuration-file-format" title="Permanent link">&para;</a></h3>
+<p>The <code>--user_simulation_config_file</code> expects a JSON file matching the <code>ConversationGenerationConfig</code> schema:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;generation_instruction&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Generate scenarios where the user asks to control home devices under different conditions.&quot;</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;environment_context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Available devices: device_1 (Light), device_2 (Thermostat).&quot;</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;model_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gemini-flash-latest&quot;</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="configuration-fields">Configuration Fields<a class="headerlink" href="#configuration-fields" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>count</code></strong> (required): The number of conversation scenarios to generate.</li>
+<li><strong><code>generation_instruction</code></strong> (optional): A natural language prompt guiding the specific types of scenarios or goals you want to test.</li>
+<li><strong><code>environment_context</code></strong> (optional): Context describing the backend data or state accessible to the agent's tools. This helps the generator create queries that are grounded in realistic data (e.g., valid device IDs).</li>
+<li><strong><code>model_name</code></strong> (required): The Gemini model used for generation (e.g., <code>gemini-flash-latest</code>).</li>
+</ul>
 
 
 

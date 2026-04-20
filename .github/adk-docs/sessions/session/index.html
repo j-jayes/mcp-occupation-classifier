@@ -2638,6 +2638,8 @@
       
         
       
+        
+      
     
     
     
@@ -2763,6 +2765,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -6707,7 +6737,7 @@ are its key properties:</p>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;---------------------------------&quot;</span><span class="p">)</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a> <span class="c1"># Clean up (optional for this example)</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a> <span class="n">temp_service</span> <span class="o">=</span> <span class="k">await</span> <span class="n">temp_service</span><span class="o">.</span><span class="n">delete_session</span><span class="p">(</span><span class="n">app_name</span><span class="o">=</span><span class="n">example_session</span><span class="o">.</span><span class="n">app_name</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a> <span class="k">await</span> <span class="n">temp_service</span><span class="o">.</span><span class="n">delete_session</span><span class="p">(</span><span class="n">app_name</span><span class="o">=</span><span class="n">example_session</span><span class="o">.</span><span class="n">app_name</span><span class="p">,</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                             <span class="n">user_id</span><span class="o">=</span><span class="n">example_session</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="n">example_session</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The final status of temp_service - &quot;</span><span class="p">,</span> <span class="n">temp_service</span><span class="p">)</span>
 </span></code></pre></div>
@@ -6885,7 +6915,7 @@ the storage backend that best suits your needs:</p>
     <a href="https://cloud.google.com/vertex-ai/docs/pipelines/configure-project#storage">step</a>.</li>
 <li>A Reasoning Engine resource name/ID that can setup following this
     <a href="/deploy/agent-engine/">tutorial</a>.</li>
-<li>If you do not have a Google Cloud project and you want to try the VertexAiSessionService, see <a href="/tools/google-cloud/express-mode/">Vertex AI Express Mode</a>.</li>
+<li>If you do not have a Google Cloud project and you want to try the VertexAiSessionService, see <a href="/integrations/express-mode/">Vertex AI Express Mode</a>.</li>
 </ul>
 </li>
 <li><strong>Best for:</strong> Scalable production applications deployed on Google Cloud,

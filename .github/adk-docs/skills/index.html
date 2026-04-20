@@ -2668,6 +2668,8 @@
       
         
       
+        
+      
     
     
     
@@ -2793,6 +2795,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -6468,17 +6498,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#known-limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known limitations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6613,8 +6632,7 @@ The structure of a Skill allows it to be loaded incrementally to minimize the
 impact on the operating context window of the agent.</p>
 <div class="admonition example">
 <p class="admonition-title">Experimental</p>
-<p>The Skills feature is experimental and has some
-<a href="#known-limitations">known limitations</a>. We welcome your
+<p>The Skills feature is experimental. We welcome your
 <a href="https://github.com/google/adk-python/issues/new?template=feature_request.md&amp;labels=skills">feedback</a>!</p>
 </div>
 <h2 id="get-started">Get started<a class="headerlink" href="#get-started" title="Permanent link">&para;</a></h2>
@@ -6696,11 +6714,6 @@ file structure. Only the <code>SKILL.md</code> file is required.</p>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            scripts/
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                *.py          # utility scripts
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Script execution not supported</p>
-<p>Scripts execution is not yet supported and is a
-<a href="#known-limitations">known limitation</a>.</p>
-</div>
 <h3 id="inline-skills">Define Skills in code<a class="headerlink" href="#inline-skills" title="Permanent link">&para;</a></h3>
 <p>In ADK agents, you can also define Skills within the code of the agent, using
 the <code>Skill</code> model class, as shown below. This method of Skill definition enables
@@ -6726,13 +6739,6 @@ you to dynamically modify skills from your ADK agent code.</p>
 </span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="p">),</span>
 </span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h2>
-<p>The Skills feature is experimental and includes the following
-limitations:</p>
-<ul>
-<li><strong>Script execution:</strong> The Skills feature does not currently support
-    script execution (<code>scripts/</code> directory).</li>
-</ul>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <p>Check out these resources for building agents with Skills:</p>
 <ul>

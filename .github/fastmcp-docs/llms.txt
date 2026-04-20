@@ -361,6 +361,3 @@
 - [Versioning](https://gofastmcp.com/servers/versioning.md): Serve multiple API versions from a single codebase
 - [Component Visibility](https://gofastmcp.com/servers/visibility.md): Control which components are available to clients
 - [FastMCP Updates](https://gofastmcp.com/updates.md)
-
-
-Built with [Mintlify](https://mintlify.com).
