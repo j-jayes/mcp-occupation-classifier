@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1886,14 +1886,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../agents/models/vertex/" class="md-nav__link">
+      <a href="../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2645,6 +2645,8 @@
       
         
       
+        
+      
     
     
     
@@ -2773,6 +2775,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -2990,14 +3020,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3019,7 +3049,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3034,7 +3064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3062,14 +3092,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3090,7 +3120,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5497,14 +5527,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6706,7 +6736,7 @@
 </div>
 
 <p>As AI agents grow in capability, ensuring they operate safely, securely, and align with your brand values is paramount. Uncontrolled agents can pose risks, including executing misaligned or harmful actions, such as data exfiltration, and generating inappropriate content that can impact your brand’s reputation. <strong>Sources of risk include vague instructions, model hallucination, jailbreaks and prompt injections from adversarial users, and indirect prompt injections via tool use.</strong></p>
-<p><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/overview">Google Cloud Vertex AI</a> provides a multi-layered approach to mitigate these risks, enabling you to build powerful <em>and</em> trustworthy agents. It offers several mechanisms to establish strict boundaries, ensuring agents only perform actions you've explicitly allowed:</p>
+<p><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/overview">Google Cloud Agent Platform</a> provides a multi-layered approach to mitigate these risks, enabling you to build powerful <em>and</em> trustworthy agents. It offers several mechanisms to establish strict boundaries, ensuring agents only perform actions you've explicitly allowed:</p>
 <ol>
 <li><strong>Identity and Authorization</strong>: Control who the agent <strong>acts as</strong> by defining agent and user auth.</li>
 <li>
@@ -7006,7 +7036,7 @@
 <h4 id="built-in-gemini-safety-features">Built-in Gemini Safety Features<a class="headerlink" href="#built-in-gemini-safety-features" title="Permanent link">&para;</a></h4>
 <p>Gemini models come with in-built safety mechanisms that can be leveraged to improve content and brand safety.</p>
 <ul>
-<li><strong>Content safety filters</strong>:  <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes">Content filters</a> can help block the output of harmful content. They function independently from Gemini models as part of a layered defense against threat actors who attempt to jailbreak the model. Gemini models on Vertex AI use two types of content filters:<ul>
+<li><strong>Content safety filters</strong>:  <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes">Content filters</a> can help block the output of harmful content. They function independently from Gemini models as part of a layered defense against threat actors who attempt to jailbreak the model. Gemini models on Agent Platform use two types of content filters:<ul>
 <li><strong>Non-configurable safety filters</strong> automatically block outputs containing prohibited content, such as child sexual abuse material (CSAM) and personally identifiable information (PII).</li>
 <li><strong>Configurable content filters</strong> allow you to define blocking thresholds in four harm categories (hate speech, harassment, sexually explicit, and dangerous content,) based on probability and severity scores. These filters are default off but you can configure them according to your needs.</li>
 </ul>
@@ -7053,7 +7083,7 @@
 </div>
 </div>
 <ul>
-<li><strong>System instructions for safety</strong>: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/safety-system-instructions">System instructions</a> for Gemini models in Vertex AI provide direct guidance to the model on how to behave and what type of content to generate. By providing specific instructions, you can proactively steer the model away from generating undesirable content to meet your organization’s unique needs. You can craft system instructions to define content safety guidelines, such as prohibited and sensitive topics, and disclaimer language, as well as brand safety guidelines to ensure the model's outputs align with your brand's voice, tone, values, and target audience.</li>
+<li><strong>System instructions for safety</strong>: <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/safety-system-instructions">System instructions</a> for Gemini models on Agent Platform provide direct guidance to the model on how to behave and what type of content to generate. By providing specific instructions, you can proactively steer the model away from generating undesirable content to meet your organization’s unique needs. You can craft system instructions to define content safety guidelines, such as prohibited and sensitive topics, and disclaimer language, as well as brand safety guidelines to ensure the model's outputs align with your brand's voice, tone, values, and target audience.</li>
 </ul>
 <p>While these measures are robust against content safety, you need additional checks to reduce agent misalignment, unsafe actions, and brand safety risks.</p>
 <h4 id="callbacks-and-plugins-for-security-guardrails">Callbacks and Plugins for Security Guardrails<a class="headerlink" href="#callbacks-and-plugins-for-security-guardrails" title="Permanent link">&para;</a></h4>
@@ -7236,7 +7266,7 @@
 </ul>
 <h3 id="sandboxed-code-execution">Sandboxed Code Execution<a class="headerlink" href="#sandboxed-code-execution" title="Permanent link">&para;</a></h3>
 <p>Code execution is a special tool that has extra security implications: sandboxing must be used to prevent model-generated code to compromise the local environment, potentially creating security issues.</p>
-<p>Google and the ADK provide several options for safe code execution. <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution-api">Vertex Gemini Enterprise API code execution feature</a> enables agents to take advantage of sandboxed code execution server-side by enabling the tool_execution tool. For code performing data analysis, you can use the <a href="/tools/gemini-api/code-execution/">Code Executor</a> tool in ADK to call the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/extensions/code-interpreter">Vertex Code Interpreter Extension</a>.</p>
+<p>Google and the ADK provide several options for safe code execution. <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution-api">Vertex Gemini Enterprise API code execution feature</a> enables agents to take advantage of sandboxed code execution server-side by enabling the tool_execution tool. For code performing data analysis, you can use the <a href="/integrations/code-execution/">Code Executor</a> tool in ADK to call the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/extensions/code-interpreter">Vertex Code Interpreter Extension</a>.</p>
 <p>If none of these options satisfy your requirements, you can build your own code executor using the building blocks provided by the ADK. We recommend creating execution environments that are hermetic: no network connections and API calls permitted to avoid uncontrolled data exfiltration; and full cleanup of data across execution to not create cross-user exfiltration concerns.</p>
 <h3 id="evaluations">Evaluations<a class="headerlink" href="#evaluations" title="Permanent link">&para;</a></h3>
 <p>See <a href="../evaluate/">Evaluate Agents</a>.</p>

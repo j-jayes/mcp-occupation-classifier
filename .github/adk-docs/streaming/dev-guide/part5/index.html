@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1884,14 +1884,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3007,14 +3007,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3036,7 +3036,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3051,7 +3051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3079,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3107,7 +3107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -6081,14 +6081,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -8188,7 +8188,7 @@
 </tr>
 <tr>
 <td>Native Audio</td>
-<td>Vertex AI Live API</td>
+<td>Gemini Live API</td>
 <td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api">gemini-live-2.5-flash-native-audio</a></td>
 <td>Public preview</td>
 </tr>
@@ -8227,7 +8227,7 @@
 </tr>
 <tr>
 <td>Half-Cascade</td>
-<td>Vertex AI Live API</td>
+<td>Gemini Live API</td>
 <td><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#2.5-flash">gemini-live-2.5-flash</a></td>
 <td>Private GA, not publicly available</td>
 </tr>
@@ -8258,7 +8258,7 @@
 <p><strong>Why use environment variables:</strong></p>
 <ul>
 <li><strong>Model availability changes</strong>: Models are released, updated, and deprecated regularly (e.g., <code>gemini-2.0-flash-live-001</code> was deprecated on December 09, 2025)</li>
-<li><strong>Platform-specific names</strong>: Gemini Live API and Vertex AI Live API use different model naming conventions for the same functionality</li>
+<li><strong>Platform-specific names</strong>: Gemini Live API and Gemini Live API on Agent Platform use different model naming conventions for the same functionality</li>
 <li><strong>Easy switching</strong>: Change models without modifying code by updating the <code>.env</code> file</li>
 <li><strong>Environment-specific configuration</strong>: Use different models for development, staging, and production</li>
 </ul>
@@ -8266,7 +8266,7 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># For Gemini Live API (publicly available)</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nv">DEMO_AGENT_MODEL</span><span class="o">=</span>gemini-2.5-flash-native-audio-preview-12-2025
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># For Vertex AI Live API (if using Vertex AI)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># For Gemini Live API (if using Agent Platform)</span>
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># DEMO_AGENT_MODEL=gemini-live-2.5-flash-native-audio</span>
 </span></code></pre></div>
 <div class="admonition note">
@@ -8293,7 +8293,7 @@
 </div>
 <p><strong>Selecting the right model:</strong></p>
 <ol>
-<li><strong>Choose platform</strong>: Decide between Gemini Live API (public) or Vertex AI Live API (enterprise)</li>
+<li><strong>Choose platform</strong>: Decide between Gemini Live API (public) or Gemini Live API on Agent Platform (enterprise)</li>
 <li><strong>Choose architecture</strong>:</li>
 <li>Native Audio for natural conversational AI with advanced features</li>
 <li>Half-Cascade for production reliability with tool execution</li>
@@ -8304,7 +8304,7 @@
 <p>For the latest information on Live API model compatibility and availability:</p>
 <ul>
 <li><strong>Gemini Live API models</strong>: See the <a href="https://ai.google.dev/gemini-api/docs/models/gemini">Gemini models documentation</a></li>
-<li><strong>Vertex AI Live API models</strong>: See the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models">Vertex AI model documentation</a></li>
+<li><strong>Gemini Live API models (Agent Platform)</strong>: See the <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models">Agent Platform model documentation</a></li>
 </ul>
 <p>Always verify model availability and feature support in the official documentation before deploying to production.</p>
 <h2 id="audio-transcription">Audio Transcription<a class="headerlink" href="#audio-transcription" title="Permanent link">&para;</a></h2>
@@ -8746,11 +8746,11 @@
 <li>✅ Half-cascade models: 8 voices (Puck, Charon, Kore, Fenrir, Aoede, Leda, Orus, Zephyr)</li>
 <li>✅ Native audio models: Extended voice list (see <a href="https://ai.google.dev/gemini-api/docs/live-guide">documentation</a>)</li>
 </ul>
-<p><strong>Vertex AI Live API:</strong></p>
+<p><strong>Gemini Live API (Agent Platform):</strong></p>
 <ul>
 <li>✅ Voice configuration supported</li>
 <li>⚠️ <strong>Platform-specific difference</strong>: Voice availability may differ from Gemini Live API</li>
-<li>⚠️ <strong>Verification required</strong>: Check <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/live-api">Vertex AI documentation</a> for the current list of supported voices</li>
+<li>⚠️ <strong>Verification required</strong>: Check <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/live-api">Agent Platform documentation</a> for the current list of supported voices</li>
 </ul>
 <p><strong>Best practice</strong>: Always test your chosen voice configuration on your target platform during development. If a voice is not supported on your platform/model combination, the Live API will return an error at connection time.</p>
 <h3 id="important-notes">Important Notes<a class="headerlink" href="#important-notes" title="Permanent link">&para;</a></h3>
@@ -9057,7 +9057,7 @@
 <li>✅ Supported on <code>gemini-2.5-flash-native-audio-preview-12-2025</code> (native audio model)</li>
 <li>❌ Not supported on <code>gemini-live-2.5-flash-preview</code> (half-cascade model)</li>
 </ul>
-<p><strong>Vertex AI Live API:</strong></p>
+<p><strong>Gemini Live API (Agent Platform):</strong></p>
 <ul>
 <li>❌ Not currently supported on <code>gemini-live-2.5-flash</code> (half-cascade model)</li>
 <li>⚠️ <strong>Platform-specific difference</strong>: Proactivity and affective dialog require native audio models, which are currently only available on Gemini Live API</li>

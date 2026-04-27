@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1884,14 +1884,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3007,14 +3007,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3036,7 +3036,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3051,7 +3051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3079,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3107,7 +3107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5503,14 +5503,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6701,7 +6701,7 @@
 
 <h1 id="human-input-for-agent-workflows">Human input for agent workflows<a class="headerlink" href="#human-input-for-agent-workflows" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span><span class="lst-preview">Alpha</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span><span class="lst-preview">Beta</span>
 </div>
 
 <p>Being able to request human input for data input, decision verification, or
@@ -6711,8 +6711,8 @@ specifically built for obtaining input from humans as part of a workflow. These
 nodes do not require artificial intelligence (AI) models to run, which can make
 the input process more predictable and reliable.</p>
 <div class="admonition example">
-<p class="admonition-title">Alpha Release</p>
-<p>ADK 2.0 is an Alpha release and may cause breaking changes when used with prior
+<p class="admonition-title">Beta Release</p>
+<p>ADK 2.0 is a Beta release and may cause breaking changes when used with prior
 versions of ADK. Do not use ADK 2.0 if you require backwards compatibility, such
 as in production environments. We encourage you to test this release and we
 welcome your
@@ -6777,9 +6777,7 @@ a workflow node, including a <strong><em>response schema</em></strong>:</p>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">           Hobby,</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">           Example of attraction you liked</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">   &quot;&quot;&quot;</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   <span class="n">resp</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;user_response&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">}</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   <span class="k">yield</span> <span class="n">RequestInput</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">input_message</span><span class="p">,</span> <span class="n">response_schema</span><span class="o">=</span><span class="n">resp</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   <span class="k">yield</span> <span class="n">RequestInput</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">input_message</span><span class="p">,</span> <span class="n">response_schema</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="request-input-with-data-payload">Request input with data payload<a class="headerlink" href="#request-input-with-data-payload" title="Permanent link">&para;</a></h3>
 <p>The following code sample shows how to construct a <strong><em>RequestInput</em></strong> object in
@@ -6792,23 +6790,27 @@ feedback for the user.</p>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sd">   activity has a name and a description&quot;&quot;&quot;</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   <span class="n">itinerary</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user_feedback</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="n">ActivitiesList</span><span class="p">):</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="sd">   Retrieves the user&#39;s thoughts on the agents initial itinerary in order to</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="sd">   either expand on, change the list, or exit the loop</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="sd">   &quot;&quot;&quot;</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>   <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>       <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">       Here is your recommended base itinerary:</span><span class="se">\n</span><span class="si">{</span><span class="n">node_input</span><span class="si">}</span><span class="se">\n\n</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">       Which of these items appeal to you (if any)?</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">       &quot;&quot;&quot;</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>   <span class="p">)</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>   <span class="k">yield</span> <span class="n">RequestInput</span><span class="p">(</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>       <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>       <span class="n">payload</span><span class="o">=</span><span class="n">node_input</span><span class="p">,</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>       <span class="n">response_schema</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;response&quot;</span><span class="p">}</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>   <span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">UserFeedback</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">   </span><span class="sd">&quot;&quot;&quot;Expected response structure from the user.&quot;&quot;&quot;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>   <span class="n">user_response</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user_feedback</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="n">ActivitiesList</span><span class="p">):</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="sd">   Retrieves the user&#39;s thoughts on the agents initial itinerary in order to</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="sd">   either expand on, change the list, or exit the loop</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="sd">   &quot;&quot;&quot;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>       <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s2">       Here is your recommended base itinerary:</span><span class="se">\n</span><span class="si">{</span><span class="n">node_input</span><span class="si">}</span><span class="se">\n\n</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s2">       Which of these items appeal to you (if any)?</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s2">       &quot;&quot;&quot;</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>   <span class="p">)</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>   <span class="k">yield</span> <span class="n">RequestInput</span><span class="p">(</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>       <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>       <span class="n">payload</span><span class="o">=</span><span class="n">node_input</span><span class="p">,</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="n">response_schema</span><span class="o">=</span><span class="n">UserFeedback</span><span class="p">,</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>   <span class="p">)</span>
 </span></code></pre></div>
 
 

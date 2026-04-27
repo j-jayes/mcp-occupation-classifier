@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1884,14 +1884,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3007,14 +3007,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3036,7 +3036,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3051,7 +3051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3079,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3107,7 +3107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5503,14 +5503,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6745,7 +6745,7 @@
 
 <h1 id="data-handling-for-agent-workflows">Data handling for agent workflows<a class="headerlink" href="#data-handling-for-agent-workflows" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span><span class="lst-preview">Alpha</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span><span class="lst-preview">Beta</span>
 </div>
 
 <p>Structuring and managing data between agents and graph-based notes is critical
@@ -6756,19 +6756,12 @@ the essential parameters for events, data, content, and state, and explains how
 to implement structured data transfer for both function and agent nodes using
 data format schemas and specific instruction syntax.</p>
 <div class="admonition example">
-<p class="admonition-title">Alpha Release</p>
-<p>ADK 2.0 is an Alpha release and may cause breaking changes when used with prior
+<p class="admonition-title">Beta Release</p>
+<p>ADK 2.0 is a Beta release and may cause breaking changes when used with prior
 versions of ADK. Do not use ADK 2.0 if you require backwards compatibility, such
 as in production environments. We encourage you to test this release and we
 welcome your
 <a href="https://github.com/google/adk-python/issues/new?template=feature_request.md&amp;labels=v2">feedback</a>!</p>
-</div>
-<div class="admonition danger">
-<p class="admonition-title">WARNING: DO NOT MIX ADK 2.0 and ADK 1.0 data storage systems</p>
-<p>If you use persistent storage for ADK 2.0 projects, <strong>DO NOT allow ADK 2.0
-projects to share storage with ADK 1.0 projects</strong>, including, but not limited to,
-session storage, memory systems, and evaluation data. Doing so may result in
-loss of data or make the data unusable in ADK 1.0 projects.</p>
 </div>
 <h2 id="workflow-graph-events">Workflow graph Events<a class="headerlink" href="#workflow-graph-events" title="Permanent link">&para;</a></h2>
 <p>Within a graph-based workflow, you pass data using <strong><em>Events</em></strong>. All execution
@@ -6808,8 +6801,8 @@ containing the data, as shown in the following code sample:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function_node_1</span><span class="p">():</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;The Result&quot;</span><span class="p">)</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function_node_2</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="n">Content</span><span class="p">):</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">output_value</span> <span class="o">=</span> <span class="n">node_input</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function_node_2</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">output_value</span> <span class="o">=</span> <span class="n">node_input</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">output_value</span><span class="p">)</span> <span class="c1"># &quot;the result&quot;</span>
 </span></code></pre></div>
 <p>You can pass longer, structured data in a serializable format, as shown in this
@@ -6860,7 +6853,7 @@ state is persisted across nodes:</p>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      <span class="p">},</span>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  <span class="p">)</span>
 </span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_state_node</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">WorkflowContext</span><span class="p">):</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_state_node</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">):</span>
 </span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;attempts state: </span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># attempts state: attempts: 1</span>
 </span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
@@ -6906,7 +6899,7 @@ subagent.</p>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="n">input_schema</span><span class="o">=</span><span class="n">FlightSearchInput</span><span class="p">,</span>
 </span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="n">output_schema</span><span class="o">=</span><span class="n">FlightSearchOutput</span><span class="p">,</span>
 </span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">search_flights_api</span><span class="p">],</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;single-turn&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;single_turn&quot;</span><span class="p">,</span>
 </span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>    <span class="o">...</span>
 </span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="p">)</span>
 </span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>

@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1886,14 +1886,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2645,6 +2645,8 @@
       
         
       
+        
+      
     
     
     
@@ -2773,6 +2775,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -2990,14 +3020,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3019,7 +3049,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3034,7 +3064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3062,14 +3092,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3090,7 +3120,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -6215,14 +6245,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -8364,11 +8394,11 @@ response safety is a priority.</p>
 <p>This criterion assesses whether the agent's response contains any harmful
 content, such as hate speech, harassment, or dangerous information. Unlike other
 metrics implemented natively within ADK, <code>safety_v1</code> delegates the evaluation to
-the Vertex AI General AI Eval SDK.</p>
+the Agent Platform Eval SDK.</p>
 <h3 id="how-to-use-this-criterion_6">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_6" title="Permanent link">&para;</a></h3>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
-typically in an <code>.env</code> file in your agent's directory, for the Vertex AI SDK to
+typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
 function correctly.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
@@ -8434,11 +8464,11 @@ outcome rather than the specific steps taken to reach it.</p>
 <h4 id="details_8">Details<a class="headerlink" href="#details_8" title="Permanent link">&para;</a></h4>
 <p>This criterion takes into account all the turns of the multi-turn conversation
 to determine if the task was successfully completed. It delegates the evaluation
-to the Vertex AI General AI Eval SDK.</p>
+to the Agent Platform Eval SDK.</p>
 <h4 id="how-to-use-this-criterion_8">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_8" title="Permanent link">&para;</a></h4>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
-typically in an <code>.env</code> file in your agent's directory, for the Vertex AI SDK to
+typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
 function correctly.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
@@ -8466,11 +8496,11 @@ steps taken during the conversation.</p>
 <h4 id="details_9">Details<a class="headerlink" href="#details_9" title="Permanent link">&para;</a></h4>
 <p>This criterion is a reference-free metric that assesses the quality of the 
 interaction trajectory across multiple turns. It delegates the evaluation to the
-Vertex AI General AI Eval SDK.</p>
+Agent Platform Eval SDK.</p>
 <h4 id="how-to-use-this-criterion_9">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_9" title="Permanent link">&para;</a></h4>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
-typically in an <code>.env</code> file in your agent's directory, for the Vertex AI SDK to
+typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
 function correctly.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
@@ -8502,7 +8532,7 @@ AI General AI Eval SDK.</p>
 <h4 id="how-to-use-this-criterion_10">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_10" title="Permanent link">&para;</a></h4>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
-typically in an <code>.env</code> file in your agent's directory, for the Vertex AI SDK to
+typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
 function correctly.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,

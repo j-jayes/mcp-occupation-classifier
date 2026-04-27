@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1884,14 +1884,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2638,6 +2638,8 @@
       
         
       
+        
+      
     
     
     
@@ -2763,6 +2765,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -2977,14 +3007,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3006,7 +3036,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3021,7 +3051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3049,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3077,7 +3107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -6212,14 +6242,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -8089,7 +8119,7 @@ end</code></pre>
 <p>To save audio conversations to the ADK <code>Session</code> for review or resumption, enable <code>RunConfig.save_live_blob = True</code>. This persists audio streams to artifacts. See <a href="../part4/#save_live_blob">Part 4: save_live_blob</a> for configuration details.</p>
 </div>
 <h2 id="understanding-events">Understanding Events<a class="headerlink" href="#understanding-events" title="Permanent link">&para;</a></h2>
-<p>Events are the core communication mechanism in ADK Gemini Live API Toolkit's streaming system. This section explores the complete lifecycle of events—from how they're generated through multiple pipeline layers, to concurrent processing patterns that enable true real-time interaction, to practical handling of interruptions and turn completion. You'll learn about event types (text, audio, transcriptions, tool calls), serialization strategies for network transport, and the connection lifecycle that manages streaming sessions across both Gemini Live API and Vertex AI Live API platforms.</p>
+<p>Events are the core communication mechanism in ADK Gemini Live API Toolkit's streaming system. This section explores the complete lifecycle of events—from how they're generated through multiple pipeline layers, to concurrent processing patterns that enable true real-time interaction, to practical handling of interruptions and turn completion. You'll learn about event types (text, audio, transcriptions, tool calls), serialization strategies for network transport, and the connection lifecycle that manages streaming sessions across both Gemini Live API and Gemini Live API platforms.</p>
 <h3 id="the-event-class">The Event Class<a class="headerlink" href="#the-event-class" title="Permanent link">&para;</a></h3>
 <p>ADK's <code>Event</code> class is a Pydantic model that represents all communication in a streaming conversation. It extends <code>LlmResponse</code> and serves as the unified container for model responses, user input, transcriptions, and control signals.</p>
 <div class="admonition note">
@@ -8562,8 +8592,8 @@ end</code></pre>
 <div class="admonition note">
 <p class="admonition-title">Official Documentation</p>
 <ul>
-<li><strong>FinishReason</strong> (when model stops generating tokens): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/Candidate/FinishReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini">Vertex AI</a></li>
-<li><strong>BlockedReason</strong> (when prompts are blocked by content filters): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/GenerateContentResponse/PromptFeedback/BlockReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes">Vertex AI</a></li>
+<li><strong>FinishReason</strong> (when model stops generating tokens): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/Candidate/FinishReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/gemini">Agent Platform</a></li>
+<li><strong>BlockedReason</strong> (when prompts are blocked by content filters): <a href="https://ai.google.dev/api/python/google/ai/generativelanguage/GenerateContentResponse/PromptFeedback/BlockReason">Google AI for Developers</a> | <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/configure-safety-attributes">Agent Platform</a></li>
 <li><strong>ADK Implementation</strong>: <a href="https://github.com/google/adk-python/blob/427a983b18088bdc22272d02714393b0a779ecdf/src/google/adk/models/llm_response.py#L145-L200"><code>llm_response.py:145-200</code></a></li>
 </ul>
 </div>
@@ -8989,7 +9019,7 @@ end</code></pre>
 <p>Both types of queues are <code>LiveRequestQueue</code> instances, but they serve different purposes in the streaming architecture.</p>
 <p>This enables tools to provide incremental updates, progress notifications, or partial results during long-running operations.</p>
 <p><strong>Code reference</strong>: See <code>runners.py:828-865</code> (tool detection) and <code>function_tool.py:238-253</code> (parameter injection) for implementation details.</p>
-<p>See the <a href="/tools/">Tools Guide</a> for implementation examples.</p>
+<p>See the <a href="/integrations/">Tools Guide</a> for implementation examples.</p>
 </div>
 <h3 id="key-takeaway">Key Takeaway<a class="headerlink" href="#key-takeaway" title="Permanent link">&para;</a></h3>
 <p>The difference between raw Live API tool use and ADK is stark:</p>

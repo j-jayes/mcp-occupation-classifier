@@ -32,7 +32,7 @@
         <link rel="prev" href="../runtime/event-loop/">
       
       
-        <link rel="next" href="agent-engine/">
+        <link rel="next" href="agent-runtime/">
       
       
         
@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1886,14 +1886,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../agents/models/vertex/" class="md-nav__link">
+      <a href="../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2645,6 +2645,8 @@
       
         
       
+        
+      
     
     
     
@@ -2773,6 +2775,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -2992,14 +3022,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="agent-engine/" class="md-nav__link ">
+            <a href="agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3021,7 +3051,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3036,7 +3066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agent-engine/deploy/" class="md-nav__link">
+      <a href="agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3064,14 +3094,14 @@
   
   
     <li class="md-nav__item">
-      <a href="agent-engine/asp/" class="md-nav__link">
+      <a href="agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3092,7 +3122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="agent-engine/test/" class="md-nav__link">
+      <a href="agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5497,14 +5527,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6424,10 +6454,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#agent-engine-in-vertex-ai" class="md-nav__link">
+  <a href="#agent-runtime-on-agent-platform" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Agent Engine in Vertex AI
+        Agent Runtime on Agent Platform
       
     </span>
   </a>
@@ -6592,11 +6622,11 @@ from your local development machine to a scalable and reliable environment.</p>
 <h2 id="deployment-options">Deployment Options<a class="headerlink" href="#deployment-options" title="Permanent link">&para;</a></h2>
 <p>Your ADK agent can be deployed to a range of different environments based
 on your needs for production readiness or custom flexibility:</p>
-<h3 id="agent-engine-in-vertex-ai">Agent Engine in Vertex AI<a class="headerlink" href="#agent-engine-in-vertex-ai" title="Permanent link">&para;</a></h3>
-<p><a href="agent-engine/">Agent Engine</a> is a fully managed auto-scaling service on Google Cloud
+<h3 id="agent-runtime-on-agent-platform">Agent Runtime on Agent Platform<a class="headerlink" href="#agent-runtime-on-agent-platform" title="Permanent link">&para;</a></h3>
+<p><a href="agent-runtime/">Agent Runtime</a> is a fully managed auto-scaling service on Google Cloud
 specifically designed for deploying, managing, and scaling AI agents built with
 frameworks such as ADK.</p>
-<p>Learn more about <a href="agent-engine/">deploying your agent to Vertex AI Agent Engine</a>.</p>
+<p>Learn more about <a href="agent-runtime/">deploying your agent to Agent Runtime</a>.</p>
 <h3 id="cloud-run">Cloud Run<a class="headerlink" href="#cloud-run" title="Permanent link">&para;</a></h3>
 <p><a href="https://cloud.google.com/run">Cloud Run</a> is a managed auto-scaling compute platform on
 Google Cloud that enables you to run your agent as a container-based
@@ -6673,13 +6703,13 @@ Dockerfile.</p>
         
         
           
-          <a href="agent-engine/" class="md-footer__link md-footer__link--next" aria-label="Next: Deploy to Vertex AI Agent Engine">
+          <a href="agent-runtime/" class="md-footer__link md-footer__link--next" aria-label="Next: Deploy to Agent Runtime">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Deploy to Vertex AI Agent Engine
+                Deploy to Agent Runtime
               </div>
             </div>
             <div class="md-footer__button md-icon">

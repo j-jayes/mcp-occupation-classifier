@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1886,14 +1886,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2645,6 +2645,8 @@
       
         
       
+        
+      
     
     
     
@@ -2773,6 +2775,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -2992,14 +3022,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../agent-engine/" class="md-nav__link ">
+            <a href="../agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3021,7 +3051,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3036,7 +3066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/deploy/" class="md-nav__link">
+      <a href="../agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3064,14 +3094,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/asp/" class="md-nav__link">
+      <a href="../agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3092,7 +3122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/test/" class="md-nav__link">
+      <a href="../agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -3316,10 +3346,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configure-kubernetes-service-account-for-vertex-ai" class="md-nav__link">
+  <a href="#configure-kubernetes-service-account-for-agent-platform" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Kubernetes Service Account for Vertex AI
+        Configure Kubernetes Service Account for Agent Platform
       
     </span>
   </a>
@@ -5954,14 +5984,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6969,10 +6999,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configure-kubernetes-service-account-for-vertex-ai" class="md-nav__link">
+  <a href="#configure-kubernetes-service-account-for-agent-platform" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Kubernetes Service Account for Vertex AI
+        Configure Kubernetes Service Account for Agent Platform
       
     </span>
   </a>
@@ -7396,12 +7426,12 @@
 
 <p><a href="https://cloud.google.com/gke">GKE</a> is the Google Cloud managed Kubernetes service. It allows you to deploy and manage containerized applications using Kubernetes.</p>
 <p>To deploy your agent you will need to have a Kubernetes cluster running on GKE. You can create a cluster using the Google Cloud Console or the <code>gcloud</code> command line tool.</p>
-<p>In this example we will deploy a simple agent to GKE. The agent will be a FastAPI application that uses <code>Gemini 2.0 Flash</code> as the LLM. We can use Vertex AI or AI Studio as the LLM provider using the Environment variable <code>GOOGLE_GENAI_USE_VERTEXAI</code>.</p>
+<p>In this example we will deploy a simple agent to GKE. The agent will be a FastAPI application that uses <code>Gemini 2.0 Flash</code> as the LLM. We can use Agent Platform or AI Studio as the LLM provider using the Environment variable <code>GOOGLE_GENAI_USE_VERTEXAI</code>.</p>
 <h2 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <p>Set your environment variables as described in the <a href="../../get-started/installation/">Setup and Installation</a> guide. You also need to install the <code>kubectl</code> command line tool. You can find instructions to do so in the <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl">Google Kubernetes Engine Documentation</a>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>your-project-id<span class="w"> </span><span class="c1"># Your GCP project ID</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_CLOUD_LOCATION</span><span class="o">=</span>us-central1<span class="w"> </span><span class="c1"># Or your preferred location</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_GENAI_USE_VERTEXAI</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="c1"># Set to true if using Vertex AI</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_GENAI_USE_VERTEXAI</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="c1"># Set to true if using Agent Platform</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_CLOUD_PROJECT_NUMBER</span><span class="o">=</span><span class="k">$(</span>gcloud<span class="w"> </span>projects<span class="w"> </span>describe<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="nv">$GOOGLE_CLOUD_PROJECT</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;.projectNumber&quot;</span><span class="k">)</span>
 </span></code></pre></div>
 <p>If you don't have <code>jq</code> installed, you can use the following command to get the project number:</p>
@@ -7586,8 +7616,8 @@ unless you specify it as deployment setting, such as the <code>--with_ui</code> 
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nv">$GOOGLE_CLOUD_LOCATION</span>-docker.pkg.dev/<span class="nv">$GOOGLE_CLOUD_PROJECT</span>/adk-repo<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span>--project<span class="o">=</span><span class="nv">$GOOGLE_CLOUD_PROJECT</span>
 </span></code></pre></div>
-<h3 id="configure-kubernetes-service-account-for-vertex-ai">Configure Kubernetes Service Account for Vertex AI<a class="headerlink" href="#configure-kubernetes-service-account-for-vertex-ai" title="Permanent link">&para;</a></h3>
-<p>If your agent uses Vertex AI, you need to create a Kubernetes service account with the necessary permissions. This example creates a service account named <code>adk-agent-sa</code> and binds it to the <code>Vertex AI User</code> role.</p>
+<h3 id="configure-kubernetes-service-account-for-agent-platform">Configure Kubernetes Service Account for Agent Platform<a class="headerlink" href="#configure-kubernetes-service-account-for-agent-platform" title="Permanent link">&para;</a></h3>
+<p>If your agent uses Agent Platform, you need to create a Kubernetes service account with the necessary permissions. This example creates a service account named <code>adk-agent-sa</code> and binds it to the <code>Agent Platform User</code> role.</p>
 <blockquote>
 <p>If you are using AI Studio and accessing the model with an API key you can skip this step.</p>
 </blockquote>
@@ -7868,7 +7898,7 @@ You should see output like <code>adk-default-service-name-xxxx-xxxx ... 1/1 Runn
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <p>These are some common issues you might encounter when deploying your agent to GKE:</p>
 <h3 id="403-permission-denied-for-gemini-20-flash">403 Permission Denied for <code>Gemini 2.0 Flash</code><a class="headerlink" href="#403-permission-denied-for-gemini-20-flash" title="Permanent link">&para;</a></h3>
-<p>This usually means that the Kubernetes service account does not have the necessary permission to access the Vertex AI API. Ensure that you have created the service account and bound it to the <code>Vertex AI User</code> role as described in the <a href="#configure-kubernetes-service-account-for-vertex-ai">Configure Kubernetes Service Account for Vertex AI</a> section. If you are using AI Studio, ensure that you have set the <code>GOOGLE_API_KEY</code> environment variable in the deployment manifest and it is valid.</p>
+<p>This usually means that the Kubernetes service account does not have the necessary permission to access the Agent Platform API. Ensure that you have created the service account and bound it to the <code>Agent Platform User</code> role as described in the <a href="#configure-kubernetes-service-account-for-agent-platform">Configure Kubernetes Service Account for Agent Platform</a> section. If you are using AI Studio, ensure that you have set the <code>GOOGLE_API_KEY</code> environment variable in the deployment manifest and it is valid.</p>
 <h3 id="404-or-not-found-response">404 or Not Found response<a class="headerlink" href="#404-or-not-found-response" title="Permanent link">&para;</a></h3>
 <p>This usually means there is an error in your request. Check the application logs to diagnose the problem. </p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>adk-agent<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.items[0].metadata.name}&#39;</span><span class="k">)</span>

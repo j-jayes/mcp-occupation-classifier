@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1884,14 +1884,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3007,14 +3007,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3036,7 +3036,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3051,7 +3051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3079,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3107,7 +3107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -4214,15 +4214,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vertex-ai-memory-bank" class="md-nav__link">
+  <a href="#memory-bank" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Memory Bank
+        Memory Bank
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Vertex AI Memory Bank">
+    <nav class="md-nav" aria-label="Memory Bank">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5757,14 +5757,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6722,15 +6722,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vertex-ai-memory-bank" class="md-nav__link">
+  <a href="#memory-bank" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Memory Bank
+        Memory Bank
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Vertex AI Memory Bank">
+    <nav class="md-nav" aria-label="Memory Bank">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6972,7 +6972,7 @@
 <tr>
 <td style="text-align: left;"><strong>Persistence</strong></td>
 <td style="text-align: left;">None (data is lost on restart)</td>
-<td style="text-align: left;">Yes (Managed by Vertex AI)</td>
+<td style="text-align: left;">Yes (Managed by Agent Platform)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Primary Use Case</strong></td>
@@ -6992,12 +6992,12 @@
 <tr>
 <td style="text-align: left;"><strong>Setup Complexity</strong></td>
 <td style="text-align: left;">None. It's the default.</td>
-<td style="text-align: left;">Low. Requires an <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview">Agent Engine</a> instance in Vertex AI.</td>
+<td style="text-align: left;">Low. Requires an <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview">Agent Engine</a> instance on Agent Platform.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Dependencies</strong></td>
 <td style="text-align: left;">None.</td>
-<td style="text-align: left;">Google Cloud Project, Vertex AI API</td>
+<td style="text-align: left;">Google Cloud Project, Agent Platform API</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>When to use it</strong></td>
@@ -7549,8 +7549,8 @@
 </div>
 </div>
 </div>
-<h2 id="vertex-ai-memory-bank">Vertex AI Memory Bank<a class="headerlink" href="#vertex-ai-memory-bank" title="Permanent link">&para;</a></h2>
-<p>The <code>VertexAiMemoryBankService</code> connects your agent to <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview">Vertex AI Memory Bank</a>, a fully managed Google Cloud service that provides sophisticated, persistent memory capabilities for conversational agents.</p>
+<h2 id="memory-bank">Memory Bank<a class="headerlink" href="#memory-bank" title="Permanent link">&para;</a></h2>
+<p>The <code>VertexAiMemoryBankService</code> connects your agent to <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview">Memory Bank</a>, a fully managed Google Cloud service that provides sophisticated, persistent memory capabilities for conversational agents.</p>
 <h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
 <p>The service handles two key operations:</p>
 <ul>
@@ -7560,8 +7560,8 @@
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <p>Before you can use this feature, you must have:</p>
 <ol>
-<li><strong>A Google Cloud Project:</strong> With the Vertex AI API enabled.</li>
-<li><strong>An Agent Engine:</strong> You need to create an Agent Engine in Vertex AI. You do not need to deploy your agent to Agent Engine Runtime to use Memory Bank. This will provide you with the <strong>Agent Engine ID</strong> required for configuration.</li>
+<li><strong>A Google Cloud Project:</strong> With the Agent Platform API enabled.</li>
+<li><strong>An Agent Runtime:</strong> You need to create an Agent Runtime on Agent Platform. You do not need to deploy your agent to Agent Runtime to use Memory Bank. This will provide you with the <strong>Agent Runtime ID</strong> required for configuration.</li>
 <li><strong>Authentication:</strong> Ensure your local environment is authenticated to access Google Cloud services. The simplest way is to run:
     <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gcloud<span class="w"> </span>auth<span class="w"> </span>application-default<span class="w"> </span>login
 </span></code></pre></div></li>
@@ -7730,7 +7730,7 @@
 <p>The memory workflow internally involves these steps:</p>
 <ol>
 <li><strong>Session Interaction:</strong> A user interacts with an agent via a <code>Session</code>, managed by a <code>SessionService</code>. Events are added, and state might be updated.</li>
-<li><strong>Ingestion into Memory:</strong> At some point (often when a session is considered complete or has yielded significant information), your application calls <code>memory_service.add_session_to_memory(session)</code>. This extracts relevant information from the session's events and adds it to the long-term knowledge store (in-memory dictionary or Agent Engine Memory Bank).</li>
+<li><strong>Ingestion into Memory:</strong> At some point (often when a session is considered complete or has yielded significant information), your application calls <code>memory_service.add_session_to_memory(session)</code>. This extracts relevant information from the session's events and adds it to the long-term knowledge store (in-memory dictionary or Agent Runtime Memory Bank).</li>
 <li><strong>Later Query:</strong> In a <em>different</em> (or the same) session, the user might ask a question requiring past context (e.g., "What did we discuss about project X last week?").</li>
 <li><strong>Agent Uses Memory Tool:</strong> An agent equipped with a memory-retrieval tool (like the built-in <code>load_memory</code> tool) recognizes the need for past context. It calls the tool, providing a search query (e.g., "discussion project X last week").</li>
 <li><strong>Search Execution:</strong> The tool internally calls <code>memory_service.search_memory(app_name, user_id, query)</code>.</li>

@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1903,14 +1903,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2904,6 +2904,8 @@
       
         
       
+        
+      
     
     
     
@@ -3029,6 +3031,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -3243,14 +3273,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3272,7 +3302,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3287,7 +3317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3315,14 +3345,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3343,7 +3373,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5739,14 +5769,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6984,11 +7014,15 @@ carefully consider which approach best serves your application and customers.</p
 properly authenticate to restricted tools and services becomes more challenging
 and more important to properly manage. This authentication challenge can become
 even more complicated when users of your agent have varying levels of access to
-restricted tools and data. Rather than writing code to handle the authentication
-process and credential managment for various tools used by your agent, use an
-<em>authentication manager</em> service that manages <em>both</em> for you. This service
-should handle the storage of keys and secrets, as well as the acquisition,
-management, and storage of OAuth access or refresh tokens.</p>
+restricted tools and data.</p>
+<p>Rather than writing code to handle the authentication process and credential
+management for various tools used by your agent, use an <em>authentication manager</em>
+service that manages <em>both</em> for you. This service should handle the storage of
+keys and secrets, as well as the acquisition, management, and storage of OAuth
+access or refresh tokens. Learn more about Agent Identity Authentication Manager
+for <a href="https://docs.cloud.google.com/iam/docs/auth-with-2lo">2-legged OAuth</a>,
+<a href="https://docs.cloud.google.com/iam/docs/auth-with-3lo">3-legged OAuth</a>, and <a href="https://docs.cloud.google.com/iam/docs/auth-with-api-key">API
+key</a>.</p>
 <h3 id="self-managed-authentication">Self-managed authentication<a class="headerlink" href="#self-managed-authentication" title="Permanent link">&para;</a></h3>
 <p>If you decide to manage your own authentication process with ADK helper functions
 and your own code, consider these recommendations:</p>

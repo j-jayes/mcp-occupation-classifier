@@ -29,7 +29,7 @@
         <link rel="canonical" href="https://adk.dev/deploy/cloud-run/">
       
       
-        <link rel="prev" href="../agent-engine/test/">
+        <link rel="prev" href="../agent-runtime/test/">
       
       
         <link rel="next" href="../gke/">
@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1886,14 +1886,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3022,14 +3022,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../agent-engine/" class="md-nav__link ">
+            <a href="../agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3051,7 +3051,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3066,7 +3066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/deploy/" class="md-nav__link">
+      <a href="../agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3094,14 +3094,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/asp/" class="md-nav__link">
+      <a href="../agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3122,7 +3122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../agent-engine/test/" class="md-nav__link">
+      <a href="../agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -6213,14 +6213,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -8022,7 +8022,7 @@ unless you specify it as deployment setting, such as the <code>--with_ui</code> 
 <li><code>--region TEXT</code>: (Required) The Google Cloud location for deployment (e.g., <code>$GOOGLE_CLOUD_LOCATION</code>, <code>us-central1</code>).</li>
 <li><code>--service_name TEXT</code>: (Optional) The name for the Cloud Run service (e.g., <code>$SERVICE_NAME</code>). Defaults to <code>adk-default-service-name</code>.</li>
 <li><code>--app_name TEXT</code>: (Optional) The application name for the ADK API server (e.g., <code>$APP_NAME</code>). Defaults to the name of the directory specified by <code>AGENT_PATH</code> (e.g., <code>capital_agent</code> if <code>AGENT_PATH</code> is <code>./capital_agent</code>).</li>
-<li><code>--agent_engine_id TEXT</code>: (Optional) If you are using a managed session service via Vertex AI Agent Engine, provide its resource ID here.</li>
+<li><code>--agent_engine_id TEXT</code>: (Optional) If you are using a managed session service via Agent Runtime, provide its resource ID here.</li>
 <li><code>--port INTEGER</code>: (Optional) The port number the ADK API server will listen on within the container. Defaults to 8000.</li>
 <li><code>--with_ui</code>: (Optional) If included, deploys the ADK dev UI alongside the agent API server. By default, only the API server is deployed.</li>
 <li><code>--temp_folder TEXT</code>: (Optional) Specifies a directory for storing intermediate files generated during the deployment process. Defaults to a timestamped folder in the system's temporary directory. <em>(Note: This option is generally not needed unless troubleshooting issues).</em></li>
@@ -8586,7 +8586,7 @@ repository.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../agent-engine/test/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Test deployed agents">
+          <a href="../agent-runtime/test/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Test deployed agents">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>

@@ -139,15 +139,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1903,14 +1903,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../agents/models/vertex/" class="md-nav__link">
+      <a href="../../agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -2736,10 +2736,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vertex-ai-agent-engine" class="md-nav__link">
+  <a href="#agent-runtime" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Agent Engine
+        Agent Runtime
       
     </span>
   </a>
@@ -2897,10 +2897,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vertex-ai-agent-engine_1" class="md-nav__link">
+  <a href="#agent-runtime_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Agent Engine
+        Agent Runtime
       
     </span>
   </a>
@@ -3209,6 +3209,8 @@
       
         
       
+        
+      
     
     
     
@@ -3334,6 +3336,34 @@
     
   
     API Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/ambient-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ambient Agents
   
 
     
@@ -3548,14 +3578,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deploy/agent-engine/" class="md-nav__link ">
+            <a href="../../deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3577,7 +3607,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3592,7 +3622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3620,14 +3650,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3648,7 +3678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deploy/agent-engine/test/" class="md-nav__link">
+      <a href="../../deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -6044,14 +6074,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="../../grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -7249,10 +7279,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vertex-ai-agent-engine" class="md-nav__link">
+  <a href="#agent-runtime" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Agent Engine
+        Agent Runtime
       
     </span>
   </a>
@@ -7410,10 +7440,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vertex-ai-agent-engine_1" class="md-nav__link">
+  <a href="#agent-runtime_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vertex AI Agent Engine
+        Agent Runtime
       
     </span>
   </a>
@@ -7695,7 +7725,7 @@
 </li>
 </ol>
 <p>You should see the agent interacting with the MCP file system server, and the server's responses (file listings, file content) relayed through the agent. The <code>adk web</code> console (terminal where you ran the command) might also show logs from the <code>npx</code> process if it outputs to stderr.</p>
-<p><img src="../../assets/adk-tool-mcp-filesystem-adk-web-demo.png" alt="MCP with ADK Web - FileSystem Example"></p>
+<p><img alt="MCP with ADK Web - FileSystem Example" src="../../assets/adk-tool-mcp-filesystem-adk-web-demo.png" /></p>
 <p>For Java, refer to the following sample to define an agent that initializes the <code>McpToolset</code>:</p>
 <div class="language-java highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">agents</span><span class="p">;</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
@@ -7898,7 +7928,7 @@
 </li>
 </ol>
 <p>You should see the agent use the Google Maps Grounding Lite MCP tools to provide directions or location-based information.</p>
-<p><img src="../../assets/adk-tool-maps-lite-mcp-adk-web-demo.png" alt="Google Maps Grounding Lite MCP with ADK Web Example"></p>
+<p><img alt="Google Maps Grounding Lite MCP with ADK Web Example" src="../../assets/adk-tool-maps-lite-mcp-adk-web-demo.png" /></p>
 <p>For Java, refer to the following sample to define an agent that initializes the <code>McpToolset</code>:</p>
 <div class="language-java highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">agents</span><span class="p">;</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
@@ -7916,7 +7946,7 @@
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MapsAgentCreator</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span><span class="cm">/**</span>
-</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="cm">     * Initializes an McpToolset for Google Maps Grounding Lite, </span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="cm">     * Initializes an McpToolset for Google Maps Grounding Lite,</span>
 </span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="cm">     * creates an LlmAgent, sends a map-related prompt, and closes the toolset.</span>
 </span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="cm">     */</span>
 </span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -8002,7 +8032,7 @@
 </span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">        </span><span class="ow">new</span><span class="w"> </span><span class="nx">MCPToolset</span><span class="p">({</span>
 </span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">            </span><span class="c1">// Using SseConnectionParams to connect to the remote Grounding Lite service,</span>
 </span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">            </span><span class="c1">// mirroring Python&#39;s StreamableHTTPConnectionParams.</span>
-</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">            </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SseConnectionParams&quot;</span><span class="p">,</span><span class="w"> </span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">            </span><span class="kr">type</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SseConnectionParams&quot;</span><span class="p">,</span>
 </span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">            </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://mapstools.googleapis.com/mcp&quot;</span><span class="p">,</span>
 </span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">            </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">                </span><span class="s2">&quot;X-Goog-Api-Key&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">googleMapsApiKey</span><span class="p">,</span>
@@ -8351,7 +8381,7 @@ from the MCP Server running remotely, or in another process.</p>
 </li>
 </ul>
 <h2 id="deploying-agents-with-mcp-tools">Deploying Agents with MCP Tools<a class="headerlink" href="#deploying-agents-with-mcp-tools" title="Permanent link">&para;</a></h2>
-<p>When deploying ADK agents that use MCP tools to production environments like Cloud Run, GKE, or Vertex AI Agent Engine, you need to consider how MCP connections will work in containerized and distributed environments.</p>
+<p>When deploying ADK agents that use MCP tools to production environments like Cloud Run, GKE, or Agent Runtime, you need to consider how MCP connections will work in containerized and distributed environments.</p>
 <h3 id="critical-deployment-requirement-synchronous-agent-definition">Critical Deployment Requirement: Synchronous Agent Definition<a class="headerlink" href="#critical-deployment-requirement-synchronous-agent-definition" title="Permanent link">&para;</a></h3>
 <p><strong>⚠️ Important:</strong> When deploying agents with MCP tools, the agent and its McpToolset must be defined <strong>synchronously</strong> in your <code>agent.py</code> file. While <code>adk web</code> allows for asynchronous agent creation, deployment environments require synchronous instantiation.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># ✅ CORRECT: Synchronous agent definition for deployment</span>
@@ -8392,7 +8422,7 @@ from the MCP Server running remotely, or in another process.</p>
 </span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="k">return</span> <span class="n">LlmAgent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">toolset</span><span class="p">])</span>
 </span></code></pre></div>
 <h3 id="quick-deployment-commands">Quick Deployment Commands<a class="headerlink" href="#quick-deployment-commands" title="Permanent link">&para;</a></h3>
-<h4 id="vertex-ai-agent-engine">Vertex AI Agent Engine<a class="headerlink" href="#vertex-ai-agent-engine" title="Permanent link">&para;</a></h4>
+<h4 id="agent-runtime">Agent Runtime<a class="headerlink" href="#agent-runtime" title="Permanent link">&para;</a></h4>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>uv<span class="w"> </span>run<span class="w"> </span>adk<span class="w"> </span>deploy<span class="w"> </span>agent_engine<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>--project<span class="o">=</span>&lt;your-gcp-project-id&gt;<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>--region<span class="o">=</span>&lt;your-gcp-region&gt;<span class="w"> </span><span class="se">\</span>
@@ -8666,8 +8696,8 @@ from the MCP Server running remotely, or in another process.</p>
 </span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>    <span class="p">),</span>
 </span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<h4 id="vertex-ai-agent-engine_1">Vertex AI Agent Engine<a class="headerlink" href="#vertex-ai-agent-engine_1" title="Permanent link">&para;</a></h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Agent Engine managed deployment</span>
+<h4 id="agent-runtime_1">Agent Runtime<a class="headerlink" href="#agent-runtime_1" title="Permanent link">&para;</a></h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Agent Runtime managed deployment</span>
 </span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1"># Prefer lightweight, self-contained MCP servers or external services</span>
 </span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="n">McpToolset</span><span class="p">(</span>
 </span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>    <span class="n">connection_params</span><span class="o">=</span><span class="n">SseConnectionParams</span><span class="p">(</span>

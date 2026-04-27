@@ -132,15 +132,15 @@
             
             
 <span class="announce-item">
-  <strong>New Releases!</strong> Check out our blog posts for
-  <a href="https://developers.googleblog.com/adk-go-10-arrives/" target="_blank" rel="noopener">
-    ADK Go 1.0
+  <strong>New Releases!</strong> Explore
+  <a href="/2.0/">
+    ADK Python 2.0 Beta
   </a>
-  and
-  <a href="https://developers.googleblog.com/announcing-adk-for-java-100-building-the-future-of-ai-agents-in-java/"
-    target="_blank" rel="noopener">
-    ADK Java 1.0
+  with workflows and agent teams, and
+  <a href="https://github.com/google/adk-js/releases/tag/adk-v1.0.0" target="_blank" rel="noopener">
+    ADK TypeScript 1.0
   </a>
+  is now available
 </span>
 
           </div>
@@ -1887,14 +1887,14 @@
   
   
     <li class="md-nav__item">
-      <a href="agents/models/vertex/" class="md-nav__link">
+      <a href="agents/models/agent-platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI hosted
+    Agent Platform hosted
   
 
     
@@ -3010,14 +3010,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="deploy/agent-engine/" class="md-nav__link ">
+            <a href="deploy/agent-runtime/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Agent Engine
+    Agent Runtime
   
 
     
@@ -3039,7 +3039,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Agent Engine
+    Agent Runtime
   
 
           </label>
@@ -3054,7 +3054,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deploy/agent-engine/deploy/" class="md-nav__link">
+      <a href="deploy/agent-runtime/deploy/" class="md-nav__link">
         
   
   
@@ -3082,14 +3082,14 @@
   
   
     <li class="md-nav__item">
-      <a href="deploy/agent-engine/asp/" class="md-nav__link">
+      <a href="deploy/agent-runtime/agents-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Agent Starter Pack
+    agents-cli
   
 
     
@@ -3110,7 +3110,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deploy/agent-engine/test/" class="md-nav__link">
+      <a href="deploy/agent-runtime/test/" class="md-nav__link">
         
   
   
@@ -5506,14 +5506,14 @@
   
   
     <li class="md-nav__item">
-      <a href="grounding/vertex_ai_search_grounding/" class="md-nav__link">
+      <a href="grounding/grounding_with_search/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Vertex AI Search Grounding
+    Grounding with Search
   
 
     
@@ -6676,7 +6676,7 @@ a := agent.<span class="fn">New</span>(<span class="str">"researcher"</span>,
 
   <details class="faq-item-arrow">
     <summary>How does ADK deploy to production?</summary>
-    <p>ADK is built for <em>deploy anywhere</em> flexibility. You can containerize and run ADK on your own infrastructure, or take advantage of our native, one-command deployment to Google Cloud. When deploying to Google Cloud via Agent Engine (Vertex AI), Cloud Run, or GKE, your agents instantly inherit managed infrastructure, built-in authentication, Cloud Trace observability, and enterprise-grade security—all without requiring you to change a single line of your agent code. Develop locally, scale globally.</p>
+    <p>ADK is built for <em>deploy anywhere</em> flexibility. You can containerize and run ADK on your own infrastructure, or take advantage of our native, one-command deployment to Google Cloud. When deploying to Google Cloud via Agent Runtime (Agent Platform), Cloud Run, or GKE, your agents instantly inherit managed infrastructure, built-in authentication, Cloud Trace observability, and enterprise-grade security—all without requiring you to change a single line of your agent code. Develop locally, scale globally.</p>
   </details>
 
   <details class="faq-item-arrow">
@@ -6688,38 +6688,10 @@ a := agent.<span class="fn">New</span>(<span class="str">"researcher"</span>,
 </div>
 
 <script>
-// Tab switching logic
-document.addEventListener("DOMContentLoaded", function() {
-  var tabs = document.querySelectorAll('.iterm-tab');
-  var langs = ['python', 'go', 'java', 'typescript'];
-
-  tabs.forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      var lang = this.getAttribute('data-lang');
-      tabs.forEach(function(t) { t.classList.remove('active'); });
-      this.classList.add('active');
-      langs.forEach(function(l) {
-        document.getElementById('code-' + l).style.display = l === lang ? 'block' : 'none';
-        document.getElementById('install-' + l).style.display = l === lang ? 'flex' : 'none';
-      });
-    });
-  });
-
-  // Copy-to-clipboard buttons
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('.copy-btn');
-    if (!btn) return;
-    var text = btn.getAttribute('data-copy');
-    navigator.clipboard.writeText(text).then(function() {
-      var orig = btn.textContent;
-      btn.textContent = '✅';
-      setTimeout(function() { btn.textContent = orig; }, 1500);
-    });
-  });
-
+function initHomepage() {
   // Asciinema player (for _agent-cli.md)
   var playerEl = document.getElementById('asciinema-demo');
-  if (playerEl && typeof AsciinemaPlayer !== 'undefined') {
+  if (playerEl && !playerEl.hasChildNodes() && typeof AsciinemaPlayer !== 'undefined') {
     AsciinemaPlayer.create('assets/adk-demo.cast', playerEl, {
       theme: 'monokai',
       fit: 'width',
@@ -6732,7 +6704,48 @@ document.addEventListener("DOMContentLoaded", function() {
       poster: 'npt:0:18'
     });
   }
+}
+
+// Event delegation for tab switching and copy buttons.
+// Attaching to `document` means these handlers survive DOM replacement
+// during MkDocs Material instant (SPA) navigation.
+document.addEventListener('click', function(e) {
+  // Tab switching
+  var tab = e.target.closest('.iterm-tab');
+  if (tab) {
+    var lang = tab.getAttribute('data-lang');
+    var allTabs = document.querySelectorAll('.iterm-tab');
+    var langs = ['python', 'go', 'java', 'typescript'];
+    allTabs.forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    langs.forEach(function(l) {
+      var codeEl = document.getElementById('code-' + l);
+      var installEl = document.getElementById('install-' + l);
+      if (codeEl) codeEl.style.display = l === lang ? 'block' : 'none';
+      if (installEl) installEl.style.display = l === lang ? 'flex' : 'none';
+    });
+    return;
+  }
+
+  // Copy-to-clipboard buttons
+  var btn = e.target.closest('.copy-btn');
+  if (btn) {
+    var text = btn.getAttribute('data-copy');
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = '✅';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    });
+  }
 });
+
+// Initialize on first load
+document.addEventListener('DOMContentLoaded', initHomepage);
+
+// Re-initialize after MkDocs Material instant navigation
+if (typeof document$ !== 'undefined') {
+  document$.subscribe(function() { initHomepage(); });
+}
 </script>
 
 
