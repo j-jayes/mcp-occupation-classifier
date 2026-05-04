@@ -32,7 +32,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../evaluate/">
+        <link rel="next" href="../traces/">
       
       
         
@@ -3230,6 +3230,8 @@
       
         
       
+        
+      
     
     
     
@@ -3357,7 +3359,7 @@
   <a href="#logging-philosophy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logging Philosophy
+        Logging philosophy
       
     </span>
   </a>
@@ -3365,33 +3367,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuring-logging-in-python" class="md-nav__link">
+  <a href="#logging-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Logging in Python
+        Logging schema
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuring Logging in Python">
+    <nav class="md-nav" aria-label="Logging schema">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-configuration" class="md-nav__link">
+  <a href="#structured-genai-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuring-logging-with-the-adk-cli-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Logging with the ADK CLI (Python)
+        Structured GenAI logs
       
     </span>
   </a>
@@ -3402,7 +3393,7 @@
   <a href="#log-levels-python" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Log Levels (Python)
+        Log levels (Python)
       
     </span>
   </a>
@@ -3415,45 +3406,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#note-it-is-recommended-to-use-info-or-warning-in-production-environments-only-enable-debug-when-actively-troubleshooting-an-issue-as-debug-logs-can-be-very-verbose-and-may-contain-sensitive-information" class="md-nav__link">
+  <a href="#logging-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note: It is recommended to use INFO or WARNING in production environments. Only enable DEBUG when actively troubleshooting an issue, as DEBUG logs can be very verbose and may contain sensitive information.
+        Logging setup
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-logging-in-go" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Logging in Go
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuring Logging in Go">
+    <nav class="md-nav" aria-label="Logging setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#opentelemetry-logging" class="md-nav__link">
+  <a href="#logging-in-adk-web" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenTelemetry Logging
+        Logging in ADK Web
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="OpenTelemetry Logging">
+    <nav class="md-nav" aria-label="Logging in ADK Web">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#enabling-prompt-logging" class="md-nav__link">
+  <a href="#logging-level" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling Prompt Logging
+        Logging level
       
     </span>
   </a>
@@ -3461,10 +3441,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#programmatic-configuration" class="md-nav__link">
+  <a href="#capture-prompt-content" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Programmatic Configuration
+        Capture prompt content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
       
     </span>
   </a>
@@ -3477,10 +3479,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#general-logging" class="md-nav__link">
+  <a href="#python-programmatic-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        General Logging
+        Python programmatic setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python programmatic setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-level_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging level
       
     </span>
   </a>
@@ -3488,13 +3502,90 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuring-logging-with-the-adk-go-launcher" class="md-nav__link">
+  <a href="#capture-prompt-content_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Logging with the ADK Go Launcher
+        Capture prompt content
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#go-programmatic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go programmatic setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Go programmatic setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-prompt-content_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture prompt content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3504,22 +3595,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reading-and-understanding-the-logs" class="md-nav__link">
+  <a href="#understanding-log-output" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reading and Understanding the Logs
+        Understanding log output
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reading and Understanding the Logs">
+    <nav class="md-nav" aria-label="Understanding log output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#sample-python-log-entry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sample Python Log Entry
+        Sample Python log entry
       
     </span>
   </a>
@@ -3527,10 +3618,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#debugging-with-logs-a-practical-example-python" class="md-nav__link">
+  <a href="#debugging-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Debugging with Logs: A Practical Example (Python)
+        Debugging example
       
     </span>
   </a>
@@ -3546,6 +3637,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6681,7 +6800,7 @@
   <a href="#logging-philosophy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logging Philosophy
+        Logging philosophy
       
     </span>
   </a>
@@ -6689,33 +6808,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuring-logging-in-python" class="md-nav__link">
+  <a href="#logging-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Logging in Python
+        Logging schema
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuring Logging in Python">
+    <nav class="md-nav" aria-label="Logging schema">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-configuration" class="md-nav__link">
+  <a href="#structured-genai-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuring-logging-with-the-adk-cli-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Logging with the ADK CLI (Python)
+        Structured GenAI logs
       
     </span>
   </a>
@@ -6726,7 +6834,7 @@
   <a href="#log-levels-python" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Log Levels (Python)
+        Log levels (Python)
       
     </span>
   </a>
@@ -6739,45 +6847,34 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#note-it-is-recommended-to-use-info-or-warning-in-production-environments-only-enable-debug-when-actively-troubleshooting-an-issue-as-debug-logs-can-be-very-verbose-and-may-contain-sensitive-information" class="md-nav__link">
+  <a href="#logging-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note: It is recommended to use INFO or WARNING in production environments. Only enable DEBUG when actively troubleshooting an issue, as DEBUG logs can be very verbose and may contain sensitive information.
+        Logging setup
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuring-logging-in-go" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuring Logging in Go
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuring Logging in Go">
+    <nav class="md-nav" aria-label="Logging setup">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#opentelemetry-logging" class="md-nav__link">
+  <a href="#logging-in-adk-web" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenTelemetry Logging
+        Logging in ADK Web
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="OpenTelemetry Logging">
+    <nav class="md-nav" aria-label="Logging in ADK Web">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#enabling-prompt-logging" class="md-nav__link">
+  <a href="#logging-level" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling Prompt Logging
+        Logging level
       
     </span>
   </a>
@@ -6785,10 +6882,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#programmatic-configuration" class="md-nav__link">
+  <a href="#capture-prompt-content" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Programmatic Configuration
+        Capture prompt content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
       
     </span>
   </a>
@@ -6801,10 +6920,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#general-logging" class="md-nav__link">
+  <a href="#python-programmatic-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        General Logging
+        Python programmatic setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python programmatic setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logging-level_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging level
       
     </span>
   </a>
@@ -6812,13 +6943,90 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuring-logging-with-the-adk-go-launcher" class="md-nav__link">
+  <a href="#capture-prompt-content_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuring Logging with the ADK Go Launcher
+        Capture prompt content
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#go-programmatic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Go programmatic setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Go programmatic setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-prompt-content_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture prompt content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#otlp-export_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OTLP export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcp-export-setup_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GCP export setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -6828,22 +7036,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reading-and-understanding-the-logs" class="md-nav__link">
+  <a href="#understanding-log-output" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reading and Understanding the Logs
+        Understanding log output
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Reading and Understanding the Logs">
+    <nav class="md-nav" aria-label="Understanding log output">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#sample-python-log-entry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sample Python Log Entry
+        Sample Python log entry
       
     </span>
   </a>
@@ -6851,10 +7059,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#debugging-with-logs-a-practical-example-python" class="md-nav__link">
+  <a href="#debugging-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Debugging with Logs: A Practical Example (Python)
+        Debugging example
       
     </span>
   </a>
@@ -6979,43 +7187,39 @@
 
 <h1 id="agent-activity-logging">Agent activity logging<a class="headerlink" href="#agent-activity-logging" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">TypeScript v0.2.0</span><span class="lst-go">Go v0.1.0</span><span class="lst-java">Java v0.1.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-go">Go v0.1.0</span>
 </div>
 
-<p>Agent Development Kit (ADK) provides flexible and powerful logging capabilities to monitor agent behavior and debug issues effectively. Understanding how to configure and interpret these logs is crucial for monitoring agent behavior and debugging issues effectively.</p>
-<h2 id="logging-philosophy">Logging Philosophy<a class="headerlink" href="#logging-philosophy" title="Permanent link">&para;</a></h2>
-<p>ADK's approach to logging is to provide detailed diagnostic information without being overly verbose by default. It is designed to be configured by the application developer, allowing you to tailor the log output to your specific needs, whether in a development or production environment.</p>
+<p>Agent Development Kit (ADK) provides flexible and powerful logging capabilities
+to monitor agent behavior and debug issues effectively.</p>
+<h2 id="logging-philosophy">Logging philosophy<a class="headerlink" href="#logging-philosophy" title="Permanent link">&para;</a></h2>
+<p>ADK's approach to logging is to provide detailed diagnostic information without
+being overly verbose by default. It is designed to be configured by the
+application developer, allowing you to tailor the log output to your specific
+needs, whether in a development or production environment.</p>
 <ul>
-<li><strong>Standard Library Integration:</strong> ADK uses the standard logging facilities of the host language (e.g., Python's <code>logging</code> module, Go's <code>log</code> package).</li>
-<li><strong>Structured GenAI Logging:</strong> ADK uses OpenTelemetry to log structured events for GenAI requests and responses, allowing for advanced monitoring and debugging in cloud environments.</li>
-<li><strong>User-Configured:</strong> While ADK provides defaults and integration with its CLI tools, it is ultimately the responsibility of the application developer to configure logging to suit their specific environment.</li>
+<li><strong>Standard Library Integration:</strong> ADK uses the standard logging facilities of
+  the host language (e.g., Python's <code>logging</code> module, Go's <code>log</code> package).</li>
+<li><strong>Structured GenAI Logging:</strong> ADK uses OpenTelemetry to log structured events
+  for GenAI requests and responses, allowing for advanced monitoring and
+  debugging in cloud environments.</li>
+<li><strong>User-Configured:</strong> While ADK provides defaults and integration with its CLI
+  tools, it is ultimately the responsibility of the application developer to
+  configure logging to suit their specific environment.</li>
 </ul>
-<hr />
-<h2 id="configuring-logging-in-python">Configuring Logging in Python<a class="headerlink" href="#configuring-logging-in-python" title="Permanent link">&para;</a></h2>
-<p>In Python, ADK uses the standard <code>logging</code> module.</p>
-<h3 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h3>
-<p>To enable detailed logging, including <code>DEBUG</code> level messages, add the following to the top of your script:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="configuring-logging-with-the-adk-cli-python">Configuring Logging with the ADK CLI (Python)<a class="headerlink" href="#configuring-logging-with-the-adk-cli-python" title="Permanent link">&para;</a></h3>
-<p>When running Python agents using the ADK's built-in web or API servers, you can easily control the log verbosity directly from the command line. The <code>adk web</code>, <code>adk api_server</code>, and <code>adk deploy cloud_run</code> commands all accept a <code>--log_level</code> option.</p>
-<p>To start the web server with <code>DEBUG</code> level logging, run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--log_level<span class="w"> </span>DEBUG<span class="w"> </span>path/to/your/agents_dir
-</span></code></pre></div>
-<p>The available log levels for the <code>--log_level</code> option are:</p>
-<ul>
-<li><code>DEBUG</code></li>
-<li><code>INFO</code> (default)</li>
-<li><code>WARNING</code></li>
-<li><code>ERROR</code></li>
-<li><code>CRITICAL</code></li>
-</ul>
-<h3 id="log-levels-python">Log Levels (Python)<a class="headerlink" href="#log-levels-python" title="Permanent link">&para;</a></h3>
+<h2 id="logging-schema">Logging schema<a class="headerlink" href="#logging-schema" title="Permanent link">&para;</a></h2>
+<p>ADK emits logs using standard library facilities and structured GenAI events via
+OpenTelemetry.</p>
+<h3 id="structured-genai-logs">Structured GenAI logs<a class="headerlink" href="#structured-genai-logs" title="Permanent link">&para;</a></h3>
+<p>Structured GenAI logs emitted via OpenTelemetry follow the <a href="https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-events.md">Semantic Conventions
+for
+GenAI</a>.</p>
+<p>By default prompt content is elided in logs for security. You can enable prompt
+logging using environment variables or programmatic configuration (see Setup
+section below).</p>
+<h3 id="log-levels-python">Log levels (Python)<a class="headerlink" href="#log-levels-python" title="Permanent link">&para;</a></h3>
+<p>The following table describes what is logged at different levels in Python when
+using the standard logger:</p>
 <table>
 <thead>
 <tr>
@@ -7047,120 +7251,223 @@
 </tr>
 </tbody>
 </table>
-<h2 id="note-it-is-recommended-to-use-info-or-warning-in-production-environments-only-enable-debug-when-actively-troubleshooting-an-issue-as-debug-logs-can-be-very-verbose-and-may-contain-sensitive-information"><strong>Note:</strong> It is recommended to use <code>INFO</code> or <code>WARNING</code> in production environments. Only enable <code>DEBUG</code> when actively troubleshooting an issue, as <code>DEBUG</code> logs can be very verbose and may contain sensitive information.<a class="headerlink" href="#note-it-is-recommended-to-use-info-or-warning-in-production-environments-only-enable-debug-when-actively-troubleshooting-an-issue-as-debug-logs-can-be-very-verbose-and-may-contain-sensitive-information" title="Permanent link">&para;</a></h2>
-<h2 id="configuring-logging-in-go">Configuring Logging in Go<a class="headerlink" href="#configuring-logging-in-go" title="Permanent link">&para;</a></h2>
-<p>In Go, ADK uses the standard <code>log</code> package for general events and OpenTelemetry for GenAI activity logging.</p>
-<h3 id="opentelemetry-logging">OpenTelemetry Logging<a class="headerlink" href="#opentelemetry-logging" title="Permanent link">&para;</a></h3>
-<p>ADK Go uses OpenTelemetry (OTel) to log GenAI requests and responses. By default, prompt content is elided in logs for security. You can enable prompt logging using environment variables or programmatic configuration.</p>
-<h4 id="enabling-prompt-logging">Enabling Prompt Logging<a class="headerlink" href="#enabling-prompt-logging" title="Permanent link">&para;</a></h4>
-<p>Set the following environment variable to <code>true</code> to include full prompts in your OTel logs:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</span><span class="o">=</span><span class="nb">true</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is recommended to use <code>INFO</code> or <code>WARNING</code> in production environments.
+Only enable <code>DEBUG</code> when actively troubleshooting an issue, as <code>DEBUG</code> logs
+can be very verbose and may contain sensitive information.</p>
+</div>
+<h2 id="logging-setup">Logging setup<a class="headerlink" href="#logging-setup" title="Permanent link">&para;</a></h2>
+<h3 id="logging-in-adk-web">Logging in ADK Web<a class="headerlink" href="#logging-in-adk-web" title="Permanent link">&para;</a></h3>
+<p>When running agents using the ADK's <code>adk web</code>, <code>adk api_server</code>, <code>adk deploy
+cloud_run</code> and <code>adk deploy gke</code> commands, you can control the log verbosity or
+destination.</p>
+<h4 id="logging-level">Logging level<a class="headerlink" href="#logging-level" title="Permanent link">&para;</a></h4>
+<p>To start the web server with <code>DEBUG</code> level logging, run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--log_level<span class="w"> </span>DEBUG<span class="w"> </span>path/to/your/agents_dir
 </span></code></pre></div>
-<h4 id="programmatic-configuration">Programmatic Configuration<a class="headerlink" href="#programmatic-configuration" title="Permanent link">&para;</a></h4>
-<p>You can configure telemetry providers using the <code>google.golang.org/adk/telemetry</code> package.</p>
-<div class="language-go highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="s">&quot;context&quot;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">&quot;google.golang.org/adk/telemetry&quot;</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">)</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nx">ctx</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">()</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="c1">// Initialize telemetry with prompt content logging enabled</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nx">tp</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">WithGenAICaptureMessageContent</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="c1">// Add other options like WithOtelToCloud(true) for GCP export</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="c1">// handle error</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">tp</span><span class="p">.</span><span class="nx">Shutdown</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="c1">// Register as global OTel providers</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="nx">tp</span><span class="p">.</span><span class="nx">SetGlobalOtelProviders</span><span class="p">()</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="c1">// Your ADK agent code follows...</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">}</span>
+<p>The available log levels for the <code>--log_level</code> option are: <code>DEBUG</code>, <code>INFO</code>
+(default), <code>WARNING</code>, <code>ERROR</code>, <code>CRITICAL</code>.</p>
+<h4 id="capture-prompt-content">Capture prompt content<a class="headerlink" href="#capture-prompt-content" title="Permanent link">&para;</a></h4>
+<p>By default a prompt content is elided in logs for security. You can enable
+prompt logging using the environment variable:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</span><span class="o">=</span><span class="nb">true</span>
 </span></code></pre></div>
-<h3 id="general-logging">General Logging<a class="headerlink" href="#general-logging" title="Permanent link">&para;</a></h3>
-<p>General events (like server startup or HTTP requests) are logged using the standard Go <code>log</code> package. These logs are written to <code>stderr</code> by default.</p>
-<h3 id="configuring-logging-with-the-adk-go-launcher">Configuring Logging with the ADK Go Launcher<a class="headerlink" href="#configuring-logging-with-the-adk-go-launcher" title="Permanent link">&para;</a></h3>
-<p>When using the ADK Go <code>full.Launcher</code> or <code>prod.Launcher</code>, telemetry is automatically initialized. You can enable GCP export using the <code>-otel_to_cloud</code> flag:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>go<span class="w"> </span>run<span class="w"> </span>main.go<span class="w"> </span>web<span class="w"> </span>-otel_to_cloud<span class="w"> </span>a2a
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</code> setting logs the
+full content of user prompts and agent responses. This is useful for
+debugging but may capture sensitive data or PII. In production, set this to
+false or ensure you have appropriate data handling policies in place.</p>
+</div>
+<h4 id="otlp-export">OTLP export<a class="headerlink" href="#otlp-export" title="Permanent link">&para;</a></h4>
+<p>To export logs to an OTLP-compatible backend, set the standard OTel environment
+variables:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_LOGS_ENDPOINT</span><span class="o">=</span><span class="s2">&quot;http://your-collector:4318/v1/logs&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>adk<span class="w"> </span>web<span class="w"> </span>path/to/your/agents_dir
 </span></code></pre></div>
-<hr />
-<h2 id="reading-and-understanding-the-logs">Reading and Understanding the Logs<a class="headerlink" href="#reading-and-understanding-the-logs" title="Permanent link">&para;</a></h2>
-<p>The structure of logs depends on your configuration. Structured GenAI logs emitted via OpenTelemetry follow the <a href="https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/gen-ai-events.md">Semantic Conventions for GenAI</a>.</p>
-<h3 id="sample-python-log-entry">Sample Python Log Entry<a class="headerlink" href="#sample-python-log-entry" title="Permanent link">&para;</a></h3>
-<p><div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>2025-07-08 11:22:33,456 - DEBUG - google_adk.models.google_llm - LLM Request: contents { ... }
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also set the general <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> environment
+variable if you would like to send metrics and traces to the same endpoint
+in addition to logs.</p>
+</div>
+<h4 id="gcp-export-setup">GCP export setup<a class="headerlink" href="#gcp-export-setup" title="Permanent link">&para;</a></h4>
+<p>You can enable GCP export using the <code>-otel_to_cloud</code> flag:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>adk<span class="w"> </span>web<span class="w"> </span>-otel_to_cloud<span class="w"> </span>path/to/your/agents_dir
 </span></code></pre></div>
-| Log Segment                     | Format Specifier | Meaning                                        |
-| ------------------------------- | ---------------- | ---------------------------------------------- |
-| <code>2025-07-08 11:22:33,456</code>       | <code>%(asctime)s</code>    | Timestamp                                      |
-| <code>DEBUG</code>                         | <code>%(levelname)s</code>  | Severity level                                 |
-| <code>google_adk.models.google_llm</code>  | <code>%(name)s</code>       | Logger name (the module that produced the log) |
-| <code>LLM Request: contents { ... }</code> | <code>%(message)s</code>    | The actual log message                         |
-By reading the logger name, you can immediately pinpoint the source of the log and understand its context within the agent's architecture.</p>
-<h3 id="debugging-with-logs-a-practical-example-python">Debugging with Logs: A Practical Example (Python)<a class="headerlink" href="#debugging-with-logs-a-practical-example-python" title="Permanent link">&para;</a></h3>
-<p><strong>Scenario:</strong> Your agent is not producing the expected output, and you suspect the prompt being sent to the LLM is incorrect.
-<strong>Steps:</strong>
-1.  <strong>Enable DEBUG Logging:</strong> In your <code>main.py</code>, set the logging level to <code>DEBUG</code> as shown in the configuration example.
-    <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">)</span>
+<h3 id="python-programmatic-setup">Python programmatic setup<a class="headerlink" href="#python-programmatic-setup" title="Permanent link">&para;</a></h3>
+<p>In Python, ADK uses the standard <code>logging</code> module and OpenTelemetry for
+structured GenAI logs.</p>
+<h4 id="logging-level_1">Logging level<a class="headerlink" href="#logging-level_1" title="Permanent link">&para;</a></h4>
+<p>To enable detailed logging, including <code>DEBUG</code> level messages, add the following
+to the top of your script:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
 </span></code></pre></div>
-2.  <strong>Run Your Agent:</strong> Execute your agent's task as you normally would.
-3.  <strong>Inspect the Logs:</strong> Look through the console output for a message from the <code>google.adk.models.google_llm</code> logger that starts with <code>LLM Request:</code>.
-    <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>...
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>2025-07-10 15:26:13,778 - DEBUG - google_adk.google.adk.models.google_llm - Sending out request, model: gemini-flash-latest, backend: GoogleLLMVariant.GEMINI_API, stream: False
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>2025-07-10 15:26:13,778 - DEBUG - google_adk.google.adk.models.google_llm -
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>LLM Request:
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>-----------------------------------------------------------
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>System Instruction:
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      You roll dice and answer questions about the outcome of the dice rolls.
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>      You can roll dice of different sizes.
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>      You can use multiple tools in parallel by calling functions in parallel(in one request and in one round).
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>      It is ok to discuss previous dice roles, and comment on the dice rolls.
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>      When you are asked to roll a die, you must call the roll_die tool with the number of sides. Be sure to pass in an integer. Do not pass in a string.
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      You should never roll a die on your own.
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      When checking prime numbers, call the check_prime tool with a list of integers. Be sure to pass in a list of integers. You should never pass in a string.
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      You should not check prime numbers before calling the tool.
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>      When you are asked to roll a die and check prime numbers, you should always make the following two function calls:
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>      1. You should first call the roll_die tool to get a roll. Wait for the function response before calling the check_prime tool.
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>      2. After you get the function response from roll_die tool, you should call the check_prime tool with the roll_die result.
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>        2.1 If user asks you to check primes based on previous rolls, make sure you include the previous rolls in the list.
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>      3. When you respond, you must include the roll_die result from step 1.
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>      You should always perform the previous 3 steps when asking for a roll and checking prime numbers.
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>      You should not rely on the previous history on prime results.
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>You are an agent. Your internal name is &quot;hello_world_agent&quot;.
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>The description about you is &quot;hello world agent that can roll a dice of 8 sides and check prime numbers.&quot;
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>-----------------------------------------------------------
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>Contents:
-</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>{&quot;parts&quot;:[{&quot;text&quot;:&quot;Roll a 6 sided dice&quot;}],&quot;role&quot;:&quot;user&quot;}
-</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>{&quot;parts&quot;:[{&quot;function_call&quot;:{&quot;args&quot;:{&quot;sides&quot;:6},&quot;name&quot;:&quot;roll_die&quot;}}],&quot;role&quot;:&quot;model&quot;}
-</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>{&quot;parts&quot;:[{&quot;function_response&quot;:{&quot;name&quot;:&quot;roll_die&quot;,&quot;response&quot;:{&quot;result&quot;:2}}}],&quot;role&quot;:&quot;user&quot;}
-</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>-----------------------------------------------------------
-</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>Functions:
-</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>roll_die: {&#39;sides&#39;: {&#39;type&#39;: &lt;Type.INTEGER: &#39;INTEGER&#39;&gt;}}
-</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>check_prime: {&#39;nums&#39;: {&#39;items&#39;: {&#39;type&#39;: &lt;Type.INTEGER: &#39;INTEGER&#39;&gt;}, &#39;type&#39;: &lt;Type.ARRAY: &#39;ARRAY&#39;&gt;}}
-</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>-----------------------------------------------------------
-</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>2025-07-10 15:26:13,779 - INFO - google_genai.models - AFC is enabled with max remote calls: 10.
-</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>2025-07-10 15:26:14,309 - INFO - google_adk.google.adk.models.google_llm -
-</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>LLM Response:
-</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>-----------------------------------------------------------
-</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>Text:
-</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>I have rolled a 6 sided die, and the result is 2.
-</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>...
+<h4 id="capture-prompt-content_1">Capture prompt content<a class="headerlink" href="#capture-prompt-content_1" title="Permanent link">&para;</a></h4>
+<p>You can enable full prompt logging programmatically by setting an environment
+variable:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
 </span></code></pre></div>
-4.  <strong>Analyze the Prompt:</strong> By examining the <code>System Instruction</code>, <code>contents</code>, <code>functions</code> sections of the logged request, you can verify:
-    -   Is the system instruction correct?
-    -   Is the conversation history (<code>user</code> and <code>model</code> turns) accurate?
-    -   Is the most recent user query included?
-    -   Are the correct tools being provided to the model?
-    -   Are the tools correctly called by the model?
-    -   How long it takes for the model to respond?</p>
-<p>This detailed output allows you to diagnose a wide range of issues, from incorrect prompt engineering to problems with tool definitions, directly from the log files.</p>
+<h4 id="otlp-export_1">OTLP export<a class="headerlink" href="#otlp-export_1" title="Permanent link">&para;</a></h4>
+<p>To export logs to an OpenTelemetry Collector (or an OTLP-compatible backend)
+programmatically:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.telemetry.setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">maybe_set_otel_providers</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_EXPORTER_OTLP_LOGS_ENDPOINT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;http://your-collector:4318/v1/logs&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_SERVICE_NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;your-adk-agent&quot;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_RESOURCE_ATTRIBUTES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;key1=value1,key2=value2&quot;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">maybe_set_otel_providers</span><span class="p">()</span>
+</span></code></pre></div>
+<h4 id="gcp-export-setup_1">GCP export setup<a class="headerlink" href="#gcp-export-setup_1" title="Permanent link">&para;</a></h4>
+<p>To export logs to Google Cloud Logging programmatically, use the OpenTelemetry
+Google Cloud exporter. Here is an example in Python:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.telemetry.google_cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_gcp_exporters</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.telemetry.setup</span><span class="w"> </span><span class="kn">import</span> <span class="n">maybe_set_otel_providers</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">gcp_exporters</span> <span class="o">=</span> <span class="n">get_gcp_exporters</span><span class="p">(</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  <span class="n">enable_cloud_logging</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_SERVICE_NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;your-adk-agent&quot;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;OTEL_RESOURCE_ATTRIBUTES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;key1=value1,key2=value2&quot;</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">maybe_set_otel_providers</span><span class="p">([</span><span class="n">gcp_exporters</span><span class="p">])</span>
+</span></code></pre></div>
+<h3 id="go-programmatic-setup">Go programmatic setup<a class="headerlink" href="#go-programmatic-setup" title="Permanent link">&para;</a></h3>
+<p>In Go, ADK uses the <code>google.golang.org/adk/telemetry</code> package for OpenTelemetry
+configuration and the standard <code>log</code> package for general events.</p>
+<h4 id="capture-prompt-content_2">Capture prompt content<a class="headerlink" href="#capture-prompt-content_2" title="Permanent link">&para;</a></h4>
+<p>You can enable full prompt logging programmatically when initializing telemetry:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="s">&quot;context&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="s">&quot;google.golang.org/adk/telemetry&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nx">ctx</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">()</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nx">tp</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">WithGenAICaptureMessageContent</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">        </span><span class="c1">// handle error</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">tp</span><span class="p">.</span><span class="nx">Shutdown</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="nx">tp</span><span class="p">.</span><span class="nx">SetGlobalOtelProviders</span><span class="p">()</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="otlp-export_2">OTLP export<a class="headerlink" href="#otlp-export_2" title="Permanent link">&para;</a></h4>
+<p>To export logs to an OTLP-compatible backend, configure the standard
+OpenTelemetry environment variables (e.g., <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> or
+<code>OTEL_EXPORTER_OTLP_LOGS_ENDPOINT</code>). The ADK telemetry package will
+automatically use these settings when initialized.</p>
+<h4 id="gcp-export-setup_2">GCP export setup<a class="headerlink" href="#gcp-export-setup_2" title="Permanent link">&para;</a></h4>
+<p>To export logs to Google Cloud Logging, use the <code>WithOtelToCloud</code> option:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">package</span><span class="w"> </span><span class="nx">main</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="s">&quot;context&quot;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="s">&quot;google.golang.org/adk/telemetry&quot;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">)</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nx">ctx</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">()</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nx">tp</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="nx">telemetry</span><span class="p">.</span><span class="nx">WithOtelToCloud</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">        </span><span class="c1">// handle error</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="nx">tp</span><span class="p">.</span><span class="nx">Shutdown</span><span class="p">(</span><span class="nx">ctx</span><span class="p">)</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="nx">tp</span><span class="p">.</span><span class="nx">SetGlobalOtelProviders</span><span class="p">()</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>If using the Go launcher, you can also enable GCP export via the CLI flag:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>go<span class="w"> </span>run<span class="w"> </span>main.go<span class="w"> </span>web<span class="w"> </span>-otel_to_cloud
+</span></code></pre></div>
+<p>General events (like server startup or HTTP requests) are logged using the
+standard Go <code>log</code> package. These logs are written to <code>stderr</code> by default.</p>
+<h2 id="understanding-log-output">Understanding log output<a class="headerlink" href="#understanding-log-output" title="Permanent link">&para;</a></h2>
+<h3 id="sample-python-log-entry">Sample Python log entry<a class="headerlink" href="#sample-python-log-entry" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>2025-07-08 11:22:33,456 - DEBUG - google_adk.models.google_llm - LLM Request: contents { ... }
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Log Segment</th>
+<th>Format Specifier</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>2025-07-08 11:22:33,456</code></td>
+<td><code>%(asctime)s</code></td>
+<td>Timestamp</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td><code>%(levelname)s</code></td>
+<td>Severity level</td>
+</tr>
+<tr>
+<td><code>google_adk.models.google_llm</code></td>
+<td><code>%(name)s</code></td>
+<td>Logger name (the module that produced the log)</td>
+</tr>
+<tr>
+<td><code>LLM Request: contents { ... }</code></td>
+<td><code>%(message)s</code></td>
+<td>The actual log message</td>
+</tr>
+</tbody>
+</table>
+<p>By reading the logger name, you can immediately pinpoint the source of the log
+and understand its context within the agent's architecture.</p>
+<h3 id="debugging-example">Debugging example<a class="headerlink" href="#debugging-example" title="Permanent link">&para;</a></h3>
+<p>After enabling <code>DEBUG</code> logging (see <a href="#logging-level">Logging level</a> above), run
+your agent and look for messages from the <code>google.adk.models.google_llm</code> logger.
+The output shows the full LLM request and response:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>2025-07-10 15:26:13,778 - DEBUG - google_adk.google.adk.models.google_llm -
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>LLM Request:
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>-----------------------------------------------------------
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>System Instruction:
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>      You roll dice and answer questions about the outcome of the dice rolls.
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      ...
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>-----------------------------------------------------------
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>Contents:
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>{&quot;parts&quot;:[{&quot;text&quot;:&quot;Roll a 6 sided dice&quot;}],&quot;role&quot;:&quot;user&quot;}
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>{&quot;parts&quot;:[{&quot;function_call&quot;:{&quot;args&quot;:{&quot;sides&quot;:6},&quot;name&quot;:&quot;roll_die&quot;}}],&quot;role&quot;:&quot;model&quot;}
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>{&quot;parts&quot;:[{&quot;function_response&quot;:{&quot;name&quot;:&quot;roll_die&quot;,&quot;response&quot;:{&quot;result&quot;:2}}}],&quot;role&quot;:&quot;user&quot;}
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>-----------------------------------------------------------
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>Functions:
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>roll_die: {&#39;sides&#39;: {&#39;type&#39;: &lt;Type.INTEGER: &#39;INTEGER&#39;&gt;}}
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>check_prime: {&#39;nums&#39;: {&#39;items&#39;: {&#39;type&#39;: &lt;Type.INTEGER: &#39;INTEGER&#39;&gt;}, &#39;type&#39;: &lt;Type.ARRAY: &#39;ARRAY&#39;&gt;}}
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>-----------------------------------------------------------
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>2025-07-10 15:26:14,309 - INFO - google_adk.google.adk.models.google_llm -
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>LLM Response:
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>-----------------------------------------------------------
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>Text:
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>I have rolled a 6 sided die, and the result is 2.
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>...
+</span></code></pre></div>
+<p>From this output you can verify:</p>
+<ul>
+<li>Is the system instruction correct?</li>
+<li>Is the conversation history (<code>user</code> and <code>model</code> turns) accurate?</li>
+<li>Are the correct tools being provided to the model?</li>
+<li>Are the tools correctly called by the model?</li>
+<li>How long it takes for the model to respond?</li>
+</ul>
 
 
 
@@ -7217,13 +7524,13 @@ By reading the logger name, you can immediately pinpoint the source of the log a
         
         
           
-          <a href="../../evaluate/" class="md-footer__link md-footer__link--next" aria-label="Next: Why Evaluate Agents">
+          <a href="../traces/" class="md-footer__link md-footer__link--next" aria-label="Next: Traces">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Why Evaluate Agents
+                Traces
               </div>
             </div>
             <div class="md-footer__button md-icon">

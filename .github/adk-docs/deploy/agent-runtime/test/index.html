@@ -3407,6 +3407,8 @@
       
         
       
+        
+      
     
     
     
@@ -3479,6 +3481,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../observability/traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traces
   
 
     
@@ -7139,7 +7169,7 @@ data to an agent deployed on Agent Runtime is by providing a GCS URI.</p>
 <h2 id="clean-up-deployments">Clean up deployments<a class="headerlink" href="#clean-up-deployments" title="Permanent link">&para;</a></h2>
 <p>If you have performed deployments as tests, it is a good practice to clean up
 your cloud resources after you have finished. You can delete the deployed Agent
-Engine instance to avoid any unexpected charges on your Google Cloud account.</p>
+Runtime instance to avoid any unexpected charges on your Google Cloud account.</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">remote_app</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 <p>The <code>force=True</code> parameter also deletes any child resources that were generated

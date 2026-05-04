@@ -3213,6 +3213,8 @@
       
         
       
+        
+      
     
     
     
@@ -3282,6 +3284,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traces
   
 
     
@@ -7156,9 +7186,9 @@ nodes.</p>
 <h2 id="human-input">Human input<a class="headerlink" href="#human-input" title="Permanent link">&para;</a></h2>
 <p>Dynamic workflows in ADK can also include human input or human in the loop
 (HITL) steps. You build human input into workflows by yielding a
-<strong><em>RequestInput</em></strong> from a <code>@node</code> function, which pauses the workflow and waits
-for user input. The following code example shows how to build a human input node
-and include it in a workflow:</p>
+<strong><em>RequestInput</em></strong> from a node, which pauses the workflow and waits for user
+input. The following code example shows how to build a human input node and
+include it in a workflow:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Context</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestInput</span>

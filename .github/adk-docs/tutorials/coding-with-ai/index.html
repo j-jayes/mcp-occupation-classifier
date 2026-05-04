@@ -3414,6 +3414,8 @@
       
         
       
+        
+      
     
     
     
@@ -3483,6 +3485,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/traces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traces
   
 
     
@@ -6855,21 +6885,21 @@
 into your project, or by connecting it to ADK documentation through an MCP
 server.</p>
 <ul>
-<li><a href="#agents-cli"><strong>agents-cli</strong></a>: Command-line tool and coding skills for ADK development.</li>
+<li><a href="#agents-cli"><strong>Agents CLI in Agent Platform</strong></a>: Command-line tool and coding skills for ADK development.</li>
 <li><a href="#adk-docs-mcp-server"><strong>ADK Docs MCP Server</strong></a>: Connect your coding tool to
   ADK documentation through an MCP server.</li>
 <li><a href="#adk-docs-index"><strong>ADK Docs Index</strong></a>: Machine-readable documentation files
   following the <code>llms.txt</code> standard.</li>
 </ul>
 <h2 id="agents-cli">agents-cli<a class="headerlink" href="#agents-cli" title="Permanent link">&para;</a></h2>
-<p><a href="https://google.github.io/agents-cli/">agents-cli</a> is the command-line tool for
+<p><a href="https://google.github.io/agents-cli/">Agents CLI in Agent Platform</a> is the command-line tool for
 ADK development. It provides scaffolding commands, deployment tools, and
 development skills that work with any compatible coding assistant, including
 Gemini CLI, Antigravity, Claude Code, and Cursor.</p>
-<p>To install agents-cli and set up ADK development skills:</p>
+<p>To install Agents CLI and set up ADK development skills:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uvx<span class="w"> </span>google-agents-cli<span class="w"> </span>setup
 </span></code></pre></div>
-<p>This installs both the CLI and coding skills. Browse the <a href="https://google.github.io/agents-cli/">agents-cli
+<p>This installs both the CLI and coding skills. Browse the <a href="https://google.github.io/agents-cli/">Agents CLI
 documentation</a> for more details.</p>
 <h3 id="cli-commands">CLI Commands<a class="headerlink" href="#cli-commands" title="Permanent link">&para;</a></h3>
 <table>
@@ -6894,11 +6924,11 @@ documentation</a> for more details.</p>
 </tr>
 <tr>
 <td><code>agents-cli deploy</code></td>
-<td>Deploy to Agent Runtime or Cloud Run</td>
+<td>Deploy to Agent Runtime, Cloud Run, or GKE</td>
 </tr>
 <tr>
 <td><code>agents-cli publish</code></td>
-<td>Publish agent to Agent Store</td>
+<td>Publish to Gemini Enterprise</td>
 </tr>
 </tbody>
 </table>
@@ -6913,28 +6943,32 @@ documentation</a> for more details.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>google-agents-cli-workflow</code></td>
+<td>Development lifecycle and coding guidelines</td>
+</tr>
+<tr>
 <td><code>google-agents-cli-adk-code</code></td>
 <td>Python API quick reference and docs index</td>
 </tr>
 <tr>
-<td><code>google-agents-cli-adk-deploy</code></td>
-<td>Agent Runtime and Cloud Run deployment</td>
+<td><code>google-agents-cli-scaffold</code></td>
+<td>Project scaffolding</td>
 </tr>
 <tr>
-<td><code>google-agents-cli-adk-dev</code></td>
-<td>Development lifecycle and coding guidelines</td>
-</tr>
-<tr>
-<td><code>google-agents-cli-adk-eval</code></td>
+<td><code>google-agents-cli-eval</code></td>
 <td>Evaluation methodology and scoring</td>
 </tr>
 <tr>
-<td><code>google-agents-cli-adk-observe</code></td>
-<td>Tracing, logging, and integrations</td>
+<td><code>google-agents-cli-deploy</code></td>
+<td>Agent Runtime, Cloud Run, and GKE deployment</td>
 </tr>
 <tr>
-<td><code>google-agents-cli-adk-scaffold</code></td>
-<td>Project scaffolding</td>
+<td><code>google-agents-cli-publish</code></td>
+<td>Gemini Enterprise registration</td>
+</tr>
+<tr>
+<td><code>google-agents-cli-observability</code></td>
+<td>Tracing, logging, and integrations</td>
 </tr>
 </tbody>
 </table>
