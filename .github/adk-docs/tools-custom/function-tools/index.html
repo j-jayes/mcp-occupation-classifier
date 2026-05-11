@@ -1382,6 +1382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1695,6 +1697,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../agents/config/" class="md-nav__link">
         
   
@@ -1735,6 +1765,8 @@
       
         
           
+        
+      
         
       
         
@@ -1939,6 +1971,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -3008,6 +3068,8 @@
       
         
       
+        
+      
     
     
     
@@ -3189,6 +3251,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3585,6 +3675,8 @@
       
         
       
+        
+      
     
     
     
@@ -3654,6 +3746,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -7320,6 +7440,7 @@ For example, a function tool, <code>myfinancetool</code>, might be a function th
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>A parameter is considered <strong>optional</strong> if you provide a <strong>default value</strong>. This is the standard Python way to define optional arguments. You can also mark a parameter as optional using <code>typing.Optional[SomeType]</code> or the <code>| None</code> syntax (Python 3.10+).</p>
+<p>Use defaults only for values that are truly optional. Do not add defaults for information the model should derive from the user request or ask the user to provide.</p>
 <details open="open">
 <summary>Example: Optional Parameters</summary>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">search_flights</span><span class="p">(</span><span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">departure_date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flexible_days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>

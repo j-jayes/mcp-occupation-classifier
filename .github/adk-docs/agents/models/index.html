@@ -1382,6 +1382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1695,6 +1697,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../config/" class="md-nav__link">
         
   
@@ -1737,6 +1767,8 @@
       
         
           
+        
+      
         
       
         
@@ -1941,6 +1973,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2670,6 +2730,8 @@
       
         
       
+        
+      
     
     
     
@@ -2851,6 +2913,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3247,6 +3337,8 @@
       
         
       
+        
+      
     
     
     
@@ -3316,6 +3408,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -6589,13 +6709,14 @@
 integrate various Large Language Models (LLMs) into your agents. This section
 details how to leverage Gemini and integrate other popular models effectively,
 including those hosted externally or running locally.</p>
-<p>ADK primarily uses two mechanisms for model integration:</p>
+<p>ADK provides several mechanisms for model integration:</p>
 <ol>
 <li>
-<p><strong>Direct String / Registry:</strong> For models tightly integrated with Google Cloud,
-   such as Gemini models accessed via Google AI Studio or Agent Platform, or models
-   hosted on Agent Platform endpoints. You access these models by providing the model name or endpoint resource string and ADK's internal registry
-   resolves this string to the appropriate backend client.</p>
+<p><strong>Direct String / Registry:</strong> For models tightly integrated with Google
+   Cloud, such as Gemini models accessed via Google AI Studio or Agent Platform,
+   or models hosted on Agent Platform endpoints. You access these models by
+   providing the model name or endpoint resource string and ADK's internal
+   registry resolves this string to the appropriate backend client.</p>
 <ul>
 <li><a href="/agents/models/google-gemini/">Gemini models</a></li>
 <li><a href="/agents/models/anthropic/">Claude models</a></li>
@@ -6603,11 +6724,11 @@ including those hosted externally or running locally.</p>
 </ul>
 </li>
 <li>
-<p><strong>Model connectors:</strong> For broader compatibility, especially models
-   outside the Google ecosystem or those requiring specific client
-   configurations, such as models accessed via Apigee or LiteLLM. You instantiate a specific wrapper class, such as <code>ApigeeLlm</code> or
-   <code>LiteLlm</code>, and pass this object as the <code>model</code> parameter
-   to your <code>LlmAgent</code>.</p>
+<p><strong>Model connectors:</strong> For broader compatibility, especially models outside
+   the Google ecosystem or those requiring specific client configurations, such
+   as models accessed via Apigee or LiteLLM. You instantiate a specific wrapper
+   class, such as <code>ApigeeLlm</code> or <code>LiteLlm</code>, and pass this object as the <code>model</code>
+   parameter to your <code>LlmAgent</code>.</p>
 <ul>
 <li><a href="/agents/models/apigee/">Apigee models</a></li>
 <li><a href="/agents/models/litellm/">LiteLLM models</a></li>
@@ -6615,6 +6736,11 @@ including those hosted externally or running locally.</p>
 <li><a href="/agents/models/vllm/">vLLM model hosting</a></li>
 <li><a href="/agents/models/litert-lm/">LiteRT-LM model hosting</a></li>
 </ul>
+</li>
+<li>
+<p><strong><a href="/agents/models/routing/">Model routing</a>:</strong> For dynamically selecting
+   between multiple models at runtime using a router function, with automatic
+   failover on error.</p>
 </li>
 </ol>
 

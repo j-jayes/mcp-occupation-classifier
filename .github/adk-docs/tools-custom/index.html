@@ -1382,6 +1382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1695,6 +1697,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../agents/config/" class="md-nav__link">
         
   
@@ -1735,6 +1765,8 @@
       
         
           
+        
+      
         
       
         
@@ -1939,6 +1971,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2670,6 +2730,8 @@
       
         
       
+        
+      
     
     
     
@@ -2851,6 +2913,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runtime/cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3247,6 +3337,8 @@
       
         
       
+        
+      
     
     
     
@@ -3316,6 +3408,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -8418,7 +8538,7 @@ searching for information, calling an API, or performing calculations.</p>
 <li>Use clear and descriptive names (e.g., <code>city</code> instead of <code>c</code>, <code>search_query</code> instead of <code>q</code>).</li>
 <li><strong>Provide type hints in Python</strong>  for all parameters (e.g., <code>city: str</code>, <code>user_id: int</code>, <code>items: list[str]</code>). This is essential for ADK to generate the correct schema for the LLM.</li>
 <li>Ensure all parameter types are <strong>JSON serializable</strong>. All java primitives as well as standard Python types like <code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code>, <code>list</code>, <code>dict</code>, and their combinations are generally safe. Avoid complex custom class instances as direct parameters unless they have a clear JSON representation.</li>
-<li><strong>Do not set default values</strong> for parameters. E.g., <code>def my_func(param1: str = "default")</code>. Default values are not reliably supported or used by the underlying models during function call generation. All necessary information should be derived by the LLM from the context or explicitly requested if missing.</li>
+<li><strong>Avoid default values for information the model must provide.</strong> E.g., avoid <code>def my_func(destination: str = "Paris")</code> if the destination should come from the user or conversation context. Default values can be appropriate for genuinely optional tuning parameters, but do not use them to hide required business inputs from the tool schema.</li>
 <li><strong><code>self</code> / <code>cls</code> Handled Automatically:</strong> Implicit parameters like <code>self</code> (for instance methods) or <code>cls</code> (for class methods) are automatically handled by ADK and excluded from the schema shown to the LLM. You only need to define type hints and descriptions for the logical parameters your tool requires the LLM to provide.</li>
 </ul>
 </li>

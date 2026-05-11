@@ -127,7 +127,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ambient-agents" class="md-skip">
+        <a href="#trigger-actions-with-ambient-agents" class="md-skip">
           Skip to content
         </a>
       
@@ -1371,6 +1371,8 @@
       
         
       
+        
+      
     
     
     
@@ -1681,6 +1683,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../agents/config/" class="md-nav__link">
         
   
@@ -1721,6 +1751,8 @@
       
         
           
+        
+      
         
       
         
@@ -1922,6 +1954,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2649,6 +2709,8 @@
       
         
       
+        
+      
     
     
     
@@ -3205,6 +3267,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../runconfig/" class="md-nav__link">
         
   
@@ -3584,6 +3674,8 @@
       
         
       
+        
+      
     
     
     
@@ -3656,6 +3748,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -7239,14 +7359,17 @@
   </button>
 
 
-<h1 id="ambient-agents">Ambient Agents<a class="headerlink" href="#ambient-agents" title="Permanent link">&para;</a></h1>
+<h1 id="trigger-actions-with-ambient-agents">Trigger actions with ambient agents<a class="headerlink" href="#trigger-actions-with-ambient-agents" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-go">Go</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.29.0</span><span class="lst-go">Go v1.1.0</span>
 </div>
 
-<p>ADK supports <strong>ambient agents</strong>, autonomous agents that process data, monitor
-events, and respond asynchronously without human intervention. Use ambient
-agents to:</p>
+<p>When running an agent workflow, you may want to activate it in response to an
+event or new data being available, rather than waiting for input from a human.
+You can configure ADK agents with triggers to respond to events and perform
+work, known as <em>ambient agents</em>. These agents can run as background processes
+to process data, monitor events, and respond asynchronously without human 
+intervention. You can use ambient agents to:</p>
 <ul>
 <li><strong>React to cloud events.</strong> Process a file when it's uploaded to
   <a href="https://cloud.google.com/storage">Cloud Storage</a>, respond to database
