@@ -29,7 +29,7 @@
         <link rel="canonical" href="https://adk.dev/runtime/runconfig/">
       
       
-        <link rel="prev" href="../resume/">
+        <link rel="prev" href="../cancel/">
       
       
         <link rel="next" href="../event-loop/">
@@ -1371,6 +1371,8 @@
       
         
       
+        
+      
     
     
     
@@ -1681,6 +1683,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../agents/config/" class="md-nav__link">
         
   
@@ -1721,6 +1751,8 @@
       
         
           
+        
+      
         
       
         
@@ -1922,6 +1954,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2649,6 +2709,8 @@
       
         
       
+        
+      
     
     
     
@@ -2850,6 +2912,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2913,10 +3003,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#class-definition" class="md-nav__link">
+  <a href="#manage-sessions-and-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Class Definition
+        Manage sessions and context
       
     </span>
   </a>
@@ -2924,157 +3014,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-parameters" class="md-nav__link">
+  <a href="#enable-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime Parameters
+        Enable streaming
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Runtime Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#speech_config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        speech_config
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_modalities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        response_modalities
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save_input_blobs_as_artifacts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        save_input_blobs_as_artifacts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#support_cfc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        support_cfc
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#streaming_mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        streaming_mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output_audio_transcription" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        output_audio_transcription
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#max_llm_calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        max_llm_calls
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-rules" class="md-nav__link">
+  <a href="#configure-audio-and-speech" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation Rules
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Validation Rules">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-runtime-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic runtime configuration
+        Configure audio and speech
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-streaming" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#configure-live-agents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling streaming
+        Configure live agents
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-speech-support" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#configure-runtime-limits-and-debugging" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling speech support
+        Configure runtime limits and debugging
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-cfc-support" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling CFC Support
+        API reference
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3445,6 +3435,8 @@
       
         
       
+        
+      
     
     
     
@@ -3517,6 +3509,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -6685,10 +6705,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#class-definition" class="md-nav__link">
+  <a href="#manage-sessions-and-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Class Definition
+        Manage sessions and context
       
     </span>
   </a>
@@ -6696,157 +6716,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runtime-parameters" class="md-nav__link">
+  <a href="#enable-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Runtime Parameters
+        Enable streaming
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Runtime Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#speech_config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        speech_config
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#response_modalities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        response_modalities
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#save_input_blobs_as_artifacts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        save_input_blobs_as_artifacts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#support_cfc" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        support_cfc
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#streaming_mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        streaming_mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output_audio_transcription" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        output_audio_transcription
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#max_llm_calls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        max_llm_calls
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-rules" class="md-nav__link">
+  <a href="#configure-audio-and-speech" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Validation Rules
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Validation Rules">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-runtime-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic runtime configuration
+        Configure audio and speech
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-streaming" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#configure-live-agents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling streaming
+        Configure live agents
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-speech-support" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#configure-runtime-limits-and-debugging" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling speech support
+        Configure runtime limits and debugging
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#enabling-cfc-support" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enabling CFC Support
+        API reference
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -6963,524 +6883,305 @@
 
 <h1 id="runtime-configuration">Runtime Configuration<a class="headerlink" href="#runtime-configuration" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">Typescript v0.2.0</span><span class="lst-go">Go v0.1.0</span><span class="lst-java">Java v0.1.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">TypeScript v0.2.0</span><span class="lst-go">Go v0.1.0</span><span class="lst-java">Java v0.1.0</span>
 </div>
 
-<p><code>RunConfig</code> defines runtime behavior and options for agents in ADK. It controls
-speech and streaming settings, function calling, artifact saving, and limits on
-LLM calls.</p>
-<p>When constructing an agent run, you can pass a <code>RunConfig</code> to customize how the
-agent interacts with models, handles audio, and streams responses. By default,
-no streaming is enabled and inputs aren’t retained as artifacts. Use <code>RunConfig</code>
-to override these defaults.</p>
-<h2 id="class-definition">Class Definition<a class="headerlink" href="#class-definition" title="Permanent link">&para;</a></h2>
-<p>The <code>RunConfig</code> class holds configuration parameters for an agent's runtime behavior.</p>
-<ul>
-<li>Python ADK uses Pydantic for this validation.</li>
-<li>Go ADK has mutable structs by default.</li>
-<li>
-<p>Java ADK typically uses immutable data classes.</p>
-</li>
-<li>
-<p>TypeScript ADK uses a standard interface, with type safety provided by the TypeScript compiler.</p>
-</li>
-</ul>
+<p><code>RunConfig</code> controls how agents behave at runtime, including streaming mode,
+speech settings, LLM call limits, and live agent options. Pass a <code>RunConfig</code>
+to <code>runner.run_async()</code> or <code>runner.run_live()</code> to override default behavior.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="typescript">TypeScript</label><label for="go">Go</label><label for="java">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RunConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Configs for runtime behavior of agents.&quot;&quot;&quot;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">extra</span><span class="o">=</span><span class="s1">&#39;forbid&#39;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">speech_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">response_modalities</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">save_input_blobs_as_artifacts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">support_cfc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">streaming_mode</span><span class="p">:</span> <span class="n">StreamingMode</span> <span class="o">=</span> <span class="n">StreamingMode</span><span class="o">.</span><span class="n">NONE</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">output_audio_transcription</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">AudioTranscriptionConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">max_llm_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_async</span><span class="p">(</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">...</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">run_config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">):</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="o">...</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">RunConfig</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">speechConfig?</span><span class="o">:</span><span class="w"> </span><span class="kt">SpeechConfig</span><span class="p">;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">responseModalities?</span><span class="o">:</span><span class="w"> </span><span class="kt">Modality</span><span class="p">[];</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">saveInputBlobsAsArtifacts</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">supportCfc</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode</span><span class="p">;</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nx">outputAudioTranscription?</span><span class="o">:</span><span class="w"> </span><span class="kt">AudioTranscriptionConfig</span><span class="p">;</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="c1">// ... and other properties</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">export</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nx">NONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">,</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nx">SSE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;sse&#39;</span><span class="p">,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nx">BIDI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;bidi&#39;</span><span class="p">,</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">}</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">200</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">};</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">type</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="kt">string</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/agent&quot;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kd">const</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">StreamingModeNone</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;none&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nx">StreamingModeSSE</span><span class="w">  </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;sse&quot;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// RunConfig controls runtime behavior.</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="kd">type</span><span class="w"> </span><span class="nx">RunConfig</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="c1">// Streaming mode, None or StreamingMode.SSE.</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="nx">StreamingMode</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="c1">// Whether or not to save the input blobs as artifacts</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nx">SaveInputBlobsAsArtifacts</span><span class="w"> </span><span class="kt">bool</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeSSE</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RunConfig</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">StreamingMode</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">NONE</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">SSE</span><span class="p">,</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">BIDI</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="nd">@Nullable</span><span class="w"> </span><span class="n">SpeechConfig</span><span class="w"> </span><span class="nf">speechConfig</span><span class="p">();</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="n">ImmutableList</span><span class="o">&lt;</span><span class="n">Modality</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">responseModalities</span><span class="p">();</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">saveInputBlobsAsArtifacts</span><span class="p">();</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="nd">@Nullable</span><span class="w"> </span><span class="n">AudioTranscriptionConfig</span><span class="w"> </span><span class="nf">outputAudioTranscription</span><span class="p">();</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxLlmCalls</span><span class="p">();</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="c1">// ...</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">}</span>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">.</span><span class="na">streamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">.</span><span class="na">maxLlmCalls</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </span></code></pre></div>
 </div>
 </div>
 </div>
-<h2 id="runtime-parameters">Runtime Parameters<a class="headerlink" href="#runtime-parameters" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Python Type</th>
-<th style="text-align: left;">TypeScript Type</th>
-<th style="text-align: left;">Go Type</th>
-<th style="text-align: left;">Java Type</th>
-<th style="text-align: left;">Default (Py / TS / Go / Java)</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>speech_config</code></td>
-<td style="text-align: left;"><code>Optional[types.SpeechConfig]</code></td>
-<td style="text-align: left;"><code>SpeechConfig</code> (optional)</td>
-<td style="text-align: left;">N/A</td>
-<td style="text-align: left;"><code>SpeechConfig</code> (nullable via <code>@Nullable</code>)</td>
-<td style="text-align: left;"><code>None</code> / <code>undefined</code>/ N/A / <code>null</code></td>
-<td style="text-align: left;">Configures speech synthesis (voice, language) using the <code>SpeechConfig</code> type.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>response_modalities</code></td>
-<td style="text-align: left;"><code>Optional[list[str]]</code></td>
-<td style="text-align: left;"><code>Modality[]</code> (optional)</td>
-<td style="text-align: left;">N/A</td>
-<td style="text-align: left;"><code>ImmutableList&lt;Modality&gt;</code></td>
-<td style="text-align: left;"><code>None</code> / <code>undefined</code> / N/A / Empty <code>ImmutableList</code></td>
-<td style="text-align: left;">List of desired output modalities (e.g., Python: <code>["TEXT", "AUDIO"]</code>; Java/TS: uses structured <code>Modality</code> objects).</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>save_input_blobs_as_artifacts</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>boolean</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>boolean</code></td>
-<td style="text-align: left;"><code>False</code> / <code>false</code> / <code>false</code> / <code>false</code></td>
-<td style="text-align: left;">If <code>true</code>, saves input blobs (e.g., uploaded files) as run artifacts for debugging/auditing.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>streaming_mode</code></td>
-<td style="text-align: left;"><code>StreamingMode</code></td>
-<td style="text-align: left;"><code>StreamingMode</code></td>
-<td style="text-align: left;"><code>StreamingMode</code></td>
-<td style="text-align: left;"><code>StreamingMode</code></td>
-<td style="text-align: left;"><code>StreamingMode.NONE</code> / <code>StreamingMode.NONE</code> / <code>agent.StreamingModeNone</code> / <code>StreamingMode.NONE</code></td>
-<td style="text-align: left;">Sets the streaming behavior: <code>NONE</code> (default), <code>SSE</code> (server-sent events), or <code>BIDI</code> (bidirectional).</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>output_audio_transcription</code></td>
-<td style="text-align: left;"><code>Optional[types.AudioTranscriptionConfig]</code></td>
-<td style="text-align: left;"><code>AudioTranscriptionConfig</code> (optional)</td>
-<td style="text-align: left;">N/A</td>
-<td style="text-align: left;"><code>AudioTranscriptionConfig</code> (nullable via <code>@Nullable</code>)</td>
-<td style="text-align: left;"><code>None</code> / <code>undefined</code> / N/A / <code>null</code></td>
-<td style="text-align: left;">Configures transcription of generated audio output using the <code>AudioTranscriptionConfig</code> type.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>max_llm_calls</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;"><code>number</code></td>
-<td style="text-align: left;">N/A</td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;"><code>500</code> / <code>500</code> / N/A / <code>500</code></td>
-<td style="text-align: left;">Limits total LLM calls per run. <code>0</code> or negative means unlimited. Exceeding language limits (e.g. <code>sys.maxsize</code>, <code>Number.MAX_SAFE_INTEGER</code>) raises an error.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>support_cfc</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>boolean</code></td>
-<td style="text-align: left;">N/A</td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>False</code> / <code>false</code> / N/A / <code>false</code></td>
-<td style="text-align: left;"><strong>Python/TypeScript:</strong> Enables Compositional Function Calling. Requires <code>streaming_mode=SSE</code> and uses the LIVE API. <strong>Experimental.</strong></td>
-</tr>
-</tbody>
-</table>
-<h3 id="speech_config"><code>speech_config</code><a class="headerlink" href="#speech_config" title="Permanent link">&para;</a></h3>
+<h2 id="manage-sessions-and-context">Manage sessions and context<a class="headerlink" href="#manage-sessions-and-context" title="Permanent link">&para;</a></h2>
 <div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-java">Java v0.1.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span>
 </div>
 
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The interface or definition of <code>SpeechConfig</code> is the same, irrespective of the language.</p>
-</div>
-<p>Speech configuration settings for live agents with audio capabilities. The
-<code>SpeechConfig</code> class has the following structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SpeechConfig</span><span class="p">(</span><span class="n">_common</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The speech generation configuration.&quot;&quot;&quot;</span>
+<p>For long-running sessions, you can control how much history is loaded and
+whether the context window is compressed:</p>
+<ul>
+<li><code>get_session_config</code>: Limits which events are fetched when loading a session.
+  Use <code>num_recent_events</code> or <code>after_timestamp</code> to avoid loading the full event
+  history on every invocation.</li>
+<li><code>context_window_compression</code>: Enables context window compression for LLM
+  input, useful when sessions approach model context limits.</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.sessions.base_session_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetSessionConfig</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">voice_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VoiceConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The configuration for the speaker to use.&quot;&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">)</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">language_code</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Language code (ISO 639. e.g. en-US) for the speech synthesization.</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">        Only available for Live API.&quot;&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">get_session_config</span><span class="o">=</span><span class="n">GetSessionConfig</span><span class="p">(</span><span class="n">num_recent_events</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>The <code>voice_config</code> parameter uses the <code>VoiceConfig</code> class:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">VoiceConfig</span><span class="p">(</span><span class="n">_common</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The configuration for the voice to use.&quot;&quot;&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">prebuilt_voice_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PrebuiltVoiceConfig</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The configuration for the speaker to use.&quot;&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">)</span>
-</span></code></pre></div>
-<p>And <code>PrebuiltVoiceConfig</code> has the following structure:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">PrebuiltVoiceConfig</span><span class="p">(</span><span class="n">_common</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The configuration for the prebuilt speaker to use.&quot;&quot;&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">voice_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;The name of the prebuilt voice to use.&quot;&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">)</span>
-</span></code></pre></div>
-<p>These nested configuration classes allow you to specify:</p>
+</div>
+</div>
+</div>
+<h2 id="enable-streaming">Enable streaming<a class="headerlink" href="#enable-streaming" title="Permanent link">&para;</a></h2>
+<p>To control how the agent delivers responses, set the <code>streaming_mode</code> parameter:</p>
 <ul>
-<li><code>voice_config</code>: The name of the prebuilt voice to use (in the <code>PrebuiltVoiceConfig</code>)</li>
-<li><code>language_code</code>: ISO 639 language code (e.g., "en-US") for speech synthesis</li>
+<li><strong><code>StreamingMode.NONE</code></strong> (default): The runner returns one complete response
+  per turn. Suitable for CLI tools, batch processing, and synchronous workflows.</li>
+<li><strong><code>StreamingMode.SSE</code></strong>: Server-Sent Events streaming. The runner yields
+  partial events as the LLM generates, enabling typewriter-style UIs and
+  real-time chat displays.</li>
+<li><strong><code>StreamingMode.BIDI</code></strong>: Reserved for bidirectional streaming, but <strong>not
+  used</strong> in the standard <code>run_async()</code> path. For bidirectional streaming, use
+  <code>runner.run_live()</code> instead.</li>
 </ul>
-<p>When implementing voice-enabled agents, configure these parameters to control
-how your agent sounds when speaking.</p>
-<h3 id="response_modalities"><code>response_modalities</code><a class="headerlink" href="#response_modalities" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-java">Java v0.1.0</span>
-</div>
-
-<p>Defines the output modalities for the agent. If not set, defaults to AUDIO.
-Response modalities determine how the agent communicates with users through
-various channels (e.g., text, audio).</p>
-<h3 id="save_input_blobs_as_artifacts"><code>save_input_blobs_as_artifacts</code><a class="headerlink" href="#save_input_blobs_as_artifacts" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-go">Go v0.1.0</span><span class="lst-java">Java v0.1.0</span>
-</div>
-
-<p>When enabled, input blobs will be saved as artifacts during agent execution.
-This is useful for debugging and audit purposes, allowing developers to review
-the exact data received by agents.</p>
-<h3 id="support_cfc"><code>support_cfc</code><a class="headerlink" href="#support_cfc" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag" title="This feature is an experimental preview release.">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-preview">Experimental</span>
-</div>
-
-<p>Enables Compositional Function Calling (CFC) support. Only applicable when using
-StreamingMode.SSE. When enabled, the LIVE API will be invoked as only it
-supports CFC functionality.</p>
+<p>Set <code>support_cfc=True</code> alongside <code>StreamingMode.SSE</code> to enable Compositional
+Function Calling (CFC), which allows the model to dynamically compose and
+execute function calls. CFC uses the Live API under the hood.</p>
 <div class="admonition example">
-<p class="admonition-title">Experimental release</p>
-<p>The <code>support_cfc</code> feature is experimental and its API or behavior might
-change in future releases.</p>
+<p class="admonition-title">Experimental</p>
+<p>CFC support is experimental and its API or behavior may change in future
+releases.</p>
 </div>
-<h3 id="streaming_mode"><code>streaming_mode</code><a class="headerlink" href="#streaming_mode" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag" title="This feature is an experimental preview release.">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-go">Go v0.1.0</span>
-</div>
-
-<p>Configures the streaming behavior of the agent. Possible values:</p>
-<ul>
-<li><code>StreamingMode.NONE</code>: No streaming; responses delivered as complete units</li>
-<li><code>StreamingMode.SSE</code>: Server-Sent Events streaming; one-way streaming from server to client</li>
-<li><code>StreamingMode.BIDI</code>: Bidirectional streaming; simultaneous communication in both directions</li>
-</ul>
-<p>Streaming modes affect both performance and user experience. SSE streaming lets users see partial responses as they're generated, while BIDI streaming enables real-time interactive experiences.</p>
-<h3 id="output_audio_transcription"><code>output_audio_transcription</code><a class="headerlink" href="#output_audio_transcription" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-java">Java v0.1.0</span>
-</div>
-
-<p>Configuration for transcribing audio outputs from live agents with audio
-response capability. This enables automatic transcription of audio responses for
-accessibility, record-keeping, and multi-modal applications.</p>
-<h3 id="max_llm_calls"><code>max_llm_calls</code><a class="headerlink" href="#max_llm_calls" title="Permanent link">&para;</a></h3>
-<div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-java">Java v0.1.0</span>
-</div>
-
-<p>Sets a limit on the total number of LLM calls for a given agent run.</p>
-<ul>
-<li>Values greater than 0 and less than <code>sys.maxsize</code>: Enforces a bound on LLM calls</li>
-<li>Values less than or equal to 0: Allows unbounded LLM calls <em>(not recommended for production)</em></li>
-</ul>
-<p>This parameter prevents excessive API usage and potential runaway processes.
-Since LLM calls often incur costs and consume resources, setting appropriate
-limits is crucial.</p>
-<h2 id="validation-rules">Validation Rules<a class="headerlink" href="#validation-rules" title="Permanent link">&para;</a></h2>
-<div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">Typescript v0.2.0</span><span class="lst-go">Go v0.1.0</span><span class="lst-java">Java v0.1.0</span>
-</div>
-
-<p>The <code>RunConfig</code> class validates its parameters to ensure proper agent operation. While Python ADK uses <code>Pydantic</code> for automatic type validation, Java and TypeScript ADK rely on their static type systems and may include explicit checks in the <code>RunConfig</code>'s constructor.
-For the <code>max_llm_calls</code> parameter specifically:</p>
-<ol>
-<li>
-<p>Extremely large values (like <code>sys.maxsize</code> in Python, <code>Integer.MAX_VALUE</code> in Java, or <code>Number.MAX_SAFE_INTEGER</code> in TypeScript) are typically disallowed to prevent issues.</p>
-</li>
-<li>
-<p>Values of zero or less will usually trigger a warning about unlimited LLM interactions.</p>
-</li>
-</ol>
-<h3 id="basic-runtime-configuration">Basic runtime configuration<a class="headerlink" href="#basic-runtime-configuration" title="Permanent link">&para;</a></h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:4"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="typescript_1" name="__tabbed_2" type="radio" /><input id="go_1" name="__tabbed_2" type="radio" /><input id="java_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="typescript_1">TypeScript</label><label for="go_1">Go</label><label for="java_1">Java</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="python_2" name="__tabbed_3" type="radio" /><input id="typescript_1" name="__tabbed_3" type="radio" /><input id="go_1" name="__tabbed_3" type="radio" /><input id="java_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_2">Python</label><label for="typescript_1">TypeScript</label><label for="go_1">Go</label><label for="java_1">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">support_cfc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">supportCfc</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">150</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">};</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-go highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/agent&quot;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">100</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeSSE</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.NONE</span><span class="p">,</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">100</span><span class="p">,</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">};</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-go highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/agent&quot;</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeNone</span><span class="p">,</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="p">.</span><span class="na">setStreamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">NONE</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="p">.</span><span class="na">setMaxLlmCalls</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="p">.</span><span class="na">streamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="p">.</span><span class="na">maxLlmCalls</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </span></code></pre></div>
 </div>
 </div>
 </div>
-<p>This configuration creates a non-streaming agent with a limit of 100 LLM calls,
-suitable for simple task-oriented agents where complete responses are
-preferable.</p>
-<h3 id="enabling-streaming">Enabling streaming<a class="headerlink" href="#enabling-streaming" title="Permanent link">&para;</a></h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="python_2" name="__tabbed_3" type="radio" /><input id="typescript_2" name="__tabbed_3" type="radio" /><input id="go_2" name="__tabbed_3" type="radio" /><input id="java_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_2">Python</label><label for="typescript_2">TypeScript</label><label for="go_2">Go</label><label for="java_2">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">200</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">200</span><span class="p">,</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">};</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-go highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/agent&quot;</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeSSE</span><span class="p">,</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="p">.</span><span class="na">setStreamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="p">.</span><span class="na">setMaxLlmCalls</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
-</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<p>Using SSE streaming allows users to see responses as they're generated,
-providing a more responsive feel for chatbots and assistants.</p>
-<h3 id="enabling-speech-support">Enabling speech support<a class="headerlink" href="#enabling-speech-support" title="Permanent link">&para;</a></h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="python_3" name="__tabbed_4" type="radio" /><input id="typescript_3" name="__tabbed_4" type="radio" /><input id="java_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="python_3">Python</label><label for="typescript_3">TypeScript</label><label for="java_3">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
-</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        <span class="n">language_code</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
-</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
-</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
-</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>                <span class="n">voice_name</span><span class="o">=</span><span class="s2">&quot;Kore&quot;</span>
-</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>            <span class="p">)</span>
-</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="p">),</span>
-</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>    <span class="p">),</span>
-</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AUDIO&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">],</span>
-</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="n">save_input_blobs_as_artifacts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>    <span class="n">support_cfc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
-</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nx">speechConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">        </span><span class="nx">languageCode</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="nx">voiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">            </span><span class="nx">prebuiltVoiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">                </span><span class="nx">voiceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Kore&quot;</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">            </span><span class="p">}</span>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">        </span><span class="p">},</span>
-</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="nx">responseModalities</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">modality</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;AUDIO&quot;</span><span class="w"> </span><span class="p">},</span>
-</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">modality</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;TEXT&quot;</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span><span class="p">],</span>
-</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">    </span><span class="nx">saveInputBlobsAsArtifacts</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">    </span><span class="nx">supportCfc</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
-</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span>
-</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="p">};</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.common.collect.ImmutableList</span><span class="p">;</span>
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Content</span><span class="p">;</span>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Modality</span><span class="p">;</span>
-</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Part</span><span class="p">;</span>
-</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.PrebuiltVoiceConfig</span><span class="p">;</span>
-</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.SpeechConfig</span><span class="p">;</span>
-</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.VoiceConfig</span><span class="p">;</span>
-</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
-</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">runConfig</span><span class="w"> </span><span class="o">=</span>
-</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">        </span><span class="p">.</span><span class="na">setStreamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
-</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">        </span><span class="p">.</span><span class="na">setMaxLlmCalls</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">        </span><span class="p">.</span><span class="na">setSaveInputBlobsAsArtifacts</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
-</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">        </span><span class="p">.</span><span class="na">setResponseModalities</span><span class="p">(</span><span class="n">ImmutableList</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="s">&quot;AUDIO&quot;</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="s">&quot;TEXT&quot;</span><span class="p">)))</span>
-</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">        </span><span class="p">.</span><span class="na">setSpeechConfig</span><span class="p">(</span>
-</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">            </span><span class="n">SpeechConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">                </span><span class="p">.</span><span class="na">voiceConfig</span><span class="p">(</span>
-</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">                    </span><span class="n">VoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="w">                        </span><span class="p">.</span><span class="na">prebuiltVoiceConfig</span><span class="p">(</span>
-</span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="w">                            </span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">&quot;Kore&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-17-23"><a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="w">                        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-17-24"><a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="w">                </span><span class="p">.</span><span class="na">languageCode</span><span class="p">(</span><span class="s">&quot;en-US&quot;</span><span class="p">)</span>
-</span><span id="__span-17-25"><a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-17-26"><a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</span></code></pre></div>
-</div>
-</div>
-</div>
-<p>This comprehensive example configures an agent with:</p>
-<ul>
-<li>Speech capabilities using the "Kore" voice (US English)</li>
-<li>Both audio and text output modalities</li>
-<li>Artifact saving for input blobs (useful for debugging)</li>
-<li>Experimental CFC support enabled <strong>(Python and TypeScript)</strong></li>
-<li>SSE streaming for responsive interaction</li>
-<li>A limit of 1000 LLM calls</li>
-</ul>
-<h3 id="enabling-cfc-support">Enabling CFC Support<a class="headerlink" href="#enabling-cfc-support" title="Permanent link">&para;</a></h3>
+<h2 id="configure-audio-and-speech">Configure audio and speech<a class="headerlink" href="#configure-audio-and-speech" title="Permanent link">&para;</a></h2>
 <div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">Typescript v0.2.0</span><span class="lst-preview">Experimental</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-typescript">TypeScript</span><span class="lst-java">Java</span>
 </div>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="python_4" name="__tabbed_5" type="radio" /><input id="typescript_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="python_4">Python</label><label for="typescript_4">TypeScript</label></div>
+<p>For voice-enabled agents, configure speech synthesis, audio transcription, and
+response modalities.</p>
+<ul>
+<li><code>speech_config</code>: Sets the voice and language for speech output (e.g., the
+  "Kore" voice with <code>en-US</code>).</li>
+<li><code>response_modalities</code>: Controls output formats. Set to <code>["AUDIO", "TEXT"]</code> for
+  agents that both speak and return text.</li>
+<li><code>output_audio_transcription</code> / <code>input_audio_transcription</code>: Enable
+  transcription of audio output from the model and audio input from the user.
+  Both default to <code>AudioTranscriptionConfig()</code> in Python.</li>
+</ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:3"><input checked="checked" id="python_3" name="__tabbed_4" type="radio" /><input id="typescript_2" name="__tabbed_4" type="radio" /><input id="java_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="python_3">Python</label><label for="typescript_2">TypeScript</label><label for="java_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="n">support_cfc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">150</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>        <span class="n">language_code</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>                <span class="n">voice_name</span><span class="o">=</span><span class="s2">&quot;Kore&quot;</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>            <span class="p">)</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="p">),</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="p">),</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AUDIO&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">],</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">    </span><span class="nx">supportCfc</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">150</span><span class="p">,</span>
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="p">};</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Modality</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/genai&#39;</span><span class="p">;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nx">speechConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="nx">languageCode</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="nx">voiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">            </span><span class="nx">prebuiltVoiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">                </span><span class="nx">voiceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Kore&quot;</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">            </span><span class="p">}</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="nx">responseModalities</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">Modality</span><span class="p">.</span><span class="nx">AUDIO</span><span class="p">,</span><span class="w"> </span><span class="nx">Modality</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">],</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="p">};</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-java highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig.StreamingMode</span><span class="p">;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.common.collect.ImmutableList</span><span class="p">;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Modality</span><span class="p">;</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.PrebuiltVoiceConfig</span><span class="p">;</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.SpeechConfig</span><span class="p">;</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.VoiceConfig</span><span class="p">;</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">runConfig</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">        </span><span class="p">.</span><span class="na">streamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">        </span><span class="p">.</span><span class="na">maxLlmCalls</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">        </span><span class="p">.</span><span class="na">responseModalities</span><span class="p">(</span><span class="n">ImmutableList</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="n">Modality</span><span class="p">.</span><span class="na">Known</span><span class="p">.</span><span class="na">AUDIO</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="n">Modality</span><span class="p">.</span><span class="na">Known</span><span class="p">.</span><span class="na">TEXT</span><span class="p">)))</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">        </span><span class="p">.</span><span class="na">speechConfig</span><span class="p">(</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">            </span><span class="n">SpeechConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">                </span><span class="p">.</span><span class="na">voiceConfig</span><span class="p">(</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">                    </span><span class="n">VoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">                        </span><span class="p">.</span><span class="na">prebuiltVoiceConfig</span><span class="p">(</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">                            </span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">&quot;Kore&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">                        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">                </span><span class="p">.</span><span class="na">languageCode</span><span class="p">(</span><span class="s">&quot;en-US&quot;</span><span class="p">)</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </span></code></pre></div>
 </div>
 </div>
 </div>
-<p>Enabling Compositional Function Calling (CFC) creates an agent that can
-dynamically execute functions based on model outputs, powerful for applications
-requiring complex workflows.</p>
-<div class="admonition example">
-<p class="admonition-title">Experimental release</p>
-<p>The Compositional Function Calling (CFC) streaming feature is an
-experimental release.</p>
+<h2 id="configure-live-agents">Configure live agents<a class="headerlink" href="#configure-live-agents" title="Permanent link">&para;</a></h2>
+<div class="language-support-tag">
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-typescript">TypeScript</span>
 </div>
+
+<p>When using <code>runner.run_live()</code>, configure real-time behavior with these
+additional parameters:</p>
+<ul>
+<li><code>realtime_input_config</code>: Configures how audio input is received from users.</li>
+<li><code>proactivity</code>: Allows the model to respond proactively and ignore irrelevant
+  input.</li>
+<li><code>enable_affective_dialog</code>: When <code>True</code>, the model detects user emotions and
+  adapts its tone accordingly.</li>
+<li><code>avatar_config</code>: Configures an avatar for live agents.</li>
+<li><code>session_resumption</code>: Enables transparent session resumption across
+  disconnects.</li>
+<li><code>save_live_blob</code>: When <code>True</code>, saves live audio and video data to the session
+  and artifact service.</li>
+<li><code>tool_thread_pool_config</code>: Runs tool executions in a background thread pool
+  to keep the event loop responsive to user interruptions.</li>
+</ul>
+<p>Not all parameters are available in every language. See the
+<a href="#api-reference">API reference</a> for language-specific details.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="python_4" name="__tabbed_5" type="radio" /><input id="typescript_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="python_4">Python</label><label for="typescript_3">TypeScript</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">ToolThreadPoolConfig</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">save_live_blob</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">tool_thread_pool_config</span><span class="o">=</span><span class="n">ToolThreadPoolConfig</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Thread pool and the GIL</p>
+<p>Thread pools help with blocking I/O and C extensions that release the
+GIL (e.g. <code>time.sleep()</code>, network calls, numpy). They do <strong>not</strong> help
+with pure Python CPU-bound code since the GIL prevents true parallel
+execution of Python bytecode.</p>
+</div>
+</div>
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nx">enableAffectiveDialog</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nx">proactivity</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">        </span><span class="nx">proactiveAudio</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">};</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="configure-runtime-limits-and-debugging">Configure runtime limits and debugging<a class="headerlink" href="#configure-runtime-limits-and-debugging" title="Permanent link">&para;</a></h2>
+<p>Use these parameters to control runtime guardrails and debugging:</p>
+<ul>
+<li><code>max_llm_calls</code>: Caps the total number of LLM calls per run (default: 500).
+  Set to 0 or negative for unlimited calls, though this is not recommended for
+  production. Values at or above <code>sys.maxsize</code> raise an error.</li>
+<li><code>save_input_blobs_as_artifacts</code>: When <code>True</code>, saves input blobs (e.g.,
+  uploaded files) as run artifacts for debugging and auditing.</li>
+<li><code>custom_metadata</code>: A <code>dict[str, Any]</code> of arbitrary metadata attached to the
+  invocation, useful for tracing or logging.</li>
+</ul>
+<h2 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
+<p>For the complete list of fields, types, and defaults, see the API reference for
+your language:</p>
+<ul>
+<li><a href="../../api-reference/python/google-adk.html#google.adk.agents.RunConfig">Python API reference</a></li>
+<li><a href="../../api-reference/typescript/interfaces/RunConfig.html">TypeScript API reference</a></li>
+<li><a href="https://pkg.go.dev/google.golang.org/adk/agent#RunConfig">Go API reference</a></li>
+<li><a href="../../api-reference/java/com/google/adk/agents/RunConfig.html">Java API reference</a></li>
+</ul>
 
 
 
@@ -7520,7 +7221,7 @@ experimental release.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../resume/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resume Agents">
+          <a href="../cancel/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Cancel Agent Runs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -7530,7 +7231,7 @@ experimental release.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Resume Agents
+                Cancel Agent Runs
               </div>
             </div>
           </a>

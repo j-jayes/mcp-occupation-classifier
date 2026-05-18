@@ -29,7 +29,7 @@
         <link rel="canonical" href="https://adk.dev/observability/traces/">
       
       
-        <link rel="prev" href="../logging/">
+        <link rel="prev" href="../metrics/">
       
       
         <link rel="next" href="../../evaluate/">
@@ -1371,6 +1371,8 @@
       
         
       
+        
+      
     
     
     
@@ -1681,6 +1683,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../agents/config/" class="md-nav__link">
         
   
@@ -1721,6 +1751,8 @@
       
         
           
+        
+      
         
       
         
@@ -1922,6 +1954,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2647,6 +2707,8 @@
       
         
       
+        
+      
     
     
     
@@ -2831,6 +2893,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3232,6 +3322,8 @@
       
         
       
+        
+      
     
     
     
@@ -3304,6 +3396,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -6929,8 +7049,8 @@
 <p><strong>Note:</strong>  You can also set the general <code>OTEL_EXPORTER_OTLP_ENDPOINT</code> environment variable if you would like to send metrics and logs to the same endpoint in addition to traces.</p>
 </blockquote>
 <h4 id="gcp-export">GCP export<a class="headerlink" href="#gcp-export" title="Permanent link">&para;</a></h4>
-<p>To enable trace export to Google Cloud Trace, use the <code>-otel_to_cloud</code> flag:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>adk<span class="w"> </span>web<span class="w"> </span>-otel_to_cloud<span class="w"> </span>path/to/your/agents_dir
+<p>To enable trace export to Google Cloud Trace, use the <code>--otel_to_cloud</code> flag:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--otel_to_cloud<span class="w"> </span>path/to/your/agents_dir
 </span></code></pre></div>
 <h3 id="programmatic-traces-export">Programmatic traces export<a class="headerlink" href="#programmatic-traces-export" title="Permanent link">&para;</a></h3>
 <p>You can also configure trace export programmatically in your application code.</p>
@@ -6996,7 +7116,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../logging/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Logging">
+          <a href="../metrics/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metrics">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -7006,7 +7126,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Logging
+                Metrics
               </div>
             </div>
           </a>

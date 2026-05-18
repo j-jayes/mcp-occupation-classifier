@@ -1531,6 +1531,8 @@
       
         
       
+        
+      
     
     
     
@@ -1844,6 +1846,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../agents/config/" class="md-nav__link">
         
   
@@ -1884,6 +1914,8 @@
       
         
           
+        
+      
         
       
         
@@ -2088,6 +2120,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2817,6 +2877,8 @@
       
         
       
+        
+      
     
     
     
@@ -2998,6 +3060,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../runtime/cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3394,6 +3484,8 @@
       
         
       
+        
+      
     
     
     
@@ -3463,6 +3555,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -6911,8 +7031,22 @@ don't already have Gemini API key, create a key in Google AI Studio on the
 <a href="https://aistudio.google.com/app/apikey">API Keys</a> page.</p>
 <p>In a terminal window, write your API key into your <code>.env</code> file of your project
 to set environment variables:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="macos--linux_1" name="__tabbed_2" type="radio" /><input id="windows-powershell" name="__tabbed_2" type="radio" /><input id="windows-command-prompt" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="macos--linux_1">MacOS / Linux</label><label for="windows-powershell">Windows PowerShell</label><label for="windows-command-prompt">Windows Command Prompt</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-bash highlight"><span class="filename">Update: my-agent/.env</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;GEMINI_API_KEY=&quot;YOUR_API_KEY&quot;&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-console highlight"><span class="filename">Update: my-agent/.env</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="go">echo &#39;GEMINI_API_KEY=&quot;YOUR_API_KEY&quot;&#39; &gt; .env</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-console highlight"><span class="filename">Update: my-agent/.env</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">echo GEMINI_API_KEY=&quot;YOUR_API_KEY&quot; &gt; .env</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <details class="tip">
 <summary>Using other AI models with ADK</summary>
 <p>ADK supports the use of many generative AI models. For more
@@ -6927,12 +7061,12 @@ interact with your agent.</p>
 <h3 id="run-with-command-line-interface">Run with command-line interface<a class="headerlink" href="#run-with-command-line-interface" title="Permanent link">&para;</a></h3>
 <p>Run your agent with the ADK TypeScript command-line interface tool
 using the following command:</p>
-<div class="language-console highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="go">npx adk run agent.ts</span>
+<div class="language-console highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="go">npx adk run agent.ts</span>
 </span></code></pre></div>
 <p><img alt="adk-run.png" src="/assets/adk-run.png" /></p>
 <h3 id="run-with-web-interface">Run with web interface<a class="headerlink" href="#run-with-web-interface" title="Permanent link">&para;</a></h3>
 <p>Run your agent with the ADK web interface using the following command:</p>
-<div class="language-console highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">npx adk web</span>
+<div class="language-console highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="go">npx adk web</span>
 </span></code></pre></div>
 <p>This command starts a web server with a chat interface for your agent. You can
 access the web interface at (http://localhost:8000). Select your agent at the

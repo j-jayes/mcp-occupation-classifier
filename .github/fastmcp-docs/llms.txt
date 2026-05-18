@@ -4,21 +4,19 @@
 
 ## Docs
 
-- [App Architecture](https://gofastmcp.com/apps/architecture.md): How FastMCP apps work under the hood — from Python to pixels.
+- [Architecture](https://gofastmcp.com/apps/architecture.md): How FastMCP apps work under the hood — from Python to pixels.
 - [Development](https://gofastmcp.com/apps/development.md): Preview and test your app tools locally without a full MCP host.
 - [Examples](https://gofastmcp.com/apps/examples.md): Example apps you can run right now.
+- [FastMCPApp](https://gofastmcp.com/apps/fastmcp-app.md): Wire an interactive UI to backend tools with managed visibility and composition safety.
 - [Generative UI](https://gofastmcp.com/apps/generative.md): Let the LLM build custom Prefab UIs on the fly.
-- [FastMCPApp](https://gofastmcp.com/apps/interactive-apps.md): Managed tool binding, visibility, and composition for apps with heavy server interaction.
 - [Custom HTML Apps](https://gofastmcp.com/apps/low-level.md): Build apps with your own HTML, CSS, and JavaScript using the MCP Apps extension directly.
 - [Apps](https://gofastmcp.com/apps/overview.md): Give your tools interactive UIs rendered directly in the conversation.
-- [Patterns](https://gofastmcp.com/apps/patterns.md): Copy-paste examples for common tool UIs.
-- [Prefab UI](https://gofastmcp.com/apps/prefab.md): The component library behind FastMCP apps — charts, tables, dashboards, forms, and reactive displays.
+- [Interactive Tools](https://gofastmcp.com/apps/prefab.md): Turn your tools into interactive UIs with charts, tables, and dashboards.
 - [Approval](https://gofastmcp.com/apps/providers/approval.md): Human-in-the-loop approval gates for agent actions
 - [Choice](https://gofastmcp.com/apps/providers/choice.md): Present clickable options instead of free-text responses
 - [File Upload](https://gofastmcp.com/apps/providers/file-upload.md): Drag-and-drop file upload for any MCP server
 - [Form Input](https://gofastmcp.com/apps/providers/form.md): Collect structured data from users via Pydantic models
-- [Generative UI](https://gofastmcp.com/apps/providers/generative.md): Let the LLM generate custom UIs at runtime
-- [Quickstart](https://gofastmcp.com/apps/quickstart.md): Build your first MCP app in under a minute.
+- [Quickstart](https://gofastmcp.com/apps/quickstart.md): Build your first FastMCP app in under a minute.
 - [Changelog](https://gofastmcp.com/changelog.md)
 - [Auth Utilities](https://gofastmcp.com/cli/auth.md): Create and validate CIMD documents for OAuth
 - [Client Commands](https://gofastmcp.com/cli/client.md): List tools, call them, and discover configured servers
@@ -31,6 +29,7 @@
 - [CIMD Authentication](https://gofastmcp.com/clients/auth/cimd.md): Use Client ID Metadata Documents for verifiable, domain-based client identity.
 - [OAuth Authentication](https://gofastmcp.com/clients/auth/oauth.md): Authenticate your FastMCP client via OAuth 2.1.
 - [The FastMCP Client](https://gofastmcp.com/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
+- [Client-Only Package](https://gofastmcp.com/clients/client-only-package.md): Use FastMCP's client without installing the full server framework.
 - [User Elicitation](https://gofastmcp.com/clients/elicitation.md): Handle server requests for structured user input.
 - [Server Logging](https://gofastmcp.com/clients/logging.md): Receive and handle log messages from MCP servers.
 - [Notifications](https://gofastmcp.com/clients/notifications.md): Handle server-sent notifications for list changes and other events.
@@ -45,6 +44,7 @@
 - [HTTP Deployment](https://gofastmcp.com/deployment/http.md): Deploy your FastMCP server over HTTP for remote access
 - [Prefect Horizon](https://gofastmcp.com/deployment/prefect-horizon.md): The MCP platform from the FastMCP team
 - [Running Your Server](https://gofastmcp.com/deployment/running-server.md): Learn how to run your FastMCP server locally for development and testing
+- [Sandboxed Agents](https://gofastmcp.com/deployment/sandboxed-agents.md): Expose MCP tools to isolated agents without giving the sandbox long-lived credentials.
 - [Project Configuration](https://gofastmcp.com/deployment/server-configuration.md): Use fastmcp.json for portable, declarative project configuration
 - [Contributing](https://gofastmcp.com/development/contributing.md): Development workflow for FastMCP contributors
 - [Releases](https://gofastmcp.com/development/releases.md): FastMCP versioning and release process
@@ -73,12 +73,14 @@
 - [GitHub OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/github.md): Secure your FastMCP server with GitHub OAuth
 - [Google OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/google.md): Secure your FastMCP server with Google OAuth
 - [Goose 🤝 FastMCP](https://gofastmcp.com/integrations/goose.md): Install and use FastMCP servers in Goose
+- [Keycloak OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/keycloak.md): Secure your FastMCP server with Keycloak OAuth
 - [MCP JSON Configuration 🤝 FastMCP](https://gofastmcp.com/integrations/mcp-json-configuration.md): Generate standard MCP configuration files for any compatible client
 - [OCI IAM OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/oci.md): Secure your FastMCP server with OCI IAM OAuth
 - [OpenAI API 🤝 FastMCP](https://gofastmcp.com/integrations/openai.md): Connect FastMCP servers to the OpenAI API
 - [OpenAPI 🤝 FastMCP](https://gofastmcp.com/integrations/openapi.md): Generate MCP servers from any OpenAPI specification
 - [Permit.io Authorization 🤝 FastMCP](https://gofastmcp.com/integrations/permit.md): Add fine-grained authorization to your FastMCP servers with Permit.io
 - [PropelAuth 🤝 FastMCP](https://gofastmcp.com/integrations/propelauth.md): Secure your FastMCP server with PropelAuth
+- [Pydantic AI 🤝 FastMCP](https://gofastmcp.com/integrations/pydantic-ai.md): Connect FastMCP servers to Pydantic AI agents using the FastMCPToolset
 - [Scalekit 🤝 FastMCP](https://gofastmcp.com/integrations/scalekit.md): Secure your FastMCP server with Scalekit
 - [Supabase 🤝 FastMCP](https://gofastmcp.com/integrations/supabase.md): Secure your FastMCP server with Supabase Auth
 - [WorkOS 🤝 FastMCP](https://gofastmcp.com/integrations/workos.md): Authenticate FastMCP servers with WorkOS Connect
@@ -166,6 +168,8 @@
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-server-auth-auth.md)
 - [authorization](https://gofastmcp.com/python-sdk/fastmcp-server-auth-authorization.md)
 - [cimd](https://gofastmcp.com/python-sdk/fastmcp-server-auth-cimd.md)
+- [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-auth-handlers-__init__.md)
+- [authorize](https://gofastmcp.com/python-sdk/fastmcp-server-auth-handlers-authorize.md)
 - [jwt_issuer](https://gofastmcp.com/python-sdk/fastmcp-server-auth-jwt_issuer.md)
 - [middleware](https://gofastmcp.com/python-sdk/fastmcp-server-auth-middleware.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-auth-oauth_proxy-__init__.md)
@@ -187,6 +191,7 @@
 - [in_memory](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-in_memory.md)
 - [introspection](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-introspection.md)
 - [jwt](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-jwt.md)
+- [keycloak](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-keycloak.md)
 - [oci](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-oci.md)
 - [propelauth](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-propelauth.md)
 - [scalekit](https://gofastmcp.com/python-sdk/fastmcp-server-auth-providers-scalekit.md)
@@ -222,6 +227,7 @@
 - [routing](https://gofastmcp.com/python-sdk/fastmcp-server-openapi-routing.md)
 - [server](https://gofastmcp.com/python-sdk/fastmcp-server-openapi-server.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-providers-__init__.md)
+- [addressing](https://gofastmcp.com/python-sdk/fastmcp-server-providers-addressing.md)
 - [aggregate](https://gofastmcp.com/python-sdk/fastmcp-server-providers-aggregate.md)
 - [base](https://gofastmcp.com/python-sdk/fastmcp-server-providers-base.md)
 - [fastmcp_provider](https://gofastmcp.com/python-sdk/fastmcp-server-providers-fastmcp_provider.md)
@@ -237,6 +243,7 @@
 - [components](https://gofastmcp.com/python-sdk/fastmcp-server-providers-openapi-components.md)
 - [provider](https://gofastmcp.com/python-sdk/fastmcp-server-providers-openapi-provider.md)
 - [routing](https://gofastmcp.com/python-sdk/fastmcp-server-providers-openapi-routing.md)
+- [prefab_synthesis](https://gofastmcp.com/python-sdk/fastmcp-server-providers-prefab_synthesis.md)
 - [proxy](https://gofastmcp.com/python-sdk/fastmcp-server-providers-proxy.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-providers-skills-__init__.md)
 - [claude_provider](https://gofastmcp.com/python-sdk/fastmcp-server-providers-skills-claude_provider.md)
@@ -252,6 +259,7 @@
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-__init__.md)
 - [capabilities](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-capabilities.md)
 - [config](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-config.md)
+- [context](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-context.md)
 - [elicitation](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-elicitation.md)
 - [handlers](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-handlers.md)
 - [keys](https://gofastmcp.com/python-sdk/fastmcp-server-tasks-keys.md)
@@ -285,6 +293,7 @@
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-utilities-auth.md)
 - [cli](https://gofastmcp.com/python-sdk/fastmcp-utilities-cli.md)
 - [components](https://gofastmcp.com/python-sdk/fastmcp-utilities-components.md)
+- [docstring_parsing](https://gofastmcp.com/python-sdk/fastmcp-utilities-docstring_parsing.md)
 - [exceptions](https://gofastmcp.com/python-sdk/fastmcp-utilities-exceptions.md)
 - [http](https://gofastmcp.com/python-sdk/fastmcp-utilities-http.md)
 - [inspect](https://gofastmcp.com/python-sdk/fastmcp-utilities-inspect.md)

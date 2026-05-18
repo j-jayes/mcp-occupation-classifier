@@ -1371,6 +1371,8 @@
       
         
       
+        
+      
     
     
     
@@ -1681,6 +1683,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../agents/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../agents/config/" class="md-nav__link">
         
   
@@ -1721,6 +1751,8 @@
       
         
           
+        
+      
         
       
         
@@ -1922,6 +1954,34 @@
     
   
     Apigee AI Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/models/routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model routing
   
 
     
@@ -2649,6 +2709,8 @@
       
         
       
+        
+      
     
     
     
@@ -2833,6 +2895,34 @@
     
   
     Resume Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cancel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cancel Agent Runs
   
 
     
@@ -3232,6 +3322,8 @@
       
         
       
+        
+      
     
     
     
@@ -3304,6 +3396,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
   
 
     
@@ -6633,6 +6753,13 @@ agents.</p>
 <p>Use <code>adk api_server</code> to expose your agents through a RESTful API.</p>
 <p><a href="api-server/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Use the API Server</a></p>
 </li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4.93 4.93A9.97 9.97 0 0 0 2 12c0 2.76 1.12 5.26 2.93 7.07l1.41-1.41A7.94 7.94 0 0 1 4 12c0-2.21.89-4.22 2.34-5.66zm14.14 0-1.41 1.41A7.96 7.96 0 0 1 20 12c0 2.22-.89 4.22-2.34 5.66l1.41 1.41A9.97 9.97 0 0 0 22 12c0-2.76-1.12-5.26-2.93-7.07M7.76 7.76A5.98 5.98 0 0 0 6 12c0 1.65.67 3.15 1.76 4.24l1.41-1.41A4 4 0 0 1 8 12c0-1.11.45-2.11 1.17-2.83zm8.48 0-1.41 1.41A4 4 0 0 1 16 12c0 1.11-.45 2.11-1.17 2.83l1.41 1.41A5.98 5.98 0 0 0 18 12c0-1.65-.67-3.15-1.76-4.24M12 10a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2"/></svg></span> <strong>Ambient Agents</strong></p>
+<hr />
+<p>Build autonomous agents that process events, monitor systems, and respond
+asynchronously without human intervention.</p>
+<p><a href="ambient-agents/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Use Ambient Agents</a></p>
+</li>
 </ul>
 </div>
 <h2 id="technical-reference">Technical reference<a class="headerlink" href="#technical-reference" title="Permanent link">&para;</a></h2>
@@ -6643,6 +6770,8 @@ pages:</p>
   ADK, including the yield/pause/resume cycle.</li>
 <li><strong><a href="resume/">Resume Agents</a></strong>: Learn how to resume agent execution from a
   previous state.</li>
+<li><strong><a href="cancel/">Cancel Agent Runs</a></strong>: Gracefully cancel running
+  agent invocations using AbortSignal (TypeScript).</li>
 <li><strong><a href="runconfig/">Runtime Config</a></strong>: Configure runtime behavior with
   RunConfig.</li>
 </ul>
