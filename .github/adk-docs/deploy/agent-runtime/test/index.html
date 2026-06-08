@@ -7031,6 +7031,10 @@
 
 
 <h1 id="test-deployed-agents-in-agent-runtime">Test deployed agents in Agent Runtime<a class="headerlink" href="#test-deployed-agents-in-agent-runtime" title="Permanent link">&para;</a></h1>
+<div class="language-support-tag" title="Agent Runtime currently supports Python and Go.">
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-go">Go v1.2.0</span>
+</div>
+
 <p>These instructions explain how to test an ADK agent deployed to the
 <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview">Agent Runtime</a>
 runtime environment. Before using these instructions, you need to have completed
@@ -7065,8 +7069,10 @@ Console or the <code>gcloud</code> command line tool to find this information.</
     <a href="https://console.cloud.google.com/vertex-ai/agents/agent-engines">https://console.cloud.google.com/vertex-ai/agents/agent-engines</a></p>
 </li>
 <li>
-<p>At the top of the page, select <strong>API URLs</strong>, and then copy the <strong>Query
-    URL</strong> string for your deployed agent, which should be in this format:</p>
+<p>Choose the instance you want to view.</p>
+</li>
+<li>
+<p>At the top of the page, select <strong>Copy query URL</strong>, which should be in this format:</p>
 <div class="language-text highlight"><pre><span></span><code>https://$(LOCATION_ID)-aiplatform.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(LOCATION_ID)/reasoningEngines/$(RESOURCE_ID):query
 </code></pre></div>
 </li>
