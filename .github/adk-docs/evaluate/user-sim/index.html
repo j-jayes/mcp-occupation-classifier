@@ -3514,7 +3514,7 @@
   <a href="#user-personas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Personas
+        User personas
       
     </span>
   </a>
@@ -3533,10 +3533,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-evaluating-the-hello_world-agent-with-conversation-scenarios" class="md-nav__link">
+  <a href="#example-evaluate-the-hello_world-agent-with-conversation-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example: Evaluating the hello_world agent with conversation scenarios
+        Example: Evaluate the hello_world agent with conversation scenarios
       
     </span>
   </a>
@@ -3558,7 +3558,7 @@
   <a href="#custom-personas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Personas
+        Custom personas
       
     </span>
   </a>
@@ -3566,15 +3566,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#generating-evaluation-cases-via-user-simulation" class="md-nav__link">
+  <a href="#generate-evaluation-cases-via-user-simulation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generating Evaluation Cases via User Simulation
+        Generate evaluation cases via user simulation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Generating Evaluation Cases via User Simulation">
+    <nav class="md-nav" aria-label="Generate evaluation cases via user simulation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6752,7 +6752,7 @@
   <a href="#user-personas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        User Personas
+        User personas
       
     </span>
   </a>
@@ -6771,10 +6771,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-evaluating-the-hello_world-agent-with-conversation-scenarios" class="md-nav__link">
+  <a href="#example-evaluate-the-hello_world-agent-with-conversation-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example: Evaluating the hello_world agent with conversation scenarios
+        Example: Evaluate the hello_world agent with conversation scenarios
       
     </span>
   </a>
@@ -6796,7 +6796,7 @@
   <a href="#custom-personas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom Personas
+        Custom personas
       
     </span>
   </a>
@@ -6804,15 +6804,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#generating-evaluation-cases-via-user-simulation" class="md-nav__link">
+  <a href="#generate-evaluation-cases-via-user-simulation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Generating Evaluation Cases via User Simulation
+        Generate evaluation cases via user simulation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Generating Evaluation Cases via User Simulation">
+    <nav class="md-nav" aria-label="Generate evaluation cases via user simulation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6964,7 +6964,7 @@
   </button>
 
 
-<h1 id="user-simulation">User Simulation<a class="headerlink" href="#user-simulation" title="Permanent link">&para;</a></h1>
+<h1 id="user-simulation">User simulation<a class="headerlink" href="#user-simulation" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
     <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.18.0</span>
 </div>
@@ -7010,7 +7010,11 @@ dynamically generate user prompts.</p>
 You'll define a conversation scenario, run a "dry run" to check the
 dialogue, and then perform a full evaluation to score the agent's responses.</p>
 </div>
-<h2 id="user-personas">User Personas<a class="headerlink" href="#user-personas" title="Permanent link">&para;</a></h2>
+<h2 id="user-personas">User personas<a class="headerlink" href="#user-personas" title="Permanent link">&para;</a></h2>
+<div class="language-support-tag">
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.26.0</span>
+</div>
+
 <p>A User Persona is a role that the simulated user adopts during the conversation.
 It is defined by a set of <strong>behaviors</strong> that dictate how the user interacts with
 the agent, such as their communication style, how they provide information, and
@@ -7077,7 +7081,7 @@ below summarizes the behaviors for each persona:</p>
 </tr>
 </tbody>
 </table>
-<h2 id="example-evaluating-the-hello_world-agent-with-conversation-scenarios">Example: Evaluating the <a href="https://github.com/google/adk-python/tree/main/contributing/samples/core/hello_world"><code>hello_world</code></a> agent with conversation scenarios<a class="headerlink" href="#example-evaluating-the-hello_world-agent-with-conversation-scenarios" title="Permanent link">&para;</a></h2>
+<h2 id="example-evaluate-the-hello_world-agent-with-conversation-scenarios">Example: Evaluate the <a href="https://github.com/google/adk-python/tree/main/contributing/samples/core/hello_world"><code>hello_world</code></a> agent with conversation scenarios<a class="headerlink" href="#example-evaluate-the-hello_world-agent-with-conversation-scenarios" title="Permanent link">&para;</a></h2>
 <p>To add evaluation cases containing conversation scenarios to a new or existing
 <a href="https://github.com/google/adk-python/blob/main/src/google/adk/evaluation/eval_set.py"><code>EvalSet</code></a>,
 you need to first create a list of conversation scenarios to test the agent in.</p>
@@ -7191,7 +7195,7 @@ The below <code>EvalConfig</code> shows the default user simulator configuration
 </ul>
 </li>
 </ul>
-<h2 id="custom-personas">Custom Personas<a class="headerlink" href="#custom-personas" title="Permanent link">&para;</a></h2>
+<h2 id="custom-personas">Custom personas<a class="headerlink" href="#custom-personas" title="Permanent link">&para;</a></h2>
 <p>You can define your own custom persona by providing a <code>UserPersona</code> object in
 the <code>ConversationScenario</code>.</p>
 <p>Example of a custom persona definition:</p>
@@ -7218,7 +7222,7 @@ the <code>ConversationScenario</code>.</p>
 </span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="p">}</span>
 </span></code></pre></div>
-<h2 id="generating-evaluation-cases-via-user-simulation">Generating Evaluation Cases via User Simulation<a class="headerlink" href="#generating-evaluation-cases-via-user-simulation" title="Permanent link">&para;</a></h2>
+<h2 id="generate-evaluation-cases-via-user-simulation">Generate evaluation cases via user simulation<a class="headerlink" href="#generate-evaluation-cases-via-user-simulation" title="Permanent link">&para;</a></h2>
 <p>Writing evaluation cases manually can be time-consuming and may not cover all potential failure modes. ADK provides a command to automatically generate diverse and realistic conversation scenarios based on your agent's definition using the Agent Platform Eval SDK.</p>
 <div class="admonition warning">
 <p class="admonition-title">Prerequisites: Agent Platform Credentials</p>

@@ -6739,8 +6739,8 @@
 
 
 <h1 id="deploy-to-agent-runtime">Deploy to Agent Runtime<a class="headerlink" href="#deploy-to-agent-runtime" title="Permanent link">&para;</a></h1>
-<div class="language-support-tag" title="Agent Runtime currently supports only Python.">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span>
+<div class="language-support-tag" title="Agent Runtime currently supports Python and Go.">
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-go">Go v1.2.0</span>
 </div>
 
 <p>Google Cloud Agent Platform
@@ -6785,9 +6785,19 @@ uploaded to the service:</p>
 <li>Your ADK agent code</li>
 <li>Any dependencies declared in your ADK agent code</li>
 </ul>
-<p>The deployment <em>does not</em> include the ADK API server or the ADK web user
+<p>Depending on what programming language you use, additional libraries may be included as explained in the following sections.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="go">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The deployment with Python <em>does not</em> include the ADK API server or the ADK web user
 interface libraries. The Agent Runtime service provides the libraries for ADK API
 server functionality.</p>
+</div>
+<div class="tabbed-block">
+<p>The deployment with Go <em>does</em> include the dedicated ADK API server.</p>
+</div>
+</div>
+</div>
 
 
 
