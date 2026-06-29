@@ -791,6 +791,8 @@
       
         
       
+        
+      
     
     
     
@@ -1000,6 +1002,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -7009,8 +7039,8 @@
 
 
 <h1 id="deploy-to-agent-runtime">Deploy to Agent Runtime<a class="headerlink" href="#deploy-to-agent-runtime" title="Permanent link">&para;</a></h1>
-<div class="language-support-tag" title="Agent Runtime currently supports only Python.">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span>
+<div class="language-support-tag" title="Agent Runtime currently supports Python and Go.">
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-go">Go v1.2.0</span>
 </div>
 
 <p>This deployment procedure describes how to perform a standard deployment of
@@ -7129,6 +7159,9 @@ environment to run command line instructions.</p>
 <p>With your Google Cloud and coding environment prepared, you're ready to deploy
 your agent. The instructions assume that you have an agent project folder,
 such as:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="go">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>multi_tool_agent/
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├──<span class="w"> </span>.env
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>├──<span class="w"> </span>__init__.py
@@ -7137,35 +7170,100 @@ such as:</p>
 <p>For more details on the project files and format, see the
 <a href="https://github.com/google/adk-docs/tree/main/examples/python/snippets/get-started/multi_tool_agent">multi_tool_agent</a>
 code sample.</p>
+</div>
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>multi_tool_agent/
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├──<span class="w"> </span>go.mod
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├──<span class="w"> </span>go.sum
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>└──<span class="w"> </span>main.go
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="deploy-agent">Deploy the agent<a class="headerlink" href="#deploy-agent" title="Permanent link">&para;</a></h2>
 <p>You can deploy from your terminal using the <code>adk deploy</code> command line tool. This
 process packages your code, builds it into a container, and deploys it to the
 managed Agent Runtime service. This process can take several minutes.</p>
 <p>The following example deploy command uses the <code>multi_tool_agent</code> sample code as
 the project to be deployed:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">PROJECT_ID</span><span class="o">=</span>my-project-id
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">LOCATION_ID</span><span class="o">=</span>us-central1
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>adk<span class="w"> </span>deploy<span class="w"> </span>agent_engine<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span>--project<span class="o">=</span><span class="nv">$PROJECT_ID</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span>--region<span class="o">=</span><span class="nv">$LOCATION_ID</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span>--display_name<span class="o">=</span><span class="s2">&quot;My First Agent&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span>multi_tool_agent
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="go_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="go_1">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">PROJECT_ID</span><span class="o">=</span>my-project-id
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">LOCATION_ID</span><span class="o">=</span>us-central1
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>adk<span class="w"> </span>deploy<span class="w"> </span>agent_engine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span>--project<span class="o">=</span><span class="nv">$PROJECT_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span>--region<span class="o">=</span><span class="nv">$LOCATION_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span>--display_name<span class="o">=</span><span class="s2">&quot;My First Agent&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span>multi_tool_agent
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">PROJECT_ID</span><span class="o">=</span>my-project-id
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">LOCATION_ID</span><span class="o">=</span>us-central1
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>adkgo<span class="w"> </span>deploy<span class="w"> </span>agentengine<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>-e<span class="w"> </span>./main.go<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>-s<span class="w"> </span><span class="s2">&quot;multi_tool_agent&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>-p<span class="w"> </span><span class="nv">$PROJECT_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>-r<span class="w"> </span><span class="nv">$LOCATION_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>-d<span class="w"> </span>.
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <p>For <code>region</code>, you can find a list of the supported regions on the
-<a href="https://docs.cloud.google.com/agent-builder/locations#supported-regions-agent-engine">Agent Builder locations page</a>.
-To learn about the CLI options for the <code>adk deploy agent_engine</code> command, see the
+<a href="https://docs.cloud.google.com/agent-builder/locations#supported-regions-agent-engine">Agent Builder locations page</a>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="python_2" name="__tabbed_3" type="radio" /><input id="go_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_2">Python</label><label for="go_2">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>To learn about the CLI options for the <code>adk deploy agent_engine</code> command, see the
 <a href="/api-reference/cli/#adk-deploy-agent-engine">ADK CLI Reference</a>.</p>
+</div>
+<div class="tabbed-block">
+<p>To learn about the CLI options for the <code>adkgo deploy agentengine</code> command you can run <code>adkgo help deploy agentengine</code> which will display available options. 
+The most important are:
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>-e,<span class="w"> </span>--entry_point_path<span class="w"> </span>string<span class="w">   </span>Path<span class="w"> </span>to<span class="w"> </span>an<span class="w"> </span>entry<span class="w"> </span>point<span class="w"> </span><span class="o">(</span>go<span class="w"> </span><span class="s1">&#39;main&#39;</span><span class="o">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>-s,<span class="w"> </span>--name<span class="w"> </span>string<span class="w">               </span>Agent<span class="w"> </span>Engine<span class="w"> </span>name
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>-p,<span class="w"> </span>--project_name<span class="w"> </span>string<span class="w">       </span>GCP<span class="w"> </span>Project<span class="w"> </span>Name
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>-r,<span class="w"> </span>--region<span class="w"> </span>string<span class="w">             </span>GCP<span class="w"> </span>Region
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>-d,<span class="w"> </span>--source_dir<span class="w"> </span>string<span class="w">         </span>Directory<span class="w"> </span>to<span class="w"> </span>archive,<span class="w"> </span>defaults<span class="w"> </span>to<span class="w"> </span>current<span class="w"> </span>working<span class="w"> </span>directory
+</span></code></pre></div></p>
+</div>
+</div>
+</div>
 <h3 id="deploy-command-output">Deploy command output<a class="headerlink" href="#deploy-command-output" title="Permanent link">&para;</a></h3>
 <p>Once successfully deployed, you should see the following output:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Creating<span class="w"> </span>AgentEngine
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Create<span class="w"> </span>AgentEngine<span class="w"> </span>backing<span class="w"> </span>LRO:<span class="w"> </span>projects/123456789/locations/us-central1/reasoningEngines/751619551677906944/operations/2356952072064073728
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>View<span class="w"> </span>progress<span class="w"> </span>and<span class="w"> </span>logs<span class="w"> </span>at<span class="w"> </span>https://console.cloud.google.com/logs/query?project<span class="o">=</span>hopeful-sunset-478017-q0
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>AgentEngine<span class="w"> </span>created.<span class="w"> </span>Resource<span class="w"> </span>name:<span class="w"> </span>projects/123456789/locations/us-central1/reasoningEngines/751619551677906944
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>To<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>AgentEngine<span class="w"> </span><span class="k">in</span><span class="w"> </span>another<span class="w"> </span>session:
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">agent_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>vertexai.agent_engines.get<span class="o">(</span><span class="s1">&#39;projects/123456789/locations/us-central1/reasoningEngines/751619551677906944&#39;</span><span class="o">)</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Cleaning<span class="w"> </span>up<span class="w"> </span>the<span class="w"> </span>temp<span class="w"> </span>folder:<span class="w"> </span>/var/folders/k5/pv70z5m92s30k0n7hfkxszfr00mz24/T/agent_engine_deploy_src/20251219_134245
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="python_3" name="__tabbed_4" type="radio" /><input id="go_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="python_3">Python</label><label for="go_3">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Creating<span class="w"> </span>AgentEngine
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Create<span class="w"> </span>AgentEngine<span class="w"> </span>backing<span class="w"> </span>LRO:<span class="w"> </span>projects/123456789/locations/us-central1/reasoningEngines/751619551677906944/operations/2356952072064073728
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>View<span class="w"> </span>progress<span class="w"> </span>and<span class="w"> </span>logs<span class="w"> </span>at<span class="w"> </span>https://console.cloud.google.com/logs/query?project<span class="o">=</span>hopeful-sunset-478017-q0
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>AgentEngine<span class="w"> </span>created.<span class="w"> </span>Resource<span class="w"> </span>name:<span class="w"> </span>projects/123456789/locations/us-central1/reasoningEngines/751619551677906944
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>To<span class="w"> </span>use<span class="w"> </span>this<span class="w"> </span>AgentEngine<span class="w"> </span><span class="k">in</span><span class="w"> </span>another<span class="w"> </span>session:
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">agent_engine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>vertexai.agent_engines.get<span class="o">(</span><span class="s1">&#39;projects/123456789/locations/us-central1/reasoningEngines/751619551677906944&#39;</span><span class="o">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Cleaning<span class="w"> </span>up<span class="w"> </span>the<span class="w"> </span>temp<span class="w"> </span>folder:<span class="w"> </span>/var/folders/k5/pv70z5m92s30k0n7hfkxszfr00mz24/T/agent_engine_deploy_src/20251219_134245
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Computing<span class="w"> </span>flags<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>preparing<span class="w"> </span>temp<span class="w"> </span>:<span class="w"> </span>Starting
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>...
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>&gt;<span class="w">  </span><span class="o">[</span>Deployed<span class="w"> </span>Reasoning<span class="w"> </span>Engine:<span class="w"> </span>projects/887748635400/locations/us-central1/reasoningEngines/751619551677906944<span class="o">]</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>&gt;<span class="w">  </span><span class="o">[</span>Display<span class="w"> </span>Name:<span class="w"> </span>simpleText<span class="o">]</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Deploying<span class="w"> </span>to<span class="w"> </span>Agent<span class="w"> </span>Engine<span class="w"> </span>:<span class="w"> </span>Finished<span class="w"> </span>successfully
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>Cleaning<span class="w"> </span>temp<span class="w"> </span>:<span class="w"> </span>Starting
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span>&gt;<span class="w">  </span><span class="o">[</span>Clean<span class="w"> </span>temp<span class="w"> </span>starting<span class="w"> </span>with<span class="w"> </span>/tmp/agentEngine_20260424_141040__2470352066<span class="o">]</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>Cleaning<span class="w"> </span>temp<span class="w"> </span>:<span class="w"> </span>Finished<span class="w"> </span>successfully
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <p>Note that you now have a <code>RESOURCE_ID</code> where your agent has been deployed (which
 in the example above is <code>751619551677906944</code>). You need this ID number along
 with the other values to use your agent on Agent Runtime.</p>
@@ -7183,7 +7281,7 @@ and how to construct URLs to interact with your agent's REST API.</p>
     <a href="https://console.cloud.google.com/vertex-ai/agents/agent-engines">Agent Runtime UI</a></li>
 </ul>
 <p>The query URL structure is as follows:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>https://<span class="k">$(</span>LOCATION_ID<span class="k">)</span>-aiplatform.googleapis.com/v1/projects/<span class="k">$(</span>PROJECT_ID<span class="k">)</span>/locations/<span class="k">$(</span>LOCATION_ID<span class="k">)</span>/reasoningEngines/<span class="k">$(</span>RESOURCE_ID<span class="k">)</span>:query
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>https://<span class="k">$(</span>LOCATION_ID<span class="k">)</span>-aiplatform.googleapis.com/v1/projects/<span class="k">$(</span>PROJECT_ID<span class="k">)</span>/locations/<span class="k">$(</span>LOCATION_ID<span class="k">)</span>/reasoningEngines/<span class="k">$(</span>RESOURCE_ID<span class="k">)</span>:query
 </span></code></pre></div>
 <p>You can make requests from your agent using this URL structure. For more information
 on how to make requests, see the instructions in the Agent Runtime documentation

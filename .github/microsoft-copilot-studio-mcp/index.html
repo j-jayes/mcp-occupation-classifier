@@ -58,8 +58,6 @@
 	
 		<meta name="ms.update-cycle" content="180-days" />
 	
-		<meta name="ms.custom" content="action, connector, mcp" />
-	
 		<meta name="keywords" content="mcp, connector, tool" />
 	
 		<meta name="ms.date" content="2026-04-17T00:00:00Z" />
@@ -73,6 +71,8 @@
 		<meta name="manager" content="kjette" />
 	
 		<meta name="ms.author" content="zadesa" />
+	
+		<meta name="ms.custom" content="action, connector, mcp" />
 	
 		<meta name="document_id" content="8186e801-3422-0bae-681d-0d254c6d8618" />
 	
@@ -123,6 +123,19 @@
 		<meta name="spProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/19ada1b6-705b-4ed7-aad0-bffd1bd03dfa" data-source="generated" />
 	
 
+			<!-- Apply persisted/system theme before first paint to prevent wrong-theme flash when scripts are deferred. -->
+			<script id="theme-preference">
+				(function () {
+			try {
+				var stored = localStorage.getItem('theme');
+				var theme = /^(light|dark|high-contrast)$/.test(stored)
+					? stored
+					: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				document.documentElement.classList.add('theme-' + theme);
+			} catch (e) {}
+		})();;
+			</script>
+
 			<script id="atlas-layout-preferences">
 				(function () {
 			try {
@@ -151,11 +164,11 @@
 
 			<!-- assets and js globals -->
 			
-			<link rel="stylesheet" href="/static/assets/0.4.03447.7916-1d0cc631/styles/site.css" />
+			<link rel="stylesheet" href="/static/assets/0.4.03462.7951-706af597/styles/site.css" />
 			
 			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
 			<script src="https://js.monitor.azure.com/scripts/c/ms.jsll-4.min.js"></script>
-			<script src="/_themes/docs.theme/master/en-us/_themes/global/deprecation.js"></script>
+			
 
 			<!-- msdocs global object -->
 			<script id="msdocs-script">
@@ -227,7 +240,7 @@
 	</script>
 
 			<!-- base scripts, msdocs global should be before this -->
-			<script src="/static/assets/0.4.03447.7916-1d0cc631/scripts/en-us/index-docs.js"></script>
+			<script src="/static/assets/0.4.03462.7951-706af597/scripts/en-us/index-docs.js"></script>
 			
 
 			<!-- json-ld -->

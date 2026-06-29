@@ -789,6 +789,8 @@
       
         
       
+        
+      
     
     
     
@@ -998,6 +1000,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -5256,18 +5286,35 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Under the hood: to_a2a() method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
   <a href="#getting-the-sample-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Getting the Sample Code
+        Getting the Sample Code
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Getting the Sample Code">
+    <nav class="md-nav" aria-label="Getting the Sample Code">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5301,7 +5348,7 @@
   <a href="#start-the-remote-a2a-agent-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Start the Remote A2A Agent server
+        Start the Remote A2A Agent server
       
     </span>
   </a>
@@ -5312,7 +5359,7 @@
   <a href="#check-that-your-remote-agent-is-running" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Check that your remote agent is running
+        Check that your remote agent is running
       
     </span>
   </a>
@@ -5323,7 +5370,7 @@
   <a href="#run-the-main-consuming-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Run the Main (Consuming) Agent
+        Run the Main (Consuming) Agent
       
     </span>
   </a>
@@ -6873,18 +6920,35 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Under the hood: to_a2a() method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
   <a href="#getting-the-sample-code" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Getting the Sample Code
+        Getting the Sample Code
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Getting the Sample Code">
+    <nav class="md-nav" aria-label="Getting the Sample Code">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6918,7 +6982,7 @@
   <a href="#start-the-remote-a2a-agent-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Start the Remote A2A Agent server
+        Start the Remote A2A Agent server
       
     </span>
   </a>
@@ -6929,7 +6993,7 @@
   <a href="#check-that-your-remote-agent-is-running" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Check that your remote agent is running
+        Check that your remote agent is running
       
     </span>
   </a>
@@ -6940,7 +7004,7 @@
   <a href="#run-the-main-consuming-agent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Run the Main (Consuming) Agent
+        Run the Main (Consuming) Agent
       
     </span>
   </a>
@@ -7198,7 +7262,7 @@
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Make your agent A2A-compatible</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">a2a_app</span> <span class="o">=</span> <span class="n">to_a2a</span><span class="p">(</span><span class="n">root_agent</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8001</span><span class="p">)</span>
 </span></code></pre></div>
-<p>The <code>to_a2a()</code> function will even auto-generate an agent card in-memory behind-the-scenes by <a href="https://github.com/google/adk-python/blob/main/src/google/adk/a2a/utils/agent_card_builder.py">extracting skills, capabilities, and metadata from the ADK agent</a>, so that the well-known agent card is made available when the agent endpoint is served using <code>uvicorn</code>.</p>
+<p>The <code>to_a2a()</code> function will even auto-generate an agent card in-memory behind-the-scenes by <a href="https://github.com/google/adk-python/blob/main/src/google/adk/a2a/utils/agent_card_builder.py">extracting skills, capabilities, and metadata from ADK agent</a>, so that the well-known agent card is made available when the agent endpoint is served using <code>uvicorn</code>.</p>
 <p>You can also provide your own agent card by using the <code>agent_card</code> parameter. The value can be an <code>AgentCard</code> object or a path to an agent card JSON file.</p>
 <p><strong>Example with an <code>AgentCard</code> object:</strong>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.a2a.utils.agent_to_a2a</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_a2a</span>
@@ -7225,15 +7289,21 @@
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">a2a_app</span> <span class="o">=</span> <span class="n">to_a2a</span><span class="p">(</span><span class="n">root_agent</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8001</span><span class="p">,</span> <span class="n">agent_card</span><span class="o">=</span><span class="s2">&quot;/path/to/your/agent-card.json&quot;</span><span class="p">)</span>
 </span></code></pre></div></p>
 <h3 id="under-the-hood-to_a2a-method">Under the hood: to_a2a() method<a class="headerlink" href="#under-the-hood-to_a2a-method" title="Permanent link">&para;</a></h3>
-<p>When you call <code>to_a2a()</code>, the ADK automatically handles several setup steps to expose your agent:</p>
+<p>When you call <code>to_a2a()</code>, ADK automatically handles several setup steps to expose your agent:</p>
 <ul>
-<li><strong><code>A2aAgentExecutor</code> setup:</strong> An <code>A2aAgentExecutor</code> is initialized to act as the bridge between the A2A protocol and your ADK agent. If you don't provide a custom <code>Runner</code>, it automatically creates a default one backed by in-memory services (for artifacts, sessions, memory, and credentials).</li>
-<li><strong>State Management:</strong> It creates an <code>InMemoryTaskStore</code> to track A2A tasks and an <code>InMemoryPushNotificationConfigStore</code> for handling push notifications.</li>
-<li><strong>Request Handling:</strong> A <code>DefaultRequestHandler</code> is created to route incoming A2A HTTP requests to the <code>A2aAgentExecutor</code> and the state stores.</li>
-<li><strong>Starlette App &amp; Agent Card:</strong> It creates a Starlette application. During the application's startup phase, it either loads your provided Agent Card or automatically builds one from your agent's configuration using an <code>AgentCardBuilder</code>. It then mounts all the necessary A2A API routes.</li>
+<li><strong>A2aAgentExecutor setup:</strong> An <code>A2aAgentExecutor</code> acts as the bridge between the A2A protocol and your ADK agent. If you don't provide a custom <code>Runner</code>, it automatically creates a default one backed by in-memory services (for artifacts, sessions, memory, and credentials).</li>
+<li><strong>State Management:</strong> Creates an <code>InMemoryTaskStore</code> to track A2A tasks and an <code>InMemoryPushNotificationConfigStore</code> for handling push notifications.</li>
+<li><strong>Request Handling:</strong> Creates a <code>DefaultRequestHandler</code> to route incoming A2A HTTP requests to the <code>A2aAgentExecutor</code> and the state stores.</li>
+<li><strong>Starlette App &amp; Agent Card:</strong> Creates a Starlette application. During the startup phase, it either loads your provided Agent Card or automatically builds one from your agent's configuration using an <code>AgentCardBuilder</code>. It then mounts all the necessary A2A API routes.</li>
 </ul>
-<p>Now let's dive into the sample code.</p>
-<h3 id="getting-the-sample-code">1. Getting the Sample Code<a class="headerlink" href="#getting-the-sample-code" title="Permanent link">&para;</a></h3>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>root_agent</code> (required):</strong> The primary ADK agent instance you want to expose via the A2A protocol.</li>
+<li><strong><code>port</code> (optional):</strong>  The port number the application will run on.</li>
+<li><strong><code>push_config_store</code> (optional):</strong> A custom store implementation for managing A2A push notifications. If not provided, the system defaults to an in-memory store (<code>InMemoryPushNotificationConfigStore</code>).</li>
+<li><strong><code>agent_card</code> (optional):</strong> An <code>AgentCard</code> object or a path to a JSON file. If omitted, ADK automatically generates an agent card from your agent's code.</li>
+</ul>
+<h3 id="getting-the-sample-code">Getting the Sample Code<a class="headerlink" href="#getting-the-sample-code" title="Permanent link">&para;</a></h3>
 <p>First, make sure you have the necessary dependencies installed:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>google-adk<span class="o">[</span>a2a<span class="o">]</span>
 </span></code></pre></div>
@@ -7261,7 +7331,7 @@
 <li><strong><code>root_agent</code></strong>: The main agent with comprehensive instructions</li>
 <li><strong><code>a2a_app</code></strong>: The A2A application created using <code>to_a2a()</code> utility</li>
 </ul>
-<h3 id="start-the-remote-a2a-agent-server">2. Start the Remote A2A Agent server<a class="headerlink" href="#start-the-remote-a2a-agent-server" title="Permanent link">&para;</a></h3>
+<h3 id="start-the-remote-a2a-agent-server">Start the Remote A2A Agent server<a class="headerlink" href="#start-the-remote-a2a-agent-server" title="Permanent link">&para;</a></h3>
 <p>You can now start the remote agent server, which will host the <code>a2a_app</code> within the hello_world agent:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Ensure current working directory is adk-python/</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Start the remote agent using uvicorn</span>
@@ -7277,13 +7347,13 @@
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span class="w"> </span>on<span class="w"> </span>http://localhost:8001<span class="w"> </span><span class="o">(</span>Press<span class="w"> </span>CTRL+C<span class="w"> </span>to<span class="w"> </span>quit<span class="o">)</span>
 </span></code></pre></div>
-<h3 id="check-that-your-remote-agent-is-running">3. Check that your remote agent is running<a class="headerlink" href="#check-that-your-remote-agent-is-running" title="Permanent link">&para;</a></h3>
+<h3 id="check-that-your-remote-agent-is-running">Check that your remote agent is running<a class="headerlink" href="#check-that-your-remote-agent-is-running" title="Permanent link">&para;</a></h3>
 <p>You can check that your agent is up and running by visiting the agent card that was auto-generated earlier as part of your <code>to_a2a()</code> function in <code>a2a_root/remote_a2a/hello_world/agent.py</code>:</p>
 <p><a href="http://localhost:8001/.well-known/agent-card.json">http://localhost:8001/.well-known/agent-card.json</a></p>
 <p>You should see the contents of the agent card, which should look like:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span><span class="nt">&quot;capabilities&quot;</span><span class="p">:{},</span><span class="nt">&quot;defaultInputModes&quot;</span><span class="p">:[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">],</span><span class="nt">&quot;defaultOutputModes&quot;</span><span class="p">:[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">],</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;hello world agent that can roll a dice of 8 sides and check prime numbers.&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world_agent&quot;</span><span class="p">,</span><span class="nt">&quot;protocolVersion&quot;</span><span class="p">:</span><span class="s2">&quot;0.2.6&quot;</span><span class="p">,</span><span class="nt">&quot;skills&quot;</span><span class="p">:[{</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;hello world agent that can roll a dice of 8 sides and check prime numbers. \n      I roll dice and answer questions about the outcome of the dice rolls.\n      I can roll dice of different sizes.\n      I can use multiple tools in parallel by calling functions in parallel(in one request and in one round).\n      It is ok to discuss previous dice roles, and comment on the dice rolls.\n      When I are asked to roll a die, I must call the roll_die tool with the number of sides. Be sure to pass in an integer. Do not pass in a string.\n      I should never roll a die on my own.\n      When checking prime numbers, call the check_prime tool with a list of integers. Be sure to pass in a list of integers. I should never pass in a string.\n      I should not check prime numbers before calling the tool.\n      When I are asked to roll a die and check prime numbers, I should always make the following two function calls:\n      1. I should first call the roll_die tool to get a roll. Wait for the function response before calling the check_prime tool.\n      2. After I get the function response from roll_die tool, I should call the check_prime tool with the roll_die result.\n        2.1 If user asks I to check primes based on previous rolls, make sure I include the previous rolls in the list.\n      3. When I respond, I must include the roll_die result from step 1.\n      I should always perform the previous 3 steps when asking for a roll and checking prime numbers.\n      I should not rely on the previous history on prime results.\n    &quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world_agent&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;model&quot;</span><span class="p">,</span><span class="nt">&quot;tags&quot;</span><span class="p">:[</span><span class="s2">&quot;llm&quot;</span><span class="p">]},{</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Roll a die and return the rolled result.\n\nArgs:\n  sides: The integer number of sides the die has.\n  tool_context: the tool context\nReturns:\n  An integer of the result of rolling the die.&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world_agent-roll_die&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;roll_die&quot;</span><span class="p">,</span><span class="nt">&quot;tags&quot;</span><span class="p">:[</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span><span class="s2">&quot;tools&quot;</span><span class="p">]},{</span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Check if a given list of numbers are prime.\n\nArgs:\n  nums: The list of numbers to check.\n\nReturns:\n  A str indicating which number is prime.&quot;</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;hello_world_agent-check_prime&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;check_prime&quot;</span><span class="p">,</span><span class="nt">&quot;tags&quot;</span><span class="p">:[</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span><span class="s2">&quot;tools&quot;</span><span class="p">]}],</span><span class="nt">&quot;supportsAuthenticatedExtendedCard&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="s2">&quot;http://localhost:8001&quot;</span><span class="p">,</span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">}</span>
 </span></code></pre></div>
-<h3 id="run-the-main-consuming-agent">4. Run the Main (Consuming) Agent<a class="headerlink" href="#run-the-main-consuming-agent" title="Permanent link">&para;</a></h3>
+<h3 id="run-the-main-consuming-agent">Run the Main (Consuming) Agent<a class="headerlink" href="#run-the-main-consuming-agent" title="Permanent link">&para;</a></h3>
 <p>Now that your remote agent is running, you can launch the dev UI and select "a2a_root" as your agent.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># In a separate terminal, run the adk web server</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>adk<span class="w"> </span>web<span class="w"> </span>contributing/samples/

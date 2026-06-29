@@ -796,6 +796,8 @@
       
         
       
+        
+      
     
     
     
@@ -1008,6 +1010,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -2306,13 +2336,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-implementation" class="md-nav__link">
+  <a href="#implementation-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example implementation
+        Implementation example
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-with-openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility with OpenAI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compatibility with OpenAI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6658,13 +6716,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-implementation" class="md-nav__link">
+  <a href="#implementation-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example implementation
+        Implementation example
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-with-openai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility with OpenAI
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compatibility with OpenAI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6803,13 +6889,11 @@ Apigee proxy, you immediately gain enterprise-grade capabilities:</p>
 <p><strong>Monitoring &amp; Visibility:</strong> Get granular monitoring, analysis, and auditing of all your AI requests.</p>
 </li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <code>ApigeeLLM</code> wrapper is currently designed for use with Agent Platform
-and the Gemini API (generateContent). We are continually expanding support for
-other models and interfaces.</p>
-</div>
-<h2 id="example-implementation">Example implementation<a class="headerlink" href="#example-implementation" title="Permanent link">&para;</a></h2>
+<p>The <code>ApigeeLLM</code> wrapper is designed for use with Agent Platform
+   and the Gemini API (generateContent). We are continually expanding support for
+   other models and interfaces. For OpenAI compatible models, including self-hosted or 
+   other providers, use the <code>CompletionsHTTPClient</code> to route traffic through your Apigee proxy.</p>
+<h2 id="implementation-example">Implementation example<a class="headerlink" href="#implementation-example" title="Permanent link">&para;</a></h2>
 <p>Integrate Apigee's governance into your agent's workflow by instantiating the
 <code>ApigeeLlm</code> wrapper object and pass it to an <code>LlmAgent</code> or other agent type.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="java">Java</label></div>
@@ -6865,6 +6949,40 @@ Apigee first, where all necessary policies (security, rate limiting, logging)
 are executed before the request is securely forwarded to the underlying AI model
 endpoint. For a full code example using the Apigee proxy, see
 <a href="https://github.com/google/adk-python/tree/main/contributing/samples/models/hello_world_apigeellm">Hello World Apigee LLM</a>.</p>
+<h2 id="compatibility-with-openai">Compatibility with OpenAI<a class="headerlink" href="#compatibility-with-openai" title="Permanent link">&para;</a></h2>
+<p>The <code>CompletionsHTTPClient</code> is a generic HTTP client designed for compatibility with the OpenAI API format. It allows you to route requests through proxies (such as Apigee) that expect standard OpenAI-compatible <code>/chat/completions</code> endpoints, rather than native Gemini or Vertex AI protocols. This client handles:</p>
+<ul>
+<li><strong>Payload construction</strong>: Converts LlmRequest objects into the format required by OpenAI-compatible APIs.</li>
+<li><strong>Response handling</strong>: Manages streaming and non-streaming responses from the proxy.</li>
+<li><strong>Reliability</strong>: Uses <code>tenacity</code> for built-in retry logic.</li>
+<li><strong>Normalization</strong>: Parses responses and streaming chunks into the standard format expected by the rest of the ADK framework.</li>
+</ul>
+<h3 id="implementation-example_1">Implementation example<a class="headerlink" href="#implementation-example_1" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.models.apigee_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompletionsHTTPClient</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.models.llm_request</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmRequest</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">test_client</span><span class="p">():</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="c1"># 1. Initialize the client</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">CompletionsHTTPClient</span><span class="p">(</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://your-apigee-proxy-url.com/v1&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer YOUR_API_KEY&quot;</span><span class="p">}</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="c1"># 2. Construct a minimal request</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">request</span> <span class="o">=</span> <span class="n">LlmRequest</span><span class="p">(</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>  <span class="c1"># Replace with your target model ID</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">contents</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)])]</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="p">)</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="c1"># 3. Execute a non-streaming generation</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">generate_content_async</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">test_client</span><span class="p">())</span>
+</span></code></pre></div>
 
 
 
