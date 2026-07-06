@@ -140,11 +140,9 @@
             
 <span class="announce-item">
   <a href="/2.0/">
-    ADK Python 2.0 GA
+    ADK Go 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents, and check out
-  <a href="/get-started/kotlin/"
-  target="_blank" rel="noopener">ADK Kotlin</a>!
+  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
 </span>
 
           </div>
@@ -796,6 +794,8 @@
       
         
       
+        
+      
     
     
     
@@ -1008,6 +1008,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -1704,6 +1732,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loop-and-escalation-exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop and escalation exit
+      
+    </span>
+  </a>
   
 </li>
       
@@ -6331,9 +6370,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1_4" id="__nav_6_1_4_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -6347,7 +6408,79 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Go ADK
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk/v2" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v2.x
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -6824,6 +6957,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#loop-and-escalation-exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop and escalation exit
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6937,7 +7081,7 @@
 
 <h1 id="build-graph-routes-for-agent-workflows">Build graph routes for agent workflows<a class="headerlink" href="#build-graph-routes-for-agent-workflows" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v2.0.0</span><span class="lst-go">Go v2.0.0</span>
 </div>
 
 <p>Graph-based workflows in ADK define agent logic as a graph of execution nodes
@@ -6948,7 +7092,11 @@ AI-powered agents, Tools, and human input. By explicitly mapping out routing
 logic, this approach allows you to define a specific, step-wise process workflow
 in code, providing improved precision and reliability over purely prompt-based
 agents.</p>
-<p><img alt="Graph-based flight upgrade agent" src="/assets/graph-workflow-router.svg" /></p>
+<p><img alt="Task graph with conditional routing between nodes" src="/assets/graph-workflow-router.svg" /></p>
+<p><strong>Figure 1.</strong> Visualization of a task graph and the routing code to implement it.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="go">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;routing_workflow&quot;</span><span class="p">,</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
@@ -6963,8 +7111,31 @@ agents.</p>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  <span class="p">],</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>Figure 1.</strong> Visualization of a task graph and the <strong><em>Workflow</em></strong> code to
-implement it.</p>
+</div>
+<div class="tabbed-block">
+<p>ADK Go v2.0.0 provides the following approach to graph-based
+workflows:</p>
+<p><strong>Graph engine</strong> (<code>workflowagent</code> + <code>workflow.Edge</code>): A node-and-edges
+graph API that maps directly to Python's <code>Workflow(edges=[...])</code>.
+Nodes are defined with <code>workflow.NewFunctionNode</code>, <code>workflow.NewAgentNode</code>,
+or <code>workflow.NewDynamicNode</code>, edges are declared as <code>[]workflow.Edge</code>, and
+the whole graph is wrapped in a <code>workflowagent.New</code> call:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">edges</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Concat</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">),</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="p">[]</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Edge</span><span class="p">{</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">responseA</span><span class="p">,</span><span class="w"> </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;output-1&quot;</span><span class="p">)},</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">responseB</span><span class="p">,</span><span class="w"> </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;output-2&quot;</span><span class="p">)},</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">responseC</span><span class="p">,</span><span class="w"> </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;output-3&quot;</span><span class="p">)},</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;routing_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nx">Edges</span><span class="p">:</span><span class="w"> </span><span class="nx">edges</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">})</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <p>The advantage of using a graph-based agent workflow is the significant increase
 in control, predictability, and reliability over prompt-based agents. By
 defining the overall process workflow in code, you gain more control over how
@@ -6977,157 +7148,628 @@ defined steps and process management.</p>
 <p>A graph is composed of execution nodes. These <em>nodes</em> can be <strong><em>Agents</em></strong>, ADK
 <strong><em>Tools</em></strong>, human input tasks, or code functions you write. Nodes can take
 inputs from previously executed nodes, and emit data through <strong><em>Event</em></strong>
-objects. The following shows a simple <strong><em>FunctionNode</em></strong> that handles text
-inputs and sends a text output:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function_node</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">input_text_modified</span> <span class="o">=</span> <span class="n">node_input</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">input_text_modified</span><span class="p">)</span>
+objects.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="go_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="go_1">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The following shows a simple <strong><em>FunctionNode</em></strong> that handles text inputs
+and sends a text output:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_function_node</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">input_text_modified</span> <span class="o">=</span> <span class="n">node_input</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">input_text_modified</span><span class="p">)</span>
 </span></code></pre></div>
-<p>For more information about transferring data between nodes, see .
+</div>
+<div class="tabbed-block">
+<p>In ADK Go v2.0.0, the primary node type is <code>workflow.NewFunctionNode</code>.
+A <code>FunctionNode</code> wraps a plain Go function: the function returns a typed
+value, and the framework automatically wraps it in a <code>session.Event</code>,
+setting <code>event.Output</code>. The successor node receives this value as its
+typed <code>input</code> parameter — no manual state writes or event construction
+needed:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// newFunctionNodePipeline demonstrates workflow.NewFunctionNode as the primary</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">// v2 node type. A FunctionNode wraps a plain Go function: the function returns</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// a typed value, and the framework automatically wraps it in a session.Event,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// setting event.Output. The successor node receives this value as its typed</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">// input parameter.</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">//</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">// This is the direct Go equivalent of the Python FunctionNode:</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">//</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">//  def my_function_node(node_input: str):</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">//      return Event(output=node_input.upper())</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="kd">func</span><span class="w"> </span><span class="nx">newFunctionNodePipeline</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nx">upperFn</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">ToUpper</span><span class="p">(</span><span class="nx">input</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="nx">suffixFn</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; IS AWESOME!&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="c1">// workflow.NewFunctionNode wraps each function as a graph node.</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="c1">// workflow.Chain wires them in order: START → upper → suffix.</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="c1">// The output of upperFn is delivered as the typed input of suffixFn</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="c1">// via event.Output — no session state writes are needed.</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span><span class="nx">nodeA</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;upper&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">upperFn</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="nx">nodeB</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;suffix&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">suffixFn</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;function_node_pipeline&quot;</span><span class="p">,</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Demonstrates workflow.NewFunctionNode data flow via Event.Output.&quot;</span><span class="p">,</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">nodeA</span><span class="p">,</span><span class="w"> </span><span class="nx">nodeB</span><span class="p">),</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<p>For more information about transferring data between nodes, see
 <a href="/graphs/data-handling/">Data handling for agent workflows</a>.</p>
 <h2 id="workflow-graphs-syntax">Workflow graphs syntax<a class="headerlink" href="#workflow-graphs-syntax" title="Permanent link">&para;</a></h2>
-<p>You define a graph by creating an <strong><em>edges</em></strong> array, which defines a logical
-execution path of <em>nodes</em> and conditions to be followed. This section
-provides an overview of graph syntax in an <strong><em>edges</em></strong> array. The following code
-example shows a basic workflow with two nodes to be executed in order:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sequential_workflow&quot;</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">,</span> <span class="n">task_B_node</span><span class="p">)],</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
-</span></code></pre></div>
+<p>You define a graph by composing workflow agents. This section provides an
+overview of the common routing patterns.</p>
 <div class="admonition caution">
-<p class="admonition-title">Caution: Workflows and agent limitations</p>
-<p>You can add <strong><em>Agents</em></strong>, or <strong><em>LlmAgents</em></strong>, to graph-based workflows,
-however they must be set to a task or single-turn mode. For more
-information about agent modes, see
+<p class="admonition-title">Caution: Workflow agent limitations</p>
+<p>You can add <strong><em>LlmAgents</em></strong> to graph-based workflows. However, they must
+be configured for single-turn or task mode. For more information about
+agent modes, see
 <a href="/workflows/collaboration/#mode-configuration-and-behaviors">Build collaborative agent teams</a>.</p>
 </div>
 <h3 id="route-sequences">Route sequences<a class="headerlink" href="#route-sequences" title="Permanent link">&para;</a></h3>
-<p>The <strong><em>edges</em></strong> array executes nodes based on the order or nodes presented in
-the array, starting with the first row and proceeding through the subsequent
-rows until execution is complete. The first row of the <strong><em>edges</em></strong> array uses
-the <strong><em>START</em></strong> keyword to indicate the beginning of a graph execution, with
-each listed node executed in sequence, as shown in the following code
-snippets:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">)]</span>  <span class="c1"># single node run</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="n">task_A_node</span><span class="p">,</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">task_B_node</span><span class="p">,</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">task_C_node</span><span class="p">)]</span>           <span class="c1"># 3 nodes run in order</span>
+<p>A sequential route runs each node once, in the listed order.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="python_2" name="__tabbed_3" type="radio" /><input id="go_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_2">Python</label><label for="go_2">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The <code>edges</code> array uses the <code>START</code> keyword to indicate the beginning of a
+graph execution, with each listed node executed in sequence:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">)]</span>  <span class="c1"># single node run</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">task_A_node</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">task_B_node</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="n">task_C_node</span><span class="p">)]</span>           <span class="c1"># 3 nodes run in order</span>
 </span></code></pre></div>
-<p>You can also use <strong><em>START</em></strong> more than once to initiate parallel tasks at the
-beginning of a workflow graph, as shown in the following code snippet:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">edges</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_A</span><span class="p">),</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_B</span><span class="p">),</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_C</span><span class="p">),</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">]</span>
+</div>
+<div class="tabbed-block">
+<p><code>workflow.Chain(workflow.Start, nodeA, nodeB, nodeC)</code> wires nodes into a
+sequential edge slice. Each node's typed return value is forwarded to the
+next node via <code>event.Output</code> — no session state writes needed:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// newSequentialNodes builds a two-step sequential workflow using the v2 graph</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// engine. workflow.Chain wires the nodes in order; each node&#39;s typed return</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// value is forwarded to the next node via event.Output.</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">//</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">// This is the Go equivalent of:</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1">//</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">//  edges=[(&quot;START&quot;, task_A_node, task_B_node)]</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kd">func</span><span class="w"> </span><span class="nx">newSequentialNodes</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="c1">// task_A_node: transforms the user&#39;s input.</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nx">taskANode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;task_A_node&quot;</span><span class="p">,</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Summary: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">TrimSpace</span><span class="p">(</span><span class="nx">input</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span><span class="c1">// task_B_node: receives task A&#39;s output as its typed input and produces</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="c1">// the final result. No session state reads needed.</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nx">taskBNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;task_B_node&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">summary</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">ToUpper</span><span class="p">(</span><span class="nx">summary</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;sequential_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Runs task A then task B in order via workflow.Chain.&quot;</span><span class="p">,</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">taskANode</span><span class="p">,</span><span class="w"> </span><span class="nx">taskBNode</span><span class="p">),</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="p">}</span>
 </span></code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Caution: Limitations on parallel nodes</p>
-<p>Not all workflow nodes or subagents can be run in parallel. In particular,
-you cannot run multiple interactive chat sessions within the same agent
-session.</p>
+</div>
+</div>
 </div>
 <h3 id="route-branches-and-conditional-execution">Route branches and conditional execution<a class="headerlink" href="#route-branches-and-conditional-execution" title="Permanent link">&para;</a></h3>
-<p>The subsequent rows of the <strong><em>edges</em></strong> arrays after the START keyword define
-additional execution logic for nodes. For branching paths, which is how you create a conditional node, you define a node,
-usually a <strong><em>FunctionNode</em></strong>, that outputs an Event with a specific  <strong><em>route</em></strong> value. In the edges graph, you then define the conditional execution logic by mapping these route values to target nodes, as shown in the following code example:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">router</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Route to task B or C based on node_input.&quot;&quot;&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">node_input</span><span class="p">):</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">)</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">task_B_node</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;task_B_agent&quot;</span><span class="p">)</span> <span class="c1"># An agent to execute node B</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">task_C_node</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A FunctionNode to execute node C.&quot;&quot;&quot;</span>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;Task C completed&quot;</span><span class="p">)</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;routing_workflow&quot;</span><span class="p">,</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">,</span> <span class="n">router</span><span class="p">),</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="p">(</span><span class="n">router</span><span class="p">,</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>          <span class="p">{</span>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="c1"># &quot;route value&quot;: node_to_run</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            <span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">:</span> <span class="n">task_B_node</span><span class="p">,</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>            <span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">:</span> <span class="n">task_C_node</span><span class="p">,</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>          <span class="p">},</span>
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>        <span class="p">),</span>
-</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    <span class="p">],</span>
-</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">)</span>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="python_3" name="__tabbed_4" type="radio" /><input id="go_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="python_3">Python</label><label for="go_3">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In Python, branching is handled by a <code>FunctionNode</code> that returns an
+<code>Event(route=...)</code> value, which the <code>edges</code> dict dispatches to different nodes.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">router</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Route to task B or C based on node_input.&quot;&quot;&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">node_input</span><span class="p">):</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">task_B_node</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;task_B_agent&quot;</span><span class="p">)</span> <span class="c1"># An agent to execute node B</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">task_C_node</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A FunctionNode to execute node C.&quot;&quot;&quot;</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;Task C completed&quot;</span><span class="p">)</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;routing_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">,</span> <span class="n">router</span><span class="p">),</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="p">(</span><span class="n">router</span><span class="p">,</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>          <span class="p">{</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>            <span class="c1"># &quot;route value&quot;: node_to_run</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>            <span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">:</span> <span class="n">task_B_node</span><span class="p">,</span>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>            <span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">:</span> <span class="n">task_C_node</span><span class="p">,</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>          <span class="p">},</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>        <span class="p">),</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    <span class="p">],</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="p">)</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>In ADK Go v2.0.0, conditional dispatch uses the <code>workflow</code> graph engine.
+A node sets <code>Event.Routes</code> to one or more string route keys, and each
+<code>workflow.Edge</code> selects its successor using a <code>workflow.Route</code> matcher:</p>
+<ul>
+<li><code>workflow.StringRoute("category")</code> — matches a single string value</li>
+<li><code>workflow.IntRoute(n)</code> or <code>workflow.MultiRoute[int]{1, 2, 3}</code> — matches
+    integer values</li>
+<li><code>workflow.BoolRoute(true)</code> — matches a boolean value</li>
+<li><code>workflow.Default</code> — matches when no other route on the same source
+    node matches</li>
+</ul>
+<p>The following pattern is the Go equivalent of the Python router:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// classifyNode emits an Event with Routes=[]string{&quot;BUG&quot;},</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1">// [&quot;CUSTOMER_SUPPORT&quot;], or [&quot;LOGISTICS&quot;] based on the message.</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">edges</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Concat</span><span class="p">(</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">processMessage</span><span class="p">,</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">),</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="p">[]</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Edge</span><span class="p">{</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">bugHandler</span><span class="p">,</span><span class="w">       </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;BUG&quot;</span><span class="p">)},</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">supportHandler</span><span class="p">,</span><span class="w">   </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;CUSTOMER_SUPPORT&quot;</span><span class="p">)},</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">        </span><span class="p">{</span><span class="nx">From</span><span class="p">:</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">To</span><span class="p">:</span><span class="w"> </span><span class="nx">logisticsHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">Route</span><span class="p">:</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;LOGISTICS&quot;</span><span class="p">)},</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">)</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;routing_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="nx">Edges</span><span class="p">:</span><span class="w"> </span><span class="nx">edges</span><span class="p">,</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">})</span>
+</span></code></pre></div>
+<p><code>workflow.EdgeBuilder</code> provides a fluent alternative to assembling the
+<code>[]workflow.Edge</code> slice by hand. The builder's <code>Add</code>, <code>AddFanOut</code>, and
+<code>AddFanIn</code> methods express the same topology with less repetition:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">eb</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewEdgeBuilder</span><span class="p">()</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">processMessage</span><span class="p">)</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">processMessage</span><span class="p">,</span><span class="w"> </span><span class="nx">classifyNode</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">bugHandler</span><span class="p">,</span><span class="w">       </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;BUG&quot;</span><span class="p">))</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">supportHandler</span><span class="p">,</span><span class="w">   </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;CUSTOMER_SUPPORT&quot;</span><span class="p">))</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">classifyNode</span><span class="p">,</span><span class="w"> </span><span class="nx">logisticsHandler</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;LOGISTICS&quot;</span><span class="p">))</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;routing_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nx">Edges</span><span class="p">:</span><span class="w"> </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Build</span><span class="p">(),</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">})</span>
+</span></code></pre></div>
+<p>For complete, runnable routing examples see:
+<a href="https://github.com/google/adk-go/tree/v2/examples/workflow/routing/string">string routing</a>,
+<a href="https://github.com/google/adk-go/tree/v2/examples/workflow/routing/int">int / multi-value routing</a>,
+and <a href="https://github.com/google/adk-go/tree/v2/examples/workflow/routing/llm">LLM-driven routing</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Prebuilt agents: encoding routing in state</p>
+<p>When using <code>sequentialagent</code> / <code>parallelagent</code> / <code>loopagent</code> instead
+of the graph engine, there is no <code>Event.Routes</code> dispatch. Encode the
+routing decision in session state via <code>OutputKey</code> and let downstream
+agents inspect it in their <code>Instruction</code> template, or use a <code>loopagent</code>
+with an <code>Escalate</code>-based exit — see the
+<a href="#loop-and-escalation-exit">loop and escalation example</a> below.</p>
+</div>
+</div>
+</div>
+</div>
 <h2 id="parallel-tasks-fan-out-and-join-paths">Parallel tasks: fan out and join paths<a class="headerlink" href="#parallel-tasks-fan-out-and-join-paths" title="Permanent link">&para;</a></h2>
 <p>You can create graphs that split execution across multiple, parallel nodes, and
 typically you need to assemble the output of each node for further processing.
-This task execution pattern has two stages. The workflow first fans out when it 
-starts multiple parallel tasks, and then it re-joins those paths when those 
-those tasks are completed before proceeding to the next step.</p>
-<p>You accomplish the join step by using a <strong><em>JoinNode</em></strong> object, which waits for
-each parallel task to complete and then passes the collection of outputs from
-these nodes to the next node.</p>
+This task execution pattern has two stages. The workflow first fans out when it
+starts multiple parallel tasks, and then it re-joins those paths when those
+tasks are completed before proceeding to the next step.</p>
 <p><img alt="Tasks connecting to a JoinNode" src="/assets/graph-joinnode.svg" /></p>
-<p><strong>Figure 2.</strong> The output of parallel task nodes can be assembled using a
-JoinNode object.</p>
-<p>The following code snippet shows how to start three parallel tasks from
-<strong><em>START</em></strong> and use a basic <strong><em>JoinNode</em></strong> object to join their outputs before
-running the final task:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">​​</span><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">JoinNode</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">my_join_node</span> <span class="o">=</span> <span class="n">JoinNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_join_node&quot;</span><span class="p">)</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">edges</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_A</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_B</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_C</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">(</span><span class="n">my_join_node</span><span class="p">,</span> <span class="n">final_task_D</span><span class="p">),</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">]</span>
+<p><strong>Figure 2.</strong> The output of parallel task nodes can be assembled and joined
+before passing results to the next step.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="python_4" name="__tabbed_5" type="radio" /><input id="go_4" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="python_4">Python</label><label for="go_4">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>You accomplish the join step by using a <strong><em>JoinNode</em></strong> object, which waits
+for each parallel task to complete and then passes the collection of outputs
+from these nodes to the next node.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">JoinNode</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">my_join_node</span> <span class="o">=</span> <span class="n">JoinNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_join_node&quot;</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">edges</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_A</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_B</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">parallel_task_C</span><span class="p">,</span> <span class="n">my_join_node</span><span class="p">),</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="p">(</span><span class="n">my_join_node</span><span class="p">,</span> <span class="n">final_task_D</span><span class="p">),</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">]</span>
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Caution: Stuck JoinNode from incomplete nodes</p>
-<p>The <strong><em>JoinNode</em></strong> object proceeds only after all its upstream nodes have
-provided an Event output. If one of the upstream nodes fails to provide output,
-the JoinNode is stuck and workflow execution stops. Make sure to include
-failsafe output from any node that outputs to a <strong><em>JoinNode</em></strong>.</p>
+<p>The <strong><em>JoinNode</em></strong> object proceeds only after all its upstream nodes
+have provided an Event output. If one of the upstream nodes fails to
+provide output, the JoinNode is stuck and workflow execution stops.
+Make sure to include failsafe output from any node that outputs to a
+<strong><em>JoinNode</em></strong>.</p>
+</div>
+</div>
+<div class="tabbed-block">
+<p>ADK Go v2.0.0 provides <code>workflow.NewJoinNode</code> for true fan-in in the
+graph engine: fan-out edges from <code>workflow.Start</code> (or any shared source
+node) feed in parallel to the join node, which waits for all of them to
+complete before emitting a <code>map[string]any</code> keyed by predecessor node name
+to the next node.</p>
+<p><code>workflow.EdgeBuilder</code> makes the fan-out / fan-in wiring concise with its
+dedicated <code>AddFanOut</code> and <code>AddFanIn</code> helpers (as shown in the
+<a href="https://github.com/google/adk-go/tree/v2/examples/workflow/complex">complex workflow example</a>):</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nx">gatherNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewJoinNode</span><span class="p">(</span><span class="s">&quot;gather&quot;</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">eb</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewEdgeBuilder</span><span class="p">()</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">AddFanOut</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeA</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeB</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeC</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">AddFanIn</span><span class="p">(</span><span class="nx">gatherNode</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeA</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeB</span><span class="p">,</span><span class="w"> </span><span class="nx">researchNodeC</span><span class="p">)</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">gatherNode</span><span class="p">,</span><span class="w"> </span><span class="nx">formatNode</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">formatNode</span><span class="p">,</span><span class="w"> </span><span class="nx">synthesisNode</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;research_pipeline&quot;</span><span class="p">,</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nx">Edges</span><span class="p">:</span><span class="w"> </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Build</span><span class="p">(),</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="p">})</span>
+</span></code></pre></div>
+<p>The following snippet shows the complete fan-out / join pattern using
+<code>workflow.NewJoinNode</code> and <code>EdgeBuilder.AddFanOut</code> / <code>AddFanIn</code>:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// newParallelFanOut builds a fan-out / join workflow using the v2 graph engine.</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// Three research nodes run in parallel from Start; workflow.NewJoinNode waits</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// for all of them to complete and emits a map[nodeName]output to the format</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// node, which assembles the results for a synthesis node.</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1">//</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1">// Graph topology:</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1">//</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1">//  START ─┬─&gt; research_A ──┐</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1">//         ├─&gt; research_B ──┼─&gt; gather (JoinNode) ─&gt; format ─&gt; synthesis</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1">//         └─&gt; research_C ──┘</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1">//</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1">// Python equivalent:</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1">//</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1">//  edges=[</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1">//      (&quot;START&quot;, research_A, my_join_node),</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1">//      (&quot;START&quot;, research_B, my_join_node),</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1">//      (&quot;START&quot;, research_C, my_join_node),</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1">//      (my_join_node, format_node),</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1">//      (format_node, synthesis_node),</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1">//  ]</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="kd">func</span><span class="w"> </span><span class="nx">newParallelFanOut</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span><span class="nx">researchA</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;research_A&quot;</span><span class="p">,</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Fact about renewable energy.&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-11-27"><a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-11-28"><a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">    </span><span class="nx">researchB</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;research_B&quot;</span><span class="p">,</span>
+</span><span id="__span-11-29"><a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-30"><a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Fact about electric vehicles.&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-11-31"><a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-11-32"><a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-11-33"><a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-11-34"><a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">    </span><span class="nx">researchC</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;research_C&quot;</span><span class="p">,</span>
+</span><span id="__span-11-35"><a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-36"><a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Fact about carbon capture.&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-11-37"><a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-11-38"><a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-11-39"><a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-11-40"><a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>
+</span><span id="__span-11-41"><a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="w">    </span><span class="c1">// workflow.NewJoinNode waits for all predecessors (research_A, research_B,</span>
+</span><span id="__span-11-42"><a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a><span class="w">    </span><span class="c1">// research_C) to complete and emits a map[nodeName]output to its successor.</span>
+</span><span id="__span-11-43"><a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="w">    </span><span class="nx">gatherNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewJoinNode</span><span class="p">(</span><span class="s">&quot;gather&quot;</span><span class="p">)</span>
+</span><span id="__span-11-44"><a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>
+</span><span id="__span-11-45"><a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="w">    </span><span class="c1">// formatNode receives map[string]any from gatherNode and assembles a</span>
+</span><span id="__span-11-46"><a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="w">    </span><span class="c1">// combined prompt string.</span>
+</span><span id="__span-11-47"><a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a><span class="w">    </span><span class="nx">formatNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;format&quot;</span><span class="p">,</span>
+</span><span id="__span-11-48"><a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">any</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-49"><a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;A: %v\nB: %v\nC: %v&quot;</span><span class="p">,</span>
+</span><span id="__span-11-50"><a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a><span class="w">                </span><span class="nx">results</span><span class="p">[</span><span class="s">&quot;research_A&quot;</span><span class="p">],</span>
+</span><span id="__span-11-51"><a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a><span class="w">                </span><span class="nx">results</span><span class="p">[</span><span class="s">&quot;research_B&quot;</span><span class="p">],</span>
+</span><span id="__span-11-52"><a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a><span class="w">                </span><span class="nx">results</span><span class="p">[</span><span class="s">&quot;research_C&quot;</span><span class="p">],</span>
+</span><span id="__span-11-53"><a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a><span class="w">            </span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-11-54"><a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-11-55"><a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-11-56"><a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-11-57"><a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a>
+</span><span id="__span-11-58"><a id="__codelineno-11-58" name="__codelineno-11-58" href="#__codelineno-11-58"></a><span class="w">    </span><span class="nx">synthesisNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;synthesis&quot;</span><span class="p">,</span>
+</span><span id="__span-11-59"><a id="__codelineno-11-59" name="__codelineno-11-59" href="#__codelineno-11-59"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">prompt</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-60"><a id="__codelineno-11-60" name="__codelineno-11-60" href="#__codelineno-11-60"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Combined report: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">prompt</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-11-61"><a id="__codelineno-11-61" name="__codelineno-11-61" href="#__codelineno-11-61"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-11-62"><a id="__codelineno-11-62" name="__codelineno-11-62" href="#__codelineno-11-62"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-11-63"><a id="__codelineno-11-63" name="__codelineno-11-63" href="#__codelineno-11-63"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-11-64"><a id="__codelineno-11-64" name="__codelineno-11-64" href="#__codelineno-11-64"></a>
+</span><span id="__span-11-65"><a id="__codelineno-11-65" name="__codelineno-11-65" href="#__codelineno-11-65"></a><span class="w">    </span><span class="c1">// EdgeBuilder.AddFanOut fans workflow.Start out to all three research nodes.</span>
+</span><span id="__span-11-66"><a id="__codelineno-11-66" name="__codelineno-11-66" href="#__codelineno-11-66"></a><span class="w">    </span><span class="c1">// EdgeBuilder.AddFanIn routes all three research nodes into gatherNode.</span>
+</span><span id="__span-11-67"><a id="__codelineno-11-67" name="__codelineno-11-67" href="#__codelineno-11-67"></a><span class="w">    </span><span class="nx">eb</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewEdgeBuilder</span><span class="p">()</span>
+</span><span id="__span-11-68"><a id="__codelineno-11-68" name="__codelineno-11-68" href="#__codelineno-11-68"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddFanOut</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">researchA</span><span class="p">,</span><span class="w"> </span><span class="nx">researchB</span><span class="p">,</span><span class="w"> </span><span class="nx">researchC</span><span class="p">)</span>
+</span><span id="__span-11-69"><a id="__codelineno-11-69" name="__codelineno-11-69" href="#__codelineno-11-69"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddFanIn</span><span class="p">(</span><span class="nx">gatherNode</span><span class="p">,</span><span class="w"> </span><span class="nx">researchA</span><span class="p">,</span><span class="w"> </span><span class="nx">researchB</span><span class="p">,</span><span class="w"> </span><span class="nx">researchC</span><span class="p">)</span>
+</span><span id="__span-11-70"><a id="__codelineno-11-70" name="__codelineno-11-70" href="#__codelineno-11-70"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">gatherNode</span><span class="p">,</span><span class="w"> </span><span class="nx">formatNode</span><span class="p">)</span>
+</span><span id="__span-11-71"><a id="__codelineno-11-71" name="__codelineno-11-71" href="#__codelineno-11-71"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">formatNode</span><span class="p">,</span><span class="w"> </span><span class="nx">synthesisNode</span><span class="p">)</span>
+</span><span id="__span-11-72"><a id="__codelineno-11-72" name="__codelineno-11-72" href="#__codelineno-11-72"></a>
+</span><span id="__span-11-73"><a id="__codelineno-11-73" name="__codelineno-11-73" href="#__codelineno-11-73"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-11-74"><a id="__codelineno-11-74" name="__codelineno-11-74" href="#__codelineno-11-74"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;fan_out_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-11-75"><a id="__codelineno-11-75" name="__codelineno-11-75" href="#__codelineno-11-75"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Parallel research fan-out with JoinNode barrier and synthesis.&quot;</span><span class="p">,</span>
+</span><span id="__span-11-76"><a id="__codelineno-11-76" name="__codelineno-11-76" href="#__codelineno-11-76"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Build</span><span class="p">(),</span>
+</span><span id="__span-11-77"><a id="__codelineno-11-77" name="__codelineno-11-77" href="#__codelineno-11-77"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-11-78"><a id="__codelineno-11-78" name="__codelineno-11-78" href="#__codelineno-11-78"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Caution: Stuck JoinNode from incomplete nodes</p>
+<p><code>workflow.NewJoinNode</code> proceeds only after every predecessor node has
+emitted an <code>event.Output</code>. If a predecessor fails without emitting
+output, the JoinNode is stuck and workflow execution stops. Attach a
+<code>RetryConfig</code> to flaky predecessor nodes to guard against transient
+failures.</p>
+</div>
+</div>
+</div>
 </div>
 <h2 id="nested-workflows">Nested workflows<a class="headerlink" href="#nested-workflows" title="Permanent link">&para;</a></h2>
 <p>When building more complex workflows, you may want to encapsulate the
 functionality for specific tasks into reusable workflows. One or more
-<strong><em>Workflow</em></strong> objects can be used as a node within the graph of another
-workflow agent to accomplish this goal.</p>
+workflow agents can be used as a sub-agent within another workflow agent to
+accomplish this goal.</p>
 <p><img alt="Nested Workflows inside a parent Workflow" src="/assets/graph-workflow-nodes.svg" /></p>
-<p><strong>Figure 3.</strong> Nested <strong><em>Workflows</em></strong> as nodes inside a parent <strong><em>Workflow</em></strong>.</p>
-<p>The following code snippet shows how to implement a workflow agent with two
-nested more <strong><em>Workflow</em></strong> objects (workflow_B, workflow_C) as nodes in the
-graph:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;parent_workflow&quot;</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>       <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A1</span><span class="p">,</span> <span class="n">router</span><span class="p">),</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>       <span class="p">(</span><span class="n">router</span><span class="p">,</span> <span class="p">{</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>            <span class="s2">&quot;RUN_WORKFLOW_B&quot;</span><span class="p">:</span> <span class="n">workflow_B</span><span class="p">,</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="s2">&quot;RUN_WORKFLOW_C&quot;</span><span class="p">:</span> <span class="n">workflow_C</span><span class="p">,</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            <span class="p">},</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>       <span class="p">),</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="p">],</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="p">)</span>
+<p><strong>Figure 3.</strong> Nested workflow agents as sub-agents inside a parent workflow.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="python_5" name="__tabbed_6" type="radio" /><input id="go_5" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="python_5">Python</label><label for="go_5">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Workflow</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;parent_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>       <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A1</span><span class="p">,</span> <span class="n">router</span><span class="p">),</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>       <span class="p">(</span><span class="n">router</span><span class="p">,</span> <span class="p">{</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>            <span class="s2">&quot;RUN_WORKFLOW_B&quot;</span><span class="p">:</span> <span class="n">workflow_B</span><span class="p">,</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>            <span class="s2">&quot;RUN_WORKFLOW_C&quot;</span><span class="p">:</span> <span class="n">workflow_C</span><span class="p">,</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>            <span class="p">},</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>       <span class="p">),</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="p">],</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="p">)</span>
 </span></code></pre></div>
-<h3 id="nested-workflow-data-output">Nested workflow data output<a class="headerlink" href="#nested-workflow-data-output" title="Permanent link">&para;</a></h3>
-<p>Output for nested Workflow objects works slightly differently from individual
-nodes. When the nested workflow completes one of its nodes, it transmits data
-to the next node in the nested workflow's graph <em>and</em> the system bubbles up the
-Event for that node to the parent workflow for process traceability. When the
-nested workflow completes the last node in its process, the parent node extracts
-data from the final leaf nodes and emits it as the output of the nested
-workflow.</p>
+<h4 id="nested-workflow-data-output">Nested workflow data output<a class="headerlink" href="#nested-workflow-data-output" title="Permanent link">&para;</a></h4>
+<p>Output for nested Workflow objects works slightly differently from
+individual nodes. When the nested workflow completes one of its nodes, it
+transmits data to the next node in the nested workflow's graph <em>and</em> the
+system bubbles up the Event for that node to the parent workflow for
+process traceability. When the nested workflow completes the last node in
+its process, the parent node extracts data from the final leaf nodes and
+emits it as the output of the nested workflow.</p>
+</div>
+<div class="tabbed-block">
+<p>ADK Go v2.0.0 supports nested workflows in two complementary ways:</p>
+<p><strong>Graph engine</strong> (<code>workflowagent</code> + <code>workflow.Edge</code>): A <code>workflowagent</code>
+created with <code>workflowagent.New</code> is itself an <code>agent.Agent</code>, so it can
+be wrapped with <code>workflow.NewAgentNode</code> and used as a node inside another
+workflow's <code>edges</code> slice. The inner workflow runs to completion as a single
+node from the outer graph's perspective, and its terminal output is emitted
+as the node output on the outer graph's edge:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nx">innerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewAgentNode</span><span class="p">(</span><span class="nx">innerWorkflowAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nx">outerEdges</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">outerStepNode</span><span class="p">,</span><span class="w"> </span><span class="nx">innerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">finalNode</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nx">Name</span><span class="p">:</span><span class="w">  </span><span class="s">&quot;parent_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="nx">Edges</span><span class="p">:</span><span class="w"> </span><span class="nx">outerEdges</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="p">})</span>
+</span></code></pre></div>
+<p>The following snippet shows both the inner and outer graph construction.
+<code>workflow.NewAgentNode</code> wraps the inner <code>workflowagent</code> so it can be
+placed in the outer graph's <code>workflow.Chain</code>:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">// newNestedWorkflows shows how to nest one workflowagent inside another using</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1">// the v2 graph engine. The inner workflowagent is wrapped with</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1">// workflow.NewAgentNode and placed as a node in the outer graph&#39;s edge slice.</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1">// From the outer graph&#39;s perspective the inner workflow is a single node that</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">// runs to completion before the edge to finalNode is followed.</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1">//</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1">// Python equivalent:</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1">//</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1">//  root_agent = Workflow(</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1">//      name=&quot;parent_workflow&quot;,</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1">//      edges=[(&quot;START&quot;, task_A1, workflow_B, final_node)],</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1">//  )</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="kd">func</span><span class="w"> </span><span class="nx">newNestedWorkflows</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span><span class="c1">// --- Inner workflow B ---</span>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="nx">innerStep1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;inner_step_1&quot;</span><span class="p">,</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;[ES] &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">input</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="c1">// simulate translation to Spanish</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="nx">innerStep2</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;inner_step_2&quot;</span><span class="p">,</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">spanish</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;[EN] &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">spanish</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="c1">// simulate translation back to English</span>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-14-26"><a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-14-27"><a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>
+</span><span id="__span-14-28"><a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span><span class="c1">// workflowB is a self-contained inner graph.</span>
+</span><span id="__span-14-29"><a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">    </span><span class="nx">workflowB</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-14-30"><a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;workflow_B&quot;</span><span class="p">,</span>
+</span><span id="__span-14-31"><a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Translates input to Spanish then back to English.&quot;</span><span class="p">,</span>
+</span><span id="__span-14-32"><a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">innerStep1</span><span class="p">,</span><span class="w"> </span><span class="nx">innerStep2</span><span class="p">),</span>
+</span><span id="__span-14-33"><a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-14-34"><a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-35"><a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;workflowB: %w&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-14-36"><a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-14-37"><a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>
+</span><span id="__span-14-38"><a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">    </span><span class="c1">// --- Outer graph ---</span>
+</span><span id="__span-14-39"><a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">    </span><span class="nx">taskA1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;task_A1&quot;</span><span class="p">,</span>
+</span><span id="__span-14-40"><a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">input</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-41"><a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Summary: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">TrimSpace</span><span class="p">(</span><span class="nx">input</span><span class="p">),</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-14-42"><a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-14-43"><a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-14-44"><a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-14-45"><a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a>
+</span><span id="__span-14-46"><a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">    </span><span class="nx">finalNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;final_node&quot;</span><span class="p">,</span>
+</span><span id="__span-14-47"><a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">        </span><span class="kd">func</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-48"><a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Final: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">result</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-14-49"><a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">        </span><span class="p">},</span>
+</span><span id="__span-14-50"><a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="w">        </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{},</span>
+</span><span id="__span-14-51"><a id="__codelineno-14-51" name="__codelineno-14-51" href="#__codelineno-14-51"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-14-52"><a id="__codelineno-14-52" name="__codelineno-14-52" href="#__codelineno-14-52"></a>
+</span><span id="__span-14-53"><a id="__codelineno-14-53" name="__codelineno-14-53" href="#__codelineno-14-53"></a><span class="w">    </span><span class="c1">// workflow.NewAgentNode wraps workflowB so it can be placed as a node</span>
+</span><span id="__span-14-54"><a id="__codelineno-14-54" name="__codelineno-14-54" href="#__codelineno-14-54"></a><span class="w">    </span><span class="c1">// in the outer graph&#39;s edges slice.</span>
+</span><span id="__span-14-55"><a id="__codelineno-14-55" name="__codelineno-14-55" href="#__codelineno-14-55"></a><span class="w">    </span><span class="nx">innerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewAgentNode</span><span class="p">(</span><span class="nx">workflowB</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-14-56"><a id="__codelineno-14-56" name="__codelineno-14-56" href="#__codelineno-14-56"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-57"><a id="__codelineno-14-57" name="__codelineno-14-57" href="#__codelineno-14-57"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Errorf</span><span class="p">(</span><span class="s">&quot;NewAgentNode(workflowB): %w&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-14-58"><a id="__codelineno-14-58" name="__codelineno-14-58" href="#__codelineno-14-58"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-14-59"><a id="__codelineno-14-59" name="__codelineno-14-59" href="#__codelineno-14-59"></a>
+</span><span id="__span-14-60"><a id="__codelineno-14-60" name="__codelineno-14-60" href="#__codelineno-14-60"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-14-61"><a id="__codelineno-14-61" name="__codelineno-14-61" href="#__codelineno-14-61"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;parent_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-14-62"><a id="__codelineno-14-62" name="__codelineno-14-62" href="#__codelineno-14-62"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Runs task_A1 then the nested workflow_B then final_node.&quot;</span><span class="p">,</span>
+</span><span id="__span-14-63"><a id="__codelineno-14-63" name="__codelineno-14-63" href="#__codelineno-14-63"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Chain</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">taskA1</span><span class="p">,</span><span class="w"> </span><span class="nx">innerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">finalNode</span><span class="p">),</span>
+</span><span id="__span-14-64"><a id="__codelineno-14-64" name="__codelineno-14-64" href="#__codelineno-14-64"></a><span class="w">        </span><span class="nx">SubAgents</span><span class="p">:</span><span class="w">   </span><span class="p">[]</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">{</span><span class="nx">workflowB</span><span class="p">},</span>
+</span><span id="__span-14-65"><a id="__codelineno-14-65" name="__codelineno-14-65" href="#__codelineno-14-65"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-14-66"><a id="__codelineno-14-66" name="__codelineno-14-66" href="#__codelineno-14-66"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<h2 id="loop-and-escalation-exit">Loop and escalation exit<a class="headerlink" href="#loop-and-escalation-exit" title="Permanent link">&para;</a></h2>
+<p>A loop repeats a set of steps until a termination condition is met. In Python
+this is expressed as a back-edge in the <code>edges</code> graph that routes back to an
+earlier node. In ADK Go v2.0.0, the graph engine supports the same pattern
+directly: add an edge from a downstream node back to an earlier node with a
+route condition, and the engine re-activates the target node with a fresh
+lifecycle on each iteration.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="python_6" name="__tabbed_7" type="radio" /><input id="go_6" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="python_6">Python</label><label for="go_6">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">router</span><span class="p">(</span><span class="n">node_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Route to task B or C based on node_input.&quot;&quot;&quot;</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">node_input</span><span class="p">):</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>        <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">)</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="k">return</span> <span class="n">Event</span><span class="p">(</span><span class="n">route</span><span class="o">=</span><span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">)</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Workflow</span><span class="p">(</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;routing_workflow&quot;</span><span class="p">,</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="n">edges</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>        <span class="p">(</span><span class="s2">&quot;START&quot;</span><span class="p">,</span> <span class="n">task_A_node</span><span class="p">,</span> <span class="n">router</span><span class="p">),</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>        <span class="p">(</span><span class="n">router</span><span class="p">,</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>          <span class="p">{</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>            <span class="s2">&quot;RUN_TASK_B&quot;</span><span class="p">:</span> <span class="n">task_B_node</span><span class="p">,</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>            <span class="s2">&quot;RUN_TASK_C&quot;</span><span class="p">:</span> <span class="n">task_C_node</span><span class="p">,</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>          <span class="p">},</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>        <span class="p">),</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>    <span class="p">],</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<p>The following example uses the graph engine with <code>workflow.EdgeBuilder</code>.
+The critic node returns a verdict, a router node sets <code>Event.Routes</code>, and
+a back-edge from the refiner to the critic creates the loop. When the
+critic is satisfied it routes to the terminal <code>done</code> node instead:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// draft carries the working document through the refinement loop.</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">type</span><span class="w"> </span><span class="nx">draft</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nx">Text</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;text&quot;`</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">}</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1">// criticResult is emitted by the critic node with the review verdict and</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1">// optional suggestions. The router reads Verdict to set Event.Routes.</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="kd">type</span><span class="w"> </span><span class="nx">criticResult</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span><span class="nx">Verdict</span><span class="w">     </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;verdict&quot;`</span><span class="w">     </span><span class="c1">// &quot;REFINE&quot; or &quot;DONE&quot;</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">    </span><span class="nx">Suggestions</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="s">`json:&quot;suggestions&quot;`</span><span class="w"> </span><span class="c1">// non-empty when Verdict == &quot;REFINE&quot;</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="p">}</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1">// writeDraft is the initial writer node: produces the first draft from the</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="c1">// user&#39;s topic. Its typed return value becomes the input to the critic node</span>
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="c1">// via Event.Output — no session state writes needed.</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="kd">func</span><span class="w"> </span><span class="nx">writeDraft</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">topic</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">draft</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">    </span><span class="c1">// In a real workflow this would call an LLM; here we return a stub.</span>
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">draft</span><span class="p">{</span><span class="nx">Text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Draft about &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">topic</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;: placeholder content.&quot;</span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="p">}</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="c1">// reviewDraft is the critic node: inspects the draft and returns a verdict.</span>
+</span><span id="__span-16-22"><a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="c1">// &quot;DONE&quot; exits the loop; &quot;REFINE&quot; triggers a back-edge to the refiner.</span>
+</span><span id="__span-16-23"><a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="kd">func</span><span class="w"> </span><span class="nx">reviewDraft</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">d</span><span class="w"> </span><span class="nx">draft</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">criticResult</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-24"><a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">    </span><span class="c1">// Simulate a critic: approve once the draft contains &quot;improved&quot;.</span>
+</span><span id="__span-16-25"><a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">strings</span><span class="p">.</span><span class="nx">Contains</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">Text</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;improved&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-26"><a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">criticResult</span><span class="p">{</span><span class="nx">Verdict</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DONE&quot;</span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-27"><a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-16-28"><a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">criticResult</span><span class="p">{</span>
+</span><span id="__span-16-29"><a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">        </span><span class="nx">Verdict</span><span class="p">:</span><span class="w">     </span><span class="s">&quot;REFINE&quot;</span><span class="p">,</span>
+</span><span id="__span-16-30"><a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">        </span><span class="nx">Suggestions</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Add more detail and mark the text as improved.&quot;</span><span class="p">,</span>
+</span><span id="__span-16-31"><a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-32"><a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="p">}</span>
+</span><span id="__span-16-33"><a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>
+</span><span id="__span-16-34"><a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="c1">// routeVerdict reads the critic&#39;s verdict and sets Event.Routes so the</span>
+</span><span id="__span-16-35"><a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="c1">// graph engine dispatches to either the refiner or the done node.</span>
+</span><span id="__span-16-36"><a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="c1">// Returning nil suppresses the automatic terminal event.</span>
+</span><span id="__span-16-37"><a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="kd">func</span><span class="w"> </span><span class="nx">routeVerdict</span><span class="p">(</span><span class="nx">ctx</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="nx">criticResult</span><span class="p">,</span><span class="w"> </span><span class="nx">emit</span><span class="w"> </span><span class="kd">func</span><span class="p">(</span><span class="o">*</span><span class="nx">session</span><span class="p">.</span><span class="nx">Event</span><span class="p">)</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">any</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-38"><a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">    </span><span class="nx">ev</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">session</span><span class="p">.</span><span class="nx">NewEvent</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">InvocationID</span><span class="p">())</span>
+</span><span id="__span-16-39"><a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="w">    </span><span class="nx">ev</span><span class="p">.</span><span class="nx">Routes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="nx">r</span><span class="p">.</span><span class="nx">Verdict</span><span class="p">}</span>
+</span><span id="__span-16-40"><a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">    </span><span class="nx">ev</span><span class="p">.</span><span class="nx">Output</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="c1">// forward the full result to the chosen successor</span>
+</span><span id="__span-16-41"><a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">emit</span><span class="p">(</span><span class="nx">ev</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-42"><a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+</span><span id="__span-16-43"><a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-16-44"><a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-45"><a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a><span class="p">}</span>
+</span><span id="__span-16-46"><a id="__codelineno-16-46" name="__codelineno-16-46" href="#__codelineno-16-46"></a>
+</span><span id="__span-16-47"><a id="__codelineno-16-47" name="__codelineno-16-47" href="#__codelineno-16-47"></a><span class="c1">// refineDraft applies the critic&#39;s suggestions and returns the improved draft.</span>
+</span><span id="__span-16-48"><a id="__codelineno-16-48" name="__codelineno-16-48" href="#__codelineno-16-48"></a><span class="c1">// Its output feeds back to the critic node via the back-edge.</span>
+</span><span id="__span-16-49"><a id="__codelineno-16-49" name="__codelineno-16-49" href="#__codelineno-16-49"></a><span class="kd">func</span><span class="w"> </span><span class="nx">refineDraft</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="nx">criticResult</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">draft</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-50"><a id="__codelineno-16-50" name="__codelineno-16-50" href="#__codelineno-16-50"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">draft</span><span class="p">{</span><span class="nx">Text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;improved draft incorporating: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Suggestions</span><span class="p">},</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-51"><a id="__codelineno-16-51" name="__codelineno-16-51" href="#__codelineno-16-51"></a><span class="p">}</span>
+</span><span id="__span-16-52"><a id="__codelineno-16-52" name="__codelineno-16-52" href="#__codelineno-16-52"></a>
+</span><span id="__span-16-53"><a id="__codelineno-16-53" name="__codelineno-16-53" href="#__codelineno-16-53"></a><span class="c1">// reportDone is the terminal node, reached only when the critic is satisfied.</span>
+</span><span id="__span-16-54"><a id="__codelineno-16-54" name="__codelineno-16-54" href="#__codelineno-16-54"></a><span class="kd">func</span><span class="w"> </span><span class="nx">reportDone</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">r</span><span class="w"> </span><span class="nx">criticResult</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-55"><a id="__codelineno-16-55" name="__codelineno-16-55" href="#__codelineno-16-55"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Refinement complete. Final verdict: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">Verdict</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+</span><span id="__span-16-56"><a id="__codelineno-16-56" name="__codelineno-16-56" href="#__codelineno-16-56"></a><span class="p">}</span>
+</span><span id="__span-16-57"><a id="__codelineno-16-57" name="__codelineno-16-57" href="#__codelineno-16-57"></a>
+</span><span id="__span-16-58"><a id="__codelineno-16-58" name="__codelineno-16-58" href="#__codelineno-16-58"></a><span class="c1">// newLoopEscalate builds an iterative document-refinement workflow using the</span>
+</span><span id="__span-16-59"><a id="__codelineno-16-59" name="__codelineno-16-59" href="#__codelineno-16-59"></a><span class="c1">// graph engine. The critic node emits a route (&quot;REFINE&quot; or &quot;DONE&quot;) and the</span>
+</span><span id="__span-16-60"><a id="__codelineno-16-60" name="__codelineno-16-60" href="#__codelineno-16-60"></a><span class="c1">// engine dispatches to either the refiner (which loops back to the critic via</span>
+</span><span id="__span-16-61"><a id="__codelineno-16-61" name="__codelineno-16-61" href="#__codelineno-16-61"></a><span class="c1">// a back-edge) or the terminal done node.</span>
+</span><span id="__span-16-62"><a id="__codelineno-16-62" name="__codelineno-16-62" href="#__codelineno-16-62"></a><span class="c1">//</span>
+</span><span id="__span-16-63"><a id="__codelineno-16-63" name="__codelineno-16-63" href="#__codelineno-16-63"></a><span class="c1">// Graph topology:</span>
+</span><span id="__span-16-64"><a id="__codelineno-16-64" name="__codelineno-16-64" href="#__codelineno-16-64"></a><span class="c1">//</span>
+</span><span id="__span-16-65"><a id="__codelineno-16-65" name="__codelineno-16-65" href="#__codelineno-16-65"></a><span class="c1">//  START → writer → critic → router ─┬─ &quot;REFINE&quot; → refiner ──┐</span>
+</span><span id="__span-16-66"><a id="__codelineno-16-66" name="__codelineno-16-66" href="#__codelineno-16-66"></a><span class="c1">//                                     └─ &quot;DONE&quot;   → done       │</span>
+</span><span id="__span-16-67"><a id="__codelineno-16-67" name="__codelineno-16-67" href="#__codelineno-16-67"></a><span class="c1">//                   ▲_______________________________┘ (back-edge)</span>
+</span><span id="__span-16-68"><a id="__codelineno-16-68" name="__codelineno-16-68" href="#__codelineno-16-68"></a><span class="c1">//</span>
+</span><span id="__span-16-69"><a id="__codelineno-16-69" name="__codelineno-16-69" href="#__codelineno-16-69"></a><span class="c1">// Python equivalent:</span>
+</span><span id="__span-16-70"><a id="__codelineno-16-70" name="__codelineno-16-70" href="#__codelineno-16-70"></a><span class="c1">//</span>
+</span><span id="__span-16-71"><a id="__codelineno-16-71" name="__codelineno-16-71" href="#__codelineno-16-71"></a><span class="c1">//  edges=[</span>
+</span><span id="__span-16-72"><a id="__codelineno-16-72" name="__codelineno-16-72" href="#__codelineno-16-72"></a><span class="c1">//      (&quot;START&quot;, writer_node, critic_node, router),</span>
+</span><span id="__span-16-73"><a id="__codelineno-16-73" name="__codelineno-16-73" href="#__codelineno-16-73"></a><span class="c1">//      (router, {&quot;REFINE&quot;: refiner_node, &quot;DONE&quot;: done_node}),</span>
+</span><span id="__span-16-74"><a id="__codelineno-16-74" name="__codelineno-16-74" href="#__codelineno-16-74"></a><span class="c1">//      (refiner_node, critic_node),  # back-edge creates the loop</span>
+</span><span id="__span-16-75"><a id="__codelineno-16-75" name="__codelineno-16-75" href="#__codelineno-16-75"></a><span class="c1">//  ]</span>
+</span><span id="__span-16-76"><a id="__codelineno-16-76" name="__codelineno-16-76" href="#__codelineno-16-76"></a><span class="kd">func</span><span class="w"> </span><span class="nx">newLoopEscalate</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">agent</span><span class="p">.</span><span class="nx">Agent</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-77"><a id="__codelineno-16-77" name="__codelineno-16-77" href="#__codelineno-16-77"></a><span class="w">    </span><span class="nx">writerNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;writer&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">writeDraft</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-16-78"><a id="__codelineno-16-78" name="__codelineno-16-78" href="#__codelineno-16-78"></a><span class="w">    </span><span class="nx">criticNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;critic&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">reviewDraft</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-16-79"><a id="__codelineno-16-79" name="__codelineno-16-79" href="#__codelineno-16-79"></a><span class="w">    </span><span class="nx">routerNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewEmittingFunctionNode</span><span class="p">(</span><span class="s">&quot;router&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">routeVerdict</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-16-80"><a id="__codelineno-16-80" name="__codelineno-16-80" href="#__codelineno-16-80"></a><span class="w">    </span><span class="nx">refinerNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;refiner&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">refineDraft</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-16-81"><a id="__codelineno-16-81" name="__codelineno-16-81" href="#__codelineno-16-81"></a><span class="w">    </span><span class="nx">doneNode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewFunctionNode</span><span class="p">(</span><span class="s">&quot;done&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">reportDone</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NodeConfig</span><span class="p">{})</span>
+</span><span id="__span-16-82"><a id="__codelineno-16-82" name="__codelineno-16-82" href="#__codelineno-16-82"></a>
+</span><span id="__span-16-83"><a id="__codelineno-16-83" name="__codelineno-16-83" href="#__codelineno-16-83"></a><span class="w">    </span><span class="c1">// Build the edges. The back-edge from refinerNode to criticNode creates</span>
+</span><span id="__span-16-84"><a id="__codelineno-16-84" name="__codelineno-16-84" href="#__codelineno-16-84"></a><span class="w">    </span><span class="c1">// the loop; the graph engine re-activates criticNode with a fresh</span>
+</span><span id="__span-16-85"><a id="__codelineno-16-85" name="__codelineno-16-85" href="#__codelineno-16-85"></a><span class="w">    </span><span class="c1">// lifecycle on each iteration.</span>
+</span><span id="__span-16-86"><a id="__codelineno-16-86" name="__codelineno-16-86" href="#__codelineno-16-86"></a><span class="w">    </span><span class="nx">eb</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">NewEdgeBuilder</span><span class="p">()</span>
+</span><span id="__span-16-87"><a id="__codelineno-16-87" name="__codelineno-16-87" href="#__codelineno-16-87"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Start</span><span class="p">,</span><span class="w"> </span><span class="nx">writerNode</span><span class="p">)</span>
+</span><span id="__span-16-88"><a id="__codelineno-16-88" name="__codelineno-16-88" href="#__codelineno-16-88"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">writerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">criticNode</span><span class="p">)</span>
+</span><span id="__span-16-89"><a id="__codelineno-16-89" name="__codelineno-16-89" href="#__codelineno-16-89"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">criticNode</span><span class="p">,</span><span class="w"> </span><span class="nx">routerNode</span><span class="p">)</span>
+</span><span id="__span-16-90"><a id="__codelineno-16-90" name="__codelineno-16-90" href="#__codelineno-16-90"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">routerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">refinerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;REFINE&quot;</span><span class="p">))</span>
+</span><span id="__span-16-91"><a id="__codelineno-16-91" name="__codelineno-16-91" href="#__codelineno-16-91"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">routerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">doneNode</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;DONE&quot;</span><span class="p">))</span>
+</span><span id="__span-16-92"><a id="__codelineno-16-92" name="__codelineno-16-92" href="#__codelineno-16-92"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">refinerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">criticNode</span><span class="p">)</span><span class="w"> </span><span class="c1">// back-edge: loop back for another review</span>
+</span><span id="__span-16-93"><a id="__codelineno-16-93" name="__codelineno-16-93" href="#__codelineno-16-93"></a>
+</span><span id="__span-16-94"><a id="__codelineno-16-94" name="__codelineno-16-94" href="#__codelineno-16-94"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
+</span><span id="__span-16-95"><a id="__codelineno-16-95" name="__codelineno-16-95" href="#__codelineno-16-95"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;iterative_writer&quot;</span><span class="p">,</span>
+</span><span id="__span-16-96"><a id="__codelineno-16-96" name="__codelineno-16-96" href="#__codelineno-16-96"></a><span class="w">        </span><span class="nx">Description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Writes then iteratively refines a document using a critic/refiner loop.&quot;</span><span class="p">,</span>
+</span><span id="__span-16-97"><a id="__codelineno-16-97" name="__codelineno-16-97" href="#__codelineno-16-97"></a><span class="w">        </span><span class="nx">Edges</span><span class="p">:</span><span class="w">       </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Build</span><span class="p">(),</span>
+</span><span id="__span-16-98"><a id="__codelineno-16-98" name="__codelineno-16-98" href="#__codelineno-16-98"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-16-99"><a id="__codelineno-16-99" name="__codelineno-16-99" href="#__codelineno-16-99"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 
 
 

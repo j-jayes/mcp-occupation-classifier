@@ -140,11 +140,9 @@
             
 <span class="announce-item">
   <a href="/2.0/">
-    ADK Python 2.0 GA
+    ADK Go 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents, and check out
-  <a href="/get-started/kotlin/"
-  target="_blank" rel="noopener">ADK Kotlin</a>!
+  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
 </span>
 
           </div>
@@ -791,6 +789,8 @@
       
         
       
+        
+      
     
     
     
@@ -1000,6 +1000,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -6461,9 +6489,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1_4" id="__nav_6_1_4_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -6477,7 +6527,79 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Go ADK
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk/v2" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v2.x
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7627,10 +7749,12 @@
 <h3 id="execution-logic-components">Execution Logic Components<a class="headerlink" href="#execution-logic-components" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Role:</strong> The parts containing your custom code and the core agent capabilities.</li>
-<li><strong>Components:</strong></li>
+<li><strong>Components:</strong><ul>
 <li><code>Agent</code> (<code>BaseAgent</code>, <code>LlmAgent</code>, etc.): Your primary logic units that process information and decide on actions. They implement the <code>_run_async_impl</code> method which yields events.</li>
 <li><code>Tools</code> (<code>BaseTool</code>, <code>FunctionTool</code>, <code>AgentTool</code>, etc.): External functions or capabilities used by agents (often <code>LlmAgent</code>) to interact with the outside world or perform specific tasks. They execute and return results, which are then wrapped in events.</li>
 <li><code>Callbacks</code> (Functions): User-defined functions attached to agents (e.g., <code>before_agent_callback</code>, <code>after_model_callback</code>) that hook into specific points in the execution flow, potentially modifying behavior or state, whose effects are captured in events.</li>
+</ul>
+</li>
 <li><strong>Function:</strong> Perform the actual thinking, calculation, or external interaction. They communicate their results or needs by <strong>yielding <code>Event</code> objects</strong> and pausing until the Runner processes them.</li>
 </ul>
 </li>
@@ -7645,10 +7769,12 @@
 <h3 id="services"><code>Services</code><a class="headerlink" href="#services" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Role:</strong> Backend components responsible for managing persistent or shared resources. Used primarily by the <code>Runner</code> during event processing.</li>
-<li><strong>Components:</strong></li>
+<li><strong>Components:</strong><ul>
 <li><code>SessionService</code> (<code>BaseSessionService</code>, <code>InMemorySessionService</code>, etc.): Manages <code>Session</code> objects, including saving/loading them, applying <code>state_delta</code> to the session state, and appending events to the <code>event history</code>.</li>
 <li><code>ArtifactService</code> (<code>BaseArtifactService</code>, <code>InMemoryArtifactService</code>, <code>GcsArtifactService</code>, etc.): Manages the storage and retrieval of binary artifact data. Although <code>save_artifact</code> is called via context during execution logic, the <code>artifact_delta</code> in the event confirms the action for the Runner/SessionService.</li>
 <li><code>MemoryService</code> (<code>BaseMemoryService</code>, etc.): (Optional) Manages long-term semantic memory across sessions for a user.</li>
+</ul>
+</li>
 <li><strong>Function:</strong> Provide the persistence layer. The <code>Runner</code> interacts with them to ensure changes signaled by <code>event.actions</code> are reliably stored <em>before</em> the Execution Logic resumes.</li>
 </ul>
 </li>

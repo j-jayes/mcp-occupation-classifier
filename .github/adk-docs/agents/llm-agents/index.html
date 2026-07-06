@@ -140,11 +140,9 @@
             
 <span class="announce-item">
   <a href="/2.0/">
-    ADK Python 2.0 GA
+    ADK Go 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents, and check out
-  <a href="/get-started/kotlin/"
-  target="_blank" rel="noopener">ADK Kotlin</a>!
+  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
 </span>
 
           </div>
@@ -6399,9 +6397,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1_4" id="__nav_6_1_4_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -6415,7 +6435,79 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Go ADK
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk/v2" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v2.x
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7676,6 +7768,28 @@ may not work reliably. In such cases, consider using sub-agents that handle outp
 </div>
 </div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Go v2.0.0: agent execution modes</p>
+<p>ADK Go v2.0.0 introduces an explicit <code>Mode</code> field on <code>llmagent.Config</code> that
+controls how the agent runs when used inside a graph-based or dynamic
+workflow. Three modes are available:</p>
+<ul>
+<li><strong><code>ModeChat</code></strong> (default for an agent used as a sub-agent): The agent
+    participates in a multi-turn conversation with the user and is reachable
+    from peer agents via <code>transfer_to_agent</code>.</li>
+<li><strong><code>ModeSingleTurn</code></strong> (default for an agent used as a node in a
+    workflow): The agent completes its task in a single turn without
+    chatting with the user.</li>
+<li><strong><code>ModeTask</code></strong>: A task agent that chats with the user to accomplish a
+    task — in contrast to <code>ModeSingleTurn</code>, it can interact with the user
+    across turns to complete the work.</li>
+</ul>
+<p>When you wrap an <code>llmagent</code> with <code>workflow.NewAgentNode</code>, the workflow
+engine automatically sets the mode to <code>ModeSingleTurn</code> if no mode is
+specified — equivalent to Python's <code>mode="single_turn"</code> on an agent used
+as a workflow node. For more information on composing agents in graph-based
+workflows, see <a href="/graphs/">Graph-based agent workflows</a>.</p>
+</div>
 <h3 id="planner">Planner<a class="headerlink" href="#planner" title="Permanent link">&para;</a></h3>
 <div class="language-support-tag" title="">
    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span>
@@ -8904,6 +9018,9 @@ the following:</p>
   planning (<code>planner</code>), controlling agent transfer
   (<code>disallow_transfer_to_parent</code>, <code>disallow_transfer_to_peers</code>), and system-wide
   instructions (<code>global_instruction</code>). See <a href="/agents/custom-agents/">Custom agent workflows</a>.</li>
+<li><strong>Graph-based workflows:</strong> Compose LLM agents as steps in deterministic,
+  graph-based pipelines using <a href="/graphs/">Graph-based agent workflows</a>. In Go v2.0.0, use
+  <code>workflow.NewAgentNode</code> to wrap any LLM agent as a workflow node.</li>
 </ul>
 
 
