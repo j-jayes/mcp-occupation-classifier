@@ -1407,6 +1407,8 @@
       
         
       
+        
+      
     
     
     
@@ -1479,6 +1481,34 @@
     
   
     Simple agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/managed-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed agents
   
 
     
@@ -7010,9 +7040,7 @@
   
   
     
-      
-    
-    <a href="https://github.com/google/adk-docs/raw/main/docs/workflows/collaboration.md" title="View Markdown source" class="md-content__button md-icon">
+    <a href="./index.md" title="View this page as Markdown" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -7079,15 +7107,17 @@ a small team of subagents and assign them to a coordinator agent:</p>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">root</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;travel_planner&quot;</span><span class="p">,</span>      <span class="c1"># coordinator agent</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">sub_agents</span><span class="o">=</span><span class="p">[</span><span class="n">weather_agent</span><span class="p">,</span> <span class="n">flight_agent</span><span class="p">],</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># Auto-injects: request_task_weather_checker, request_task_flight_booker</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">)</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># Auto-injects delegation tools named after each subagent:</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="c1"># weather_checker, flight_booker</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
 <p>In ADK Go v2.0.0, the <code>Mode</code> field on <code>llmagent.Config</code> accepts the same
 mode strings as Python: <code>"chat"</code>, <code>"task"</code>, and <code>"single_turn"</code>. Declaring
 <code>SubAgents</code> on the coordinator agent causes ADK to automatically generate
-<code>request_task_&lt;name&gt;</code> delegation tools, exactly as in Python.</p>
+a delegation tool for each subagent, named after the subagent itself,
+exactly as in Python.</p>
 <div class="language-go highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Stub tool functions — in a real agent these call external services.</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">func</span><span class="w"> </span><span class="nx">getWeather</span><span class="p">(</span><span class="nx">_</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="kd">struct</span><span class="p">{</span><span class="w"> </span><span class="nx">City</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Sunny, 22°C&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
@@ -7167,8 +7197,8 @@ mode strings as Python: <code>"chat"</code>, <code>"task"</code>, and <code>"sin
 </span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>
 </span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="w">    </span><span class="c1">// The coordinator agent declares SubAgents. ADK automatically generates</span>
-</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="w">    </span><span class="c1">// request_task_weather_checker and request_task_flight_booker tools so the</span>
-</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="w">    </span><span class="c1">// coordinator can delegate work to each subagent.</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="w">    </span><span class="c1">// weather_checker and flight_booker delegation tools, named after each</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="w">    </span><span class="c1">// subagent, so the coordinator can delegate work to each one.</span>
 </span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">llmagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">llmagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
 </span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;travel_planner&quot;</span><span class="p">,</span>
 </span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="w">        </span><span class="nx">Model</span><span class="p">:</span><span class="w">       </span><span class="nx">model</span><span class="p">,</span>
@@ -7234,7 +7264,7 @@ setting.</p>
     <tr>
       <td><strong>Return to parent</strong></td>
       <td>Manual (via transfer)</td>
-      <td>Automatic (via <code>complete_task</code>)</td>
+      <td>Automatic (via <code>finish_task</code>)</td>
       <td>Automatic (with result)</td>
     </tr>
   </tbody>
@@ -7258,11 +7288,11 @@ v2.0.0 graph engine — the agent executes its task. Upon completion, control
 automatically advances to the next node based on the logic of the workflow
 agent's graph.</p>
 <p><strong>As a transferee from an LlmAgent:</strong> When a parent <strong><em>LlmAgent</em></strong> transfers
-control to a task agent via <code>request_task</code>, the task agent executes until it
-calls <code>complete_task</code>. At that point, control automatically returns to the
-originating agent that initiated the transfer. This behavior differs from
-default, chat <strong><em>mode</em></strong> agents, which require explicit <code>transfer_to_agent</code>
-calls to hand back control.</p>
+control to a task agent via the delegation tool named after that subagent, the
+task agent executes until it calls <code>finish_task</code>. At that point, control
+automatically returns to the originating agent that initiated the transfer.
+This behavior differs from default, chat <strong><em>mode</em></strong> agents, which require
+explicit <code>transfer_to_agent</code> calls to hand back control.</p>
 <table>
   <thead>
     <tr>

@@ -3086,6 +3086,26 @@ For local development servers over plain HTTP, disable OAuth when the server is 
 uvx fastmcp-remote http://localhost:8000/mcp --auth none
 ```
 
+## Self-Signed Certificates
+
+For servers behind a self-signed certificate, point `--verify` at a CA bundle that trusts the certificate:
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+uvx fastmcp-remote https://internal.example.com/mcp --verify /path/to/ca-bundle.pem
+```
+
+To disable certificate verification entirely, pass `--verify false`. This is insecure and should only be used for trusted servers on private networks:
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+uvx fastmcp-remote https://internal.example.com/mcp --verify false
+```
+
+To trust a CA bundle without a flag, set the standard `SSL_CERT_FILE` environment variable, which OpenSSL reads automatically:
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+SSL_CERT_FILE=/path/to/ca-bundle.pem uvx fastmcp-remote https://internal.example.com/mcp
+```
+
 ## OAuth Storage
 
 OAuth tokens are stored under `~/.fastmcp/remote` by default. Set `FASTMCP_REMOTE_CONFIG_DIR` to use another directory:
@@ -3113,6 +3133,7 @@ uvx fastmcp-remote https://example.com/mcp 3334 --host 127.0.0.1
 | `--transport`    | Choose `http` or `sse`. Defaults to `http`.                                                                                                                                                                                                               |
 | `--header`       | Add a header to upstream requests, for example `--header "Authorization: Bearer <token>"`. Values may contain colons. Quote headers whose values contain spaces. Use `${VAR}` to expand environment variables inside values. Repeat for multiple headers. |
 | `--auth`         | Choose `oauth` or `none`. The default uses OAuth unless an `Authorization` header is provided.                                                                                                                                                            |
+| `--verify`       | Control TLS certificate verification. Pass a path to a CA bundle to trust a self-signed certificate, or `false` to disable verification (insecure). Defaults to verification enabled.                                                                     |
 | `--resource`     | Isolate OAuth token storage for a named remote resource.                                                                                                                                                                                                  |
 | `--host`         | Set the OAuth callback hostname. Defaults to `localhost`.                                                                                                                                                                                                 |
 | `--auth-timeout` | Set how long to wait for the OAuth callback. Defaults to 300 seconds.                                                                                                                                                                                     |
@@ -4639,6 +4660,51 @@ FastMCP supports multiple authentication methods to secure your remote server. S
 
 If you're mounting an authenticated server under a path prefix, see [Mounting Authenticated Servers](#mounting-authenticated-servers) below for important routing considerations.
 
+### Host and Origin Protection
+
+FastMCP validates `Host` and browser `Origin` headers for Streamable HTTP requests by default. This protects localhost-bound servers from DNS rebinding attacks and rejects browser requests from origins you have not trusted.
+
+Think of this as a request guard rather than CORS middleware. It decides whether a request can reach MCP session handling. CORS remains a separate browser response-header policy; configure CORS middleware separately when browser JavaScript must read cross-origin responses.
+
+When you deploy behind a public hostname, add the hostname clients use to reach your MCP endpoint. If a browser-based MCP client runs on a separate origin, add that origin as well:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import FastMCP
+
+mcp = FastMCP("My Server")
+
+app = mcp.http_app(
+    allowed_hosts=["mcp.example.com"],
+    allowed_origins=["https://app.example.com"],
+)
+```
+
+For the direct server approach, pass the same values to `run()`:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import FastMCP
+
+mcp = FastMCP("My Server")
+
+if __name__ == "__main__":
+    mcp.run(
+        transport="http",
+        host="0.0.0.0",
+        port=8000,
+        allowed_hosts=["mcp.example.com"],
+        allowed_origins=["https://app.example.com"],
+    )
+```
+
+You can also configure these values with environment variables:
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+export FASTMCP_HTTP_ALLOWED_HOSTS='["mcp.example.com"]'
+export FASTMCP_HTTP_ALLOWED_ORIGINS='["https://app.example.com"]'
+```
+
+Use `host_origin_protection=False` only for trusted internal deployments that provide equivalent validation at another layer, such as an ingress proxy.
+
 ### Health Checks
 
 Health check endpoints are essential for monitoring your deployed server and ensuring it's responding correctly. FastMCP allows you to add custom routes alongside your MCP endpoints, making it easy to implement health checks that work with both deployment approaches.
@@ -4692,6 +4758,8 @@ http_app = mcp.http_app(middleware=middleware)
 </Tip>
 
 CORS (Cross-Origin Resource Sharing) is needed when JavaScript running in a web browser connects directly to your MCP server. This is different from using an LLM through a browser—in that case, the browser connects to the LLM service, and the LLM service connects to your MCP server (no CORS needed).
+
+Host and Origin protection runs before CORS. Add browser client origins to `allowed_origins` so trusted browser requests reach the CORS middleware, then configure CORS to let browser JavaScript read the MCP response headers it needs. Setting `allowed_origins` trusts the request; it does not emit `Access-Control-Allow-Origin` or other CORS response headers.
 
 Browser-based MCP clients that need CORS include:
 
@@ -5126,7 +5194,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-For more details on OAuth authentication, see the [Authentication guide](/servers/auth).
+For more details on OAuth authentication, see the [Authentication guide](/servers/auth/authentication).
 
 ## Production Deployment
 
@@ -12255,11 +12323,16 @@ mcp = FastMCP(name="My Server", auth=auth)
 
   <ParamField type="list[str] | None">
     List of allowed redirect URI patterns for MCP clients. Patterns support
-    wildcards (e.g., `"http://localhost:*"`, `"https://*.example.com/*"`). -
-    `None` (default): All redirect URIs allowed (for MCP/DCR compatibility) -
-    Empty list `[]`: No redirect URIs allowed - Custom list: Only matching
-    patterns allowed These patterns apply to MCP client loopback redirects, NOT
-    the upstream OAuth app redirect URI.
+    wildcards (e.g., `"http://localhost:*"`, `"https://*.example.com/*"`).
+
+    * `None` (default): DCR clients use registered redirect URIs, with loopback
+      ports allowed to vary for MCP compatibility. Unsafe browser schemes such as
+      `javascript:`, `data:`, `file:`, and `vbscript:` are rejected.
+    * Empty list `[]`: No redirect URIs allowed
+    * Custom list: Only matching patterns allowed
+
+    These patterns apply to MCP client loopback redirects. Configure the upstream
+    OAuth app redirect URI separately with `redirect_path`.
   </ParamField>
 
   <ParamField type="list[str] | None">
@@ -12617,7 +12690,7 @@ auth = OAuthProxy(
 
 ### Redirect URI Validation
 
-While the OAuth proxy accepts all redirect URIs by default (for DCR compatibility), you can restrict which clients can connect by specifying allowed patterns:
+By default, the OAuth proxy validates DCR clients against their registered redirect URIs while allowing loopback ports to vary for MCP compatibility. Unsafe browser schemes such as `javascript:` are always rejected. You can restrict which clients can connect at the server level by specifying allowed patterns:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 # Allow only localhost clients (common for development)
@@ -12924,11 +12997,11 @@ mcp = FastMCP(name="My Server", auth=auth)
   <ParamField type="list[str] | None">
     List of allowed redirect URI patterns for MCP clients. Patterns support wildcards (e.g., `"http://localhost:*"`, `"https://*.example.com/*"`).
 
-    * `None` (default): All redirect URIs allowed (for MCP/DCR compatibility)
+    * `None` (default): DCR clients use registered redirect URIs, with loopback ports allowed to vary for MCP compatibility. Unsafe browser schemes such as `javascript:`, `data:`, `file:`, and `vbscript:` are rejected.
     * Empty list `[]`: No redirect URIs allowed
     * Custom list: Only matching patterns allowed
 
-    These patterns apply to MCP client loopback redirects, NOT the upstream OAuth app redirect URI.
+    These patterns apply to MCP client loopback redirects. Configure the upstream OAuth app redirect URI separately with `redirect_path`.
   </ParamField>
 
   <ParamField type="str | None">
@@ -13203,7 +13276,7 @@ auth = RemoteAuthProvider(
     token_verifier=token_verifier,
     authorization_servers=[AnyHttpUrl("https://auth.yourcompany.com")],
     base_url="https://api.yourcompany.com",  # Your server base URL
-    # Optional: restrict allowed client redirect URIs (defaults to all for DCR compatibility)
+    # Optional: restrict allowed client redirect URIs
     allowed_client_redirect_uris=["http://localhost:*", "http://127.0.0.1:*"]
 )
 
@@ -13305,7 +13378,7 @@ WorkOS's support for Dynamic Client Registration makes it particularly well-suit
 <Note>
   `RemoteAuthProvider` also supports the `allowed_client_redirect_uris` parameter for controlling which redirect URIs are accepted from MCP clients during DCR:
 
-  * `None` (default): All redirect URIs allowed (for DCR compatibility)
+  * `None` (default): Broad DCR-compatible redirect support, while rejecting unsafe browser schemes such as `javascript:`, `data:`, `file:`, and `vbscript:`
   * Custom list: Specify allowed patterns with wildcard support
   * Empty list `[]`: No redirect URIs allowed
 
@@ -16513,7 +16586,7 @@ mcp.add_middleware(RateLimitingMiddleware(
 | ------------------------- | ---------- | ------- | ---------------------------- |
 | `max_requests_per_second` | `float`    | `10.0`  | Sustained request rate       |
 | `burst_capacity`          | `int`      | `20`    | Maximum burst size           |
-| `client_id_func`          | `Callable` | `None`  | Custom client identification |
+| `get_client_id`           | `Callable` | `None`  | Custom client identification |
 
 For sliding window rate limiting:
 
@@ -16877,6 +16950,82 @@ class ErrorLogger(Middleware):
 ```
 
 Catching and not re-raising suppresses the error entirely. Usually you want to log and re-raise.
+
+### Audit and Event Records
+
+A common need is to emit one structured record per tool call — for audit logs, policy decisions, or offline analysis — without wrapping individual tools or storing raw payloads. `on_call_tool` is the right place: it sees the call start, the resolved `ToolResult` (so it can detect empty or error results), the duration, and can deny the call before it runs.
+
+Use [OpenTelemetry](/servers/telemetry) when the goal is to *export* spans to an observability backend. Reach for a record like this when you want a self-contained, redacted audit trail — or to drive runtime decisions from the result.
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+import hashlib
+import json
+from datetime import datetime
+
+from fastmcp.server.middleware import Middleware, MiddlewareContext
+from fastmcp.exceptions import ToolError
+
+
+def _schema_hash(arguments: dict | None) -> str:
+    """Stable hash of the argument shape — detects schema drift without storing values."""
+    shape = sorted(arguments or {})
+    return hashlib.sha256(json.dumps(shape).encode()).hexdigest()[:12]
+
+
+def _redact(arguments: dict | None) -> dict:
+    """Keep keys, drop values — raw inputs stay out of the default path."""
+    return {key: "<redacted>" for key in (arguments or {})}
+
+
+def _call_id(context: MiddlewareContext) -> str | None:
+    """Request id when an MCP session is active (see Session Availability above)."""
+    ctx = context.fastmcp_context
+    if ctx is not None and ctx.request_context:
+        return ctx.request_id
+    return None
+
+
+class AuditMiddleware(Middleware):
+    async def on_call_tool(self, context: MiddlewareContext, call_next):
+        record = {
+            "tool": context.message.name,
+            "call_id": _call_id(context),
+            "schema_hash": _schema_hash(context.message.arguments),
+            "arguments": _redact(context.message.arguments),
+            "received_at": context.timestamp.isoformat(),
+        }
+
+        try:
+            result = await call_next(context)
+        except Exception as exc:
+            record["status"] = "failed"
+            record["error"] = type(exc).__name__
+            self.emit(record)
+            raise
+
+        empty = not result.content and result.structured_content is None
+        record["status"] = "error" if result.is_error else "empty" if empty else "completed"
+        now = datetime.now(context.timestamp.tzinfo)
+        record["duration_ms"] = round((now - context.timestamp).total_seconds() * 1000, 2)
+        self.emit(record)
+        return result
+
+    def emit(self, record: dict) -> None:
+        # Swap in your sink: structured logger, queue, audit store, etc.
+        print(json.dumps(record))
+```
+
+Each record carries the fields downstream tools tend to need — tool name, call id, input schema hash, redacted arguments, result class (`completed` / `empty` / `error` / `failed`), and duration — while raw inputs and outputs stay out by default.
+
+To make this a policy layer, deny inside the same hook before calling `call_next`:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+async def on_call_tool(self, context: MiddlewareContext, call_next):
+    if not self.is_allowed(context.message.name, context.message.arguments):
+        self.emit({"tool": context.message.name, "status": "denied", "reason": "policy"})
+        raise ToolError("Call blocked by policy")
+    return await call_next(context)
+```
 
 ### Complete Example
 
@@ -19405,7 +19554,7 @@ FastMCP implements [RFC 6570 URI Templates](https://datatracker.ietf.org/doc/htm
 
 <VersionBadge />
 
-Resource templates support wildcard parameters that can match multiple path segments. While standard parameters (`{param}`) only match a single path segment and don't cross "/" boundaries, wildcard parameters (`{param*}`) can capture multiple segments including slashes. Wildcards capture all subsequent path segments *up until* the defined part of the URI template (whether literal or another parameter). This allows you to have multiple wildcard parameters in a single URI template.
+Resource templates support wildcard parameters that can match multiple path segments. Standard parameters (`{param}`) match a single URI segment before decoding and do not cross literal "/" boundaries in the request URI. Wildcard parameters (`{param*}`) can capture multiple segments including slashes. Wildcards capture all subsequent path segments *up until* the defined part of the URI template (whether literal or another parameter). This allows you to have multiple wildcard parameters in a single URI template.
 
 ```python {15, 23} theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp import FastMCP
@@ -19449,6 +19598,34 @@ Wildcard parameters are useful when:
 * Building URL-like patterns similar to REST APIs
 
 Note that like regular parameters, each wildcard parameter must still be a named parameter in your function signature, and all required function parameters must appear in the URI template.
+
+#### Filesystem Path Safety
+
+Template parameters are decoded before your function receives them. A standard `{filename}` parameter matches one URI segment before decoding, so a request like `files://a%2Fb` passes `filename="a/b"` to the handler. Treat template values as untrusted decoded URI data whenever they determine filesystem paths.
+
+Validate the final resolved path against an allowed root before reading:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
+from fastmcp import FastMCP
+from fastmcp.exceptions import ResourceError
+
+mcp = FastMCP(name="DocsServer")
+DOCS_ROOT = Path("docs").resolve()
+
+
+@mcp.resource("docs://{filename}")
+def read_doc(filename: str) -> str:
+    requested_path = (DOCS_ROOT / filename).resolve()
+
+    if not requested_path.is_relative_to(DOCS_ROOT) or not requested_path.is_file():
+        raise ResourceError("Document not found")
+
+    return requested_path.read_text(encoding="utf-8")
+```
+
+Use wildcard parameters (`{path*}`) for resources whose URI shape intentionally includes slashes, and apply the same containment check before accessing the filesystem.
 
 #### Query Parameters
 
@@ -20370,7 +20547,7 @@ These parameters control what your server is built from — its components, midd
   </ParamField>
 
   <ParamField type="list[Provider] | None">
-    [Providers](/servers/providers) that supply tools, resources, and prompts dynamically. Providers are queried at request time, so they can serve components from databases, APIs, or other external sources
+    [Providers](/servers/providers/overview) that supply tools, resources, and prompts dynamically. Providers are queried at request time, so they can serve components from databases, APIs, or other external sources
   </ParamField>
 
   <ParamField type="list[Transform] | None">
@@ -24835,6 +25012,102 @@ Server-level transforms override provider-level transforms. If a component is di
 Source: https://gofastmcp.com/changelog
 
 
+
+<Update label="v3.4.3" description="2026-07-05">
+  **[v3.4.3: The Fast and the Secure-ious](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.3)**
+
+  FastMCP 3.4.3 closes out a month of SSRF and OAuth hardening: NAT64, 6to4, Teredo, and ISATAP transition addresses can no longer smuggle private IPv4 targets past the SSRF allow-list, Streamable HTTP now validates Host and Origin before session handling to block DNS rebinding against localhost-bound servers, and OAuth redirect validation rejects unsafe schemes and unregistered DCR redirect URIs. Alongside the security work, this release also fixes proxy session teardown races, discriminator-tag handling in JSON schema conversion, and several smaller reliability issues.
+
+  ### Enhancements ✨
+
+  * Dedupe discriminator-required helper across schema converters by [@jlowin](https://github.com/jlowin) in [#4362](https://github.com/PrefectHQ/fastmcp/pull/4362)
+  * Add real Monty sandbox e2e coverage for CodeMode call\_tool by [@AlexlaGuardia](https://github.com/AlexlaGuardia) in [#4274](https://github.com/PrefectHQ/fastmcp/pull/4274)
+  * Switch prettier hook to rbubley/mirrors-prettier by [@jlowin](https://github.com/jlowin) in [#4366](https://github.com/PrefectHQ/fastmcp/pull/4366)
+  * feat(remote): add --verify flag for TLS certificate verification by [@jlowin](https://github.com/jlowin) in [#4369](https://github.com/PrefectHQ/fastmcp/pull/4369)
+
+  ### Security 🔒
+
+  * fix(deps): clear Dependabot security alerts via lockfile bumps by [@jlowin](https://github.com/jlowin) in [#4393](https://github.com/PrefectHQ/fastmcp/pull/4393)
+  * Clarify resource path parameter safety by [@jlowin](https://github.com/jlowin) in [#4398](https://github.com/PrefectHQ/fastmcp/pull/4398)
+  * Fix dev apps launch escaping by [@jlowin](https://github.com/jlowin) in [#4399](https://github.com/PrefectHQ/fastmcp/pull/4399)
+  * Block NAT64 SSRF bypass by [@jlowin](https://github.com/jlowin) in [#4400](https://github.com/PrefectHQ/fastmcp/pull/4400)
+  * \[codex] Fix event store replay isolation by [@jlowin](https://github.com/jlowin) in [#4402](https://github.com/PrefectHQ/fastmcp/pull/4402)
+  * Fix DCR redirect URI validation by [@jlowin](https://github.com/jlowin) in [#4408](https://github.com/PrefectHQ/fastmcp/pull/4408)
+  * Protect streamable HTTP from DNS rebinding by [@jlowin](https://github.com/jlowin) in [#4405](https://github.com/PrefectHQ/fastmcp/pull/4405)
+  * Block unsafe OAuth redirect schemes by [@jlowin](https://github.com/jlowin) in [#4419](https://github.com/PrefectHQ/fastmcp/pull/4419)
+  * Block IPv6 transition SSRF bypasses by [@jlowin](https://github.com/jlowin) in [#4426](https://github.com/PrefectHQ/fastmcp/pull/4426)
+
+  ### Fixes 🐞
+
+  * fix: caching middleware TypeError on cache miss due to mismatched call\_next parameter by [@gmenziesint](https://github.com/gmenziesint) in [#4301](https://github.com/PrefectHQ/fastmcp/pull/4301)
+  * Fix: async rate limiting middleware get\_client\_id callbacks by [@Chotom](https://github.com/Chotom) in [#4319](https://github.com/PrefectHQ/fastmcp/pull/4319)
+  * Recognize all GitHub issue-link forms in require-issue-link workflow by [@jlowin](https://github.com/jlowin) in [#4359](https://github.com/PrefectHQ/fastmcp/pull/4359)
+  * fix: preserve required discriminator tags by [@he-yufeng](https://github.com/he-yufeng) in [#4297](https://github.com/PrefectHQ/fastmcp/pull/4297)
+  * fix(proxy): shield stateful proxy disconnect during session teardown by [@jlowin](https://github.com/jlowin) in [#4363](https://github.com/PrefectHQ/fastmcp/pull/4363)
+  * fix(fs): isolate same-named package imports across providers by [@jlowin](https://github.com/jlowin) in [#4361](https://github.com/PrefectHQ/fastmcp/pull/4361)
+  * fix: StatefulProxyClient.clear() no longer causes KeyError on session teardown by [@tcconnally](https://github.com/tcconnally) in [#4328](https://github.com/PrefectHQ/fastmcp/pull/4328)
+  * fix: guard recursive refs in json\_schema\_to\_type by [@Epochex](https://github.com/Epochex) in [#4312](https://github.com/PrefectHQ/fastmcp/pull/4312)
+  * Forward IdP auth errors to MCP client instead of showing HTML error page by [@bobbyjames839](https://github.com/bobbyjames839) in [#4293](https://github.com/PrefectHQ/fastmcp/pull/4293)
+  * fix(resources): round-trip path values with reserved characters in URI templates by [@jlowin](https://github.com/jlowin) in [#4368](https://github.com/PrefectHQ/fastmcp/pull/4368)
+  * fix: bracket IPv6 hosts in server startup log URL by [@jlowin](https://github.com/jlowin) in [#4372](https://github.com/PrefectHQ/fastmcp/pull/4372)
+  * fix: bound default OIDC discovery timeout and expose it on provider wrappers by [@jlowin](https://github.com/jlowin) in [#4374](https://github.com/PrefectHQ/fastmcp/pull/4374)
+  * fix: validate task tool arguments against declared types by [@jlowin](https://github.com/jlowin) in [#4373](https://github.com/PrefectHQ/fastmcp/pull/4373)
+  * fix(tools): honor serialize\_by\_alias in tool result serialization by [@jlowin](https://github.com/jlowin) in [#4391](https://github.com/PrefectHQ/fastmcp/pull/4391)
+  * Fix/cimd flow issue by [@twjackysu](https://github.com/twjackysu) in [#4206](https://github.com/PrefectHQ/fastmcp/pull/4206)
+  * Reject empty env var keys by [@CodingFeng101](https://github.com/CodingFeng101) in [#4410](https://github.com/PrefectHQ/fastmcp/pull/4410)
+  * fix: correct replace\_type docstring parameter descriptions by [@hiSandog](https://github.com/hiSandog) in [#4375](https://github.com/PrefectHQ/fastmcp/pull/4375)
+  * Fix ty 0.0.55 diagnostics and prefab-ui protocol version drift by [@jlowin](https://github.com/jlowin) in [#4428](https://github.com/PrefectHQ/fastmcp/pull/4428)
+  * \[codex] Fix OpenAPI resource template requests by [@jlowin](https://github.com/jlowin) in [#4407](https://github.com/PrefectHQ/fastmcp/pull/4407)
+
+  ### Docs 📚
+
+  * fix: RST docstrings in fastmcp.types render raw on gofastmcp.com by [@jlowin](https://github.com/jlowin) in [#4367](https://github.com/PrefectHQ/fastmcp/pull/4367)
+  * docs: fix 5 broken internal links (auth & providers pages) by [@Michael-WhiteCapData](https://github.com/Michael-WhiteCapData) in [#4344](https://github.com/PrefectHQ/fastmcp/pull/4344)
+  * docs: add audit/event-record recipe for tool-call middleware by [@AlexlaGuardia](https://github.com/AlexlaGuardia) in [#4345](https://github.com/PrefectHQ/fastmcp/pull/4345)
+
+  ### Dependencies 📦
+
+  * chore(deps): bump actions/checkout from 6 to 7 by [@dependabot](https://github.com/apps/dependabot) in [#4343](https://github.com/PrefectHQ/fastmcp/pull/4343)
+  * chore(deps): bump joserfc from 1.6.5 to 1.6.7 in the uv group across 1 directory by [@dependabot](https://github.com/apps/dependabot) in [#4394](https://github.com/PrefectHQ/fastmcp/pull/4394)
+  * chore(deps): bump joserfc from 1.6.7 to 1.6.8 in the uv group across 1 directory by [@dependabot](https://github.com/apps/dependabot) in [#4429](https://github.com/PrefectHQ/fastmcp/pull/4429)
+
+  ### Other Changes 🦾
+
+  * Raise fastmcp.ValidationError for invalid tool arguments by [@jlowin](https://github.com/jlowin) in [#4392](https://github.com/PrefectHQ/fastmcp/pull/4392)
+  * Fix versioned auth middleware checks by [@jlowin](https://github.com/jlowin) in [#4401](https://github.com/PrefectHQ/fastmcp/pull/4401)
+
+  ## New Contributors
+
+  * @gmenziesint made their first contribution in [#4301](https://github.com/PrefectHQ/fastmcp/pull/4301)
+  * @Chotom made their first contribution in [#4319](https://github.com/PrefectHQ/fastmcp/pull/4319)
+  * @he-yufeng made their first contribution in [#4297](https://github.com/PrefectHQ/fastmcp/pull/4297)
+  * @AlexlaGuardia made their first contribution in [#4274](https://github.com/PrefectHQ/fastmcp/pull/4274)
+  * @tcconnally made their first contribution in [#4328](https://github.com/PrefectHQ/fastmcp/pull/4328)
+  * @Epochex made their first contribution in [#4312](https://github.com/PrefectHQ/fastmcp/pull/4312)
+  * @Michael-WhiteCapData made their first contribution in [#4344](https://github.com/PrefectHQ/fastmcp/pull/4344)
+  * @bobbyjames839 made their first contribution in [#4293](https://github.com/PrefectHQ/fastmcp/pull/4293)
+  * @twjackysu made their first contribution in [#4206](https://github.com/PrefectHQ/fastmcp/pull/4206)
+  * @CodingFeng101 made their first contribution in [#4410](https://github.com/PrefectHQ/fastmcp/pull/4410)
+  * @hiSandog made their first contribution in [#4375](https://github.com/PrefectHQ/fastmcp/pull/4375)
+
+  **Full Changelog**: [v3.4.2...v3.4.3](https://github.com/PrefectHQ/fastmcp/compare/v3.4.2...v3.4.3)
+</Update>
+
+<Update label="v3.4.2" description="2026-06-06">
+  **[v3.4.2: Heads Up](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.2)**
+
+  FastMCP 3.4.2 restores JWT compatibility for providers that include private, non-critical JWS header parameters. Tokens from providers like Clerk can carry header metadata such as `cat` without being rejected before signature and claim validation, while unsupported critical headers are still rejected.
+
+  ### Fixes 🐞
+
+  * Allow private JWT headers by [@jlowin](https://github.com/jlowin) in [#4290](https://github.com/PrefectHQ/fastmcp/pull/4290)
+
+  ### Docs 📚
+
+  * Docs: add v3.4.1 changelog entries by [@jlowin](https://github.com/jlowin) in [#4289](https://github.com/PrefectHQ/fastmcp/pull/4289)
+
+  **Full Changelog**: [v3.4.1...v3.4.2](https://github.com/PrefectHQ/fastmcp/compare/v3.4.1...v3.4.2)
+</Update>
 
 <Update label="v3.4.1" description="2026-06-05">
   **[v3.4.1: Floor It](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.1)**
@@ -32481,7 +32754,7 @@ Okay, I rolled 3 dice and got a 5, 4, and 1.
 
 ### Remote & Authenticated Servers
 
-In the above example, we connected to our local server using `stdio` transport. Because we're using a FastMCP client, you can also connect to any local or remote MCP server, using any [transport](/clients/transports) or [auth](/clients/auth) method supported by FastMCP, simply by changing the client configuration.
+In the above example, we connected to our local server using `stdio` transport. Because we're using a FastMCP client, you can also connect to any local or remote MCP server, using any [transport](/clients/transports) or [auth](/clients/auth/oauth) method supported by FastMCP, simply by changing the client configuration.
 
 For example, to connect to a remote, authenticated server, you can use the following client:
 
@@ -33789,17 +34062,20 @@ You can change which `.env` file is loaded by setting the `FASTMCP_ENV_FILE` env
 
 These control how the server listens when running with an HTTP transport.
 
-| Environment Variable           | Type                                                 | Default      | Description                                                                                  |
-| ------------------------------ | ---------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------- |
-| `FASTMCP_TRANSPORT`            | `Literal["stdio", "http", "sse", "streamable-http"]` | `stdio`      | Default transport.                                                                           |
-| `FASTMCP_HOST`                 | `str`                                                | `127.0.0.1`  | Host to bind to.                                                                             |
-| `FASTMCP_PORT`                 | `int`                                                | `8000`       | Port to bind to.                                                                             |
-| `FASTMCP_SSE_PATH`             | `str`                                                | `/sse`       | Path for SSE endpoint.                                                                       |
-| `FASTMCP_MESSAGE_PATH`         | `str`                                                | `/messages/` | Path for SSE message endpoint.                                                               |
-| `FASTMCP_STREAMABLE_HTTP_PATH` | `str`                                                | `/mcp`       | Path for Streamable HTTP endpoint.                                                           |
-| `FASTMCP_STATELESS_HTTP`       | `bool`                                               | `false`      | Enable stateless HTTP mode (new transport per request). Useful for multi-worker deployments. |
-| `FASTMCP_JSON_RESPONSE`        | `bool`                                               | `false`      | Use JSON responses instead of SSE for Streamable HTTP.                                       |
-| `FASTMCP_DEBUG`                | `bool`                                               | `false`      | Enable debug mode.                                                                           |
+| Environment Variable                  | Type                                                 | Default      | Description                                                                                                                                                                      |
+| ------------------------------------- | ---------------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FASTMCP_TRANSPORT`                   | `Literal["stdio", "http", "sse", "streamable-http"]` | `stdio`      | Default transport.                                                                                                                                                               |
+| `FASTMCP_HOST`                        | `str`                                                | `127.0.0.1`  | Host to bind to.                                                                                                                                                                 |
+| `FASTMCP_PORT`                        | `int`                                                | `8000`       | Port to bind to.                                                                                                                                                                 |
+| `FASTMCP_SSE_PATH`                    | `str`                                                | `/sse`       | Path for SSE endpoint.                                                                                                                                                           |
+| `FASTMCP_MESSAGE_PATH`                | `str`                                                | `/messages/` | Path for SSE message endpoint.                                                                                                                                                   |
+| `FASTMCP_STREAMABLE_HTTP_PATH`        | `str`                                                | `/mcp`       | Path for Streamable HTTP endpoint.                                                                                                                                               |
+| `FASTMCP_STATELESS_HTTP`              | `bool`                                               | `false`      | Enable stateless HTTP mode (new transport per request). Useful for multi-worker deployments.                                                                                     |
+| `FASTMCP_JSON_RESPONSE`               | `bool`                                               | `false`      | Use JSON responses instead of SSE for Streamable HTTP.                                                                                                                           |
+| `FASTMCP_HTTP_HOST_ORIGIN_PROTECTION` | `bool`                                               | `true`       | Validate `Host` and browser `Origin` headers for Streamable HTTP requests.                                                                                                       |
+| `FASTMCP_HTTP_ALLOWED_HOSTS`          | `list[str] \| null`                                  | `null`       | Additional trusted hostnames for Streamable HTTP requests. Use a JSON array, such as `["mcp.example.com"]`.                                                                      |
+| `FASTMCP_HTTP_ALLOWED_ORIGINS`        | `list[str] \| null`                                  | `null`       | Browser origins trusted by the Streamable HTTP request guard. Configure CORS separately for cross-origin browser reads. Use a JSON array, such as `["https://app.example.com"]`. |
+| `FASTMCP_DEBUG`                       | `bool`                                               | `false`      | Enable debug mode.                                                                                                                                                               |
 
 ## Error Handling
 
@@ -34515,16 +34791,6 @@ Source: https://gofastmcp.com/python-sdk/fastmcp-cli
 FastMCP CLI package.
 
 
-# client
-Source: https://gofastmcp.com/python-sdk/fastmcp-client
-
-
-
-# `fastmcp.client`
-
-*This module is empty or contains only private/internal implementations.*
-
-
 # decorators
 Source: https://gofastmcp.com/python-sdk/fastmcp-decorators
 
@@ -34634,46 +34900,6 @@ Object is disabled.
 ### `AuthorizationError` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/exceptions.py#L62"><Icon icon="github" /></a></sup>
 
 Error when authorization check fails.
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-experimental-__init__
-
-
-
-# `fastmcp.experimental`
-
-*This module is empty or contains only private/internal implementations.*
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-experimental-sampling-__init__
-
-
-
-# `fastmcp.experimental.sampling`
-
-*This module is empty or contains only private/internal implementations.*
-
-
-# handlers
-Source: https://gofastmcp.com/python-sdk/fastmcp-experimental-sampling-handlers
-
-
-
-# `fastmcp.experimental.sampling.handlers`
-
-*This module is empty or contains only private/internal implementations.*
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-experimental-transforms-__init__
-
-
-
-# `fastmcp.experimental.transforms`
-
-*This module is empty or contains only private/internal implementations.*
 
 
 # code_mode
@@ -34977,36 +35203,6 @@ add_server(self, name: str, server: CanonicalMCPServerTypes) -> None
 Add or update a server in the configuration.
 
 
-# prompts
-Source: https://gofastmcp.com/python-sdk/fastmcp-prompts
-
-
-
-# `fastmcp.prompts`
-
-*This module is empty or contains only private/internal implementations.*
-
-
-# resources
-Source: https://gofastmcp.com/python-sdk/fastmcp-resources
-
-
-
-# `fastmcp.resources`
-
-*This module is empty or contains only private/internal implementations.*
-
-
-# server
-Source: https://gofastmcp.com/python-sdk/fastmcp-server
-
-
-
-# `fastmcp.server`
-
-*This module is empty or contains only private/internal implementations.*
-
-
 # settings
 Source: https://gofastmcp.com/python-sdk/fastmcp-settings
 
@@ -35145,16 +35341,6 @@ trace context is preserved and meta is not used.
 * or the current context if no trace context found or already in a trace
 
 
-# tools
-Source: https://gofastmcp.com/python-sdk/fastmcp-tools
-
-
-
-# `fastmcp.tools`
-
-*This module is empty or contains only private/internal implementations.*
-
-
 # types
 Source: https://gofastmcp.com/python-sdk/fastmcp-types
 
@@ -35168,16 +35354,18 @@ These types can be used in tool function signatures to influence how
 parameters are presented in UIs (e.g. `fastmcp dev apps`) and
 serialized in JSON Schema.
 
-Example::
+Example:
 
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp import FastMCP
 from fastmcp.types import Textarea
 
 mcp = FastMCP("demo")
 
 @mcp.tool()
-def run\_query(sql: Textarea) -> str:
-...
+def run_query(sql: Textarea) -> str:
+    ...
+```
 
 
 # __init__
@@ -35541,7 +35729,23 @@ Register this component with docket for background execution.
 No-ops if task\_config.mode is "forbidden". Subclasses override to
 register their callable (self.run, self.read, self.render, or self.fn).
 
-#### `add_to_docket` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/components.py#L235"><Icon icon="github" /></a></sup>
+#### `coerce_task_arguments` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/components.py#L235"><Icon icon="github" /></a></sup>
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+coerce_task_arguments(self, arguments: dict[str, Any]) -> dict[str, Any]
+```
+
+Validate and coerce task arguments before any task state is created.
+
+Called by `submit_to_docket` up front, so invalid inputs raise before
+the task's Redis metadata and initial status notification exist —
+otherwise a coercion failure during queueing would orphan a task the
+client has already observed. The base implementation is a no-op;
+components that splat arguments into a typed Python callable (e.g.
+`FunctionTool`) override this to mirror the synchronous validation
+path.
+
+#### `add_to_docket` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/components.py#L248"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_to_docket(self, docket: Docket, *args: Any, **kwargs: Any) -> Execution
@@ -35558,7 +35762,7 @@ Subclasses override this to handle their specific calling conventions:
 
 The \*\*kwargs are passed through to docket.add() (e.g., key=task\_key).
 
-#### `get_span_attributes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/components.py#L257"><Icon icon="github" /></a></sup>
+#### `get_span_attributes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/components.py#L270"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_span_attributes(self) -> dict[str, Any]
@@ -35781,7 +35985,22 @@ Source: https://gofastmcp.com/python-sdk/fastmcp-utilities-json_schema
 
 ## Functions
 
-### `dereference_refs` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L104"><Icon icon="github" /></a></sup>
+### `require_discriminator_property` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L116"><Icon icon="github" /></a></sup>
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+require_discriminator_property(schema: dict[str, Any]) -> dict[str, Any]
+```
+
+Keep an OpenAPI discriminator's tag mandatory after the keyword is dropped.
+
+Returns a copy of *schema* with `discriminator.propertyName` added to each
+`anyOf`/`oneOf` variant's `required` list. A Pydantic discriminated
+union whose tag has a default omits that tag from `required`; without this,
+an untagged payload passes the generated schema but fails later in the source
+model with `union_tag_not_found`. No-op if there is no string
+`propertyName`.
+
+### `dereference_refs` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L147"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 dereference_refs(schema: dict[str, Any]) -> dict[str, Any]
@@ -35814,7 +36033,7 @@ schemas from untrusted servers.
 * A new schema dict with $ref resolved where possible and $defs removed
 * when no longer needed
 
-### `resolve_root_ref` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L251"><Icon icon="github" /></a></sup>
+### `resolve_root_ref` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L294"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 resolve_root_ref(schema: dict[str, Any]) -> dict[str, Any]
@@ -35836,7 +36055,7 @@ the referenced definition while preserving \$defs for nested references.
 * A new schema dict with root-level \$ref resolved, or the original schema
 * if no resolution is needed
 
-### `compress_schema` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L645"><Icon icon="github" /></a></sup>
+### `compress_schema` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/json_schema.py#L688"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 compress_schema(schema: dict[str, Any], prune_params: list[str] | None = None, prune_additional_properties: bool = False, prune_titles: bool = False, dereference: bool = False) -> dict[str, Any]
@@ -36096,16 +36315,6 @@ FastMCP Configuration module.
 
 This module provides versioned configuration support for FastMCP servers.
 The current version is v1, which is re-exported here for convenience.
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-utilities-mcp_server_config-v1-__init__
-
-
-
-# `fastmcp.utilities.mcp_server_config.v1`
-
-*This module is empty or contains only private/internal implementations.*
 
 
 # __init__
@@ -36439,16 +36648,6 @@ Load and run the server with this configuration.
 
 * `**kwargs`: Additional arguments to pass to server.run\_async()
   These override config settings
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-utilities-mcp_server_config-v1-sources-__init__
-
-
-
-# `fastmcp.utilities.mcp_server_config.v1.sources`
-
-*This module is empty or contains only private/internal implementations.*
 
 
 # base
@@ -37101,15 +37300,14 @@ replace_type(type_, type_map: dict[type, type])
 ```
 
 Given a (possibly generic, nested, or otherwise complex) type, replaces all
-instances of old\_type with new\_type.
+instances of keys in type\_map with their corresponding values.
 
 This is useful for transforming types when creating tools.
 
 **Args:**
 
-* `type_`: The type to replace instances of old\_type with new\_type.
-* `old_type`: The type to replace.
-* `new_type`: The type to replace old\_type with.
+* `type_`: The type to transform.
+* `type_map`: A mapping of types to replace (keys are replaced by values).
 
 Examples:
 
@@ -37173,7 +37371,7 @@ Helper class for returning file data from tools.
 to_resource_content(self, mime_type: str | None = None, annotations: Annotations | None = None) -> mcp.types.EmbeddedResource
 ```
 
-### `ContextSamplingFallbackProtocol` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/types.py#L491"><Icon icon="github" /></a></sup>
+### `ContextSamplingFallbackProtocol` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/types.py#L490"><Icon icon="github" /></a></sup>
 
 
 # ui
@@ -37589,6 +37787,26 @@ Comparison order:
 Source: https://gofastmcp.com/updates
 
 
+
+<Update label="FastMCP 3.4.3" description="July 5, 2026">
+  <Card title="FastMCP v3.4.3: The Fast and the Secure-ious" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.3">
+    A month of SSRF and OAuth hardening lands in one patch. NAT64, 6to4, Teredo, and ISATAP transition addresses can no longer smuggle private IPv4 targets past the SSRF allow-list, Streamable HTTP validates Host and Origin before session handling to block DNS rebinding, and OAuth redirect validation rejects unsafe schemes and unregistered DCR redirect URIs.
+
+    🛡️ **SSRF allow-list hardening** — every IPv6 transition form (NAT64, 6to4, Teredo, ISATAP) now unwraps to its embedded IPv4 target and gets checked against the same policy.
+
+    🌐 **DNS rebinding protection** — Streamable HTTP validates `Host` and browser `Origin` before session handling, closing a path to localhost-bound unauthenticated servers.
+
+    🔐 **Stricter OAuth redirects** — unsafe redirect schemes are rejected before registration, and DCR clients are bound to the redirect URIs they registered.
+
+    🧵 **Reliability fixes** — proxy session teardown races, discriminator-tag handling in JSON schema conversion, and several smaller fixes across middleware and resource templates.
+  </Card>
+</Update>
+
+<Update label="FastMCP 3.4.2" description="June 6, 2026">
+  <Card title="FastMCP v3.4.2: Heads Up" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.2">
+    A compatibility patch. `JWTVerifier` now accepts JWTs carrying private, non-critical JWS header parameters (like Clerk's `cat`) instead of rejecting them before signature and claim validation, while unsupported critical headers are still rejected.
+  </Card>
+</Update>
 
 <Update label="FastMCP 3.4.1" description="June 5, 2026">
   <Card title="FastMCP v3.4.1: Floor It" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.1">

@@ -1407,6 +1407,8 @@
       
         
       
+        
+      
     
     
     
@@ -1479,6 +1481,34 @@
     
   
     Simple agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/managed-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed agents
   
 
     
@@ -7066,9 +7096,7 @@
   
   
     
-      
-    
-    <a href="https://github.com/google/adk-docs/raw/main/docs/graphs/routes.md" title="View Markdown source" class="md-content__button md-icon">
+    <a href="./index.md" title="View this page as Markdown" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -7758,7 +7786,7 @@ critic is satisfied it routes to the terminal <code>done</code> node instead:</p
 </span><span id="__span-16-89"><a id="__codelineno-16-89" name="__codelineno-16-89" href="#__codelineno-16-89"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">criticNode</span><span class="p">,</span><span class="w"> </span><span class="nx">routerNode</span><span class="p">)</span>
 </span><span id="__span-16-90"><a id="__codelineno-16-90" name="__codelineno-16-90" href="#__codelineno-16-90"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">routerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">refinerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;REFINE&quot;</span><span class="p">))</span>
 </span><span id="__span-16-91"><a id="__codelineno-16-91" name="__codelineno-16-91" href="#__codelineno-16-91"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">routerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">doneNode</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">StringRoute</span><span class="p">(</span><span class="s">&quot;DONE&quot;</span><span class="p">))</span>
-</span><span id="__span-16-92"><a id="__codelineno-16-92" name="__codelineno-16-92" href="#__codelineno-16-92"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="nx">refinerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">criticNode</span><span class="p">)</span><span class="w"> </span><span class="c1">// back-edge: loop back for another review</span>
+</span><span id="__span-16-92"><a id="__codelineno-16-92" name="__codelineno-16-92" href="#__codelineno-16-92"></a><span class="w">    </span><span class="nx">eb</span><span class="p">.</span><span class="nx">AddRoute</span><span class="p">(</span><span class="nx">refinerNode</span><span class="p">,</span><span class="w"> </span><span class="nx">criticNode</span><span class="p">,</span><span class="w"> </span><span class="nx">workflow</span><span class="p">.</span><span class="nx">Default</span><span class="p">)</span><span class="w"> </span><span class="c1">// back-edge: loop back for another review</span>
 </span><span id="__span-16-93"><a id="__codelineno-16-93" name="__codelineno-16-93" href="#__codelineno-16-93"></a>
 </span><span id="__span-16-94"><a id="__codelineno-16-94" name="__codelineno-16-94" href="#__codelineno-16-94"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="nx">workflowagent</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
 </span><span id="__span-16-95"><a id="__codelineno-16-95" name="__codelineno-16-95" href="#__codelineno-16-95"></a><span class="w">        </span><span class="nx">Name</span><span class="p">:</span><span class="w">        </span><span class="s">&quot;iterative_writer&quot;</span><span class="p">,</span>

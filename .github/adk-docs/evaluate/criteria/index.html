@@ -140,11 +140,9 @@
             
 <span class="announce-item">
   <a href="/2.0/">
-    ADK Python 2.0 GA
+    ADK Go 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents, and check out
-  <a href="/get-started/kotlin/"
-  target="_blank" rel="noopener">ADK Kotlin</a>!
+  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
 </span>
 
           </div>
@@ -791,6 +789,8 @@
       
         
       
+        
+      
     
     
     
@@ -1000,6 +1000,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -1368,6 +1396,8 @@
       
         
       
+        
+      
     
     
     
@@ -1437,6 +1467,34 @@
     
   
     Simple agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/managed-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed agents
   
 
     
@@ -6910,9 +6968,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1_4" id="__nav_6_1_4_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -6926,7 +7006,79 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Go ADK
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk/v2" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v2.x
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -8083,9 +8235,7 @@
   
   
     
-      
-    
-    <a href="https://github.com/google/adk-docs/raw/main/docs/evaluate/criteria.md" title="View Markdown source" class="md-content__button md-icon">
+    <a href="./index.md" title="View this page as Markdown" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -8553,8 +8703,10 @@ the Agent Platform Eval SDK.</p>
 <h3 id="how-to-use-this-criterion_6">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_6" title="Permanent link">&para;</a></h3>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
-typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
-function correctly.</p>
+typically in an <code>.env</code> file in your agent's directory, for the Agent Platform
+SDK to function correctly. For more information on connecting to Google Cloud
+from ADK agents, see
+<a href="/get-started/google-cloud/">Connect to Google Cloud and Agent Platform</a>.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
 representing the minimum safety score for a response to be considered passing.</p>
@@ -8624,7 +8776,8 @@ to the Agent Platform Eval SDK.</p>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
 typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
-function correctly.</p>
+function correctly. For more information on connecting to Google Cloud from ADK agents, see
+<a href="/get-started/google-cloud/">Connect to Google Cloud and Agent Platform</a>.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
 representing the minimum score for the conversation to be considered a success.</p>
@@ -8649,14 +8802,15 @@ the path or trajectory that the agent took to achieve the goal. Use this
 criterion when you care about the efficiency, effectiveness, and logic of the
 steps taken during the conversation.</p>
 <h4 id="details_9">Details<a class="headerlink" href="#details_9" title="Permanent link">&para;</a></h4>
-<p>This criterion is a reference-free metric that assesses the quality of the 
+<p>This criterion is a reference-free metric that assesses the quality of the
 interaction trajectory across multiple turns. It delegates the evaluation to the
 Agent Platform Eval SDK.</p>
 <h4 id="how-to-use-this-criterion_9">How To Use This Criterion?<a class="headerlink" href="#how-to-use-this-criterion_9" title="Permanent link">&para;</a></h4>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
 typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
-function correctly.</p>
+function correctly. For more information on connecting to Google Cloud from ADK agents, see
+<a href="/get-started/google-cloud/">Connect to Google Cloud and Agent Platform</a>.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
 representing the minimum trajectory quality score to be considered passing.</p>
@@ -8688,7 +8842,8 @@ AI General AI Eval SDK.</p>
 <p>Using this criterion requires a Google Cloud Project. You must have
 <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_CLOUD_LOCATION</code> environment variables set,
 typically in an <code>.env</code> file in your agent's directory, for the Agent Platform SDK to
-function correctly.</p>
+function correctly. For more information on connecting to Google Cloud from ADK agents, see
+<a href="/get-started/google-cloud/">Connect to Google Cloud and Agent Platform</a>.</p>
 <p>You can specify a threshold for this criterion in <code>EvalConfig</code> under the
 <code>criteria</code> dictionary. The value should be a float between 0.0 and 1.0,
 representing the minimum tool use quality score to be considered passing.</p>

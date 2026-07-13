@@ -140,11 +140,9 @@
             
 <span class="announce-item">
   <a href="/2.0/">
-    ADK Python 2.0 GA
+    ADK Go 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents, and check out
-  <a href="/get-started/kotlin/"
-  target="_blank" rel="noopener">ADK Kotlin</a>!
+  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
 </span>
 
           </div>
@@ -789,6 +787,8 @@
       
         
       
+        
+      
     
     
     
@@ -998,6 +998,34 @@
     
   
     Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/google-cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Google Cloud
   
 
     
@@ -1366,6 +1394,8 @@
       
         
       
+        
+      
     
     
     
@@ -1435,6 +1465,34 @@
     
   
     Simple agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/managed-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managed agents
   
 
     
@@ -6817,9 +6875,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1_4" id="__nav_6_1_4_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -6833,7 +6913,79 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Go ADK
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk/v2" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v2.x
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pkg.go.dev/google.golang.org/adk" target="_blank" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Go v1.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7892,9 +8044,7 @@
   
   
     
-      
-    
-    <a href="https://github.com/google/adk-docs/raw/main/docs/streaming/dev-guide/part1.md" title="View Markdown source" class="md-content__button md-icon">
+    <a href="./index.md" title="View this page as Markdown" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
@@ -8160,15 +8310,15 @@
 <h3 id="platform-flexibility">Platform Flexibility<a class="headerlink" href="#platform-flexibility" title="Permanent link">&para;</a></h3>
 <p>One of ADK's most powerful features is its transparent support for both <a href="https://ai.google.dev/gemini-api/docs/live">Gemini Live API</a> and <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/live-api">Gemini Live API (Agent Platform)</a>. This platform flexibility enables a seamless development-to-production workflow: develop locally with Gemini API using free API keys, then deploy to production with Agent Platform using enterprise Google Cloud infrastructure—all <strong>without changing application code</strong>, only environment configuration.</p>
 <h4 id="how-platform-selection-works">How Platform Selection Works<a class="headerlink" href="#how-platform-selection-works" title="Permanent link">&para;</a></h4>
-<p>ADK uses the <code>GOOGLE_GENAI_USE_VERTEXAI</code> environment variable to determine which Live API platform to use:</p>
+<p>ADK uses the <code>GOOGLE_GENAI_USE_ENTERPRISE</code> environment variable to determine which Live API platform to use:</p>
 <ul>
-<li><code>GOOGLE_GENAI_USE_VERTEXAI=FALSE</code> (or not set): Uses Gemini Live API via Google AI Studio</li>
-<li><code>GOOGLE_GENAI_USE_VERTEXAI=TRUE</code>: Uses Gemini Live API (Agent Platform) via Google Cloud</li>
+<li><code>GOOGLE_GENAI_USE_ENTERPRISE=FALSE</code> (or not set): Uses Gemini Live API via Google AI Studio</li>
+<li><code>GOOGLE_GENAI_USE_ENTERPRISE=TRUE</code>: Uses Gemini Live API (Agent Platform) via Google Cloud</li>
 </ul>
 <p>This environment variable is read by the underlying <code>google-genai</code> SDK when ADK creates the LLM connection. No code changes are needed when switching platforms—only environment configuration changes.</p>
 <h5 id="development-phase-gemini-live-api-google-ai-studio">Development Phase: Gemini Live API (Google AI Studio)<a class="headerlink" href="#development-phase-gemini-live-api-google-ai-studio" title="Permanent link">&para;</a></h5>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># .env.development</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">GOOGLE_GENAI_USE_VERTEXAI</span><span class="o">=</span>FALSE
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">GOOGLE_GENAI_USE_ENTERPRISE</span><span class="o">=</span>FALSE
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">GOOGLE_API_KEY</span><span class="o">=</span>your_api_key_here
 </span></code></pre></div>
 <p><strong>Benefits:</strong></p>
@@ -8180,7 +8330,7 @@
 </ul>
 <h5 id="production-phase-gemini-live-api-agent-platform">Production Phase: Gemini Live API (Agent Platform)<a class="headerlink" href="#production-phase-gemini-live-api-agent-platform" title="Permanent link">&para;</a></h5>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .env.production</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">GOOGLE_GENAI_USE_VERTEXAI</span><span class="o">=</span>TRUE
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">GOOGLE_GENAI_USE_ENTERPRISE</span><span class="o">=</span>TRUE
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">GOOGLE_CLOUD_PROJECT</span><span class="o">=</span>your_project_id
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">GOOGLE_CLOUD_LOCATION</span><span class="o">=</span>us-central1
 </span></code></pre></div>
