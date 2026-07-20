@@ -7228,8 +7228,8 @@ required KSP plugin and processor dependency are included in the
 <p>An ADK Kotlin agent project requires the following dependencies in your
 <code>build.gradle.kts</code> project file:</p>
 <div class="language-kotlin highlight"><span class="filename">my_agent/build.gradle.kts (partial)</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.2.0&quot;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.5.0&quot;</span><span class="p">)</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </span></code></pre></div>
 <details class="info">
@@ -7247,9 +7247,9 @@ this project:</p>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-webserver:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.2.0&quot;</span><span class="p">)</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-webserver:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.5.0&quot;</span><span class="p">)</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">kotlin</span><span class="w"> </span><span class="p">{</span>
@@ -7332,9 +7332,9 @@ allow you to test and interact with your agent.</p>
 <p>To run your agent with the ADK web interface, add the webserver dependency
 to your <code>build.gradle.kts</code>:</p>
 <div class="language-kotlin highlight"><span class="filename">my_agent/build.gradle.kts (add to dependencies)</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-webserver:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.2.0&quot;</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-webserver:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.5.0&quot;</span><span class="p">)</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Then create a <code>WebMain.kt</code> file alongside your <code>Main.kt</code>:</p>
