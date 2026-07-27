@@ -4,6 +4,12 @@ Supported in ADKPythonExperimental
 
 This quickstart covers the most common starting point for any developer: **"I have an agent. How do I expose it so that other agents can use my agent via A2A?"**. This is crucial for building complex multi-agent systems where different agents need to collaborate and interact.
 
+A2A Python SDK version compatibility
+
+ADK's A2A integration works with both major versions of the A2A SDK (`a2a-sdk` 0.3.x and 1.x.x). The installed A2A SDK version is detected automatically, so no changes to your ADK application code are needed.
+
+Although `a2a-sdk` 0.3.x is supported in compatibility mode, new integrations should target 1.x.x. If your code references `a2a-sdk` types directly (for example, custom executors or hand-constructed `AgentCard` instances), see the [A2A SDK v1.0 migration guide](https://github.com/a2aproject/a2a-python/tree/main/docs/migrations/v1_0) when moving to 1.x.x.
+
 ## Overview
 
 This sample demonstrates how you can easily expose an ADK agent so that it can be then consumed by another agent using the A2A Protocol.
@@ -132,7 +138,7 @@ As you'll see, the folder structure is as follows:
 ```text
 a2a_root/
 ├── remote_a2a/
-│   └── hello_world/    
+│   └── hello_world/
 │       ├── __init__.py
 │       └── agent.py    # Remote Hello World Agent
 ├── README.md

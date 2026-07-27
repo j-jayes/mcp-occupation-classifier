@@ -7335,6 +7335,18 @@
 </div>
 
 <p>This quickstart covers the most common starting point for any developer: <strong>"I have an agent. How do I expose it so that other agents can use my agent via A2A?"</strong>. This is crucial for building complex multi-agent systems where different agents need to collaborate and interact.</p>
+<div class="admonition note">
+<p class="admonition-title">A2A Python SDK version compatibility</p>
+<p>ADK's A2A integration works with both major versions of the A2A SDK
+(<code>a2a-sdk</code> 0.3.x and 1.x.x). The installed A2A SDK version is detected
+automatically, so no changes to your ADK application code are needed.</p>
+<p>Although <code>a2a-sdk</code> 0.3.x is supported in compatibility mode, new
+integrations should target 1.x.x. If your code references <code>a2a-sdk</code> types
+directly (for example, custom executors or hand-constructed <code>AgentCard</code>
+instances), see the <a href="https://github.com/a2aproject/a2a-python/tree/main/docs/migrations/v1_0">A2A SDK v1.0 migration
+guide</a>
+when moving to 1.x.x.</p>
+</div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This sample demonstrates how you can easily expose an ADK agent so that it can be then consumed by another agent using the A2A Protocol.</p>
 <p>There are two main ways to expose an ADK agent via A2A.</p>
@@ -7433,7 +7445,7 @@
 <p>As you'll see, the folder structure is as follows:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>a2a_root/
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── remote_a2a/
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│   └── hello_world/    
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│   └── hello_world/
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│       ├── __init__.py
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│       └── agent.py    # Remote Hello World Agent
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>├── README.md

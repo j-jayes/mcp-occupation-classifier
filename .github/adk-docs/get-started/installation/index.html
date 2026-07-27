@@ -6957,13 +6957,13 @@ optional package is present as part of <code>google-adk-dev</code>.</p>
 </span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
 </span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">            </span><span class="nt">&lt;groupId&gt;</span>com.google.adk<span class="nt">&lt;/groupId&gt;</span>
 </span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>google-adk<span class="nt">&lt;/artifactId&gt;</span>
-</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>1.5.0<span class="nt">&lt;/version&gt;</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>1.6.0<span class="nt">&lt;/version&gt;</span>
 </span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
 </span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">        </span><span class="cm">&lt;!-- The ADK dev web UI to debug your agent --&gt;</span>
 </span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
 </span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">            </span><span class="nt">&lt;groupId&gt;</span>com.google.adk<span class="nt">&lt;/groupId&gt;</span>
 </span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>google-adk-dev<span class="nt">&lt;/artifactId&gt;</span>
-</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>1.5.0<span class="nt">&lt;/version&gt;</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">            </span><span class="nt">&lt;version&gt;</span>1.6.0<span class="nt">&lt;/version&gt;</span>
 </span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
 </span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">    </span><span class="nt">&lt;/dependencies&gt;</span>
 </span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
@@ -6974,8 +6974,8 @@ pom.xml</a>
 file for reference.</p>
 <p>If you are using gradle, add the dependency to your build.gradle:</p>
 <div class="language-text highlight"><span class="filename">build.gradle</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>dependencies {
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    implementation &#39;com.google.adk:google-adk:1.5.0&#39;
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    implementation &#39;com.google.adk:google-adk-dev:1.5.0&#39;
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    implementation &#39;com.google.adk:google-adk:1.6.0&#39;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    implementation &#39;com.google.adk:google-adk-dev:1.6.0&#39;
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>}
 </span></code></pre></div>
 <p>You should also configure Gradle to pass <code>-parameters</code> to <code>javac</code>.
@@ -6991,8 +6991,8 @@ processor to your <code>build.gradle.kts</code>:</p>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.2.0&quot;</span><span class="p">)</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.2.0&quot;</span><span class="p">)</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-core:0.5.0&quot;</span><span class="p">)</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">&quot;com.google.adk:google-adk-kotlin-processor:0.5.0&quot;</span><span class="p">)</span>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>The KSP processor generates code for the <code>@Tool</code> annotation used to

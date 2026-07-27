@@ -27,6 +27,7 @@
 - [Running Servers](https://gofastmcp.com/cli/running.md): Start, develop, and configure servers from the command line
 - [Bearer Token Authentication](https://gofastmcp.com/clients/auth/bearer.md): Authenticate your FastMCP client with a Bearer token.
 - [CIMD Authentication](https://gofastmcp.com/clients/auth/cimd.md): Use Client ID Metadata Documents for verifiable, domain-based client identity.
+- [Machine-to-Machine Authentication](https://gofastmcp.com/clients/auth/client-credentials.md): Authenticate your FastMCP client to a protected server without a browser.
 - [OAuth Authentication](https://gofastmcp.com/clients/auth/oauth.md): Authenticate your FastMCP client via OAuth 2.1.
 - [The FastMCP Client](https://gofastmcp.com/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
 - [Client-Only Package](https://gofastmcp.com/clients/client-only-package.md): Use FastMCP's client without installing the full server framework.
@@ -39,7 +40,7 @@
 - [Reading Resources](https://gofastmcp.com/clients/resources.md): Access static and templated data sources from MCP servers.
 - [Client Roots](https://gofastmcp.com/clients/roots.md): Provide local context and resource boundaries to MCP servers.
 - [LLM Sampling](https://gofastmcp.com/clients/sampling.md): Handle server-initiated LLM completion requests.
-- [Background Tasks](https://gofastmcp.com/clients/tasks.md): Execute operations asynchronously and track their progress.
+- [Background Tasks](https://gofastmcp.com/clients/tasks.md): Call long-running tools without blocking, and answer questions they ask mid-run.
 - [Calling Tools](https://gofastmcp.com/clients/tools.md): Execute server-side tools and handle structured results.
 - [Client Transports](https://gofastmcp.com/clients/transports.md): Configure how clients connect to and communicate with MCP servers.
 - [HTTP Deployment](https://gofastmcp.com/deployment/http.md): Deploy your FastMCP server over HTTP for remote access
@@ -50,12 +51,19 @@
 - [Contributing](https://gofastmcp.com/development/contributing.md): Development workflow for FastMCP contributors
 - [Releases](https://gofastmcp.com/development/releases.md): FastMCP versioning and release process
 - [Tests](https://gofastmcp.com/development/tests.md): Testing patterns and requirements for FastMCP
+- [Background Tasks (SEP-2663)](https://gofastmcp.com/development/v4-notes/background-tasks.md)
+- [Feature Program](https://gofastmcp.com/development/v4-notes/feature-program.md)
+- [v4.0 Development Notes](https://gofastmcp.com/development/v4-notes/index.md)
+- [Known Gaps and Upstream Dependencies](https://gofastmcp.com/development/v4-notes/known-gaps.md)
+- [2026-07-28 Protocol Support](https://gofastmcp.com/development/v4-notes/protocol-2026.md)
 - [Installation](https://gofastmcp.com/getting-started/installation.md): Install FastMCP and verify your setup
 - [Quickstart](https://gofastmcp.com/getting-started/quickstart.md)
 - [Upgrading from FastMCP 2](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2.md): Migration instructions for upgrading between FastMCP versions
+- [Upgrading from FastMCP 3](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-3.md): What changes when you upgrade to FastMCP 4, which builds on the MCP Python SDK v2
 - [Upgrading from the MCP Low-Level SDK](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk.md): Upgrade your MCP server from the low-level Python SDK's Server class to FastMCP
 - [Upgrading from the MCP SDK](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk.md): Upgrade from FastMCP in the MCP Python SDK to the standalone FastMCP framework
 - [Welcome to FastMCP](https://gofastmcp.com/getting-started/welcome.md): The fast, Pythonic way to build MCP servers, clients, and applications.
+- [What's New in FastMCP 4](https://gofastmcp.com/getting-started/whats-new.md): The capabilities that define FastMCP 4 — a rebuilt engine, a new protocol era, and a stateless protocol made practical.
 - [Anthropic API 🤝 FastMCP](https://gofastmcp.com/integrations/anthropic.md): Connect FastMCP servers to the Anthropic API
 - [Auth0 OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/auth0.md): Secure your FastMCP server with Auth0 OAuth
 - [AuthKit 🤝 FastMCP](https://gofastmcp.com/integrations/authkit.md): Secure your FastMCP server with AuthKit by WorkOS
@@ -74,6 +82,7 @@
 - [GitHub OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/github.md): Secure your FastMCP server with GitHub OAuth
 - [Google OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/google.md): Secure your FastMCP server with Google OAuth
 - [Goose 🤝 FastMCP](https://gofastmcp.com/integrations/goose.md): Install and use FastMCP servers in Goose
+- [Hugging Face OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/huggingface.md): Secure your FastMCP server with Hugging Face OAuth
 - [Keycloak OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/keycloak.md): Secure your FastMCP server with Keycloak OAuth
 - [MCP JSON Configuration 🤝 FastMCP](https://gofastmcp.com/integrations/mcp-json-configuration.md): Generate standard MCP configuration files for any compatible client
 - [OCI IAM OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/oci.md): Secure your FastMCP server with OCI IAM OAuth
@@ -106,6 +115,7 @@
 - [telemetry](https://gofastmcp.com/python-sdk/fastmcp-telemetry.md)
 - [types](https://gofastmcp.com/python-sdk/fastmcp-types.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-utilities-__init__.md)
+- [asgi_transport](https://gofastmcp.com/python-sdk/fastmcp-utilities-asgi_transport.md)
 - [async_utils](https://gofastmcp.com/python-sdk/fastmcp-utilities-async_utils.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-utilities-auth.md)
 - [authorization](https://gofastmcp.com/python-sdk/fastmcp-utilities-authorization.md)
@@ -146,10 +156,11 @@
 - [Remote OAuth](https://gofastmcp.com/servers/auth/remote-oauth.md): Integrate your FastMCP server with external identity providers like Descope, WorkOS, Auth0, and corporate SSO systems.
 - [Token Verification](https://gofastmcp.com/servers/auth/token-verification.md): Protect your server by validating bearer tokens issued by external systems.
 - [Authorization](https://gofastmcp.com/servers/authorization.md): Control access to components using callable-based authorization checks that filter visibility and enforce permissions.
+- [Argument Completion](https://gofastmcp.com/servers/completions.md): Suggest values for prompt arguments and resource template parameters as the user types.
 - [Composing Servers](https://gofastmcp.com/servers/composition.md): Combine multiple servers into one
 - [MCP Context](https://gofastmcp.com/servers/context.md): Access MCP capabilities like logging, progress, and resources within your MCP objects.
 - [Dependency Injection](https://gofastmcp.com/servers/dependency-injection.md): Inject runtime values like HTTP requests, access tokens, and custom dependencies into your MCP components.
-- [User Elicitation](https://gofastmcp.com/servers/elicitation.md): Request structured input from users during tool execution through the MCP context.
+- [User Elicitation](https://gofastmcp.com/servers/elicitation.md): Ask users for input while a tool is running, on both the handshake and modern protocols.
 - [Icons](https://gofastmcp.com/servers/icons.md): Add visual icons to your servers, tools, resources, and prompts
 - [Lifespans](https://gofastmcp.com/servers/lifespan.md): Server-level setup and teardown with composable lifespans
 - [Client Logging](https://gofastmcp.com/servers/logging.md): Send log messages back to MCP clients through the context.
@@ -166,8 +177,9 @@
 - [Resources & Templates](https://gofastmcp.com/servers/resources.md): Expose data sources and dynamic content generators to your MCP client.
 - [Sampling](https://gofastmcp.com/servers/sampling.md): Request LLM text generation from the client or a configured provider through the MCP context.
 - [The FastMCP Server](https://gofastmcp.com/servers/server.md): The core FastMCP server class for building MCP applications
+- [Session State](https://gofastmcp.com/servers/sessions.md): Persist state across requests on stateless connections.
 - [Storage Backends](https://gofastmcp.com/servers/storage-backends.md): Configure persistent and distributed storage for caching and OAuth state management
-- [Background Tasks](https://gofastmcp.com/servers/tasks.md): Run long-running operations asynchronously with progress tracking
+- [Background Tasks](https://gofastmcp.com/servers/tasks.md): Run long-running tools asynchronously with progress tracking
 - [OpenTelemetry](https://gofastmcp.com/servers/telemetry.md): Native OpenTelemetry instrumentation for distributed tracing.
 - [Testing your FastMCP Server](https://gofastmcp.com/servers/testing.md): How to test your FastMCP server.
 - [Tool Fingerprinting](https://gofastmcp.com/servers/tool-fingerprinting.md): Build stable fingerprints for tool identity and schema change detection

@@ -7313,6 +7313,18 @@
 </div>
 
 <p>This quickstart covers the most common starting point for any developer: <strong>"There is a remote agent, how do I let my ADK agent use it via A2A?"</strong>. This is crucial for building complex multi-agent systems where different agents need to collaborate and interact.</p>
+<div class="admonition note">
+<p class="admonition-title">A2A Python SDK version compatibility</p>
+<p>ADK's A2A integration works with both major versions of the A2A SDK
+(<code>a2a-sdk</code> 0.3.x and 1.x.x). The installed A2A SDK version is detected
+automatically, so no changes to your ADK application code are needed.</p>
+<p>Although <code>a2a-sdk</code> 0.3.x is supported in compatibility mode, new
+integrations should target 1.x.x. If your code references <code>a2a-sdk</code> types
+directly (for example, custom executors or hand-constructed <code>AgentCard</code>
+instances), see the <a href="https://github.com/a2aproject/a2a-python/tree/main/docs/migrations/v1_0">A2A SDK v1.0 migration
+guide</a>
+when moving to 1.x.x.</p>
+</div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This sample demonstrates the <strong>Agent2Agent (A2A)</strong> architecture in the Agent Development Kit (ADK), showcasing how multiple agents can work together to handle complex tasks. The sample implements an agent that can roll dice and check if numbers are prime.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────┐    ┌──────────────────┐    ┌────────────────────┐
@@ -7408,7 +7420,7 @@ This will give richer logs for you to inspect when testing your agents.</p>
 </span></code></pre></div>
 <details class="note">
 <summary>More info on agent cards in ADK</summary>
-<p>In ADK, you can use a <code>to_a2a(root_agent)</code> wrapper which automatically generates an agent card for you. If you're interested in learning more about how to expose your existing agent so others can use it, then please look at the <a href="../quickstart-exposing/">A2A Quickstart (Exposing)</a> tutorial. </p>
+<p>In ADK, you can use a <code>to_a2a(root_agent)</code> wrapper which automatically generates an agent card for you. If you're interested in learning more about how to expose your existing agent so others can use it, then please look at the <a href="../quickstart-exposing/">A2A Quickstart (Exposing)</a> tutorial.</p>
 </details>
 <h3 id="run-the-main-consuming-agent">4. Run the Main (Consuming) Agent<a class="headerlink" href="#run-the-main-consuming-agent" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># In a separate terminal, run the adk web server</span>
