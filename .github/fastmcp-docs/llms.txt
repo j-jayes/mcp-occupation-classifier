@@ -38,8 +38,8 @@
 - [Progress Monitoring](https://gofastmcp.com/clients/progress.md): Handle progress notifications from long-running server operations.
 - [Getting Prompts](https://gofastmcp.com/clients/prompts.md): Retrieve rendered message templates with automatic argument serialization.
 - [Reading Resources](https://gofastmcp.com/clients/resources.md): Access static and templated data sources from MCP servers.
-- [Client Roots](https://gofastmcp.com/clients/roots.md): Provide local context and resource boundaries to MCP servers.
-- [LLM Sampling](https://gofastmcp.com/clients/sampling.md): Handle server-initiated LLM completion requests.
+- [Client Roots](https://gofastmcp.com/clients/roots.md): Tell servers which local paths your client can reach.
+- [LLM Sampling](https://gofastmcp.com/clients/sampling.md): Answer a server's request for an LLM completion.
 - [Background Tasks](https://gofastmcp.com/clients/tasks.md): Call long-running tools without blocking, and answer questions they ask mid-run.
 - [Calling Tools](https://gofastmcp.com/clients/tools.md): Execute server-side tools and handle structured results.
 - [Client Transports](https://gofastmcp.com/clients/transports.md): Configure how clients connect to and communicate with MCP servers.
@@ -51,19 +51,16 @@
 - [Contributing](https://gofastmcp.com/development/contributing.md): Development workflow for FastMCP contributors
 - [Releases](https://gofastmcp.com/development/releases.md): FastMCP versioning and release process
 - [Tests](https://gofastmcp.com/development/tests.md): Testing patterns and requirements for FastMCP
-- [Background Tasks (SEP-2663)](https://gofastmcp.com/development/v4-notes/background-tasks.md)
-- [Feature Program](https://gofastmcp.com/development/v4-notes/feature-program.md)
-- [v4.0 Development Notes](https://gofastmcp.com/development/v4-notes/index.md)
-- [Known Gaps and Upstream Dependencies](https://gofastmcp.com/development/v4-notes/known-gaps.md)
-- [2026-07-28 Protocol Support](https://gofastmcp.com/development/v4-notes/protocol-2026.md)
 - [Installation](https://gofastmcp.com/getting-started/installation.md): Install FastMCP and verify your setup
 - [Quickstart](https://gofastmcp.com/getting-started/quickstart.md)
-- [Upgrading from FastMCP 2](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2.md): Migration instructions for upgrading between FastMCP versions
+- [Upgrading from FastMCP 2](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2.md): What changed in FastMCP 3 for servers written against FastMCP 2
 - [Upgrading from FastMCP 3](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-3.md): What changes when you upgrade to FastMCP 4, which builds on the MCP Python SDK v2
-- [Upgrading from the MCP Low-Level SDK](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk.md): Upgrade your MCP server from the low-level Python SDK's Server class to FastMCP
-- [Upgrading from the MCP SDK](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk.md): Upgrade from FastMCP in the MCP Python SDK to the standalone FastMCP framework
-- [Welcome to FastMCP](https://gofastmcp.com/getting-started/welcome.md): The fast, Pythonic way to build MCP servers, clients, and applications.
-- [What's New in FastMCP 4](https://gofastmcp.com/getting-started/whats-new.md): The capabilities that define FastMCP 4 — a rebuilt engine, a new protocol era, and a stateless protocol made practical.
+- [Upgrading from the Low-Level SDK v1](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk-v1.md): Upgrade your MCP server from v1 of the low-level Python SDK's Server class to FastMCP
+- [Upgrading from the Low-Level SDK v2](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk-v2.md): Move a server built on v2 of the low-level Python SDK's Server class to FastMCP
+- [Upgrading from MCP SDK v1](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk-v1.md): Upgrade from FastMCP 1.0, bundled in v1 of the MCP Python SDK, to the standalone FastMCP framework
+- [Upgrading from MCP SDK v2](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk-v2.md): Move a server built on the MCP Python SDK v2's MCPServer class to FastMCP
+- [FastMCP: The Framework for MCP](https://gofastmcp.com/getting-started/welcome.md): FastMCP is the standard framework for building Model Context Protocol (MCP) servers, clients, and interactive applications.
+- [What's New in FastMCP 4](https://gofastmcp.com/getting-started/whats-new.md): FastMCP 4 makes stateful MCP applications work on the sessionless protocol while one server serves every protocol era.
 - [Anthropic API 🤝 FastMCP](https://gofastmcp.com/integrations/anthropic.md): Connect FastMCP servers to the Anthropic API
 - [Auth0 OAuth 🤝 FastMCP](https://gofastmcp.com/integrations/auth0.md): Secure your FastMCP server with Auth0 OAuth
 - [AuthKit 🤝 FastMCP](https://gofastmcp.com/integrations/authkit.md): Secure your FastMCP server with AuthKit by WorkOS
@@ -94,7 +91,7 @@
 - [Scalekit 🤝 FastMCP](https://gofastmcp.com/integrations/scalekit.md): Secure your FastMCP server with Scalekit
 - [Supabase 🤝 FastMCP](https://gofastmcp.com/integrations/supabase.md): Secure your FastMCP server with Supabase Auth
 - [WorkOS 🤝 FastMCP](https://gofastmcp.com/integrations/workos.md): Authenticate FastMCP servers with WorkOS Connect
-- [FAQ](https://gofastmcp.com/more/faq.md): Answers to common questions about installing and using FastMCP
+- [FAQ](https://gofastmcp.com/more/faq.md): Direct answers to the questions that come up most often about FastMCP 4, the protocol eras, and installation
 - [Settings](https://gofastmcp.com/more/settings.md): Configure FastMCP behavior through environment variables or a .env file.
 - [Contrib Modules](https://gofastmcp.com/patterns/contrib.md): Community-contributed modules extending FastMCP
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-apps-__init__.md)
@@ -161,6 +158,7 @@
 - [MCP Context](https://gofastmcp.com/servers/context.md): Access MCP capabilities like logging, progress, and resources within your MCP objects.
 - [Dependency Injection](https://gofastmcp.com/servers/dependency-injection.md): Inject runtime values like HTTP requests, access tokens, and custom dependencies into your MCP components.
 - [User Elicitation](https://gofastmcp.com/servers/elicitation.md): Ask users for input while a tool is running, on both the handshake and modern protocols.
+- [Server Extensions](https://gofastmcp.com/servers/extensions.md): Add negotiated protocol features to a server without forking the framework.
 - [Icons](https://gofastmcp.com/servers/icons.md): Add visual icons to your servers, tools, resources, and prompts
 - [Lifespans](https://gofastmcp.com/servers/lifespan.md): Server-level setup and teardown with composable lifespans
 - [Client Logging](https://gofastmcp.com/servers/logging.md): Send log messages back to MCP clients through the context.
@@ -175,7 +173,7 @@
 - [MCP Proxy Provider](https://gofastmcp.com/servers/providers/proxy.md): Source components from other MCP servers
 - [Skills Provider](https://gofastmcp.com/servers/providers/skills.md): Expose agent skills as MCP resources
 - [Resources & Templates](https://gofastmcp.com/servers/resources.md): Expose data sources and dynamic content generators to your MCP client.
-- [Sampling](https://gofastmcp.com/servers/sampling.md): Request LLM text generation from the client or a configured provider through the MCP context.
+- [Sampling](https://gofastmcp.com/servers/sampling.md): Generate text from a FastMCP server — by calling an LLM directly, or by asking the client to sample.
 - [The FastMCP Server](https://gofastmcp.com/servers/server.md): The core FastMCP server class for building MCP applications
 - [Session State](https://gofastmcp.com/servers/sessions.md): Persist state across requests on stateless connections.
 - [Storage Backends](https://gofastmcp.com/servers/storage-backends.md): Configure persistent and distributed storage for caching and OAuth state management
