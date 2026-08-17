@@ -7056,12 +7056,12 @@ browser to use the web interface:</p>
 <tr>
 <td><code>--session_service_uri</code></td>
 <td>Custom session storage URI</td>
-<td>In-memory</td>
+<td>Per-agent SQLite at <code>&lt;agents_dir&gt;/&lt;agent&gt;/.adk/session.db</code></td>
 </tr>
 <tr>
 <td><code>--artifact_service_uri</code></td>
 <td>Custom artifact storage URI</td>
-<td>Local <code>.adk/artifacts</code></td>
+<td>Per-agent directory at <code>&lt;agents_dir&gt;/&lt;agent&gt;/.adk/artifacts</code></td>
 </tr>
 <tr>
 <td><code>--reload/--no-reload</code></td>
@@ -7070,6 +7070,8 @@ browser to use the web interface:</p>
 </tr>
 </tbody>
 </table>
+<p>Pass <code>--no_use_local_storage</code> to fall back to in-memory session and
+artifact services instead of the local <code>.adk</code> folder.</p>
 <p>For example:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span><span class="w"> </span>--session_service_uri<span class="w"> </span><span class="s2">&quot;sqlite:///sessions.db&quot;</span>
 </span></code></pre></div>

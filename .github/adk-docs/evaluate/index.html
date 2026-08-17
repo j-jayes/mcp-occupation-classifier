@@ -7569,10 +7569,12 @@ and initial session file can be ignored (or removed.)</p>
 </div>
 <h5 id="define-the-test-specification-specyaml">Define the test specification (spec.yaml)<a class="headerlink" href="#define-the-test-specification-specyaml" title="Permanent link">&para;</a></h5>
 <p>In your target test folder, create a <code>spec.yaml</code> file. This file outlines the initial conditions, configurations, and user prompts that the agent will execute during the baseline recording and subsequent conformance runs. Ensure your file matches the following basic schema, this is an example only:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Example spec.yaml for a Weather Agent name: &quot;current_weather_check&quot; description:
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&quot;Verifies the agent correctly identifies location and calls the weather tool.&quot;
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>user_prompts: - &quot;What&#39;s the temperature in San Francisco right now?&quot; expected_tools:
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a> - &quot;get_weather_api&quot;
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Example spec.yaml for a Weather Agent.</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># The test case name and category are inferred from the folder structure.</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Verifies</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">agent</span><span class="nv"> </span><span class="s">correctly</span><span class="nv"> </span><span class="s">identifies</span><span class="nv"> </span><span class="s">location</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">calls</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">weather</span><span class="nv"> </span><span class="s">tool.&quot;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;weather_agent&quot;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">user_messages</span><span class="p">:</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What&#39;s</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">temperature</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">San</span><span class="nv"> </span><span class="s">Francisco</span><span class="nv"> </span><span class="s">right</span><span class="nv"> </span><span class="s">now?&quot;</span>
 </span></code></pre></div>
 <h4 id="automate-the-baseline">Automate the baseline<a class="headerlink" href="#automate-the-baseline" title="Permanent link">&para;</a></h4>
 <p>Because the background data (like LLM requests and tool calls) is complex, you shouldn't try to write or save the baseline files manually. Instead, let ADK generate them for you.</p>
@@ -7584,8 +7586,9 @@ and initial session file can be ignored (or removed.)</p>
 <ol>
 <li>Next, open a new terminal window and tell ADK to create the baseline files based on your spec.yaml:</li>
 </ol>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>adk<span class="w"> </span>conformance<span class="w"> </span>create<span class="w"> </span>tests/category/test_name
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>adk<span class="w"> </span>conformance<span class="w"> </span>record<span class="w"> </span>tests/category/test_name<span class="w"> </span>none
 </span></code></pre></div>
+<p>The trailing streaming-mode argument is required. Use <code>none</code> to record <code>generated-recordings.yaml</code> and <code>generated-session.yaml</code>, or <code>sse</code> to record <code>generated-recordings-sse.yaml</code> and <code>generated-session-sse.yaml</code> instead. The <code>bidi</code> mode is not supported for recording.</p>
 <p>This automatically runs the scenario, records all the interactions, and saves the generated-recordings.yaml and generated-session.yaml files exactly where they need to be.</p>
 <p>Once these baseline files are locked in, your setup is complete, and the directory is ready to be targeted by <code>adk conformance</code> in either <strong>Replay</strong> or <strong>Live</strong> mode.</p>
 <h4 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h4>
@@ -7608,6 +7611,8 @@ detailed list of available criteria and guidance on when to use them, please see
     quality based on custom rubrics.</li>
 <li><strong>rubric_based_tool_use_quality_v1</strong>: LLM-judged tool usage quality based on
     custom rubrics.</li>
+<li><strong>rubric_based_multi_turn_trajectory_quality_v1</strong>: LLM-judged multi-turn
+    trajectory quality based on custom rubrics.</li>
 <li><strong>hallucinations_v1</strong>: LLM-judged groundedness of agent response against
     context.</li>
 <li><strong>safety_v1</strong>: Safety/harmlessness of agent response.</li>
@@ -7679,7 +7684,9 @@ Credentials).</p>
 <p>In addition, criteria which require information on expected agent tool use
 and/or responses are not supported in combination with
 <a href="user-sim/">User Simulation</a>.
-Currently, only the <code>hallucinations_v1</code> and <code>safety_v1</code> criteria support such evals.</p>
+The affected criteria include <code>tool_trajectory_avg_score</code>, <code>response_match_score</code>
+and <code>final_response_match_v2</code>. Support for user simulation is listed per
+criterion in the support column of <a href="criteria/">Evaluation Criteria</a>.</p>
 <h3 id="user-simulation">User simulation<a class="headerlink" href="#user-simulation" title="Permanent link">&para;</a></h3>
 <p>When evaluating conversational agents, it is not always practical to use a fixed
 set of user prompts, as the conversation can proceed in unexpected ways.
@@ -7774,7 +7781,7 @@ For details on how to set up an eval with user simulation, see
 <p>Here is the command:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>adk<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>&lt;AGENT_MODULE_FILE_PATH&gt;<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>&lt;EVAL_SET_FILE_PATH&gt;<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>&lt;EVAL_SET_FILE_PATH_OR_ID&gt;...<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="o">[</span>--config_file_path<span class="o">=</span>&lt;PATH_TO_TEST_JSON_CONFIG_FILE&gt;<span class="o">]</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="o">[</span>--print_detailed_results<span class="o">]</span>
 </span></code></pre></div>
@@ -7785,8 +7792,8 @@ For details on how to set up an eval with user simulation, see
 </span></code></pre></div>
 <p>Here are the details for each command line argument:</p>
 <ul>
-<li><code>AGENT_MODULE_FILE_PATH</code>: The path to the <code>__init__.py</code> file that contains a module by the name "agent". "agent" module contains a <code>root_agent</code>.</li>
-<li><code>EVAL_SET_FILE_PATH</code>: The path to evaluations file(s). You can specify one or more eval set file paths. For each file, all evals will be run by default. If you want to run only specific evals from a eval set, first create a comma separated list of eval names and then add that as a suffix to the eval set file name, demarcated by a colon <code>:</code> .</li>
+<li><code>AGENT_MODULE_FILE_PATH</code>: The path to the agent directory, not a file, whose <code>__init__.py</code> exposes a module by the name "agent". "agent" module contains a <code>root_agent</code>.</li>
+<li><code>EVAL_SET_FILE_PATH_OR_ID</code>: The path to evaluations file(s), or the id of an eval set managed by ADK and created with <code>adk eval_set create</code>. You can specify one or more of either, but you cannot mix file paths and eval set ids in the same command. For each eval set, all evals run by default. If you want to run only specific evals from a eval set, first create a comma separated list of eval names and then add that as a suffix to the eval set file name or id, demarcated by a colon <code>:</code> .</li>
 <li>For example: <code>sample_eval_set_file.json:eval_1,eval_2,eval_3</code>
   <code>This will only run eval_1, eval_2 and eval_3 from sample_eval_set_file.json</code></li>
 <li><code>CONFIG_FILE_PATH</code>: The path to the config file.</li>
