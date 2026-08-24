@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -303,52 +415,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -791,6 +861,8 @@
       
         
       
+        
+      
     
     
     
@@ -972,6 +1044,34 @@
     
   
     Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
   
 
     
@@ -5396,6 +5496,8 @@
       
         
       
+        
+      
     
     
     
@@ -5512,6 +5614,34 @@
     
   
     Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
   
 
     
@@ -7241,7 +7371,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -7291,15 +7421,15 @@ programmatic testing and integration.</p>
 directly in your agent's <code>main.go</code>. The <code>full.NewLauncher()</code> helper bundles
 the REST API, Web UI, and other modes into a single binary:</p>
 <div class="language-go highlight"><span class="filename">main.go</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="s">&quot;google.golang.org/adk/v2/cmd/launcher&quot;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s">&quot;google.golang.org/adk/v2/cmd/launcher/full&quot;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="s">"google.golang.org/adk/v2/cmd/launcher"</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s">"google.golang.org/adk/v2/cmd/launcher/full"</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kd">func</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="c1">// ... build your agent and config ...</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nx">l</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">full</span><span class="p">.</span><span class="nx">NewLauncher</span><span class="p">()</span>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">Execute</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span><span class="w"> </span><span class="nx">config</span><span class="p">,</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatalf</span><span class="p">(</span><span class="s">&quot;Run failed: %v\n\n%s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">CommandLineSyntax</span><span class="p">())</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatalf</span><span class="p">(</span><span class="s">"Run failed: %v\n\n%s"</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">l</span><span class="p">.</span><span class="nx">CommandLineSyntax</span><span class="p">())</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
 </span></code></pre></div>
@@ -7317,22 +7447,22 @@ backend and registers all routes under the <code>/api</code> path prefix by defa
 <div class="tabbed-block">
 <p>With Maven, compile and run the ADK web server:
 <div class="language-console highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="go">mvn compile exec:java \</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="go"> -Dexec.args=&quot;--adk.agents.source-dir=src/main/java/agents --server.port=8080&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="go"> -Dexec.args="--adk.agents.source-dir=src/main/java/agents --server.port=8080"</span>
 </span></code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p>With Gradle, the <code>build.gradle</code> or <code>build.gradle.kts</code> build file should have the following Java plugin in its plugins section:</p>
 <p><div class="language-groovy highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">id</span><span class="o">(</span><span class="s1">&#39;java&#39;</span><span class="o">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">id</span><span class="o">(</span><span class="s1">'java'</span><span class="o">)</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="c1">// other plugins</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="o">}</span>
 </span></code></pre></div>
 Then, elsewhere in the build file, at the top-level, create a new task:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">tasks</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s1">&#39;runADKWebServer&#39;</span><span class="o">,</span><span class="w"> </span><span class="n">JavaExec</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">tasks</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s1">'runADKWebServer'</span><span class="o">,</span><span class="w"> </span><span class="n">JavaExec</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="n">dependsOn</span><span class="w"> </span><span class="n">classes</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">classpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">runtimeClasspath</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">mainClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;com.google.adk.web.AdkWebServer&#39;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">args</span><span class="w"> </span><span class="s1">&#39;--adk.agents.source-dir=src/main/java/agents&#39;</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;--server.port=8080&#39;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">mainClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'com.google.adk.web.AdkWebServer'</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">args</span><span class="w"> </span><span class="s1">'--adk.agents.source-dir=src/main/java/agents'</span><span class="o">,</span><span class="w"> </span><span class="s1">'--server.port=8080'</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="o">}</span>
 </span></code></pre></div>
 <p>Finally, on the command-line, run the following command:
@@ -7422,11 +7552,11 @@ example <code>curl</code> commands below accordingly:</p>
 <p>The port can be changed with the <code>-port</code> flag on the <code>web</code> subcommand and
 the prefix can be changed with the <code>-path_prefix</code> flag on the <code>api</code>
 subcommand. For example:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>go<span class="w"> </span>run<span class="w"> </span>agent.go<span class="w"> </span>web<span class="w"> </span>-port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>api<span class="w"> </span>-path_prefix<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>go<span class="w"> </span>run<span class="w"> </span>agent.go<span class="w"> </span>web<span class="w"> </span>-port<span class="w"> </span><span class="m">8000</span><span class="w"> </span>api<span class="w"> </span>-path_prefix<span class="w"> </span><span class="s2">""</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="m">2025</span>-05-13T23:32:08.972-06:00<span class="w">  </span>INFO<span class="w"> </span><span class="m">37864</span><span class="w"> </span>---<span class="w"> </span><span class="o">[</span>ebServer.main<span class="o">()]</span><span class="w"> </span>o.s.b.w.embedded.tomcat.TomcatWebServer<span class="w">  </span>:<span class="w"> </span>Tomcat<span class="w"> </span>started<span class="w"> </span>on<span class="w"> </span>port<span class="w"> </span><span class="m">8080</span><span class="w"> </span><span class="o">(</span>http<span class="o">)</span><span class="w"> </span>with<span class="w"> </span>context<span class="w"> </span>path<span class="w"> </span><span class="s1">&#39;/&#39;</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="m">2025</span>-05-13T23:32:08.972-06:00<span class="w">  </span>INFO<span class="w"> </span><span class="m">37864</span><span class="w"> </span>---<span class="w"> </span><span class="o">[</span>ebServer.main<span class="o">()]</span><span class="w"> </span>o.s.b.w.embedded.tomcat.TomcatWebServer<span class="w">  </span>:<span class="w"> </span>Tomcat<span class="w"> </span>started<span class="w"> </span>on<span class="w"> </span>port<span class="w"> </span><span class="m">8080</span><span class="w"> </span><span class="o">(</span>http<span class="o">)</span><span class="w"> </span>with<span class="w"> </span>context<span class="w"> </span>path<span class="w"> </span><span class="s1">'/'</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="m">2025</span>-05-13T23:32:08.980-06:00<span class="w">  </span>INFO<span class="w"> </span><span class="m">37864</span><span class="w"> </span>---<span class="w"> </span><span class="o">[</span>ebServer.main<span class="o">()]</span><span class="w"> </span>com.google.adk.web.AdkWebServer<span class="w">          </span>:<span class="w"> </span>Started<span class="w"> </span>AdkWebServer<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span>.15<span class="w"> </span>seconds<span class="w"> </span><span class="o">(</span>process<span class="w"> </span>running<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="m">2</span>.877<span class="o">)</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="m">2025</span>-05-13T23:32:08.981-06:00<span class="w">  </span>INFO<span class="w"> </span><span class="m">37864</span><span class="w"> </span>---<span class="w"> </span><span class="o">[</span>ebServer.main<span class="o">()]</span><span class="w"> </span>com.google.adk.web.AdkWebServer<span class="w">          </span>:<span class="w"> </span>AdkWebServer<span class="w"> </span>application<span class="w"> </span>started<span class="w"> </span>successfully.
 </span></code></pre></div>
@@ -7438,8 +7568,8 @@ subcommand. For example:</p>
 <p>With the API server still running, open a new terminal window or tab and create
 a new session with the agent using:</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/apps/my_sample_agent/users/u_123/sessions/s_123<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;key1&quot;: &quot;value1&quot;, &quot;key2&quot;: 42}&#39;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"key1": "value1", "key2": 42}'</span>
 </span></code></pre></div>
 <p>Let's break down what's happening:</p>
 <ul>
@@ -7455,7 +7585,7 @@ a new session with the agent using:</p>
 </ul>
 <p>This should return the session information if it was created successfully. The
 output should appear similar to:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;s_123&quot;</span><span class="p">,</span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;u_123&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:{</span><span class="nt">&quot;key1&quot;</span><span class="p">:</span><span class="s2">&quot;value1&quot;</span><span class="p">,</span><span class="nt">&quot;key2&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">},</span><span class="nt">&quot;events&quot;</span><span class="p">:[],</span><span class="nt">&quot;lastUpdateTime&quot;</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"s_123"</span><span class="p">,</span><span class="nt">"appName"</span><span class="p">:</span><span class="s2">"my_sample_agent"</span><span class="p">,</span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"u_123"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:{</span><span class="nt">"key1"</span><span class="p">:</span><span class="s2">"value1"</span><span class="p">,</span><span class="nt">"key2"</span><span class="p">:</span><span class="mi">42</span><span class="p">},</span><span class="nt">"events"</span><span class="p">:[],</span><span class="nt">"lastUpdateTime"</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
 </span></code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -7478,73 +7608,73 @@ delete that session (e.g., <code>s_123</code>), or choose a different session ID
 </ul>
 <p><strong>Using <code>/run</code></strong></p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/run<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>-d<span class="w"> </span><span class="s1">&#39;{</span>
-</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s1">&quot;appName&quot;: &quot;my_sample_agent&quot;,</span>
-</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s1">&quot;userId&quot;: &quot;u_123&quot;,</span>
-</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="s1">&quot;sessionId&quot;: &quot;s_123&quot;,</span>
-</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="s1">&quot;newMessage&quot;: {</span>
-</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="s1">    &quot;role&quot;: &quot;user&quot;,</span>
-</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="s1">    &quot;parts&quot;: [{</span>
-</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="s1">    &quot;text&quot;: &quot;Hey whats the weather in new york today&quot;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s1">"appName": "my_sample_agent",</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s1">"userId": "u_123",</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="s1">"sessionId": "s_123",</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="s1">"newMessage": {</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="s1">    "role": "user",</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="s1">    "parts": [{</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="s1">    "text": "Hey whats the weather in new york today"</span>
 </span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="s1">    }]</span>
 </span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="s1">}</span>
-</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s1">}&#39;</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s1">}'</span>
 </span></code></pre></div>
 <p>In TypeScript, currently only <code>camelCase</code> field names are supported (e.g. <code>appName</code>, <code>userId</code>, <code>sessionId</code>, etc.).</p>
 <p>If using <code>/run</code>, you will see the full output of events at the same time, as a
 list, which should appear similar to:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">[{</span><span class="nt">&quot;content&quot;</span><span class="p">:{</span><span class="nt">&quot;parts&quot;</span><span class="p">:[{</span><span class="nt">&quot;functionCall&quot;</span><span class="p">:{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;af-e75e946d-c02a-4aad-931e-49e4ab859838&quot;</span><span class="p">,</span><span class="nt">&quot;args&quot;</span><span class="p">:{</span><span class="nt">&quot;city&quot;</span><span class="p">:</span><span class="s2">&quot;new york&quot;</span><span class="p">},</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;get_weather&quot;</span><span class="p">}}],</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;model&quot;</span><span class="p">},</span><span class="nt">&quot;invocationId&quot;</span><span class="p">:</span><span class="s2">&quot;e-71353f1e-aea1-4821-aa4b-46874a766853&quot;</span><span class="p">,</span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="s2">&quot;weather_time_agent&quot;</span><span class="p">,</span><span class="nt">&quot;actions&quot;</span><span class="p">:{</span><span class="nt">&quot;stateDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;artifactDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;requestedAuthConfigs&quot;</span><span class="p">:{}},</span><span class="nt">&quot;longRunningToolIds&quot;</span><span class="p">:[],</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;2Btee6zW&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mf">1743712220.385936</span><span class="p">},{</span><span class="nt">&quot;content&quot;</span><span class="p">:{</span><span class="nt">&quot;parts&quot;</span><span class="p">:[{</span><span class="nt">&quot;functionResponse&quot;</span><span class="p">:{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;af-e75e946d-c02a-4aad-931e-49e4ab859838&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;get_weather&quot;</span><span class="p">,</span><span class="nt">&quot;response&quot;</span><span class="p">:{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;success&quot;</span><span class="p">,</span><span class="nt">&quot;report&quot;</span><span class="p">:</span><span class="s2">&quot;The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).&quot;</span><span class="p">}}}],</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;user&quot;</span><span class="p">},</span><span class="nt">&quot;invocationId&quot;</span><span class="p">:</span><span class="s2">&quot;e-71353f1e-aea1-4821-aa4b-46874a766853&quot;</span><span class="p">,</span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="s2">&quot;weather_time_agent&quot;</span><span class="p">,</span><span class="nt">&quot;actions&quot;</span><span class="p">:{</span><span class="nt">&quot;stateDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;artifactDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;requestedAuthConfigs&quot;</span><span class="p">:{}},</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;PmWibL2m&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mf">1743712221.895042</span><span class="p">},{</span><span class="nt">&quot;content&quot;</span><span class="p">:{</span><span class="nt">&quot;parts&quot;</span><span class="p">:[{</span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="s2">&quot;OK. The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).\n&quot;</span><span class="p">}],</span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="s2">&quot;model&quot;</span><span class="p">},</span><span class="nt">&quot;invocationId&quot;</span><span class="p">:</span><span class="s2">&quot;e-71353f1e-aea1-4821-aa4b-46874a766853&quot;</span><span class="p">,</span><span class="nt">&quot;author&quot;</span><span class="p">:</span><span class="s2">&quot;weather_time_agent&quot;</span><span class="p">,</span><span class="nt">&quot;actions&quot;</span><span class="p">:{</span><span class="nt">&quot;stateDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;artifactDelta&quot;</span><span class="p">:{},</span><span class="nt">&quot;requestedAuthConfigs&quot;</span><span class="p">:{}},</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;sYT42eVC&quot;</span><span class="p">,</span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="mf">1743712221.899018</span><span class="p">}]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">[{</span><span class="nt">"content"</span><span class="p">:{</span><span class="nt">"parts"</span><span class="p">:[{</span><span class="nt">"functionCall"</span><span class="p">:{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"af-e75e946d-c02a-4aad-931e-49e4ab859838"</span><span class="p">,</span><span class="nt">"args"</span><span class="p">:{</span><span class="nt">"city"</span><span class="p">:</span><span class="s2">"new york"</span><span class="p">},</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"get_weather"</span><span class="p">}}],</span><span class="nt">"role"</span><span class="p">:</span><span class="s2">"model"</span><span class="p">},</span><span class="nt">"invocationId"</span><span class="p">:</span><span class="s2">"e-71353f1e-aea1-4821-aa4b-46874a766853"</span><span class="p">,</span><span class="nt">"author"</span><span class="p">:</span><span class="s2">"weather_time_agent"</span><span class="p">,</span><span class="nt">"actions"</span><span class="p">:{</span><span class="nt">"stateDelta"</span><span class="p">:{},</span><span class="nt">"artifactDelta"</span><span class="p">:{},</span><span class="nt">"requestedAuthConfigs"</span><span class="p">:{}},</span><span class="nt">"longRunningToolIds"</span><span class="p">:[],</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"2Btee6zW"</span><span class="p">,</span><span class="nt">"timestamp"</span><span class="p">:</span><span class="mf">1743712220.385936</span><span class="p">},{</span><span class="nt">"content"</span><span class="p">:{</span><span class="nt">"parts"</span><span class="p">:[{</span><span class="nt">"functionResponse"</span><span class="p">:{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"af-e75e946d-c02a-4aad-931e-49e4ab859838"</span><span class="p">,</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"get_weather"</span><span class="p">,</span><span class="nt">"response"</span><span class="p">:{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"success"</span><span class="p">,</span><span class="nt">"report"</span><span class="p">:</span><span class="s2">"The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit)."</span><span class="p">}}}],</span><span class="nt">"role"</span><span class="p">:</span><span class="s2">"user"</span><span class="p">},</span><span class="nt">"invocationId"</span><span class="p">:</span><span class="s2">"e-71353f1e-aea1-4821-aa4b-46874a766853"</span><span class="p">,</span><span class="nt">"author"</span><span class="p">:</span><span class="s2">"weather_time_agent"</span><span class="p">,</span><span class="nt">"actions"</span><span class="p">:{</span><span class="nt">"stateDelta"</span><span class="p">:{},</span><span class="nt">"artifactDelta"</span><span class="p">:{},</span><span class="nt">"requestedAuthConfigs"</span><span class="p">:{}},</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"PmWibL2m"</span><span class="p">,</span><span class="nt">"timestamp"</span><span class="p">:</span><span class="mf">1743712221.895042</span><span class="p">},{</span><span class="nt">"content"</span><span class="p">:{</span><span class="nt">"parts"</span><span class="p">:[{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"OK. The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).\n"</span><span class="p">}],</span><span class="nt">"role"</span><span class="p">:</span><span class="s2">"model"</span><span class="p">},</span><span class="nt">"invocationId"</span><span class="p">:</span><span class="s2">"e-71353f1e-aea1-4821-aa4b-46874a766853"</span><span class="p">,</span><span class="nt">"author"</span><span class="p">:</span><span class="s2">"weather_time_agent"</span><span class="p">,</span><span class="nt">"actions"</span><span class="p">:{</span><span class="nt">"stateDelta"</span><span class="p">:{},</span><span class="nt">"artifactDelta"</span><span class="p">:{},</span><span class="nt">"requestedAuthConfigs"</span><span class="p">:{}},</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"sYT42eVC"</span><span class="p">,</span><span class="nt">"timestamp"</span><span class="p">:</span><span class="mf">1743712221.899018</span><span class="p">}]</span>
 </span></code></pre></div>
 <p><strong>Using <code>/run_sse</code></strong></p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/run_sse<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>-d<span class="w"> </span><span class="s1">&#39;{</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="s1">&quot;appName&quot;: &quot;my_sample_agent&quot;,</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s1">&quot;userId&quot;: &quot;u_123&quot;,</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s1">&quot;sessionId&quot;: &quot;s_123&quot;,</span>
-</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s1">&quot;newMessage&quot;: {</span>
-</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s1">    &quot;role&quot;: &quot;user&quot;,</span>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="s1">    &quot;parts&quot;: [{</span>
-</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s1">    &quot;text&quot;: &quot;Hey whats the weather in new york today&quot;</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="s1">"appName": "my_sample_agent",</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s1">"userId": "u_123",</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s1">"sessionId": "s_123",</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s1">"newMessage": {</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s1">    "role": "user",</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="s1">    "parts": [{</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="s1">    "text": "Hey whats the weather in new york today"</span>
 </span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="s1">    }]</span>
 </span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="s1">},</span>
-</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s1">&quot;streaming&quot;: false</span>
-</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="s1">}&#39;</span>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="s1">"streaming": false</span>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="s1">}'</span>
 </span></code></pre></div>
 <p>You can set <code>streaming</code> to <code>true</code> to enable token-level streaming, which means
 the response will be returned to you in multiple chunks and the output should
 appear similar to:</p>
-<p><div class="language-shell highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;content&quot;</span>:<span class="o">{</span><span class="s2">&quot;parts&quot;</span>:<span class="o">[{</span><span class="s2">&quot;functionCall&quot;</span>:<span class="o">{</span><span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;af-f83f8af9-f732-46b6-8cb5-7b5b73bbf13d&quot;</span>,<span class="s2">&quot;args&quot;</span>:<span class="o">{</span><span class="s2">&quot;city&quot;</span>:<span class="s2">&quot;new york&quot;</span><span class="o">}</span>,<span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;get_weather&quot;</span><span class="o">}}]</span>,<span class="s2">&quot;role&quot;</span>:<span class="s2">&quot;model&quot;</span><span class="o">}</span>,<span class="s2">&quot;invocationId&quot;</span>:<span class="s2">&quot;e-3f6d7765-5287-419e-9991-5fffa1a75565&quot;</span>,<span class="s2">&quot;author&quot;</span>:<span class="s2">&quot;weather_time_agent&quot;</span>,<span class="s2">&quot;actions&quot;</span>:<span class="o">{</span><span class="s2">&quot;stateDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;artifactDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;requestedAuthConfigs&quot;</span>:<span class="o">{}}</span>,<span class="s2">&quot;longRunningToolIds&quot;</span>:<span class="o">[]</span>,<span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;ptcjaZBa&quot;</span>,<span class="s2">&quot;timestamp&quot;</span>:1743712255.313043<span class="o">}</span>
+<p><div class="language-shell highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">"content"</span>:<span class="o">{</span><span class="s2">"parts"</span>:<span class="o">[{</span><span class="s2">"functionCall"</span>:<span class="o">{</span><span class="s2">"id"</span>:<span class="s2">"af-f83f8af9-f732-46b6-8cb5-7b5b73bbf13d"</span>,<span class="s2">"args"</span>:<span class="o">{</span><span class="s2">"city"</span>:<span class="s2">"new york"</span><span class="o">}</span>,<span class="s2">"name"</span>:<span class="s2">"get_weather"</span><span class="o">}}]</span>,<span class="s2">"role"</span>:<span class="s2">"model"</span><span class="o">}</span>,<span class="s2">"invocationId"</span>:<span class="s2">"e-3f6d7765-5287-419e-9991-5fffa1a75565"</span>,<span class="s2">"author"</span>:<span class="s2">"weather_time_agent"</span>,<span class="s2">"actions"</span>:<span class="o">{</span><span class="s2">"stateDelta"</span>:<span class="o">{}</span>,<span class="s2">"artifactDelta"</span>:<span class="o">{}</span>,<span class="s2">"requestedAuthConfigs"</span>:<span class="o">{}}</span>,<span class="s2">"longRunningToolIds"</span>:<span class="o">[]</span>,<span class="s2">"id"</span>:<span class="s2">"ptcjaZBa"</span>,<span class="s2">"timestamp"</span>:1743712255.313043<span class="o">}</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;content&quot;</span>:<span class="o">{</span><span class="s2">&quot;parts&quot;</span>:<span class="o">[{</span><span class="s2">&quot;functionResponse&quot;</span>:<span class="o">{</span><span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;af-f83f8af9-f732-46b6-8cb5-7b5b73bbf13d&quot;</span>,<span class="s2">&quot;name&quot;</span>:<span class="s2">&quot;get_weather&quot;</span>,<span class="s2">&quot;response&quot;</span>:<span class="o">{</span><span class="s2">&quot;status&quot;</span>:<span class="s2">&quot;success&quot;</span>,<span class="s2">&quot;report&quot;</span>:<span class="s2">&quot;The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).&quot;</span><span class="o">}}}]</span>,<span class="s2">&quot;role&quot;</span>:<span class="s2">&quot;user&quot;</span><span class="o">}</span>,<span class="s2">&quot;invocationId&quot;</span>:<span class="s2">&quot;e-3f6d7765-5287-419e-9991-5fffa1a75565&quot;</span>,<span class="s2">&quot;author&quot;</span>:<span class="s2">&quot;weather_time_agent&quot;</span>,<span class="s2">&quot;actions&quot;</span>:<span class="o">{</span><span class="s2">&quot;stateDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;artifactDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;requestedAuthConfigs&quot;</span>:<span class="o">{}}</span>,<span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;5aocxjaq&quot;</span>,<span class="s2">&quot;timestamp&quot;</span>:1743712257.387306<span class="o">}</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">"content"</span>:<span class="o">{</span><span class="s2">"parts"</span>:<span class="o">[{</span><span class="s2">"functionResponse"</span>:<span class="o">{</span><span class="s2">"id"</span>:<span class="s2">"af-f83f8af9-f732-46b6-8cb5-7b5b73bbf13d"</span>,<span class="s2">"name"</span>:<span class="s2">"get_weather"</span>,<span class="s2">"response"</span>:<span class="o">{</span><span class="s2">"status"</span>:<span class="s2">"success"</span>,<span class="s2">"report"</span>:<span class="s2">"The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit)."</span><span class="o">}}}]</span>,<span class="s2">"role"</span>:<span class="s2">"user"</span><span class="o">}</span>,<span class="s2">"invocationId"</span>:<span class="s2">"e-3f6d7765-5287-419e-9991-5fffa1a75565"</span>,<span class="s2">"author"</span>:<span class="s2">"weather_time_agent"</span>,<span class="s2">"actions"</span>:<span class="o">{</span><span class="s2">"stateDelta"</span>:<span class="o">{}</span>,<span class="s2">"artifactDelta"</span>:<span class="o">{}</span>,<span class="s2">"requestedAuthConfigs"</span>:<span class="o">{}}</span>,<span class="s2">"id"</span>:<span class="s2">"5aocxjaq"</span>,<span class="s2">"timestamp"</span>:1743712257.387306<span class="o">}</span>
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;content&quot;</span>:<span class="o">{</span><span class="s2">&quot;parts&quot;</span>:<span class="o">[{</span><span class="s2">&quot;text&quot;</span>:<span class="s2">&quot;OK. The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).\n&quot;</span><span class="o">}]</span>,<span class="s2">&quot;role&quot;</span>:<span class="s2">&quot;model&quot;</span><span class="o">}</span>,<span class="s2">&quot;invocationId&quot;</span>:<span class="s2">&quot;e-3f6d7765-5287-419e-9991-5fffa1a75565&quot;</span>,<span class="s2">&quot;author&quot;</span>:<span class="s2">&quot;weather_time_agent&quot;</span>,<span class="s2">&quot;actions&quot;</span>:<span class="o">{</span><span class="s2">&quot;stateDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;artifactDelta&quot;</span>:<span class="o">{}</span>,<span class="s2">&quot;requestedAuthConfigs&quot;</span>:<span class="o">{}}</span>,<span class="s2">&quot;id&quot;</span>:<span class="s2">&quot;rAnWGSiV&quot;</span>,<span class="s2">&quot;timestamp&quot;</span>:1743712257.391317<span class="o">}</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>data:<span class="w"> </span><span class="o">{</span><span class="s2">"content"</span>:<span class="o">{</span><span class="s2">"parts"</span>:<span class="o">[{</span><span class="s2">"text"</span>:<span class="s2">"OK. The weather in New York is sunny with a temperature of 25 degrees Celsius (41 degrees Fahrenheit).\n"</span><span class="o">}]</span>,<span class="s2">"role"</span>:<span class="s2">"model"</span><span class="o">}</span>,<span class="s2">"invocationId"</span>:<span class="s2">"e-3f6d7765-5287-419e-9991-5fffa1a75565"</span>,<span class="s2">"author"</span>:<span class="s2">"weather_time_agent"</span>,<span class="s2">"actions"</span>:<span class="o">{</span><span class="s2">"stateDelta"</span>:<span class="o">{}</span>,<span class="s2">"artifactDelta"</span>:<span class="o">{}</span>,<span class="s2">"requestedAuthConfigs"</span>:<span class="o">{}}</span>,<span class="s2">"id"</span>:<span class="s2">"rAnWGSiV"</span>,<span class="s2">"timestamp"</span>:1743712257.391317<span class="o">}</span>
 </span></code></pre></div>
 <strong>Send a query with a base64 encoded file using <code>/run</code> or <code>/run_sse</code></strong></p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/run<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>-d<span class="w"> </span><span class="s1">&#39;{</span>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="s1">   &quot;appName&quot;:&quot;my_sample_agent&quot;,</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s1">   &quot;userId&quot;:&quot;u_123&quot;,</span>
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s1">   &quot;sessionId&quot;:&quot;s_123&quot;,</span>
-</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s1">   &quot;newMessage&quot;:{</span>
-</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s1">      &quot;role&quot;:&quot;user&quot;,</span>
-</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s1">      &quot;parts&quot;:[</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>-H<span class="w"> </span><span class="s1">'Content-Type: application/json'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="s1">   "appName":"my_sample_agent",</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s1">   "userId":"u_123",</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s1">   "sessionId":"s_123",</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s1">   "newMessage":{</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s1">      "role":"user",</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s1">      "parts":[</span>
 </span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="s1">         {</span>
-</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="s1">            &quot;text&quot;:&quot;Describe this image&quot;</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="s1">            "text":"Describe this image"</span>
 </span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="s1">         },</span>
 </span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="s1">         {</span>
-</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="s1">            &quot;inlineData&quot;:{</span>
-</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="s1">               &quot;displayName&quot;:&quot;my_image.png&quot;,</span>
-</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="s1">               &quot;data&quot;:&quot;iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpw...&quot;,</span>
-</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="s1">               &quot;mimeType&quot;:&quot;image/png&quot;</span>
+</span><span id="__span-20-14"><a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="s1">            "inlineData":{</span>
+</span><span id="__span-20-15"><a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="s1">               "displayName":"my_image.png",</span>
+</span><span id="__span-20-16"><a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="s1">               "data":"iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAACXBIWXMAAAsTAAALEwEAmpw...",</span>
+</span><span id="__span-20-17"><a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="s1">               "mimeType":"image/png"</span>
 </span><span id="__span-20-18"><a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="s1">            }</span>
 </span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="s1">         }</span>
 </span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="s1">      ]</span>
 </span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="s1">   },</span>
-</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="s1">   &quot;streaming&quot;:false</span>
-</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="s1">}&#39;</span>
+</span><span id="__span-20-22"><a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="s1">   "streaming":false</span>
+</span><span id="__span-20-23"><a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="s1">}'</span>
 </span></code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -7601,7 +7731,7 @@ send requests directly with <code>curl</code>.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>http://localhost:8000/list-apps
 </span></code></pre></div></p>
 <p><strong>Example Response</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">[</span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;another_agent&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">[</span><span class="s2">"my_sample_agent"</span><span class="p">,</span><span class="w"> </span><span class="s2">"another_agent"</span><span class="p">]</span>
 </span></code></pre></div></p>
 <hr />
 <h3 id="session-management">Session management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h3>
@@ -7620,19 +7750,19 @@ your <code>/run</code> or <code>/run_sse</code> request body instead.</p>
 </ul>
 <p><strong>Request Body</strong>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">&quot;stateDelta&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nt">&quot;key1&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value1&quot;</span><span class="p">,</span>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="nt">&quot;key2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">"stateDelta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nt">"key1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value1"</span><span class="p">,</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="nt">"key2"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
 </span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="p">}</span>
 </span></code></pre></div></p>
 <p><strong>Example Request</strong>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>http://localhost:8000/apps/my_sample_agent/users/u_123/sessions/s_abc<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;stateDelta&quot;:{&quot;visit_count&quot;: 5}}&#39;</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{"stateDelta":{"visit_count": 5}}'</span>
 </span></code></pre></div></p>
 <p><strong>Example Response</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;s_abc&quot;</span><span class="p">,</span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;u_123&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:{</span><span class="nt">&quot;visit_count&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span><span class="nt">&quot;events&quot;</span><span class="p">:[],</span><span class="nt">&quot;lastUpdateTime&quot;</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"s_abc"</span><span class="p">,</span><span class="nt">"appName"</span><span class="p">:</span><span class="s2">"my_sample_agent"</span><span class="p">,</span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"u_123"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:{</span><span class="nt">"visit_count"</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span><span class="nt">"events"</span><span class="p">:[],</span><span class="nt">"lastUpdateTime"</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
 </span></code></pre></div></p>
 <h4 id="get-a-session">Get a session<a class="headerlink" href="#get-a-session" title="Permanent link">&para;</a></h4>
 <p>Retrieves the details of a specific session, including its current state and all associated events.</p>
@@ -7644,7 +7774,7 @@ your <code>/run</code> or <code>/run_sse</code> request body instead.</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>http://localhost:8000/apps/my_sample_agent/users/u_123/sessions/s_abc
 </span></code></pre></div></p>
 <p><strong>Example Response</strong>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;s_abc&quot;</span><span class="p">,</span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;u_123&quot;</span><span class="p">,</span><span class="nt">&quot;state&quot;</span><span class="p">:{</span><span class="nt">&quot;visit_count&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span><span class="nt">&quot;events&quot;</span><span class="p">:[</span><span class="err">...</span><span class="p">],</span><span class="nt">&quot;lastUpdateTime&quot;</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"s_abc"</span><span class="p">,</span><span class="nt">"appName"</span><span class="p">:</span><span class="s2">"my_sample_agent"</span><span class="p">,</span><span class="nt">"userId"</span><span class="p">:</span><span class="s2">"u_123"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:{</span><span class="nt">"visit_count"</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span><span class="nt">"events"</span><span class="p">:[</span><span class="err">...</span><span class="p">],</span><span class="nt">"lastUpdateTime"</span><span class="p">:</span><span class="mf">1743711430.022186</span><span class="p">}</span>
 </span></code></pre></div></p>
 <h4 id="delete-a-session">Delete a session<a class="headerlink" href="#delete-a-session" title="Permanent link">&para;</a></h4>
 <p>Deletes a session and all of its associated data.</p>
@@ -7670,13 +7800,13 @@ A successful deletion returns no session data. Python returns <code>200 OK</code
 </ul>
 <p><strong>Request Body</strong>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">{</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;u_123&quot;</span><span class="p">,</span>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nt">&quot;sessionId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s_abc&quot;</span><span class="p">,</span>
-</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nt">&quot;newMessage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_sample_agent"</span><span class="p">,</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"u_123"</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s_abc"</span><span class="p">,</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nt">"newMessage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span><span class="nt">"parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is the capital of France?"</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">    </span><span class="p">]</span>
 </span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="p">}</span>
@@ -7685,16 +7815,16 @@ A successful deletion returns no session data. Python returns <code>200 OK</code
 <code>appName</code>, <code>userId</code>, <code>sessionId</code>, etc.).</p>
 <p><strong>Example Request</strong>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/run<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="s1">    &quot;appName&quot;: &quot;my_sample_agent&quot;,</span>
-</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="s1">    &quot;userId&quot;: &quot;u_123&quot;,</span>
-</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="s1">    &quot;sessionId&quot;: &quot;s_abc&quot;,</span>
-</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="s1">    &quot;newMessage&quot;: {</span>
-</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="s1">      &quot;role&quot;: &quot;user&quot;,</span>
-</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="s1">      &quot;parts&quot;: [{&quot;text&quot;: &quot;What is the capital of France?&quot;}]</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="s1">    "appName": "my_sample_agent",</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="s1">    "userId": "u_123",</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="s1">    "sessionId": "s_abc",</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="s1">    "newMessage": {</span>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="s1">      "role": "user",</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="s1">      "parts": [{"text": "What is the capital of France?"}]</span>
 </span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="s1">    }</span>
-</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="s1">  }&#39;</span>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="s1">  }'</span>
 </span></code></pre></div></p>
 <h4 id="run-agent-streaming">Run agent (streaming)<a class="headerlink" href="#run-agent-streaming" title="Permanent link">&para;</a></h4>
 <p>Executes the agent and streams events back to the client as they are generated using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">Server-Sent Events (SSE)</a>.</p>
@@ -7705,32 +7835,32 @@ A successful deletion returns no session data. Python returns <code>200 OK</code
 <p><strong>Request Body</strong>
 The request body is the same as for <code>/run</code>, with an additional optional <code>streaming</code> flag.
 <div class="language-json highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="p">{</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">&quot;appName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_sample_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;u_123&quot;</span><span class="p">,</span>
-</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span><span class="nt">&quot;sessionId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s_abc&quot;</span><span class="p">,</span>
-</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">  </span><span class="nt">&quot;newMessage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
-</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="w">    </span><span class="nt">&quot;parts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What is the weather in New York?&quot;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_sample_agent"</span><span class="p">,</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"u_123"</span><span class="p">,</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s_abc"</span><span class="p">,</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">  </span><span class="nt">"newMessage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">    </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="w">    </span><span class="nt">"parts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is the weather in New York?"</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">    </span><span class="p">]</span>
 </span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">  </span><span class="nt">&quot;streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">  </span><span class="nt">"streaming"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 </span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="p">}</span>
 </span></code></pre></div>
 - <code>streaming</code>: (Optional) Set to <code>true</code> to enable token-level streaming for model responses. Defaults to <code>false</code>.</p>
 <p><strong>Example Request</strong>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/run_sse<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="s1">    &quot;appName&quot;: &quot;my_sample_agent&quot;,</span>
-</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="s1">    &quot;userId&quot;: &quot;u_123&quot;,</span>
-</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="s1">    &quot;sessionId&quot;: &quot;s_abc&quot;,</span>
-</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="s1">    &quot;newMessage&quot;: {</span>
-</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="s1">      &quot;role&quot;: &quot;user&quot;,</span>
-</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="s1">      &quot;parts&quot;: [{&quot;text&quot;: &quot;What is the weather in New York?&quot;}]</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="s1">    "appName": "my_sample_agent",</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="s1">    "userId": "u_123",</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="s1">    "sessionId": "s_abc",</span>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="s1">    "newMessage": {</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="s1">      "role": "user",</span>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="s1">      "parts": [{"text": "What is the weather in New York?"}]</span>
 </span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="s1">    },</span>
-</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="s1">    &quot;streaming&quot;: false</span>
-</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="s1">  }&#39;</span>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="s1">    "streaming": false</span>
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="s1">  }'</span>
 </span></code></pre></div></p>
 
 

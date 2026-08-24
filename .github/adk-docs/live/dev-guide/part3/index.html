@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -303,52 +415,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -789,6 +859,8 @@
       
         
       
+        
+      
     
     
     
@@ -970,6 +1042,34 @@
     
   
     Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
   
 
     
@@ -5162,6 +5262,8 @@
       
         
       
+        
+      
     
     
     
@@ -5278,6 +5380,34 @@
     
   
     Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
   
 
     
@@ -8185,7 +8315,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -8259,7 +8389,7 @@ end</code></pre>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span>
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">):</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">event_json</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SERVER] Event: </span><span class="si">{</span><span class="n">event_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[SERVER] Event: </span><span class="si">{</span><span class="n">event_json</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_text</span><span class="p">(</span><span class="n">event_json</span><span class="p">)</span>
 </span></code></pre></div>
 <div class="admonition note">
@@ -8441,8 +8571,8 @@ end</code></pre>
 <p><strong>Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All events in this streaming session will have the same invocation_id</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Event ID: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>              <span class="c1"># Unique per event</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invocation ID: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">invocation_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Same for all events in session</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Event ID: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>              <span class="c1"># Unique per event</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invocation ID: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">invocation_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>  <span class="c1"># Same for all events in session</span>
 </span></code></pre></div>
 <p><strong>Use cases:</strong>
 - <strong>event.id</strong>: Track individual events in logs, deduplicate events
@@ -8502,7 +8632,7 @@ end</code></pre>
 <p><strong>Example:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Explicit text mode</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TEXT&quot;</span><span class="p">],</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"TEXT"</span><span class="p">],</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">BIDI</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
 </span></code></pre></div>
@@ -8522,7 +8652,7 @@ end</code></pre>
 <p><strong>Configuration:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure RunConfig for audio responses</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AUDIO&quot;</span><span class="p">],</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">BIDI</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
@@ -8533,11 +8663,11 @@ end</code></pre>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="p">:</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            <span class="c1"># Audio event structure:</span>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="c1"># part.inline_data.data: bytes (raw PCM audio)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="c1"># part.inline_data.mime_type: str (e.g., &quot;audio/pcm&quot;)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="c1"># part.inline_data.mime_type: str (e.g., "audio/pcm")</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            <span class="n">audio_data</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">data</span>
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="n">mime_type</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">mime_type</span>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes of </span><span class="si">{</span><span class="n">mime_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Received </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes of </span><span class="si">{</span><span class="n">mime_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="c1"># Your logic to play audio</span>
 </span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            <span class="k">await</span> <span class="n">play_audio</span><span class="p">(</span><span class="n">audio_data</span><span class="p">)</span>
 </span></code></pre></div>
@@ -8568,7 +8698,7 @@ end</code></pre>
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>                <span class="n">file_uri</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">file_data</span><span class="o">.</span><span class="n">file_uri</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>                <span class="n">mime_type</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">file_data</span><span class="o">.</span><span class="n">mime_type</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Audio file saved: </span><span class="si">{</span><span class="n">file_uri</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">mime_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Audio file saved: </span><span class="si">{</span><span class="n">file_uri</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">mime_type</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 </span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>                <span class="c1"># Retrieve audio file from artifact service for playback</span>
 </span></code></pre></div>
 <p><strong>File Data vs Inline Data:</strong></p>
@@ -8595,9 +8725,9 @@ end</code></pre>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">):</span>
 </span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="p">:</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prompt tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">prompt_token_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">candidates_token_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">total_token_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Prompt tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">prompt_token_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Response tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">candidates_token_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total tokens: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">total_token_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
 </span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="c1"># Track cumulative usage across the session</span>
 </span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="n">total_tokens</span> <span class="o">+=</span> <span class="n">event</span><span class="o">.</span><span class="n">usage_metadata</span><span class="o">.</span><span class="n">total_token_count</span> <span class="ow">or</span> <span class="mi">0</span>
@@ -8617,12 +8747,12 @@ end</code></pre>
 <p>When transcription is enabled in <code>RunConfig</code>, you receive transcriptions as separate events:</p>
 <p><strong>Configuration:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="c1"># User&#39;s spoken words (when input_audio_transcription enabled)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="c1"># User's spoken words (when input_audio_transcription enabled)</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span><span class="p">:</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="c1"># Your logic to display user transcription</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="n">display_user_transcription</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span><span class="p">)</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="c1"># Model&#39;s spoken words (when output_audio_transcription enabled)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="c1"># Model's spoken words (when output_audio_transcription enabled)</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span><span class="p">:</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="c1"># Your logic to display model transcription</span>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="n">display_model_transcription</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span><span class="p">)</span>
@@ -8660,20 +8790,20 @@ end</code></pre>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="c1"># Handle errors from the model or connection</span>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span><span class="p">:</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model error: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_code</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model error: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_code</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
 </span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>            <span class="c1"># Send error notification to client</span>
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>                <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span><span class="p">,</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">error_message</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>                <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"error"</span><span class="p">,</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>                <span class="s2">"code"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span><span class="p">,</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                <span class="s2">"message"</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">error_message</span>
 </span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>            <span class="p">})</span>
 </span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
 </span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>            <span class="c1"># Decide whether to continue or break based on error severity</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SAFETY&quot;</span><span class="p">,</span> <span class="s2">&quot;PROHIBITED_CONTENT&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKLIST&quot;</span><span class="p">]:</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"SAFETY"</span><span class="p">,</span> <span class="s2">"PROHIBITED_CONTENT"</span><span class="p">,</span> <span class="s2">"BLOCKLIST"</span><span class="p">]:</span>
 </span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>                <span class="c1"># Content policy violations - usually cannot retry</span>
 </span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>                <span class="k">break</span>  <span class="c1"># Terminal error - exit loop</span>
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;MAX_TOKENS&quot;</span><span class="p">:</span>
+</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">"MAX_TOKENS"</span><span class="p">:</span>
 </span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>                <span class="c1"># Token limit reached - may need to adjust configuration</span>
 </span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>                <span class="k">break</span>
 </span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>            <span class="c1"># For other errors, you might continue or implement retry logic</span>
@@ -8695,23 +8825,23 @@ end</code></pre>
 <p><strong>Scenario 1: Content Policy Violation (Use <code>break</code>)</strong></p>
 <p>You're building a customer support chatbot. A user asks an inappropriate question that triggers a SAFETY filter:</p>
 <p><strong>Example:</strong></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SAFETY&quot;</span><span class="p">,</span> <span class="s2">&quot;PROHIBITED_CONTENT&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKLIST&quot;</span><span class="p">]:</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"SAFETY"</span><span class="p">,</span> <span class="s2">"PROHIBITED_CONTENT"</span><span class="p">,</span> <span class="s2">"BLOCKLIST"</span><span class="p">]:</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="c1"># Model has stopped generating - continuation is impossible</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;I can&#39;t help with that request. Please ask something else.&quot;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"error"</span><span class="p">,</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"I can't help with that request. Please ask something else."</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="p">})</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">break</span>  <span class="c1"># Exit loop - model won&#39;t send more events for this turn</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">break</span>  <span class="c1"># Exit loop - model won't send more events for this turn</span>
 </span></code></pre></div>
 <p><strong>Why <code>break</code>?</strong> The model has terminated its response. No more events will come for this turn. Continuing would just waste resources waiting for events that won't arrive.</p>
 <hr />
 <p><strong>Scenario 2: Network Hiccup During Streaming (Use <code>continue</code>)</strong></p>
 <p>You're building a voice transcription service. Midway through transcribing, there's a brief network glitch:</p>
 <p><strong>Example:</strong></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;UNAVAILABLE&quot;</span><span class="p">:</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">"UNAVAILABLE"</span><span class="p">:</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="c1"># Temporary network issue</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network hiccup: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="c1"># Don&#39;t notify user for brief transient issues that may self-resolve</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Network hiccup: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="c1"># Don't notify user for brief transient issues that may self-resolve</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">continue</span>  <span class="c1"># Keep listening - model may recover and continue</span>
 </span></code></pre></div>
 <p><strong>Why <code>continue</code>?</strong> This is a transient error. The connection might recover, and the model may continue streaming the transcription. Breaking would prematurely end a potentially recoverable stream.</p>
@@ -8723,12 +8853,12 @@ end</code></pre>
 <p><strong>Scenario 3: Token Limit Reached (Use <code>break</code>)</strong></p>
 <p>You're generating a long-form article and hit the maximum token limit:</p>
 <p><strong>Example:</strong></p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;MAX_TOKENS&quot;</span><span class="p">:</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">"MAX_TOKENS"</span><span class="p">:</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="c1"># Model has reached output limit</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;complete&quot;</span><span class="p">,</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Response reached maximum length&quot;</span><span class="p">,</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="s2">&quot;truncated&quot;</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"complete"</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="s2">"message"</span><span class="p">:</span> <span class="s2">"Response reached maximum length"</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="s2">"truncated"</span><span class="p">:</span> <span class="kc">True</span>
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="p">})</span>
 </span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="k">break</span>  <span class="c1"># Model has finished - no more tokens will be generated</span>
 </span></code></pre></div>
@@ -8741,10 +8871,10 @@ end</code></pre>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">max_retries</span> <span class="o">=</span> <span class="mi">3</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">&quot;RESOURCE_EXHAUSTED&quot;</span><span class="p">:</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">error_code</span> <span class="o">==</span> <span class="s2">"RESOURCE_EXHAUSTED"</span><span class="p">:</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="n">retry_count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="k">if</span> <span class="n">retry_count</span> <span class="o">&gt;</span> <span class="n">max_retries</span><span class="p">:</span>
-</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Max retries exceeded&quot;</span><span class="p">)</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Max retries exceeded"</span><span class="p">)</span>
 </span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>            <span class="k">break</span>  <span class="c1"># Give up after multiple failures</span>
 </span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
 </span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="c1"># Wait and retry</span>
@@ -8921,10 +9051,10 @@ end</code></pre>
 </ul>
 </div>
 <p><strong>Example Stream:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Event 1: partial=True,  text=&quot;Hello&quot;,        turn_complete=False
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Event 2: partial=True,  text=&quot; world&quot;,       turn_complete=False
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Event 3: partial=False, text=&quot;Hello world&quot;,  turn_complete=False
-</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Event 4: partial=False, text=&quot;&quot;,             turn_complete=True  # Turn done
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Event 1: partial=True,  text="Hello",        turn_complete=False
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Event 2: partial=True,  text=" world",       turn_complete=False
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Event 3: partial=False, text="Hello world",  turn_complete=False
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Event 4: partial=False, text="",             turn_complete=True  # Turn done
 </span></code></pre></div>
 <p><strong>Important timing relationships</strong>:
 - <code>partial=False</code> can occur <strong>multiple times</strong> in a turn (e.g., after each sentence)
@@ -8953,12 +9083,12 @@ end</code></pre>
 </span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="n">show_user_interruption_indicator</span><span class="p">()</span>
 </span></code></pre></div>
 <p><strong>Example - Interruption Scenario:</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Model: &quot;The weather in San Francisco is currently...&quot;
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>User: [interrupts] &quot;Actually, I meant San Diego&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Model: "The weather in San Francisco is currently..."
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>User: [interrupts] "Actually, I meant San Diego"
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>→ event.interrupted=True received
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>→ Your app: stop rendering model response, clear UI
 </span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>→ Model processes new input
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Model: &quot;The weather in San Diego is...&quot;
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>Model: "The weather in San Diego is..."
 </span></code></pre></div>
 <p><strong>When to use interruption handling:</strong></p>
 <ul>
@@ -8973,7 +9103,7 @@ end</code></pre>
 <p><strong>Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">turn_complete</span><span class="p">:</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>        <span class="c1"># Your logic to update UI to show &quot;ready for input&quot; state</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>        <span class="c1"># Your logic to update UI to show "ready for input" state</span>
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>        <span class="n">enable_user_input</span><span class="p">()</span>
 </span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>        <span class="c1"># Your logic to hide typing indicator</span>
 </span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>        <span class="n">hide_typing_indicator</span><span class="p">()</span>
@@ -9059,7 +9189,7 @@ end</code></pre>
 <p>This provides a simple one-liner to convert ADK events into JSON format that can be sent over network protocols like WebSockets or SSE.</p>
 <p>The <code>model_dump_json()</code> method serializes an <code>Event</code> object to a JSON string:</p>
 <div class="language-python highlight"><span class="filename">Demo implementation: &lt;a href=&quot;https://github.com/google/adk-samples/blob/31847c0723fbf16ddf6eed411eb070d1c76afd1a/python/agents/bidi-demo/app/main.py#L219-L234&quot; target=&quot;_blank&quot;&gt;main.py:219-234&lt;/a&gt;</span><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">downstream_task</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Receives Events from run_live() and sends to WebSocket.&quot;&quot;&quot;</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span><span class="sd">"""Receives Events from run_live() and sends to WebSocket."""</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
 </span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>        <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>        <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
@@ -9103,13 +9233,13 @@ end</code></pre>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
 </span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Custom exclusions (e.g., skip large binary audio)</span>
 </span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">event_json</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span>
-</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;parts&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;__all__&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inline_data&#39;</span><span class="p">}}}},</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>    <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s1">'content'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'parts'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'__all__'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'inline_data'</span><span class="p">}}}},</span>
 </span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span>
 </span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="p">)</span>
 </span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
 </span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Include only specific fields</span>
 </span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="n">event_json</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span>
-</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    <span class="n">include</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="s1">&#39;turn_complete&#39;</span><span class="p">,</span> <span class="s1">&#39;interrupted&#39;</span><span class="p">},</span>
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>    <span class="n">include</span><span class="o">=</span><span class="p">{</span><span class="s1">'content'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">,</span> <span class="s1">'turn_complete'</span><span class="p">,</span> <span class="s1">'interrupted'</span><span class="p">},</span>
 </span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>    <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span>
 </span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="p">)</span>
 </span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
@@ -9129,8 +9259,8 @@ end</code></pre>
 </span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">turnComplete</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">        </span><span class="c1">// Remove typing indicator from current message</span>
 </span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">currentBubbleElement</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">textElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;.bubble-text&quot;</span><span class="p">);</span>
-</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">typingIndicator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">textElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;.typing-indicator&quot;</span><span class="p">);</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">textElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">".bubble-text"</span><span class="p">);</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">typingIndicator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">textElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">".typing-indicator"</span><span class="p">);</span>
 </span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">typingIndicator</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">                </span><span class="nx">typingIndicator</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
 </span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">            </span><span class="p">}</span>
@@ -9142,23 +9272,23 @@ end</code></pre>
 </span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>
 </span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="w">    </span><span class="c1">// Handle interrupted event</span>
 </span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">adkEvent</span><span class="p">.</span><span class="nx">interrupted</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">        </span><span class="c1">// Stop audio playback if it&#39;s playing</span>
+</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="w">        </span><span class="c1">// Stop audio playback if it's playing</span>
 </span><span id="__span-24-24"><a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">audioPlayerNode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">            </span><span class="nx">audioPlayerNode</span><span class="p">.</span><span class="nx">port</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">({</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;endOfAudio&quot;</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="w">            </span><span class="nx">audioPlayerNode</span><span class="p">.</span><span class="nx">port</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">({</span><span class="w"> </span><span class="nx">command</span><span class="o">:</span><span class="w"> </span><span class="s2">"endOfAudio"</span><span class="w"> </span><span class="p">});</span>
 </span><span id="__span-24-26"><a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-24-27"><a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>
 </span><span id="__span-24-28"><a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a><span class="w">        </span><span class="c1">// Keep the partial message but mark it as interrupted</span>
 </span><span id="__span-24-29"><a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">currentBubbleElement</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-24-30"><a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">textElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;.bubble-text&quot;</span><span class="p">);</span>
+</span><span id="__span-24-30"><a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">textElement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">".bubble-text"</span><span class="p">);</span>
 </span><span id="__span-24-31"><a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a>
 </span><span id="__span-24-32"><a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a><span class="w">            </span><span class="c1">// Remove typing indicator</span>
-</span><span id="__span-24-33"><a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">typingIndicator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">textElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;.typing-indicator&quot;</span><span class="p">);</span>
+</span><span id="__span-24-33"><a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">typingIndicator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">textElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">".typing-indicator"</span><span class="p">);</span>
 </span><span id="__span-24-34"><a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">typingIndicator</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-35"><a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a><span class="w">                </span><span class="nx">typingIndicator</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
 </span><span id="__span-24-36"><a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a><span class="w">            </span><span class="p">}</span>
 </span><span id="__span-24-37"><a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a>
 </span><span id="__span-24-38"><a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a><span class="w">            </span><span class="c1">// Add interrupted marker</span>
-</span><span id="__span-24-39"><a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a><span class="w">            </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;interrupted&quot;</span><span class="p">);</span>
+</span><span id="__span-24-39"><a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a><span class="w">            </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">"interrupted"</span><span class="p">);</span>
 </span><span id="__span-24-40"><a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-24-41"><a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a>
 </span><span id="__span-24-42"><a id="__codelineno-24-42" name="__codelineno-24-42" href="#__codelineno-24-42"></a><span class="w">        </span><span class="nx">currentMessageId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
@@ -9181,8 +9311,8 @@ end</code></pre>
 </span><span id="__span-24-59"><a id="__codelineno-24-59" name="__codelineno-24-59" href="#__codelineno-24-59"></a><span class="w">                    </span><span class="nx">messagesDiv</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">currentBubbleElement</span><span class="p">);</span>
 </span><span id="__span-24-60"><a id="__codelineno-24-60" name="__codelineno-24-60" href="#__codelineno-24-60"></a><span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-61"><a id="__codelineno-24-61" name="__codelineno-24-61" href="#__codelineno-24-61"></a><span class="w">                    </span><span class="c1">// Update the existing message bubble with accumulated text</span>
-</span><span id="__span-24-62"><a id="__codelineno-24-62" name="__codelineno-24-62" href="#__codelineno-24-62"></a><span class="w">                    </span><span class="kd">const</span><span class="w"> </span><span class="nx">existingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&quot;.bubble-text&quot;</span><span class="p">).</span><span class="nx">textContent</span><span class="p">;</span>
-</span><span id="__span-24-63"><a id="__codelineno-24-63" name="__codelineno-24-63" href="#__codelineno-24-63"></a><span class="w">                    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cleanText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">existingText</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\.\.\.$/</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+</span><span id="__span-24-62"><a id="__codelineno-24-62" name="__codelineno-24-62" href="#__codelineno-24-62"></a><span class="w">                    </span><span class="kd">const</span><span class="w"> </span><span class="nx">existingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">currentBubbleElement</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">".bubble-text"</span><span class="p">).</span><span class="nx">textContent</span><span class="p">;</span>
+</span><span id="__span-24-63"><a id="__codelineno-24-63" name="__codelineno-24-63" href="#__codelineno-24-63"></a><span class="w">                    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cleanText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">existingText</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\.\.\.$/</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">);</span>
 </span><span id="__span-24-64"><a id="__codelineno-24-64" name="__codelineno-24-64" href="#__codelineno-24-64"></a><span class="w">                    </span><span class="nx">updateMessageBubble</span><span class="p">(</span><span class="nx">currentBubbleElement</span><span class="p">,</span><span class="w"> </span><span class="nx">cleanText</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">part</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
 </span><span id="__span-24-65"><a id="__codelineno-24-65" name="__codelineno-24-65" href="#__codelineno-24-65"></a><span class="w">                </span><span class="p">}</span>
 </span><span id="__span-24-66"><a id="__codelineno-24-66" name="__codelineno-24-66" href="#__codelineno-24-66"></a>
@@ -9215,7 +9345,7 @@ end</code></pre>
 </span><span id="__span-25-14"><a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>
 </span><span id="__span-25-15"><a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>        <span class="c1"># Send metadata only (much smaller)</span>
 </span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>        <span class="n">metadata_json</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span>
-</span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>            <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;parts&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;__all__&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;inline_data&#39;</span><span class="p">}}}},</span>
+</span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>            <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s1">'content'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'parts'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'__all__'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'inline_data'</span><span class="p">}}}},</span>
 </span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>            <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span>
 </span><span id="__span-25-19"><a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>        <span class="p">)</span>
 </span><span id="__span-25-20"><a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>        <span class="k">await</span> <span class="n">websocket</span><span class="o">.</span><span class="n">send_text</span><span class="p">(</span><span class="n">metadata_json</span><span class="p">)</span>
@@ -9246,10 +9376,10 @@ end</code></pre>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">google_search</span>
 </span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
 </span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;google_search_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DEMO_AGENT_MODEL&quot;</span><span class="p">,</span> <span class="s2">&quot;gemini-2.5-flash-native-audio-preview-12-2025&quot;</span><span class="p">),</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"google_search_agent"</span><span class="p">,</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>    <span class="n">model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DEMO_AGENT_MODEL"</span><span class="p">,</span> <span class="s2">"gemini-2.5-flash-native-audio-preview-12-2025"</span><span class="p">),</span>
 </span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">google_search</span><span class="p">],</span>
-</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">&quot;You are a helpful assistant that can search the web.&quot;</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"You are a helpful assistant that can search the web."</span>
 </span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="p">)</span>
 </span></code></pre></div>
 <p>When you call <code>runner.run_live()</code>, ADK automatically:</p>
@@ -9267,11 +9397,11 @@ end</code></pre>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    <span class="c1"># Function call event - model requesting tool execution</span>
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">get_function_calls</span><span class="p">():</span>
-</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model calling: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">get_function_calls</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model calling: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">get_function_calls</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
 </span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>    <span class="c1"># Function response event - tool execution result</span>
 </span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">get_function_responses</span><span class="p">():</span>
-</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tool result: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">get_function_responses</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tool result: </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">get_function_responses</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">response</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span></code></pre></div>
 <p>You don't need to handle the execution yourself—ADK does it automatically. You just observe the events as they flow through the conversation.</p>
 <div class="admonition note">
@@ -9398,20 +9528,20 @@ end</code></pre>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="c1"># Access user identity</span>
 </span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    <span class="n">user_id</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">user_id</span>
 </span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>
-</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>    <span class="c1"># Check if this is the user&#39;s first message</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>    <span class="c1"># Check if this is the user's first message</span>
 </span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>    <span class="n">event_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 </span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>    <span class="k">if</span> <span class="n">event_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>        <span class="k">return</span> <span class="s2">&quot;Welcome! This is your first message.&quot;</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>        <span class="k">return</span> <span class="s2">"Welcome! This is your first message."</span>
 </span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>
 </span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>    <span class="c1"># Access conversation history</span>
 </span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>    <span class="n">recent_events</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span>  <span class="c1"># Last 5 events</span>
 </span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>
 </span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>    <span class="c1"># Access persistent session state</span>
 </span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>    <span class="c1"># Session state persists across invocations (not just this streaming session)</span>
-</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>    <span class="n">user_preferences</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_preferences&#39;</span><span class="p">,</span> <span class="p">{})</span>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>    <span class="n">user_preferences</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'user_preferences'</span><span class="p">,</span> <span class="p">{})</span>
 </span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>
 </span><span id="__span-29-18"><a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>    <span class="c1"># Update session state (will be persisted)</span>
-</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>    <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;last_query_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>    <span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s1">'last_query_time'</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
 </span><span id="__span-29-20"><a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>
 </span><span id="__span-29-21"><a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>    <span class="c1"># Access services for persistence</span>
 </span><span id="__span-29-22"><a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a>    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">artifact_service</span><span class="p">:</span>
@@ -9420,15 +9550,15 @@ end</code></pre>
 </span><span id="__span-29-25"><a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a>            <span class="n">app_name</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">app_name</span><span class="p">,</span>
 </span><span id="__span-29-26"><a id="__codelineno-29-26" name="__codelineno-29-26" href="#__codelineno-29-26"></a>            <span class="n">user_id</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-29-27"><a id="__codelineno-29-27" name="__codelineno-29-27" href="#__codelineno-29-27"></a>            <span class="n">session_id</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-</span><span id="__span-29-28"><a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>            <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;result.bin&quot;</span><span class="p">,</span>
-</span><span id="__span-29-29"><a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a>            <span class="n">artifact</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">inline_data</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span><span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;application/octet-stream&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)),</span>
+</span><span id="__span-29-28"><a id="__codelineno-29-28" name="__codelineno-29-28" href="#__codelineno-29-28"></a>            <span class="n">filename</span><span class="o">=</span><span class="s2">"result.bin"</span><span class="p">,</span>
+</span><span id="__span-29-29"><a id="__codelineno-29-29" name="__codelineno-29-29" href="#__codelineno-29-29"></a>            <span class="n">artifact</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">inline_data</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span><span class="n">mime_type</span><span class="o">=</span><span class="s2">"application/octet-stream"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)),</span>
 </span><span id="__span-29-30"><a id="__codelineno-29-30" name="__codelineno-29-30" href="#__codelineno-29-30"></a>        <span class="p">)</span>
 </span><span id="__span-29-31"><a id="__codelineno-29-31" name="__codelineno-29-31" href="#__codelineno-29-31"></a>
 </span><span id="__span-29-32"><a id="__codelineno-29-32" name="__codelineno-29-32" href="#__codelineno-29-32"></a>    <span class="c1"># Process the query with context</span>
 </span><span id="__span-29-33"><a id="__codelineno-29-33" name="__codelineno-29-33" href="#__codelineno-29-33"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">process_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">recent_events</span><span class="p">,</span> <span class="n">preferences</span><span class="o">=</span><span class="n">user_preferences</span><span class="p">)</span>
 </span><span id="__span-29-34"><a id="__codelineno-29-34" name="__codelineno-29-34" href="#__codelineno-29-34"></a>
 </span><span id="__span-29-35"><a id="__codelineno-29-35" name="__codelineno-29-35" href="#__codelineno-29-35"></a>    <span class="c1"># Terminate conversation in specific scenarios</span>
-</span><span id="__span-29-36"><a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a>    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+</span><span id="__span-29-36"><a id="__codelineno-29-36" name="__codelineno-29-36" href="#__codelineno-29-36"></a>    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'error'</span><span class="p">):</span>
 </span><span id="__span-29-37"><a id="__codelineno-29-37" name="__codelineno-29-37" href="#__codelineno-29-37"></a>        <span class="c1"># Processing error - stop conversation</span>
 </span><span id="__span-29-38"><a id="__codelineno-29-38" name="__codelineno-29-38" href="#__codelineno-29-38"></a>        <span class="n">context</span><span class="o">.</span><span class="n">end_invocation</span> <span class="o">=</span> <span class="kc">True</span>
 </span><span id="__span-29-39"><a id="__codelineno-29-39" name="__codelineno-29-39" href="#__codelineno-29-39"></a>
@@ -9453,17 +9583,17 @@ end</code></pre>
 <p><strong>Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># SequentialAgent automatically adds this tool to each sub-agent</span>
 </span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">task_completed</span><span class="p">():</span>
-</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="sd">    Signals that the agent has successfully completed the user&#39;s question</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span><span class="sd">"""</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="sd">    Signals that the agent has successfully completed the user's question</span>
 </span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="sd">    or task.</span>
-</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>    <span class="k">return</span> <span class="s1">&#39;Task completion signaled.&#39;</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="sd">    """</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>    <span class="k">return</span> <span class="s1">'Task completion signaled.'</span>
 </span></code></pre></div>
 <h3 id="recommended-pattern-transparent-sequential-flow">Recommended Pattern: Transparent Sequential Flow<a class="headerlink" href="#recommended-pattern-transparent-sequential-flow" title="Permanent link">&para;</a></h3>
 <p>The key insight is that <strong>agent transitions happen transparently</strong> within the same <code>run_live()</code> event stream. Your application doesn't need to manage transitions—just consume events uniformly:</p>
 <p><strong>Usage:</strong></p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">handle_sequential_workflow</span><span class="p">():</span>
-</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Recommended pattern for SequentialAgent with BIDI streaming.&quot;&quot;&quot;</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">    </span><span class="sd">"""Recommended pattern for SequentialAgent with BIDI streaming."""</span>
 </span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
 </span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>    <span class="c1"># 1. Single queue shared across all agents in the sequence</span>
 </span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>    <span class="n">queue</span> <span class="o">=</span> <span class="n">LiveRequestQueue</span><span class="p">()</span>
@@ -9474,7 +9604,7 @@ end</code></pre>
 </span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>            <span class="c1"># Your logic to read audio from microphone</span>
 </span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>            <span class="n">audio_chunk</span> <span class="o">=</span> <span class="k">await</span> <span class="n">microphone</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>            <span class="n">queue</span><span class="o">.</span><span class="n">send_realtime</span><span class="p">(</span>
-</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>                <span class="n">blob</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">audio_chunk</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">&quot;audio/pcm&quot;</span><span class="p">)</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>                <span class="n">blob</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Blob</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">audio_chunk</span><span class="p">,</span> <span class="n">mime_type</span><span class="o">=</span><span class="s2">"audio/pcm"</span><span class="p">)</span>
 </span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>            <span class="p">)</span>
 </span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>
 </span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>    <span class="n">input_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">capture_user_input</span><span class="p">())</span>
@@ -9482,8 +9612,8 @@ end</code></pre>
 </span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>    <span class="k">try</span><span class="p">:</span>
 </span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>        <span class="c1"># 3. Single event loop handles ALL agents seamlessly</span>
 </span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>        <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
-</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>            <span class="n">user_id</span><span class="o">=</span><span class="s2">&quot;user_123&quot;</span><span class="p">,</span>
-</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>            <span class="n">session_id</span><span class="o">=</span><span class="s2">&quot;session_456&quot;</span><span class="p">,</span>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>            <span class="n">user_id</span><span class="o">=</span><span class="s2">"user_123"</span><span class="p">,</span>
+</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>            <span class="n">session_id</span><span class="o">=</span><span class="s2">"session_456"</span><span class="p">,</span>
 </span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>            <span class="n">live_request_queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span>
 </span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>        <span class="p">):</span>
 </span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>            <span class="c1"># Events flow seamlessly across agent transitions</span>
@@ -9493,13 +9623,13 @@ end</code></pre>
 </span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a>            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
 </span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
 </span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>                    <span class="c1"># Check for audio data</span>
-</span><span id="__span-31-32"><a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>                    <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span> <span class="ow">and</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">mime_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;audio/&quot;</span><span class="p">):</span>
+</span><span id="__span-31-32"><a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>                    <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span> <span class="ow">and</span> <span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">mime_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"audio/"</span><span class="p">):</span>
 </span><span id="__span-31-33"><a id="__codelineno-31-33" name="__codelineno-31-33" href="#__codelineno-31-33"></a>                        <span class="c1"># Your logic to play audio</span>
 </span><span id="__span-31-34"><a id="__codelineno-31-34" name="__codelineno-31-34" href="#__codelineno-31-34"></a>            <span class="k">await</span> <span class="n">play_audio</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">inline_data</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 </span><span id="__span-31-35"><a id="__codelineno-31-35" name="__codelineno-31-35" href="#__codelineno-31-35"></a>
 </span><span id="__span-31-36"><a id="__codelineno-31-36" name="__codelineno-31-36" href="#__codelineno-31-36"></a>                    <span class="c1"># Check for text data</span>
 </span><span id="__span-31-37"><a id="__codelineno-31-37" name="__codelineno-31-37" href="#__codelineno-31-37"></a>                    <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-</span><span id="__span-31-38"><a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a>                        <span class="k">await</span> <span class="n">display_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">current_agent</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">part</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-31-38"><a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a>                        <span class="k">await</span> <span class="n">display_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">current_agent</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">part</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-31-39"><a id="__codelineno-31-39" name="__codelineno-31-39" href="#__codelineno-31-39"></a>
 </span><span id="__span-31-40"><a id="__codelineno-31-40" name="__codelineno-31-40" href="#__codelineno-31-40"></a>            <span class="c1"># No special transition handling needed!</span>
 </span><span id="__span-31-41"><a id="__codelineno-31-41" name="__codelineno-31-41" href="#__codelineno-31-41"></a>
@@ -9510,25 +9640,25 @@ end</code></pre>
 <h3 id="event-flow-during-agent-transitions">Event Flow During Agent Transitions<a class="headerlink" href="#event-flow-during-agent-transitions" title="Permanent link">&para;</a></h3>
 <p>Here's what your application sees when agents transition:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a># Agent 1 (Researcher) completes its work
-</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Event: author=&quot;researcher&quot;, text=&quot;I&#39;ve gathered all the data.&quot;
-</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Event: author=&quot;researcher&quot;, function_call: task_completed()
-</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Event: author=&quot;researcher&quot;, function_response: task_completed
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Event: author="researcher", text="I've gathered all the data."
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Event: author="researcher", function_call: task_completed()
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Event: author="researcher", function_response: task_completed
 </span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>
 </span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a># --- Automatic transition (invisible to your code) ---
 </span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>
 </span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a># Agent 2 (Writer) begins
-</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>Event: author=&quot;writer&quot;, text=&quot;Let me write the report based on the research...&quot;
-</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>Event: author=&quot;writer&quot;, text=&quot; The findings show...&quot;
-</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>Event: author=&quot;writer&quot;, function_call: task_completed()
-</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>Event: author=&quot;writer&quot;, function_response: task_completed
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>Event: author="writer", text="Let me write the report based on the research..."
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>Event: author="writer", text=" The findings show..."
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>Event: author="writer", function_call: task_completed()
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>Event: author="writer", function_response: task_completed
 </span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>
 </span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a># --- Automatic transition ---
 </span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>
 </span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a># Agent 3 (Reviewer) begins - the last agent in sequence
-</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>Event: author=&quot;reviewer&quot;, text=&quot;Let me review the report...&quot;
-</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>Event: author=&quot;reviewer&quot;, text=&quot;The report looks good. All done!&quot;
-</span><span id="__span-32-19"><a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>Event: author=&quot;reviewer&quot;, function_call: task_completed()
-</span><span id="__span-32-20"><a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>Event: author=&quot;reviewer&quot;, function_response: task_completed
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>Event: author="reviewer", text="Let me review the report..."
+</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>Event: author="reviewer", text="The report looks good. All done!"
+</span><span id="__span-32-19"><a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>Event: author="reviewer", function_call: task_completed()
+</span><span id="__span-32-20"><a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>Event: author="reviewer", function_response: task_completed
 </span><span id="__span-32-21"><a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>
 </span><span id="__span-32-22"><a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a># --- Last agent completed: run_live() exits ---
 </span><span id="__span-32-23"><a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a># Your async for loop ends here
@@ -9542,7 +9672,7 @@ end</code></pre>
 </span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>    <span class="c1"># Your event handling logic here</span>
 </span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>    <span class="k">await</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>  <span class="c1"># Works for Agent1, Agent2, Agent3...</span>
 </span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>
-</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="c1"># ❌ INCORRECT: Don&#39;t break the loop or create multiple loops</span>
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="c1"># ❌ INCORRECT: Don't break the loop or create multiple loops</span>
 </span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
 </span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>  <span class="c1"># WRONG!</span>
 </span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>        <span class="o">...</span>
@@ -9576,7 +9706,7 @@ end</code></pre>
 </span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">author</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">author</span> <span class="o">!=</span> <span class="n">current_agent_name</span><span class="p">:</span>
 </span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>        <span class="n">current_agent_name</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">author</span>
 </span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>        <span class="c1"># Your logic to update UI indicator</span>
-</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>        <span class="k">await</span> <span class="n">update_ui_indicator</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Now: </span><span class="si">{</span><span class="n">current_agent_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>        <span class="k">await</span> <span class="n">update_ui_indicator</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Now: </span><span class="si">{</span><span class="n">current_agent_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>
 </span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>    <span class="c1"># Your event handling logic here</span>
 </span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>    <span class="k">await</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
@@ -9589,10 +9719,10 @@ end</code></pre>
 </span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
 </span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">parts</span><span class="p">:</span>
 </span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a>            <span class="k">if</span> <span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">function_response</span> <span class="ow">and</span>
-</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>                <span class="n">part</span><span class="o">.</span><span class="n">function_response</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;task_completed&quot;</span><span class="p">):</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>                <span class="n">part</span><span class="o">.</span><span class="n">function_response</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"task_completed"</span><span class="p">):</span>
 </span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>                <span class="c1"># Your logic to display transition notification</span>
 </span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>                <span class="k">await</span> <span class="n">display_notification</span><span class="p">(</span>
-</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>                    <span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2"> completed. Handing off to next agent...&quot;</span>
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>                    <span class="sa">f</span><span class="s2">"✓ </span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2"> completed. Handing off to next agent..."</span>
 </span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>                <span class="p">)</span>
 </span><span id="__span-37-11"><a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a>                <span class="k">continue</span>
 </span><span id="__span-37-12"><a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a>
@@ -9627,16 +9757,16 @@ end</code></pre>
 </table>
 <p><strong>transfer_to_agent example:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a># Coordinator routes based on user intent
-</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>User: &quot;I need help with billing&quot;
-</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Event: author=&quot;coordinator&quot;, function_call: transfer_to_agent(agent_name=&quot;billing&quot;)
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>User: "I need help with billing"
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Event: author="coordinator", function_call: transfer_to_agent(agent_name="billing")
 </span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a># Stream continues with billing agent - same run_live() loop
-</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>Event: author=&quot;billing&quot;, text=&quot;I can help with your billing question...&quot;
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>Event: author="billing", text="I can help with your billing question..."
 </span></code></pre></div>
 <p><strong>task_completed example:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a># Sequential workflow progresses through pipeline
-</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>Event: author=&quot;researcher&quot;, function_call: task_completed()
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>Event: author="researcher", function_call: task_completed()
 </span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a># Current agent exits, next agent in sequence begins
-</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>Event: author=&quot;writer&quot;, text=&quot;Based on the research...&quot;
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>Event: author="writer", text="Based on the research..."
 </span></code></pre></div>
 <h3 id="best-practices-summary">Best Practices Summary<a class="headerlink" href="#best-practices-summary" title="Permanent link">&para;</a></h3>
 <table>
