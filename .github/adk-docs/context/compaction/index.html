@@ -29,10 +29,10 @@
         <link rel="canonical" href="https://adk.dev/context/compaction/">
       
       
-        <link rel="prev" href="../caching/">
+        <link rel="prev" href="../../sessions/memory/">
       
       
-        <link rel="next" href="../../sessions/">
+        <link rel="next" href="../caching/">
       
       
         
@@ -107,6 +107,118 @@
   <meta name="twitter:title" content="Agent Development Kit (ADK)">
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
+
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
 
   </head>
   
@@ -303,52 +415,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -789,6 +859,8 @@
       
         
       
+        
+      
     
     
     
@@ -990,6 +1062,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../get-started/installation/" class="md-nav__link">
         
   
@@ -1058,8 +1158,6 @@
       
         
           
-        
-      
         
       
         
@@ -1175,141 +1273,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../get-started/streaming/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming agent
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_2_4" id="__nav_2_2_4_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Streaming agent
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../get-started/streaming/quickstart-streaming/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Python
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../get-started/streaming/quickstart-streaming-java/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Java
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -2104,6 +2067,8 @@
       
         
       
+        
+      
     
     
     
@@ -2313,6 +2278,34 @@
     
   
     Model routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/openai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenAI
   
 
     
@@ -3709,8 +3702,6 @@
       
         
       
-        
-      
     
     
     
@@ -4549,6 +4540,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -4576,7 +4577,7 @@
   <span class="md-ellipsis">
     
   
-    Context
+    Agent context
   
 
     
@@ -4598,7 +4599,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Context
+    Agent context
   
 
           </label>
@@ -4613,14 +4614,233 @@
   
   
     <li class="md-nav__item">
-      <a href="../caching/" class="md-nav__link">
+      <a href="../../sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Context caching
+    Conversational context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../sessions/session/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sessions
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_6_3" id="__nav_4_6_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sessions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sessions/session/rewind/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rewind sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sessions/session/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sessions/state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sessions/memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
   
 
     
@@ -4809,6 +5029,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model context caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -4828,14 +5076,6 @@
       
         
           
-        
-      
-        
-      
-        
-      
-        
-      
         
       
     
@@ -4858,14 +5098,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../sessions/" class="md-nav__link ">
+            <a href="../../mcp/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Sessions and Memory
+    MCP
   
 
     
@@ -4874,11 +5114,6 @@
   
 
             </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
             
           </div>
         
@@ -4887,231 +5122,12 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Sessions and Memory
+    MCP
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_2" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../sessions/session/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sessions
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4_7_2" id="__nav_4_7_2_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Sessions
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sessions/session/rewind/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Rewind sessions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sessions/session/migrate/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate sessions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sessions/state/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    State
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../events/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Events
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sessions/memory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
               
             
           </ul>
@@ -5133,6 +5149,14 @@
       
         
           
+        
+      
+        
+      
+        
+      
+        
+      
         
       
     
@@ -5155,87 +5179,6 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../mcp/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    MCP
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
-        
-          
-          <div class="md-nav__link md-nav__container">
             <a href="../../a2a/" class="md-nav__link ">
               
   
@@ -5254,14 +5197,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5329,10 +5272,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_8_3" id="__nav_4_8_3_label" tabindex="0">
             
   
   
@@ -5350,8 +5293,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5468,6 +5411,8 @@
       
         
       
+        
+      
     
     
     
@@ -5481,10 +5426,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_4" id="__nav_4_9_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_8_4" id="__nav_4_8_4_label" tabindex="0">
             
   
   
@@ -5502,8 +5447,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5597,6 +5542,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5660,6 +5633,8 @@
       
         
       
+        
+      
     
     
     
@@ -5676,18 +5651,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../streaming/" class="md-nav__link ">
+            <a href="../../live/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
     
@@ -5698,23 +5673,158 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../live/get-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_9_2" id="__nav_4_9_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/get-started/streaming-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/get-started/streaming-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
               
@@ -5749,17 +5859,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_10_2" id="__nav_4_10_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit development guide series
+    Gemini Live API Toolkit development guide
   
 
     
@@ -5770,12 +5880,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_10_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit development guide series
+    Gemini Live API Toolkit development guide
   
 
           </label>
@@ -5788,7 +5898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part1/" class="md-nav__link">
+      <a href="../../live/dev-guide/part1/" class="md-nav__link">
         
   
   
@@ -5816,7 +5926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part2/" class="md-nav__link">
+      <a href="../../live/dev-guide/part2/" class="md-nav__link">
         
   
   
@@ -5844,7 +5954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part3/" class="md-nav__link">
+      <a href="../../live/dev-guide/part3/" class="md-nav__link">
         
   
   
@@ -5872,7 +5982,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part4/" class="md-nav__link">
+      <a href="../../live/dev-guide/part4/" class="md-nav__link">
         
   
   
@@ -5900,7 +6010,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part5/" class="md-nav__link">
+      <a href="../../live/dev-guide/part5/" class="md-nav__link">
         
   
   
@@ -5936,7 +6046,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/streaming-tools/" class="md-nav__link">
+      <a href="../../live/streaming-tools/" class="md-nav__link">
         
   
   
@@ -5964,7 +6074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../streaming/configuration/" class="md-nav__link">
+      <a href="../../live/configuration/" class="md-nav__link">
         
   
   
@@ -6026,7 +6136,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -6048,14 +6158,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_11" id="__nav_4_11_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_11">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_10">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6390,7 +6500,7 @@
   <span class="md-ellipsis">
     
   
-    Typescript ADK
+    TypeScript ADK
   
 
     
@@ -7072,7 +7182,7 @@
         <a href="../" class="md-path__link">
           
   <span class="md-ellipsis">
-    Context
+    Agent context
   </span>
 
         </a>
@@ -7085,7 +7195,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -7111,7 +7221,7 @@
 
 <h1 id="compress-agent-context-for-performance">Compress agent context for performance<a class="headerlink" href="#compress-agent-context-for-performance" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.16.0</span><span class="lst-java">Java v0.2.0</span><span class="lst-typescript">TypeScript v0.6.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.16.0</span><span class="lst-java">Java v0.2.0</span><span class="lst-typescript">TypeScript v0.6.0</span><span class="lst-kotlin">Kotlin v0.7.0</span>
 </div>
 
 <p>As an ADK agent runs it collects <em>context</em> information, including user
@@ -7145,8 +7255,8 @@ allowing automatic event compaction based on the rules you set in the <code>Even
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 2. Initialize your root agent (required for App setup)</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">root_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_root_agent&quot;</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Main coordinating agent for the workflow.&quot;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"my_root_agent"</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">description</span><span class="o">=</span><span class="s2">"Main coordinating agent for the workflow."</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 3. Token-based configuration: Activates the priority/pre-call layer</span>
@@ -7157,7 +7267,7 @@ allowing automatic event compaction based on the rules you set in the <code>Even
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 4. Register with required name and root_agent fields, and the config object</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_compacting_agent_app&quot;</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"my_compacting_agent_app"</span><span class="p">,</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">root_agent</span><span class="o">=</span><span class="n">root_agent</span><span class="p">,</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">events_compaction_config</span><span class="o">=</span><span class="n">compaction_config</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="p">)</span>
@@ -7175,19 +7285,19 @@ specific number of workflow events, or invocations, with the current Session.</p
 </span></code></pre></div>
 <h2 id="configure-context-compaction">Configure context compaction<a class="headerlink" href="#configure-context-compaction" title="Permanent link">&para;</a></h2>
 <p>Add context compaction to your agent workflow by adding an Events Compaction
-Configuration setting to the App object (Python/Java) or by configuring <code>contextCompactors</code>
+Configuration setting to the App object (Python/Java/Kotlin) or by configuring <code>contextCompactors</code>
 on the <code>LlmAgent</code> (TypeScript). As part of the
 configuration, you must specify a compaction interval and overlap size (Python/Java)
-or a token threshold and event retention size (TypeScript), as shown
+or a token threshold and event retention size (TypeScript/Kotlin), as shown
 in the following sample code:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="java">Java</label><label for="typescript">TypeScript</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><input id="kotlin" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="java">Java</label><label for="typescript">TypeScript</label><label for="kotlin">Kotlin</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">EventsCompactionConfig</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-agent&#39;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">'my-agent'</span><span class="p">,</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">root_agent</span><span class="o">=</span><span class="n">root_agent</span><span class="p">,</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">events_compaction_config</span><span class="o">=</span><span class="n">EventsCompactionConfig</span><span class="p">(</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">compaction_interval</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># Trigger compaction every 3 new invocations.</span>
@@ -7201,7 +7311,7 @@ in the following sample code:</p>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.summarizer.EventsCompactionConfig</span><span class="p">;</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">App</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;my-agent&quot;</span><span class="p">)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">"my-agent"</span><span class="p">)</span>
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">.</span><span class="na">rootAgent</span><span class="p">(</span><span class="n">rootAgent</span><span class="p">)</span>
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="p">.</span><span class="na">eventsCompactionConfig</span><span class="p">(</span><span class="n">EventsCompactionConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="p">.</span><span class="na">compactionInterval</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="c1">// Trigger compaction every 3 new invocations.</span>
@@ -7211,21 +7321,39 @@ in the following sample code:</p>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Gemini</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">,</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Gemini</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">,</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-agent&#39;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'my-agent'</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'gemini-flash-latest'</span><span class="p">,</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nx">contextCompactors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">({</span>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nx">tokenThreshold</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span><span class="w"> </span><span class="c1">// Trigger compaction when session exceeds 1000 tokens.</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nx">eventRetentionSize</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span><span class="w"> </span><span class="c1">// Keep at least 1 raw event (overlap).</span>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nx">summarizer</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">({</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="nx">llm</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">Gemini</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">}),</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="nx">llm</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nx">Gemini</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'gemini-flash-latest'</span><span class="p">}),</span>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="p">}),</span>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="p">}),</span>
 </span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">],</span>
 </span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">});</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.apps.App</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.summarizer.EventsCompactionConfig</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">// tokenThreshold and eventRetentionSize must be set together; either alone throws.</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">// Kotlin also accepts the compactionInterval/overlapSize pair used in the other tabs.</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kd">val</span><span class="w"> </span><span class="nv">app</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="n">App</span><span class="p">(</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my-agent"</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="n">rootAgent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rootAgent</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="n">eventsCompactionConfig</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">            </span><span class="n">EventsCompactionConfig</span><span class="p">(</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">                </span><span class="n">tokenThreshold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span><span class="w"> </span><span class="c1">// Compact when the last prompt exceeds 1000 tokens.</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">                </span><span class="n">eventRetentionSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="c1">// Keep at least 1 raw event.</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">            </span><span class="p">),</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">)</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -7269,75 +7397,75 @@ The following code example demonstrates how to define and configure a custom sum
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><input id="java_1" name="__tabbed_2" type="radio" /><input id="typescript_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="java_1">Java</label><label for="typescript_1">TypeScript</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">EventsCompactionConfig</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.llm_event_summarizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmEventSummarizer</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gemini</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Define the AI model to be used for summarization:</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">summarization_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Create the summarizer with the custom model:</span>
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">my_summarizer</span> <span class="o">=</span> <span class="n">LlmEventSummarizer</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">summarization_llm</span><span class="p">)</span>
-</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Configure the App with the custom summarizer and compaction settings:</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my-agent&#39;</span><span class="p">,</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    <span class="n">root_agent</span><span class="o">=</span><span class="n">root_agent</span><span class="p">,</span>
-</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="n">events_compaction_config</span><span class="o">=</span><span class="n">EventsCompactionConfig</span><span class="p">(</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>        <span class="n">compaction_interval</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        <span class="n">summarizer</span><span class="o">=</span><span class="n">my_summarizer</span><span class="p">,</span>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="p">),</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.apps.App</span><span class="p">;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.models.Gemini</span><span class="p">;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.summarizer.EventsCompactionConfig</span><span class="p">;</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.summarizer.LlmEventSummarizer</span><span class="p">;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1">// Define the AI model to be used for summarization:</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">Gemini</span><span class="w"> </span><span class="n">summarizationLlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gemini</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span><span class="p">,</span> <span class="n">EventsCompactionConfig</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.apps.llm_event_summarizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LlmEventSummarizer</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gemini</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Define the AI model to be used for summarization:</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">summarization_llm</span> <span class="o">=</span> <span class="n">Gemini</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">"gemini-flash-latest"</span><span class="p">)</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Create the summarizer with the custom model:</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">my_summarizer</span> <span class="o">=</span> <span class="n">LlmEventSummarizer</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">summarization_llm</span><span class="p">)</span>
 </span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">// Create the summarizer with the custom model:</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">LlmEventSummarizer</span><span class="w"> </span><span class="n">mySummarizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LlmEventSummarizer</span><span class="p">(</span><span class="n">summarizationLlm</span><span class="p">);</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1">// Configure the App with the custom summarizer and compaction settings:</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="n">App</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;my-agent&quot;</span><span class="p">)</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="p">.</span><span class="na">rootAgent</span><span class="p">(</span><span class="n">rootAgent</span><span class="p">)</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="p">.</span><span class="na">eventsCompactionConfig</span><span class="p">(</span><span class="n">EventsCompactionConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">        </span><span class="p">.</span><span class="na">compactionInterval</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">        </span><span class="p">.</span><span class="na">overlapSize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">        </span><span class="p">.</span><span class="na">summarizer</span><span class="p">(</span><span class="n">mySummarizer</span><span class="p">)</span>
-</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Configure the App with the custom summarizer and compaction settings:</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="p">(</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">'my-agent'</span><span class="p">,</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="n">root_agent</span><span class="o">=</span><span class="n">root_agent</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="n">events_compaction_config</span><span class="o">=</span><span class="n">EventsCompactionConfig</span><span class="p">(</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        <span class="n">compaction_interval</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="n">summarizer</span><span class="o">=</span><span class="n">my_summarizer</span><span class="p">,</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="p">),</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Gemini</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">,</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// Define the AI model to be used for summarization:</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">summarizationLlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Gemini</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">});</span>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.apps.App</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.models.Gemini</span><span class="p">;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.summarizer.EventsCompactionConfig</span><span class="p">;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.summarizer.LlmEventSummarizer</span><span class="p">;</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// Create the summarizer with the custom model:</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">mySummarizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">({</span><span class="nx">llm</span><span class="o">:</span><span class="w"> </span><span class="kt">summarizationLlm</span><span class="p">});</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">// Configure the agent with the custom summarizer and compaction settings:</span>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;my-agent&#39;</span><span class="p">,</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;gemini-flash-latest&#39;</span><span class="p">,</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="nx">contextCompactors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">({</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="nx">tokenThreshold</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">      </span><span class="nx">eventRetentionSize</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">      </span><span class="nx">summarizer</span><span class="o">:</span><span class="w"> </span><span class="kt">mySummarizer</span><span class="p">,</span>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="p">}),</span>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="p">],</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="p">});</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// Define the AI model to be used for summarization:</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">Gemini</span><span class="w"> </span><span class="n">summarizationLlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Gemini</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">"gemini-flash-latest"</span><span class="p">)</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">// Create the summarizer with the custom model:</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">LlmEventSummarizer</span><span class="w"> </span><span class="n">mySummarizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LlmEventSummarizer</span><span class="p">(</span><span class="n">summarizationLlm</span><span class="p">);</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1">// Configure the App with the custom summarizer and compaction settings:</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">App</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">App</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">"my-agent"</span><span class="p">)</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="p">.</span><span class="na">rootAgent</span><span class="p">(</span><span class="n">rootAgent</span><span class="p">)</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="p">.</span><span class="na">eventsCompactionConfig</span><span class="p">(</span><span class="n">EventsCompactionConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">        </span><span class="p">.</span><span class="na">compactionInterval</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="p">.</span><span class="na">overlapSize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">        </span><span class="p">.</span><span class="na">summarizer</span><span class="p">(</span><span class="n">mySummarizer</span><span class="p">)</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">Gemini</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">,</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">// Define the AI model to be used for summarization:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">summarizationLlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Gemini</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'gemini-flash-latest'</span><span class="p">});</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">// Create the summarizer with the custom model:</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">mySummarizer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmSummarizer</span><span class="p">({</span><span class="nx">llm</span><span class="o">:</span><span class="w"> </span><span class="kt">summarizationLlm</span><span class="p">});</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">// Configure the agent with the custom summarizer and compaction settings:</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="kd">const</span><span class="w"> </span><span class="nx">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">({</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">'my-agent'</span><span class="p">,</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'gemini-flash-latest'</span><span class="p">,</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nx">contextCompactors</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">TokenBasedContextCompactor</span><span class="p">({</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">      </span><span class="nx">tokenThreshold</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">      </span><span class="nx">eventRetentionSize</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">      </span><span class="nx">summarizer</span><span class="o">:</span><span class="w"> </span><span class="kt">mySummarizer</span><span class="p">,</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="p">}),</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="p">],</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">});</span>
 </span></code></pre></div>
 </div>
 </div>

@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -303,52 +415,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -798,6 +868,8 @@
       
         
       
+        
+      
     
     
     
@@ -1140,6 +1212,34 @@
     
   
     Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
   
 
     
@@ -5321,6 +5421,8 @@
       
         
       
+        
+      
     
     
     
@@ -5437,6 +5539,34 @@
     
   
     Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
   
 
     
@@ -7088,7 +7218,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -7170,24 +7300,24 @@ directory:</p>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">BaseAgent</span><span class="w"> </span><span class="nf">initAgent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">LlmAgent</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">            </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">&quot;hello-time-agent&quot;</span><span class="p">)</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">&quot;Tells the current time in a specified city&quot;</span><span class="p">)</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">            </span><span class="p">.</span><span class="na">instruction</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">            </span><span class="p">.</span><span class="na">name</span><span class="p">(</span><span class="s">"hello-time-agent"</span><span class="p">)</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">            </span><span class="p">.</span><span class="na">description</span><span class="p">(</span><span class="s">"Tells the current time in a specified city"</span><span class="p">)</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">            </span><span class="p">.</span><span class="na">instruction</span><span class="p">(</span><span class="s">"""</span>
 </span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s">                You are a helpful assistant that tells the current time in a city.</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s">                Use the &#39;getCurrentTime&#39; tool for this purpose.</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s">                &quot;&quot;&quot;</span><span class="p">)</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">            </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">&quot;gemini-flash-latest&quot;</span><span class="p">)</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">            </span><span class="p">.</span><span class="na">tools</span><span class="p">(</span><span class="n">FunctionTool</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">HelloTimeAgent</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;getCurrentTime&quot;</span><span class="p">))</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s">                Use the 'getCurrentTime' tool for this purpose.</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s">                """</span><span class="p">)</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">            </span><span class="p">.</span><span class="na">model</span><span class="p">(</span><span class="s">"gemini-flash-latest"</span><span class="p">)</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">            </span><span class="p">.</span><span class="na">tools</span><span class="p">(</span><span class="n">FunctionTool</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">HelloTimeAgent</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="s">"getCurrentTime"</span><span class="p">))</span>
 </span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
 </span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="cm">/** Mock tool implementation */</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Get the current time for a given city&quot;</span><span class="p">)</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">    </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Get the current time for a given city"</span><span class="p">)</span>
 </span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getCurrentTime</span><span class="p">(</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">        </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;city&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Name of the city to get the time for&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">city</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">        </span><span class="nd">@Schema</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"city"</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Name of the city to get the time for"</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">city</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">            </span><span class="s">&quot;city&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">city</span><span class="p">,</span>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">            </span><span class="s">&quot;forecast&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;The time is 10:30am.&quot;</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">            </span><span class="s">"city"</span><span class="p">,</span><span class="w"> </span><span class="n">city</span><span class="p">,</span>
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="w">            </span><span class="s">"forecast"</span><span class="p">,</span><span class="w"> </span><span class="s">"The time is 10:30am."</span>
 </span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="w">        </span><span class="p">);</span>
 </span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="p">}</span>
@@ -7216,17 +7346,17 @@ additional settings with the following configuration code:</p>
 <summary>Complete <code>pom.xml</code> configuration for project</summary>
 <p>The following code shows a complete <code>pom.xml</code> configuration for
 this project:</p>
-<div class="language-xml highlight"><span class="filename">my_agent/pom.xml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><span class="filename">my_agent/pom.xml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">&lt;project</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">"http://maven.apache.org/POM/4.0.0"</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="na">xsi:schemaLocation=</span><span class="s">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class="nt">&gt;</span>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.example.agent<span class="nt">&lt;/groupId&gt;</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>adk-agents<span class="nt">&lt;/artifactId&gt;</span>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="cm">&lt;!-- Specify the version of Java you&#39;ll be using --&gt;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="cm">&lt;!-- Specify the version of Java you'll be using --&gt;</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="nt">&lt;properties&gt;</span>
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="nt">&lt;maven.compiler.source&gt;</span>17<span class="nt">&lt;/maven.compiler.source&gt;</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="nt">&lt;maven.compiler.target&gt;</span>17<span class="nt">&lt;/maven.compiler.target&gt;</span>
@@ -7260,15 +7390,15 @@ to set environment variables:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="macos--linux_1" name="__tabbed_2" type="radio" /><input id="windows-powershell" name="__tabbed_2" type="radio" /><input id="windows-command-prompt" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="macos--linux_1">MacOS / Linux</label><label for="windows-powershell">Windows PowerShell</label><label for="windows-command-prompt">Windows Command Prompt</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-bash highlight"><span class="filename">Update: my_agent/.env</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export GOOGLE_API_KEY=&quot;YOUR_API_KEY&quot;&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+<div class="language-bash highlight"><span class="filename">Update: my_agent/.env</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'export GOOGLE_API_KEY="YOUR_API_KEY"'</span><span class="w"> </span>&gt;<span class="w"> </span>.env
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-console highlight"><span class="filename">Update: my_agent/env.bat</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">echo &#39;set GOOGLE_API_KEY=&quot;YOUR_API_KEY&quot;&#39; &gt; env.bat</span>
+<div class="language-console highlight"><span class="filename">Update: my_agent/env.bat</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">echo 'set GOOGLE_API_KEY="YOUR_API_KEY"' &gt; env.bat</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-console highlight"><span class="filename">Update: my_agent/env.bat</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="go">echo set GOOGLE_API_KEY=&quot;YOUR_API_KEY&quot; &gt; env.bat</span>
+<div class="language-console highlight"><span class="filename">Update: my_agent/env.bat</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="go">echo set GOOGLE_API_KEY="YOUR_API_KEY" &gt; env.bat</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -7305,21 +7435,21 @@ running agent.</p>
 </span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
 </span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">        </span><span class="n">Session</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runner</span>
 </span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">                </span><span class="p">.</span><span class="na">sessionService</span><span class="p">()</span>
-</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">                </span><span class="p">.</span><span class="na">createSession</span><span class="p">(</span><span class="n">runner</span><span class="p">.</span><span class="na">appName</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;user1234&quot;</span><span class="p">)</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">                </span><span class="p">.</span><span class="na">createSession</span><span class="p">(</span><span class="n">runner</span><span class="p">.</span><span class="na">appName</span><span class="p">(),</span><span class="w"> </span><span class="s">"user1234"</span><span class="p">)</span>
 </span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">                </span><span class="p">.</span><span class="na">blockingGet</span><span class="p">();</span>
 </span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
 </span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">Scanner</span><span class="w"> </span><span class="n">scanner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Scanner</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">in</span><span class="p">,</span><span class="w"> </span><span class="n">UTF_8</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;\nYou &gt; &quot;</span><span class="p">);</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">"\nYou &gt; "</span><span class="p">);</span>
 </span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">userInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scanner</span><span class="p">.</span><span class="na">nextLine</span><span class="p">();</span>
-</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;quit&quot;</span><span class="p">.</span><span class="na">equalsIgnoreCase</span><span class="p">(</span><span class="n">userInput</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s">"quit"</span><span class="p">.</span><span class="na">equalsIgnoreCase</span><span class="p">(</span><span class="n">userInput</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">                    </span><span class="k">break</span><span class="p">;</span>
 </span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">                </span><span class="p">}</span>
 </span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>
 </span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">                </span><span class="n">Content</span><span class="w"> </span><span class="n">userMsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Content</span><span class="p">.</span><span class="na">fromParts</span><span class="p">(</span><span class="n">Part</span><span class="p">.</span><span class="na">fromText</span><span class="p">(</span><span class="n">userInput</span><span class="p">));</span>
 </span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">                </span><span class="n">Flowable</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runner</span><span class="p">.</span><span class="na">runAsync</span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="na">userId</span><span class="p">(),</span><span class="w"> </span><span class="n">session</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span><span class="w"> </span><span class="n">userMsg</span><span class="p">,</span><span class="w"> </span><span class="n">runConfig</span><span class="p">);</span>
 </span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>
-</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;\nAgent &gt; &quot;</span><span class="p">);</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">"\nAgent &gt; "</span><span class="p">);</span>
 </span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="w">                </span><span class="n">events</span><span class="p">.</span><span class="na">blockingForEach</span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">finalResponse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="w">                        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">event</span><span class="p">.</span><span class="na">stringifyContent</span><span class="p">());</span>
@@ -7339,15 +7469,15 @@ interact with your agent.</p>
 <p>Run your agent with the command-line interface <code>AgentCliRunner</code> class
 using the following Maven command:</p>
 <div class="language-console highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gp"># </span>Remember<span class="w"> </span>to<span class="w"> </span>load<span class="w"> </span>keys<span class="w"> </span>and<span class="w"> </span>settings:<span class="w"> </span><span class="nb">source</span><span class="w"> </span>.env<span class="w"> </span>OR<span class="w"> </span>env.bat
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="go">mvn compile exec:java -Dexec.mainClass=&quot;com.example.agent.AgentCliRunner&quot;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="go">mvn compile exec:java -Dexec.mainClass="com.example.agent.AgentCliRunner"</span>
 </span></code></pre></div>
 <p><img alt="adk-run.png" src="/assets/adk-run.png" /></p>
 <h3 id="run-with-web-interface">Run with web interface<a class="headerlink" href="#run-with-web-interface" title="Permanent link">&para;</a></h3>
 <p>Run your agent with the ADK web interface using the following Maven command:</p>
 <div class="language-console highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="gp"># </span>Remember<span class="w"> </span>to<span class="w"> </span>load<span class="w"> </span>keys<span class="w"> </span>and<span class="w"> </span>settings:<span class="w"> </span><span class="nb">source</span><span class="w"> </span>.env<span class="w"> </span>OR<span class="w"> </span>env.bat
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="go">mvn compile exec:java \</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="go">    -Dexec.mainClass=&quot;com.google.adk.web.AdkWebServer&quot; \</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="go">    -Dexec.args=&quot;--adk.agents.source-dir=target --server.port=8000&quot;</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="go">    -Dexec.mainClass="com.google.adk.web.AdkWebServer" \</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="go">    -Dexec.args="--adk.agents.source-dir=target --server.port=8000"</span>
 </span></code></pre></div>
 <p>This command starts a web server with a chat interface for your agent. You can
 access the web interface at <code>http://localhost:8000</code>. Select your agent at the

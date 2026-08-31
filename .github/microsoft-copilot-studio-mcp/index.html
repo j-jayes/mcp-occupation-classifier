@@ -60,13 +60,13 @@
 	
 		<meta name="keywords" content="mcp, connector, tool" />
 	
-		<meta name="ms.date" content="2026-04-17T00:00:00Z" />
+		<meta name="ms.date" content="2026-08-26T00:00:00Z" />
 	
 		<meta name="ms.topic" content="how-to" />
 	
 		<meta name="author" content="ZadesA" />
 	
-		<meta name="ms.reviewer" content="cyanderson" />
+		<meta name="ms.reviewer" content="erickinser" />
 	
 		<meta name="manager" content="rickcatalano" />
 	
@@ -78,13 +78,13 @@
 	
 		<meta name="document_version_independent_id" content="8186e801-3422-0bae-681d-0d254c6d8618" />
 	
-		<meta name="updated_at" content="2026-08-19T19:03:00Z" />
+		<meta name="updated_at" content="2026-08-26T19:04:00Z" />
 	
 		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/dddf595b0e6291cbe0644739b5d566e7efdcf09c/copilot-studio/agent-extend-action-mcp.md" />
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/8f9331473eb5eed360f5279f8e319e61d406a0c2/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="git_commit_id" content="dddf595b0e6291cbe0644739b5d566e7efdcf09c" />
+		<meta name="git_commit_id" content="8f9331473eb5eed360f5279f8e319e61d406a0c2" />
 	
 		<meta name="site_name" content="Docs" />
 	
@@ -98,7 +98,7 @@
 	
 		<meta name="feedback_help_link_url" content="" />
 	
-		<meta name="word_count" content="361" />
+		<meta name="word_count" content="338" />
 	
 		<meta name="asset_id" content="agent-extend-action-mcp" />
 	
@@ -108,7 +108,7 @@
 	
 		<meta name="source_path" content="copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="previous_tlsh_hash" content="65A6054142080A32FB92609E71EEFB1951F090CE19A4EAC604357AB2E9463DA522AC3F27EF1FA350139E431303402606A1A4E77C60D77364542E789D823573E93BEC1FB7B9" />
+		<meta name="previous_tlsh_hash" content="D5EFB84123080922FB9360DE71EEF72951F090CE19A5A6CA44357AB1E8463DF522AD3F67EF2F9250129E431203402906A5A4E7BCA0D7B390546E7859C23673E93EDC1FB7F9" />
 	
 		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
@@ -164,7 +164,7 @@
 
 			<!-- assets and js globals -->
 			
-			<link rel="stylesheet" href="/static/assets/0.4.03519.8161-0e3d77ca/styles/site.css" />
+			<link rel="stylesheet" href="/static/assets/0.4.03524.8175-9553bcde/styles/site.css" />
 			
 			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
 			<!-- Keep this URL in sync with oneDSScriptSelector in instrumentation/one-ds.ts. -->
@@ -212,7 +212,7 @@
 
 			<!-- base scripts, msdocs global should be before this -->
 			<script
-				src="/static/assets/0.4.03519.8161-0e3d77ca/scripts/en-us/index-docs.js"
+				src="/static/assets/0.4.03524.8175-9553bcde/scripts/en-us/index-docs.js"
 				async
 			></script>
 			
@@ -407,7 +407,15 @@
 				<span>Exit editor mode</span>
 			</button>
 		</div>
-	</div>
+	</div> 
+		<div
+			id="action-panel"
+			role="region"
+			aria-label="Action Panel"
+			class="action-panel"
+			tabindex="-1"
+		></div>
+	
 			<div
 				data-main-column
 				class="reading-width margin-inline-auto layout-padding padding-top-none padding-top-sm-tablet padding-bottom-sm"
@@ -740,7 +748,7 @@
 	
 					<div class="content"><div class="NOTE">
 <p>Note</p>
-<p>Features in this article are powered by the <a href="harnesses-overview" data-linktype="relative-path">standard harness</a>, which uses the billing options described in <a href="billing-licensing" data-linktype="relative-path">Licensing for agents powered by the standard harness</a>. Learn how to access standard features in <a href="agents-experience/switch-experiences" data-linktype="relative-path">Access standard agents and agent flows</a>.</p>
+<p>This article describes features used in agents or agent flows powered by the <a href="harnesses-overview#standard-harness" data-linktype="relative-path">standard harness</a>.</p>
 </div>
 <p>You can extend your agent with tools by using Model Context Protocol (MCP).</p>
 <h2 id="what-is-model-context-protocol">What is Model Context Protocol?</h2>
@@ -996,11 +1004,11 @@
 				<li class="visibility-hidden-visual-diff">
 			<span class="badge badge-sm text-wrap-pretty">
 				<span>Last updated on <local-time format="twoDigitNumeric"
-		datetime="2026-08-03T14:59:00.000Z"
+		datetime="2026-08-26T19:04:00.000Z"
 		data-article-date-source="calculated"
 		class="is-invisible"
 	>
-		2026-08-03
+		2026-08-26
 	</local-time></span>
 			</span>
 		</li>
@@ -1008,15 +1016,6 @@
 		</div>
 	
 			</div>
-			
-		<div
-			id="action-panel"
-			role="region"
-			aria-label="Action Panel"
-			class="action-panel"
-			tabindex="-1"
-		></div>
-	
 		
 				</main>
 				<aside
