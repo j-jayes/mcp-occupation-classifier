@@ -29,10 +29,10 @@
         <link rel="canonical" href="https://adk.dev/live/configuration/">
       
       
-        <link rel="prev" href="../streaming-tools/">
+        <link rel="prev" href="../audio-video/">
       
       
-        <link rel="next" href="../../grounding/">
+        <link rel="next" href="../evaluation/">
       
       
         
@@ -43,7 +43,7 @@
     
     
       
-        <title>Configuring streaming behavior - Agent Development Kit (ADK)</title>
+        <title>Configuration - Agent Development Kit (ADK)</title>
       
     
     
@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -127,7 +239,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuring-streaming-behavior" class="md-skip">
+        <a href="#configuration-for-live-agents" class="md-skip">
           Skip to content
         </a>
       
@@ -139,10 +251,11 @@
             
             
 <span class="announce-item">
+  <strong>Released!</strong>
   <a href="/2.0/">
-    ADK Go 2.0 GA
+    ADK TypeScript 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
+  is now available with graph workflows support! <a href="/graphs/#typescript">Get started</a>
 </span>
 
           </div>
@@ -216,7 +329,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuring streaming behavior
+              Configuration
             
             </a>
           </span>
@@ -303,52 +416,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -789,6 +860,8 @@
       
         
       
+        
+      
     
     
     
@@ -970,6 +1043,34 @@
     
   
     Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
   
 
     
@@ -5162,6 +5263,8 @@
       
         
       
+        
+      
     
     
     
@@ -5278,6 +5381,34 @@
     
   
     Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
   
 
     
@@ -5554,8 +5685,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -5569,6 +5702,8 @@
       
         
       
+        
+      
     
     
     
@@ -5578,11 +5713,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" checked>
         
           
           <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
@@ -5592,7 +5727,7 @@
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
     
@@ -5603,12 +5738,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_9_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
           </label>
@@ -5621,14 +5756,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-guide/part1/" class="md-nav__link">
+      <a href="../workflows/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 1. Intro to streaming
+    Workflows
   
 
     
@@ -5649,14 +5784,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-guide/part2/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 2. Sending messages
+    Tools
   
 
     
@@ -5677,14 +5812,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-guide/part3/" class="md-nav__link">
+      <a href="../sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 3. Event handling
+    Sessions
   
 
     
@@ -5705,14 +5840,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-guide/part4/" class="md-nav__link">
+      <a href="../events/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 4. Run configuration
+    Events
   
 
     
@@ -5733,50 +5868,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../dev-guide/part5/" class="md-nav__link">
+      <a href="../audio-video/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 5. Audio, Images, and Video
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../streaming-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming Tools
+    Audio and video
   
 
     
@@ -5806,6 +5905,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -5813,7 +5930,7 @@
   <span class="md-ellipsis">
     
   
-    Configuring streaming behavior
+    Configuration
   
 
     
@@ -5823,6 +5940,343 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#runconfig-parameter-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunConfig Parameter Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#streamingmode-bidi-or-sse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bidi-streaming or SSE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#miscellaneous-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Miscellaneous Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Miscellaneous Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#max_llm_calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max_llm_calls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_live_blob" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save_live_blob
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#history_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        history_config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        custom_metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-live-related-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other live-related fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compositional-function-calling-support_cfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compositional function calling (support_cfc)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-transcription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio transcription
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voice-and-language" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice and language
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voice-activity-detection-vad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice activity detection (VAD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proactivity-and-affective-dialog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proactivity and affective dialog
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9_4" id="__nav_4_9_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Production
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a custom server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supported models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6745,6 +7199,174 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#runconfig-parameter-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunConfig Parameter Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#response-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response modes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#streamingmode-bidi-or-sse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bidi-streaming or SSE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#miscellaneous-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Miscellaneous Controls
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Miscellaneous Controls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#max_llm_calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        max_llm_calls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save_live_blob" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        save_live_blob
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#history_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        history_config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom_metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        custom_metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-live-related-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other live-related fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compositional-function-calling-support_cfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compositional function calling (support_cfc)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-transcription" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio transcription
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voice-and-language" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice and language
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#voice-activity-detection-vad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Voice activity detection (VAD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proactivity-and-affective-dialog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proactivity and affective dialog
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -6816,11 +7438,29 @@
   
 
       
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../workflows/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Building
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
     </ol>
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -6844,51 +7484,474 @@
   </button>
 
 
-<h1 id="configuring-streaming-behavior">Configuring streaming behavior<a class="headerlink" href="#configuring-streaming-behavior" title="Permanent link">&para;</a></h1>
+<h1 id="configuration-for-live-agents">Configuration for live agents<a class="headerlink" href="#configuration-for-live-agents" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.5.0</span><span class="lst-java">Java v0.2.0</span><span class="lst-preview">Experimental</span>
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-java">Java v0.2.0</span>
 </div>
 
-<p>There are some configurations you can set for live(streaming) agents. </p>
-<p>It's set by <a href="https://github.com/google/adk-python/blob/main/src/google/adk/agents/run_config.py">RunConfig</a>. You should use RunConfig with your <a href="https://github.com/google/adk-python/blob/main/src/google/adk/runners.py">Runner.run_live(...)</a>. </p>
-<p>For example, if you want to set voice config, you can leverage speech_config. </p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="java">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">voice_config</span> <span class="o">=</span> <span class="n">genai_types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">genai_types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfigDict</span><span class="p">(</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">voice_name</span><span class="o">=</span><span class="s1">&#39;Aoede&#39;</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="p">)</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">speech_config</span> <span class="o">=</span> <span class="n">genai_types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span><span class="n">voice_config</span><span class="o">=</span><span class="n">voice_config</span><span class="p">)</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">speech_config</span><span class="o">=</span><span class="n">speech_config</span><span class="p">)</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="c1"># ...,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
+<p><code>RunConfig</code> is where you shape a live session: how the agent sounds, how it transcribes
+speech, when it decides a turn is over, how much history it keeps, and what limits it runs
+under. You pass it to
+<a href="https://google.github.io/adk-docs/api-reference/python/"><code>Runner.run_live()</code></a>, and it
+applies to that session only. Two users of the same agent can run with completely
+different configurations.</p>
+<p><code>RunConfig</code> is not live-specific; <a href="../../runtime/runconfig/">Runtime configuration</a> documents
+the full class and the fields that apply to <code>run_async()</code>. What follows is the subset that
+matters under <code>run_live()</code>, plus the voice-facing settings that only exist in a live session.</p>
+<h2 id="runconfig-parameter-quick-reference">RunConfig Parameter Quick Reference<a class="headerlink" href="#runconfig-parameter-quick-reference" title="Permanent link">&para;</a></h2>
+<p>This table provides a quick reference for the <code>RunConfig</code> parameters that matter most to live agents:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>response_modalities</strong></td>
+<td>list[str]</td>
+<td>Output format. Live agents must use <code>AUDIO</code> — Live models do not accept <code>TEXT</code></td>
+<td><a href="#response-modalities">Details</a></td>
+</tr>
+<tr>
+<td><strong>streaming_mode</strong></td>
+<td>StreamingMode</td>
+<td>Chunked or single-shot delivery on the <code>run_async()</code> path; not read by <code>run_live()</code></td>
+<td><a href="#streamingmode-bidi-or-sse">Details</a></td>
+</tr>
+<tr>
+<td><strong>session_resumption</strong></td>
+<td>SessionResumptionConfig</td>
+<td>Enable automatic reconnection</td>
+<td><a href="../sessions/#session-resumption">Details</a></td>
+</tr>
+<tr>
+<td><strong>context_window_compression</strong></td>
+<td>ContextWindowCompressionConfig</td>
+<td>Unlimited session duration</td>
+<td><a href="../sessions/#context-window-compression">Details</a></td>
+</tr>
+<tr>
+<td><strong>history_config</strong></td>
+<td>HistoryConfig</td>
+<td>Control how prior conversation history is replayed to the Live server</td>
+<td><a href="#history_config">Details</a></td>
+</tr>
+<tr>
+<td><strong>max_llm_calls</strong></td>
+<td>int</td>
+<td>Limit total LLM calls per session</td>
+<td><a href="#max_llm_calls">Details</a></td>
+</tr>
+<tr>
+<td><strong>save_live_blob</strong></td>
+<td>bool</td>
+<td>Persist audio/video streams</td>
+<td><a href="#save_live_blob">Details</a></td>
+</tr>
+<tr>
+<td><strong>custom_metadata</strong></td>
+<td>dict[str, Any]</td>
+<td>Attach metadata to invocation events</td>
+<td><a href="#custom_metadata">Details</a></td>
+</tr>
+<tr>
+<td><strong>speech_config</strong></td>
+<td>SpeechConfig</td>
+<td>Voice and language configuration</td>
+<td><a href="#voice-and-language">Voice and language</a></td>
+</tr>
+<tr>
+<td><strong>input_audio_transcription</strong></td>
+<td>AudioTranscriptionConfig</td>
+<td>Transcribe user speech</td>
+<td><a href="#audio-transcription">Audio transcription</a></td>
+</tr>
+<tr>
+<td><strong>output_audio_transcription</strong></td>
+<td>AudioTranscriptionConfig</td>
+<td>Transcribe model speech</td>
+<td><a href="#audio-transcription">Audio transcription</a></td>
+</tr>
+<tr>
+<td><strong>realtime_input_config</strong></td>
+<td>RealtimeInputConfig</td>
+<td>VAD configuration</td>
+<td><a href="#voice-activity-detection-vad">Voice activity detection</a></td>
+</tr>
+<tr>
+<td><strong>explicit_vad_signal</strong></td>
+<td>bool</td>
+<td>Emit voice activity events from the model</td>
+<td><a href="#other-live-related-fields">Details</a></td>
+</tr>
+<tr>
+<td><strong>proactivity</strong></td>
+<td>ProactivityConfig</td>
+<td>Enable proactive audio (model-specific)</td>
+<td><a href="#proactivity-and-affective-dialog">Proactivity and affective dialog</a></td>
+</tr>
+<tr>
+<td><strong>enable_affective_dialog</strong></td>
+<td>bool</td>
+<td>Emotional adaptation (model-specific)</td>
+<td><a href="#proactivity-and-affective-dialog">Proactivity and affective dialog</a></td>
+</tr>
+<tr>
+<td><strong>translation_config</strong></td>
+<td>TranslationConfig</td>
+<td>Real-time speech-to-speech translation (translation models only)</td>
+<td><a href="#other-live-related-fields">Details</a></td>
+</tr>
+<tr>
+<td><strong>avatar_config</strong></td>
+<td>AvatarConfig</td>
+<td>Render the agent as an animated avatar</td>
+<td><a href="#other-live-related-fields">Details</a></td>
+</tr>
+</tbody>
+</table>
+<p>For more details on configuration options, see <a href="../../api-reference/python/google-adk.html#google.adk.agents.RunConfig"><code>RunConfig</code></a> in the Python API reference.</p>
+<p><strong>Import Paths:</strong></p>
+<p>All configuration type classes referenced in the table above are imported from <code>google.genai.types</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">StreamingMode</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Configuration types are accessed via types module</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">session_resumption</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SessionResumptionConfig</span><span class="p">(),</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">context_window_compression</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ContextWindowCompressionConfig</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="c1"># etc.</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span>
 </span></code></pre></div>
+<p>The <code>RunConfig</code> class itself and <code>StreamingMode</code> enum are imported from <code>google.adk.agents.run_config</code>.</p>
+<h2 id="response-modes">Response modes<a class="headerlink" href="#response-modes" title="Permanent link">&para;</a></h2>
+<p>The <code>response_modalities</code> setting controls the output format, and a session gets exactly one. <strong>For live
+agents the value is always <code>["AUDIO"]</code></strong>, because every
+<a href="../models/#live-models">Live model</a> ADK supports accepts no other modality.
+ADK fills this in for you when you leave it unset, so most live applications never touch the
+field.</p>
+<div class="admonition warning">
+<p class="admonition-title">Migrating from <code>response_modalities=["TEXT"]</code></p>
+<p>Older ADK samples and half-cascade models allowed a text-only live session. That no
+longer works: <code>run_live()</code> with <code>["TEXT"]</code> fails against current Live models, which
+only produce audio.</p>
+<p><strong>To get text out of a live agent, read
+<a href="#audio-transcription"><code>event.output_transcription</code></a></strong>: transcription is enabled
+by default in ADK, so deleting the <code>response_modalities</code> line is usually the whole fix.</p>
+<p><code>["TEXT"]</code> is still correct on the <code>run_async()</code> path, which runs on standard Gemini
+models. See <a href="#streamingmode-bidi-or-sse">Bidi-streaming or SSE</a>.</p>
 </div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.PrebuiltVoiceConfig</span><span class="p">;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.SpeechConfig</span><span class="p">;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.VoiceConfig</span><span class="p">;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">VoiceConfig</span><span class="w"> </span><span class="n">voiceConfig</span><span class="w"> </span><span class="o">=</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="n">VoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="p">.</span><span class="na">prebuiltVoiceConfig</span><span class="p">(</span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">&quot;Aoede&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">SpeechConfig</span><span class="w"> </span><span class="n">speechConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpeechConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceConfig</span><span class="p">(</span><span class="n">voiceConfig</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">runConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">setSpeechConfig</span><span class="p">(</span><span class="n">speechConfig</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">runner</span><span class="p">.</span><span class="na">runLive</span><span class="p">(</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="c1">// ...,</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="n">runConfig</span><span class="p">);</span>
+<p>Response modality only affects model output — <strong>you can always send text, voice, or video
+input</strong> (if the model supports that input modality) regardless of it.</p>
+<h2 id="streamingmode-bidi-or-sse">Bidi-streaming or SSE<a class="headerlink" href="#streamingmode-bidi-or-sse" title="Permanent link">&para;</a></h2>
+<p>ADK can reach Gemini over two different endpoints, and <strong>the <code>Runner</code> method you call is
+what picks one</strong>:</p>
+<ul>
+<li><strong><code>runner.run_live()</code></strong>: ADK opens a WebSocket to the <strong>Live API</strong> (the bidirectional
+  streaming endpoint via <code>live.connect()</code>). This is what the rest of this guide covers, and
+  it is required for real-time audio and video</li>
+<li><strong><code>runner.run_async()</code></strong>: ADK uses HTTP to the <strong>standard Gemini API</strong> (the
+  unary/streaming endpoint via <code>generate_content_async()</code>). Set
+  <code>RunConfig.streaming_mode = StreamingMode.SSE</code> to stream that response back chunk by chunk</li>
+</ul>
+<p>The two model sets barely overlap. Standard Gemini models such as <code>gemini-flash-latest</code> do
+not hold a bidirectional connection, and the models in
+<a href="../models/#live-models">Supported models</a> are meant to be driven with <code>run_live()</code>,
+so choosing a model is part of choosing a <code>Runner</code> method.</p>
+<div class="admonition warning">
+<p class="admonition-title">Python: <code>StreamingMode.BIDI</code> does not switch ADK to the Live API</p>
+<p>In <strong>Python</strong>, <code>RunConfig.streaming_mode</code> is read only on the <code>run_async()</code> code path,
+where it chooses between a single complete response (<code>StreamingMode.NONE</code>, the default)
+and chunked delivery (<code>StreamingMode.SSE</code>). The <code>run_live()</code> path never reads it, so
+setting <code>streaming_mode=StreamingMode.BIDI</code> has no effect and fails silently. <strong>Calling
+<code>run_live()</code> is what gets you bidirectional streaming.</strong> ADK's own Python <code>StreamingMode</code>
+docstring says as much: BIDI "is not used in the standard execution path", and the real
+bidirectional behavior "uses a completely different code path that doesn't rely on
+<code>streaming_mode</code>".</p>
+<p><strong>Java differs.</strong> ADK Java's flow does read <code>StreamingMode.BIDI</code>, and the Java quickstart
+sets it explicitly on the <code>RunConfig</code> it passes to <code>runLive()</code>. Follow each language's
+quickstart rather than porting the setting across.</p>
+</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Live API: no streaming_mode needed, calling run_live() is what selects it</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">])</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">run_config</span><span class="o">=</span><span class="n">run_config</span><span class="p">):</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="o">...</span>
 </span></code></pre></div>
+<p>This choice affects only how ADK talks to Gemini. Your client-facing architecture is
+independent: you can build WebSocket servers, REST APIs, or SSE endpoints on either path.</p>
+<p><a href="../../runtime/runconfig/#enable-streaming">Runtime configuration</a> covers the <code>run_async()</code>
+and SSE path: <code>streaming_mode</code> values, progressive SSE streaming, and the
+language-specific configuration.</p>
+<h2 id="miscellaneous-controls">Miscellaneous Controls<a class="headerlink" href="#miscellaneous-controls" title="Permanent link">&para;</a></h2>
+<p>ADK provides additional RunConfig options to control session behavior, manage costs, and persist audio data for debugging and compliance purposes.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="c1"># Limit total LLM calls per invocation</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>  <span class="c1"># Default: 500 (prevents runaway loops)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                        <span class="c1"># 0 or negative = unlimited (use with caution)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="c1"># Save audio/video artifacts for debugging/compliance</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">save_live_blob</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Default: False</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="c1"># Attach custom metadata to events</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">custom_metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"user_tier"</span><span class="p">:</span> <span class="s2">"premium"</span><span class="p">,</span> <span class="s2">"session_type"</span><span class="p">:</span> <span class="s2">"support"</span><span class="p">},</span>  <span class="c1"># Default: None</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="max_llm_calls">max_llm_calls<a class="headerlink" href="#max_llm_calls" title="Permanent link">&para;</a></h3>
+<p><code>max_llm_calls</code> caps LLM invocations per invocation context, and
+<a href="../../runtime/runconfig/#configure-runtime-limits-and-debugging">Runtime configuration</a>
+documents it in full.</p>
+<p><strong>It does not apply to <code>run_live()</code>.</strong> The parameter only guards the <code>run_async()</code> path, so
+a live session gets no automatic cost ceiling from it. Budget your own: cap session
+duration, count turns, watch <code>usage_metadata</code> on model events
+(<a href="../events/#metadata">Metadata</a>), and put a circuit breaker in front of the loop.</p>
+<h3 id="save_live_blob">save_live_blob<a class="headerlink" href="#save_live_blob" title="Permanent link">&para;</a></h3>
+<p><code>save_live_blob=True</code> persists the session's audio to the
+<a href="../../sessions/">session service</a> as references and to the
+<a href="../../artifacts/">artifact service</a> as files. Despite the name, <strong>only audio is
+persisted</strong> today, not video.</p>
+<p>Enable it for debugging voice behavior, or for audit trails in regulated environments. Leave
+it off otherwise: 16 kHz PCM input runs about <strong>1.92 MB per minute per session</strong>, written to
+two services, and that accumulates fast on a voice workload. If you need it in production,
+sample a fraction of sessions rather than all of them, and set a retention policy on the
+artifact service — ADK does not expire these for you.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>save_live_audio</code> is deprecated</p>
+<p>ADK migrates <code>save_live_audio=True</code> to <code>save_live_blob=True</code> automatically and warns,
+but the shim will be removed in a future release. Update to <code>save_live_blob</code>.</p>
 </div>
+<h3 id="history_config">history_config<a class="headerlink" href="#history_config" title="Permanent link">&para;</a></h3>
+<p>When ADK opens a <strong>new</strong> Live API connection for a session that already has conversation
+history, it replays that history to the server. That history includes the model's own past
+turns, so the server has to be told not to answer them again. ADK handles this for you:
+before connecting, it sets
+<code>live_connect_config.history_config.initial_history_in_client_content = True</code> whenever there
+is history to send and no session resumption handle is in play.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># ADK sets this automatically; override only if you need the opposite behavior.</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">history_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">HistoryConfig</span><span class="p">(</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="n">initial_history_in_client_content</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="p">),</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>What this means in practice:</strong></p>
+<ul>
+<li><strong>You normally do nothing.</strong> ADK only fills in the value when you have not set one, so an
+  explicit <code>history_config</code> on <code>RunConfig</code> always wins.</li>
+<li><strong>Reconnections skip history entirely.</strong> When ADK reconnects with a session resumption
+  handle, the server already holds the state for that session, so ADK sends no history and
+  does not touch <code>history_config</code>.</li>
+<li><strong>Symptom if it goes wrong</strong>: setting <code>initial_history_in_client_content=False</code> while
+  seeding history makes the model respond to the <em>replayed</em> turns, producing a burst of
+  duplicate answers at the start of the connection.</li>
+</ul>
+<h3 id="custom_metadata">custom_metadata<a class="headerlink" href="#custom_metadata" title="Permanent link">&para;</a></h3>
+<p><code>custom_metadata</code> attaches an arbitrary JSON-serializable dict to every <code>Event</code> in the
+invocation, and it behaves the same in a live session as anywhere else — see
+<a href="../../runtime/runconfig/#configure-runtime-limits-and-debugging">Runtime configuration</a>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">custom_metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">"user_tier"</span><span class="p">:</span> <span class="s2">"premium"</span><span class="p">,</span> <span class="s2">"session_type"</span><span class="p">:</span> <span class="s2">"support"</span><span class="p">},</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>The live-specific consequence is scope: one <code>run_live()</code> call is one invocation, so the
+metadata is stamped on every event for the entire streaming session rather than a single
+turn. Read it back with <code>event.custom_metadata</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Do not put sensitive data in <code>custom_metadata</code></p>
+<p>Every event carrying this metadata is persisted to the session service. Keep PII,
+credentials, and other sensitive values out of it, and encrypt them if you have no
+alternative.</p>
 </div>
+<h3 id="other-live-related-fields">Other live-related fields<a class="headerlink" href="#other-live-related-fields" title="Permanent link">&para;</a></h3>
+<p><code>RunConfig</code> carries a few more fields that only take effect on the <code>run_live()</code> path. ADK
+passes them straight through to the live connection, so their exact behavior is defined by
+the Live API rather than by ADK:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>explicit_vad_signal</code></td>
+<td><code>bool</code></td>
+<td>Asks the model to emit explicit voice activity signals. ADK surfaces them on <code>event.voice_activity</code> instead of inferring turn boundaries from content</td>
+</tr>
+<tr>
+<td><code>translation_config</code></td>
+<td><code>types.TranslationConfig</code></td>
+<td>Enables real-time speech-to-speech translation. Takes <code>target_language_code</code> (BCP-47) and <code>echo_target_language</code>. <strong>Only supported by translation models</strong> such as <code>gemini-3.5-live-translate-preview</code> — not by the models in <a href="../models/#live-models">Supported models</a></td>
+</tr>
+<tr>
+<td><code>avatar_config</code></td>
+<td><code>types.AvatarConfig</code></td>
+<td>Renders the agent as an animated avatar. Takes <code>avatar_name</code> (a prebuilt avatar) or <code>customized_avatar</code>, plus <code>audio_bitrate_bps</code> / <code>video_bitrate_bps</code></td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">explicit_vad_signal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>One more field is not live-specific but is often useful in a live session:</p>
+<ul>
+<li><strong><code>model_input_context</code></strong> (<code>list[types.Content]</code>): transient context injected into the LLM
+  request for the current invocation only. The <code>Runner</code> does not persist it to the session,
+  which makes it a clean way to supply per-turn grounding (a document the user just opened, a
+  page they are viewing) without polluting conversation history.</li>
+</ul>
+<h3 id="compositional-function-calling-support_cfc">Compositional function calling (support_cfc)<a class="headerlink" href="#compositional-function-calling-support_cfc" title="Permanent link">&para;</a></h3>
+<p>Compositional Function Calling (CFC) is a <code>run_async()</code> / SSE feature, not a live one: it
+applies to the current Live models only in theory, since none of them satisfy its model
+requirement. Leave <code>support_cfc</code> for the SSE path and use standard function calling in live
+sessions (see <a href="../tools/">Tools</a>). For the parameter itself, see
+<a href="../../runtime/runconfig/">Runtime configuration</a>.</p>
+<h2 id="audio-transcription">Audio transcription<a class="headerlink" href="#audio-transcription" title="Permanent link">&para;</a></h2>
+<p>The Live API transcribes both sides of the conversation for you, so you can show captions,
+log conversations, and support accessibility without a separate speech-to-text service.
+<strong>Transcription is on by default in ADK</strong> for both input (user speech) and output (model
+speech). Set a field to <code>None</code> to turn that direction off.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># On by default. This is equivalent to setting both to AudioTranscriptionConfig().</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span><span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">])</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Turn off user-input transcription, keep model-output transcription.</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">input_audio_transcription</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Transcriptions arrive as <code>types.Transcription</code> objects on <code>event.input_transcription</code> and
+<code>event.output_transcription</code>, separate from <code>event.content</code>. They stream in fragments:
+<code>.text</code> holds the latest fragment and <code>.finished</code> marks the last one for the turn.
+Concatenate the fragments to build the full transcript.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="n">update_caption</span><span class="p">(</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>            <span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            <span class="n">is_user</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>            <span class="n">is_final</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">input_transcription</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="n">update_caption</span><span class="p">(</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>            <span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            <span class="n">is_user</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>            <span class="n">is_final</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">output_transcription</span><span class="o">.</span><span class="n">finished</span><span class="p">,</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="p">)</span>
+</span></code></pre></div>
+<p>For the event structure, see <a href="../events/#transcription">Transcription events</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Multi-agent sessions always transcribe</p>
+<p>When the root agent has <code>sub_agents</code>, <code>run_live()</code> enables both input and output
+transcription even if you set them to <code>None</code>. Agent transfer needs the text transcript
+to pass conversation context to the next agent, so it cannot be disabled
+(<a href="https://github.com/google/adk-python/blob/main/src/google/adk/runners.py"><code>runners.py</code></a>).</p>
 </div>
+<h2 id="voice-and-language">Voice and language<a class="headerlink" href="#voice-and-language" title="Permanent link">&para;</a></h2>
+<p>Set <code>speech_config</code> to choose the model's voice and language. You can set it in two places:</p>
+<ul>
+<li><strong>On the agent</strong>, by passing a <code>Gemini</code> instance with a <code>speech_config</code>. Use this to give
+  each agent in a multi-agent workflow its own voice.</li>
+<li><strong>On the session</strong>, by setting <code>RunConfig.speech_config</code>. Use this for one voice across
+  the whole session.</li>
+</ul>
+<p>When both are set, <strong>the agent-level voice wins</strong>. With neither set, the Live API picks a
+default voice.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.models.google_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gemini</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Agent-level voice (wins over RunConfig).</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">model</span><span class="o">=</span><span class="n">Gemini</span><span class="p">(</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">model</span><span class="o">=</span><span class="s2">"gemini-live-2.5-flash-native-audio"</span><span class="p">,</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>            <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>                <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span><span class="n">voice_name</span><span class="o">=</span><span class="s2">"Puck"</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>            <span class="p">),</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>            <span class="n">language_code</span><span class="o">=</span><span class="s2">"en-US"</span><span class="p">,</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="p">),</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="p">),</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"You are a helpful assistant."</span><span class="p">,</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p">)</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Session-level default voice, used by any agent without its own.</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span><span class="n">voice_name</span><span class="o">=</span><span class="s2">"Kore"</span><span class="p">)</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>        <span class="p">),</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    <span class="p">),</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><code>voice_name</code> selects a prebuilt voice. <a href="../models/#live-models">Live models</a>
+support eight (Puck, Charon, Kore, Fenrir, Aoede, Leda, Orus, Zephyr) plus the extended
+<a href="https://cloud.google.com/text-to-speech/docs/voices">Text-to-Speech voice list</a>. For the
+current list and per-backend availability, see the
+<a href="https://ai.google.dev/gemini-api/docs/live-api/capabilities#change-voice-and-language">Gemini Live API voice documentation</a>.
+An unsupported voice returns an error at connection time.</p>
+<p><code>language_code</code> (for example <code>en-US</code>, <code>ja-JP</code>) sets the language and accent. Live models
+often infer the language from the conversation and may ignore it.</p>
+<h2 id="voice-activity-detection-vad">Voice activity detection (VAD)<a class="headerlink" href="#voice-activity-detection-vad" title="Permanent link">&para;</a></h2>
+<p>VAD detects when the user starts and stops speaking so the model can take turns naturally,
+including handling interruptions. <strong>It is on by default</strong> on all
+<a href="../models/#live-models">Live models</a>, and most applications need no configuration.</p>
+<p>Disable automatic VAD when your application decides turn boundaries itself: push-to-talk,
+client-side VAD, or any UX where the user signals when they are done. When you disable it,
+you must send manual <code>ActivityStart</code>/<code>ActivityEnd</code> signals with
+<a href="../sessions/#liverequestqueue"><code>send_activity_start()</code> / <code>send_activity_end()</code></a>, and your
+client must translate its own turn signals into those calls on the server.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">realtime_input_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">RealtimeInputConfig</span><span class="p">(</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">automatic_activity_detection</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">AutomaticActivityDetection</span><span class="p">(</span><span class="n">disabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="p">),</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>A client that runs its own VAD sends those signals to your server, which forwards them with
+<code>send_activity_start()</code> / <code>send_activity_end()</code>. See <a href="../custom-server/#connect-a-client">Connect a client</a>.</p>
+<h2 id="proactivity-and-affective-dialog">Proactivity and affective dialog<a class="headerlink" href="#proactivity-and-affective-dialog" title="Permanent link">&para;</a></h2>
+<p>Some Live models offer two conversational features, both off by default:</p>
+<ul>
+<li><strong>Proactive audio</strong> (<code>proactivity</code>) lets the model decide when to respond, offer
+  suggestions unprompted, or ignore irrelevant input.</li>
+<li><strong>Affective dialog</strong> (<code>enable_affective_dialog</code>) lets the model detect emotion in the
+  user's tone and adapt its response.</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">run_config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">proactivity</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ProactivityConfig</span><span class="p">(</span><span class="n">proactive_audio</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">enable_affective_dialog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Both behaviors are probabilistic and make responses less predictable, so leave them off for
+formal or high-precision contexts and while debugging.</p>
+<p>These settings apply to <code>gemini-live-2.5-flash-native-audio</code>. Some Live models build the
+behavior in and ignore both settings, so you do not need to set them. See
+<a href="../models/#live-models">Supported models</a>.</p>
 
 
 

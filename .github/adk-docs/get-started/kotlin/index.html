@@ -251,10 +251,11 @@
             
             
 <span class="announce-item">
+  <strong>Released!</strong>
   <a href="/2.0/">
-    ADK Go 2.0 GA
+    ADK TypeScript 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
+  is now available with graph workflows support! <a href="/graphs/#typescript">Get started</a>
 </span>
 
           </div>
@@ -5853,6 +5854,8 @@
       
         
       
+        
+      
     
     
     
@@ -5876,7 +5879,7 @@
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
     
@@ -5892,7 +5895,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
           </label>
@@ -5905,14 +5908,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/dev-guide/part1/" class="md-nav__link">
+      <a href="../../live/workflows/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 1. Intro to streaming
+    Workflows
   
 
     
@@ -5933,14 +5936,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/dev-guide/part2/" class="md-nav__link">
+      <a href="../../live/tools/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 2. Sending messages
+    Tools
   
 
     
@@ -5961,14 +5964,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/dev-guide/part3/" class="md-nav__link">
+      <a href="../../live/sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 3. Event handling
+    Sessions
   
 
     
@@ -5989,14 +5992,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/dev-guide/part4/" class="md-nav__link">
+      <a href="../../live/events/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 4. Run configuration
+    Events
   
 
     
@@ -6017,14 +6020,164 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/dev-guide/part5/" class="md-nav__link">
+      <a href="../../live/audio-video/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 5. Audio, Images, and Video
+    Audio and video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_9_4" id="__nav_4_9_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Production
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/custom-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a custom server
   
 
     
@@ -6053,42 +6206,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live/streaming-tools/" class="md-nav__link">
+      <a href="../../live/models/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Streaming Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../live/configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuring streaming behavior
+    Supported models
   
 
     
@@ -7341,8 +7466,8 @@ required KSP plugin and processor dependency are included in the
 <p>An ADK Kotlin agent project requires the following dependencies in your
 <code>build.gradle.kts</code> project file:</p>
 <div class="language-kotlin highlight"><span class="filename">my_agent/build.gradle.kts (partial)</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.8.0"</span><span class="p">)</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.8.0"</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.9.0"</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.9.0"</span><span class="p">)</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </span></code></pre></div>
 <details class="info">
@@ -7360,9 +7485,9 @@ this project:</p>
 </span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
 </span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.8.0"</span><span class="p">)</span>
-</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-webserver:0.8.0"</span><span class="p">)</span>
-</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.8.0"</span><span class="p">)</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.9.0"</span><span class="p">)</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-webserver:0.9.0"</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.9.0"</span><span class="p">)</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="n">kotlin</span><span class="w"> </span><span class="p">{</span>
@@ -7423,7 +7548,7 @@ user input, agent responses, and tool confirmation prompts.</p>
 </span></code></pre></div>
 <h2 id="run-your-agent">Run your agent<a class="headerlink" href="#run-your-agent" title="Permanent link">&para;</a></h2>
 <p>You can run your ADK agent using the interactive command-line REPL
-or the ADK web user interface provided by <code>AdkWebServer</code>. Both options
+or the ADK web user interface provided by <code>AdkDevServer</code>. Both options
 allow you to test and interact with your agent.</p>
 <h3 id="run-with-command-line-interface">Run with command-line interface<a class="headerlink" href="#run-with-command-line-interface" title="Permanent link">&para;</a></h3>
 <p>Run your agent with the command-line interface using the Gradle <code>run</code> task:</p>
@@ -7445,36 +7570,25 @@ allow you to test and interact with your agent.</p>
 <p>To run your agent with the ADK web interface, add the webserver dependency
 to your <code>build.gradle.kts</code>:</p>
 <div class="language-kotlin highlight"><span class="filename">my_agent/build.gradle.kts (add to dependencies)</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.8.0"</span><span class="p">)</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-webserver:0.8.0"</span><span class="p">)</span>
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.8.0"</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-core:0.9.0"</span><span class="p">)</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">implementation</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-webserver:0.9.0"</span><span class="p">)</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">ksp</span><span class="p">(</span><span class="s">"com.google.adk:google-adk-kotlin-processor:0.9.0"</span><span class="p">)</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Then create a <code>WebMain.kt</code> file alongside your <code>Main.kt</code>:</p>
 <div class="language-kotlin highlight"><span class="filename">my_agent/src/main/kotlin/com/example/agent/WebMain.kt</span><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">package</span><span class="w"> </span><span class="nn">com.example.agent</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.artifacts.InMemoryArtifactService</span>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.sessions.InMemorySessionService</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.webserver.AdkWebServer</span>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.webserver.loaders.SingleAgentLoader</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.webserver.telemetry.ApiServerSpanExporter</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HelloTimeAgent</span><span class="p">.</span><span class="na">rootAgent</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InMemorySessionService</span><span class="p">()</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">artifactService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InMemoryArtifactService</span><span class="p">()</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
-</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AdkWebServer</span><span class="p">(</span>
-</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">        </span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8080</span><span class="p">,</span>
-</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">        </span><span class="n">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionService</span><span class="p">,</span>
-</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">        </span><span class="n">artifactService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">artifactService</span><span class="p">,</span>
-</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">        </span><span class="n">agentLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SingleAgentLoader</span><span class="p">(</span><span class="n">agent</span><span class="p">),</span>
-</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">        </span><span class="n">apiServerSpanExporter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ApiServerSpanExporter</span><span class="p">(),</span>
-</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
-</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">"Starting ADK web server on http://localhost:8080..."</span><span class="p">)</span>
-</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">start</span><span class="p">(</span><span class="n">wait</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
-</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="p">}</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.webserver.AdkServerConfig</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">import</span><span class="w"> </span><span class="nn">com.google.adk.kt.webserver.dev.AdkDevServer</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="c1">// inMemory() supplies the agent loader and the session and artifact</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="c1">// services, keeping their state in the process.</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AdkDevServer</span><span class="p">(</span><span class="n">AdkServerConfig</span><span class="p">.</span><span class="na">inMemory</span><span class="p">(</span><span class="n">HelloTimeAgent</span><span class="p">.</span><span class="na">rootAgent</span><span class="p">))</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">"Starting ADK dev server on http://localhost:8080"</span><span class="p">)</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="n">server</span><span class="p">.</span><span class="na">start</span><span class="p">(</span><span class="n">wait</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>Run the web server using the <code>-PmainClass</code> property to select the web
 entry point:</p>
@@ -7488,7 +7602,8 @@ upper left corner and type a request.</p>
 <div class="admonition warning">
 <p class="admonition-title">Caution: ADK Web for development only</p>
 <p>ADK Web is <strong><em>not meant for use in production deployments</em></strong>. You should
-use ADK Web for development and debugging purposes only.</p>
+use ADK Web for development and debugging purposes only. For more
+information, see ADK <a href="/runtime/web-interface/">Web Interface</a>.</p>
 </div>
 <h2 id="next-build-your-agent">Next: Build your agent<a class="headerlink" href="#next-build-your-agent" title="Permanent link">&para;</a></h2>
 <p>Now that you have ADK installed and your first agent running, try building

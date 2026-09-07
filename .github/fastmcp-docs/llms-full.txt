@@ -2668,6 +2668,7 @@ The FastMCP Client is designed for deterministic, controlled interactions rather
 You provide a server source and the client automatically infers the appropriate transport mechanism.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 import asyncio
 from fastmcp import Client, FastMCP
 
@@ -2679,7 +2680,7 @@ client = Client(server)
 client = Client("https://example.com/mcp")
 
 # Local Python script
-client = Client("my_mcp_server.py")
+client = Client(Path("my_mcp_server.py"))
 
 async def main():
     async with client:
@@ -2713,11 +2714,12 @@ client = Client(server)  # In-memory, no network or subprocess
 **STDIO transport** launches a server as a subprocess and communicates through stdin/stdout pipes. This is the standard mechanism used by desktop clients like Claude Desktop. By default, the subprocess receives the MCP SDK's default environment; pass an explicit transport when you need to add environment variables, set a working directory, or control process reuse.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.client.transports import PythonStdioTransport
 
 # Simple inference from file path
-client = Client("my_server.py")
+client = Client(Path("my_server.py"))
 
 # With explicit environment configuration
 transport = PythonStdioTransport(
@@ -2797,9 +2799,10 @@ async with Client(mcp) as client:
 For advanced scenarios where you need precise control over when initialization happens, disable automatic initialization and call `initialize()` manually. `initialize()` is a handshake-era operation, so pin the connection with `mode="legacy"`: the modern protocol has no `initialize` round trip, and calling it on a modern connection raises.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 
-client = Client("my_mcp_server.py", auto_initialize=False, mode="legacy")
+client = Client(Path("my_mcp_server.py"), auto_initialize=False, mode="legacy")
 
 async with client:
     # Connection established, but not initialized yet
@@ -2990,6 +2993,8 @@ The client supports callback handlers for advanced server interactions. These le
 Sampling, elicitation, and roots are the requests a server makes of the client. A server reaches your handler by whichever route its [era](#protocol-negotiation) allows — pushed down the open session on the handshake, returned as an input-required result on the modern protocol — and both routes dispatch to the same handler, so one registration covers both. Logging and progress arrive as notifications on the response stream and work in either era.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
 from fastmcp import Client
 from fastmcp.client.logging import LogMessage
 
@@ -3004,7 +3009,7 @@ async def sampling_handler(messages, params, context):
     return "Generated response"
 
 client = Client(
-    "my_mcp_server.py",
+    Path("my_mcp_server.py"),
     log_handler=log_handler,
     progress_handler=progress_handler,
     sampling_handler=sampling_handler,
@@ -3041,12 +3046,12 @@ This differs from passing a multi-server configuration directly to `Client`. `Cl
 Construct the clients explicitly when each server needs its own handlers, authentication, or connection settings:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 import asyncio
 
-from fastmcp import Client
-from fastmcp.client.group import ClientGroup
+from fastmcp import Client, ClientGroup
 
-legacy_client = Client("legacy_server.py", mode="legacy")
+legacy_client = Client(Path("legacy_server.py"), mode="legacy")
 modern_client = Client("https://modern.example.com/mcp", mode="auto")
 
 group = ClientGroup(
@@ -3098,7 +3103,7 @@ The group aggregates names and detects collisions; it never stands between the a
 `ClientGroup.from_config` creates one client per server rather than passing the entire configuration through a proxy. A FastMCP-specific `mode` field can select the protocol behavior for each server:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp.client.group import ClientGroup
+from fastmcp import ClientGroup
 
 config = {
     "mcpServers": {
@@ -3129,6 +3134,15 @@ async with legacy_client, modern_client:
 ```
 
 It is also safe to enter the group inside a client context. FastMCP client contexts are reference counted, so leaving the group does not close a connection still owned by an outer context.
+
+The group's own context is reentrant in the same way (FastMCP 4.0.1 and later). Entering a group that is already connected, whether from a nested block or a concurrent task, reuses the existing connections. The first entry connects every client and the last exit disconnects them, so code that already relies on `Client` being safe to enter more than once can hold a `ClientGroup` the same way:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+async with group:
+    async with group:  # reuses the connections opened above
+        await group.call_tool("modern_get_weather", {"city": "Chicago"})
+    assert modern_client.is_connected()
+```
 
 The group adds no session handling of its own. Each client owns its transport and session exactly as it does standalone, so a legacy stateful session (for example over SSE or stdio) is held open by its client for as long as that client's context is active, whether the group or the caller entered it.
 
@@ -3165,13 +3179,14 @@ Use `fastmcp-slim[client]` when your code connects to MCP servers but does not d
 Client-only installs support remote and subprocess transports:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 
 # Remote MCP server
 http_client = Client("https://example.com/mcp")
 
 # Local MCP server over stdio
-stdio_client = Client("my_server.py")
+stdio_client = Client(Path("my_server.py"))
 ```
 
 Single-server MCP configuration works as well:
@@ -3663,7 +3678,8 @@ This structure is preserved even when logs are forwarded through a FastMCP proxy
 If you do not provide a custom `log_handler`, FastMCP's default handler routes server logs to Python's logging system at the appropriate severity level. The MCP levels map as follows: `notice` becomes INFO; `alert` and `emergency` become CRITICAL.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-client = Client("my_mcp_server.py")
+from pathlib import Path
+client = Client(Path("my_mcp_server.py"))
 
 async with client:
     # Server logs are forwarded at proper severity automatically
@@ -3687,6 +3703,8 @@ MCP servers can send notifications to inform clients about state changes. The me
 The simplest approach is a function that receives all messages and filters for the notifications you care about:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
 from fastmcp import Client
 
 async def message_handler(message):
@@ -3704,7 +3722,7 @@ async def message_handler(message):
             print("A resource was updated")
 
 client = Client(
-    "my_mcp_server.py",
+    Path("my_mcp_server.py"),
     message_handler=message_handler,
 )
 ```
@@ -3714,6 +3732,8 @@ client = Client(
 For fine-grained targeting, subclass `MessageHandler` to use specific hooks:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
 from fastmcp import Client
 from fastmcp.client.messages import MessageHandler
 import mcp.types
@@ -3738,7 +3758,7 @@ class MyMessageHandler(MessageHandler):
         print("Prompt list changed")
 
 client = Client(
-    "my_mcp_server.py",
+    Path("my_mcp_server.py"),
     message_handler=MyMessageHandler(),
 )
 ```
@@ -3808,6 +3828,7 @@ class MyMessageHandler(MessageHandler):
 A practical example of maintaining a tool cache that refreshes when tools change:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.client.messages import MessageHandler
 import mcp.types
@@ -3823,7 +3844,7 @@ class ToolCacheHandler(MessageHandler):
         print("Tools changed - clearing cache")
         self.cached_tools = []  # Force refresh on next access
 
-client = Client("server.py", message_handler=ToolCacheHandler())
+client = Client(Path("server.py"), message_handler=ToolCacheHandler())
 ```
 
 ## Server Requests
@@ -4224,6 +4245,7 @@ The handler receives the conversation the server wants completed, the parameters
 ## Handler Template
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.client.sampling import SamplingMessage, SamplingParams, RequestContext
 from mcp.types import TextContent
@@ -4246,7 +4268,7 @@ async def sampling_handler(
     return "Generated response based on the messages"
 
 
-client = Client("my_mcp_server.py", sampling_handler=sampling_handler)
+client = Client(Path("my_mcp_server.py"), sampling_handler=sampling_handler)
 ```
 
 The client answers with this handler however the server asks for a completion. The default `mode="auto"` negotiates whichever protocol era the server speaks, and one handler covers both of the routes an era can use — see [Request Routes](#request-routes).
@@ -4775,12 +4797,13 @@ transport = StdioTransport(
 client = Client(transport)
 ```
 
-For convenience, the client can infer STDIO transport from file paths, though this limits configuration options:
+For convenience, the client can infer STDIO transport from file paths, though this limits configuration options. Pass a `Path`: inferring a subprocess from a bare *string* like `Client("my_server.py")` is deprecated as of 4.0 — it warns, and in FastMCP 5 a string will only ever mean a URL:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 
-client = Client("my_server.py")  # Limited - no configuration options
+client = Client(Path("my_server.py"))  # Limited - no configuration options
 ```
 
 <Warning>
@@ -6322,7 +6345,7 @@ fastmcp run server.py --reload --transport http --port 8080
 ```
 
 <Note>
-  Auto-reload uses stateless mode to enable seamless restarts. For stdio transport, this is fully featured. For HTTP transport, some bidirectional features like elicitation are not available during reload mode.
+  Auto-reload uses stateless mode to enable seamless restarts. For stdio transport, this is fully featured. For HTTP transport, handshake-era `ctx.elicit()` is not available during reload mode; the modern guard pattern (returning `InputRequiredResult`) needs no session back-channel and is unaffected.
 </Note>
 
 SSE transport does not support auto-reload due to session limitations. Use HTTP transport instead if you need both network access and auto-reload.
@@ -7381,10 +7404,6 @@ Or with pip:
 pip install fastmcp
 ```
 
-<Note>
-  **FastMCP 4 is in prerelease.** The commands above install the latest stable release, which is still 3.x. To get v4, pin the beta explicitly with `pip install "fastmcp==4.0.0b4"`, or see [Install the v4 Prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease) for the uv constraint you'll need.
-</Note>
-
 ### Optional Dependencies
 
 FastMCP provides optional extras for specific features. For example, to install the background tasks extra:
@@ -7408,7 +7427,7 @@ You should see output like the following:
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 $ fastmcp version
 
-FastMCP version:                         4.0.0b4
+FastMCP version:                           4.0.0
 MCP version:                                2.0.0
 Python version:                            3.12.2
 Platform:            macOS-15.3.1-arm64-arm-64bit
@@ -7481,7 +7500,7 @@ FastMCP follows semantic versioning with pragmatic adaptations for the rapidly e
 For production use, always pin to exact versions:
 
 ```
-fastmcp==4.0.0b4  # Good - an exact version
+fastmcp==4.0.0    # Good - an exact version
 fastmcp>=4.0.0    # Bad - may install breaking changes
 ```
 
@@ -7789,7 +7808,7 @@ The protocol changed completely underneath those APIs. Your application usually 
 That is the theme of version 4: stateless transport without stateless application code. The release also makes protocol extensions a first-class surface, adds enterprise identity for agents acting on behalf of users, and strengthens production defaults across caching, routing, and security.
 
 <Note>
-  FastMCP 4 is in **beta**. Pin an exact version and expect sharp edges. See [Install the v4 prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease).
+  Install with `pip install fastmcp -U`. Upgrading from FastMCP 3? Start with [the upgrade guide](/getting-started/upgrading/from-fastmcp-3). The release announcement, [FastMCP 4 is GA](https://blog.gofastmcp.com/3mufbh2vcv22o), is on the [FastMCP blog](https://blog.gofastmcp.com), and every release since is in the [changelog](/changelog).
 </Note>
 
 ## Protocol compatibility
@@ -7813,6 +7832,8 @@ legacy = Client("https://example.com/mcp", mode="legacy")
 Once connected, `client.protocol_version`, `client.server_info`, `client.server_capabilities`, and `client.instructions` expose the same interface whichever era was negotiated. Application code that inspects a server does not need a protocol-version branch. See [Protocol negotiation](/clients/client#protocol-negotiation).
 
 On modern connections, FastMCP also attaches the method, target name, and opted-in argument values as HTTP headers. Gateways and load balancers can route requests without parsing JSON-RPC bodies. See [Gateway routing headers](/deployment/http#gateway-routing-headers).
+
+For applications that talk to several servers at once, `ClientGroup` manages one client per server behind a single tool catalog — collision-checked `{server}_{tool}` namespacing, call routing, and no proxy in the middle. Each member negotiates its own protocol version, so one group can span a modern server, a handshake-era server, and a local subprocess. See [Client groups](/clients/client-groups).
 
 ## Stateful applications
 
@@ -7972,7 +7993,7 @@ from fastmcp import FastMCP
 from fastmcp.server.auth import IdentityAssertion, OAuthProxy
 
 auth = OAuthProxy(
-    # Existing upstream configuration
+    # ... your existing upstream configuration (required kwargs elided) ...
     identity_assertion=IdentityAssertion(
         trusted_issuers=["https://login.acme-corp.com"]
     ),
@@ -7980,9 +8001,9 @@ auth = OAuthProxy(
 mcp = FastMCP("Internal API", auth=auth)
 ```
 
-The asserted subject enters the normal authentication context, so tools read it through `get_access_token()` like any other identity. See [Identity assertion](/servers/auth/oauth-proxy#identity-assertion-sep-990).
+The asserted subject enters the normal authentication context, so tools read it through `get_access_token()` like any other identity. Identity assertion is in beta; the API may change in a minor release. See [Identity assertion](/servers/auth/oauth-proxy#identity-assertion-sep-990).
 
-Authorization gained a provider-neutral role check as well. `require_roles` accepts an extraction function for providers that store roles and groups under different claims, while [scope step-up challenges](/servers/authorization#signaling-scope-shortfalls) tell a client exactly which scopes to request.
+Authorization gained a provider-neutral role check as well. `require_roles` takes a required `extract` function so provider-specific claim shapes (`realm_access.roles`, `cognito:groups`) stay at the call site; a role denial is a plain authorization error. Separately, [scope step-up challenges](/servers/authorization#signaling-scope-shortfalls) tell a client exactly which scopes to request.
 
 For clients with no user behind them, such as backend services and scheduled jobs, `ClientCredentialsOAuthProvider` implements the OAuth 2.0 client-credentials grant with no browser or redirect. See [Machine-to-machine authentication](/clients/auth/client-credentials).
 
@@ -7996,7 +8017,7 @@ from fastmcp import FastMCP
 mcp = FastMCP("Weather", cache_ttl=300, cache_scope="public")
 ```
 
-`KeyValueResponseCacheStore` can place the client cache in Redis or another key-value store so a fleet of clients or proxies shares fills. See [Response caching](/clients/client#response-caching).
+`KeyValueResponseCacheStore` can place the client cache in Redis or another key-value store so a fleet of clients or proxies shares fills. Cache entries are partitioned by the requested component version, so an explicit `version=` request never returns another version's cached result, and middleware response limits now align with declared output schemas. See [Response caching](/clients/client#response-caching).
 
 Resource templates now reject path traversal, absolute paths, and null bytes in their parameters before the handler runs. The protection is enabled by default and applies to mounted and proxied templates. See [Path security](/servers/resources#path-security).
 
@@ -8009,6 +8030,8 @@ The sessionless protocol has no live connection for a server to call back into d
 For generation, call an LLM directly from the server when your application owns the model. When borrowing the caller's model is the point, return an `InputRequiredResult` carrying a sampling request and read the answer on the next round. Roots use the same return-and-resume pattern. See [Sampling](/servers/sampling) and [the guard pattern](/servers/elicitation#sampling-and-roots).
 
 `ctx.elicit()` remains available on handshake-era connections; modern connections use the multi-round pattern described above. Code that constructs MCP protocol models directly must also use snake\_case Python field names with SDK v2.
+
+One deprecation to note: `Client("server.py")` — inferring a stdio transport from a bare string — now warns. Pass a `Path` to run local code and keep strings for URLs; the string form will be removed in FastMCP 5.
 
 [Upgrading from FastMCP 3](/getting-started/upgrading/from-fastmcp-3) covers these changes and every other compatibility break.
 
@@ -9224,6 +9247,8 @@ Before you begin, you will need:
     ```
     https://api.descope.com/v1/apps/P.../.well-known/openid-configuration
     ```
+
+    The project-level URL is the recommended one.
   </Step>
 </Steps>
 
@@ -14155,6 +14180,7 @@ main.mount(weather)
 Mount remote HTTP servers or subprocess-based MCP servers using `create_proxy()`:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import FastMCP
 from fastmcp.server import create_proxy
 
@@ -14164,7 +14190,7 @@ mcp = FastMCP("Orchestrator")
 mcp.mount(create_proxy("http://api.example.com/mcp"), namespace="api")
 
 # Mount local Python scripts (file paths work directly)
-mcp.mount(create_proxy("./my_server.py"), namespace="local")
+mcp.mount(create_proxy(Path("./my_server.py")), namespace="local")
 ```
 
 ### Mounting npm/uvx Packages
@@ -15296,7 +15322,7 @@ For example, a file management tool might ask "Which directory should I create?"
 Elicitation reaches the user two different ways, depending on the protocol era the connection negotiated:
 
 * **On handshake-era connections (≤ 2025-11-25)**, a running tool calls [`ctx.elicit()`](#requesting-input-on-handshake-connections). The tool pauses mid-execution, the server sends a request over the session back-channel, and the tool resumes with the answer. This is the original elicitation API and the rest of this page's first half covers it in full.
-* **On the modern protocol (2026-07-28)**, that back-channel is gone — server-initiated requests were removed from the wire (SEP-2577), so a tool cannot issue a request mid-execution and block on the answer. Instead a tool asks for input by *returning* a description of what it needs; each round completes normally and the client issues a new call with the answer attached. This is the [guard pattern](#elicitation-on-the-modern-protocol), covered in the second half.
+* **On the modern protocol (2026-07-28)**, that back-channel is gone — server-initiated requests were removed from the wire (SEP-2322, with statelessness from SEP-2575), so a tool cannot issue a request mid-execution and block on the answer. Instead a tool asks for input by *returning* a description of what it needs; each round completes normally and the client issues a new call with the answer attached. This is the [guard pattern](#elicitation-on-the-modern-protocol), covered in the second half.
 
 The era gate is strict: `ctx.elicit()` only works on handshake connections, and the guard pattern only works on modern ones. A tool that returns a guard result on a handshake connection — or calls `ctx.elicit()` on a modern one — raises a clear era error rather than failing obscurely. A server that serves both eras may need both paths; branch on `ctx.request_context.protocol_version` to pick the right one. `fastmcp.Client` drives whichever the connection negotiated automatically.
 
@@ -15667,7 +15693,7 @@ Default values are supported for strings, integers, numbers, booleans, and enums
 
 <VersionBadge />
 
-The modern protocol (2026-07-28) removes the server-initiated back-channel that `ctx.elicit()` depends on (SEP-2577), so a running tool has no way to reach the user mid-execution. Elicitation reaches the user a different way: a tool asks for input by *returning* a description of what it needs. That return value completes the call normally — the result just happens to be an `InputRequiredResult` describing a request rather than a final answer. The client fulfils the request and issues a **new** tool call with the answer attached, and the tool runs again from the top, sees the answer, and either asks for the next thing or returns its final result.
+The modern protocol (2026-07-28) removes the server-initiated back-channel that `ctx.elicit()` depends on (SEP-2322, with statelessness from SEP-2575), so a running tool has no way to reach the user mid-execution. Elicitation reaches the user a different way: a tool asks for input by *returning* a description of what it needs. That return value completes the call normally — the result just happens to be an `InputRequiredResult` describing a request rather than a final answer. The client fulfils the request and issues a **new** tool call with the answer attached, and the tool runs again from the top, sees the answer, and either asks for the next thing or returns its final result.
 
 Every round is a complete, independent request→response cycle: the tool holds no state between rounds, and nothing on the server stays alive waiting between them. That makes elicitation work on stateless, serverless, and load-balanced deployments where no two rounds are guaranteed to land on the same worker. A booking tool can ask for a destination, then a date, then confirm, across as many rounds as the work requires, without keeping a connection or a server-side session alive in between.
 
@@ -16979,7 +17005,7 @@ mcp.add_middleware(ResponseCachingMiddleware(
 See [Storage Backends](/servers/storage-backends) for complete options.
 
 <Note>
-  Cache keys are based on the operation name and arguments only — they do not include user or session identity. If your tools return user-specific data derived from auth context (e.g., headers or session state) rather than from the request arguments, you should either disable caching for those tools or ensure user identity is part of the tool arguments.
+  Cache keys include the method name, arguments, the requested component version, and the caller's access token — entries are partitioned per token, so responses cannot leak across users with different permissions. Unauthenticated callers (including STDIO) share a single anonymous partition. Data derived from request context *other than* the auth token — custom HTTP headers, session state — is not part of the key, so disable caching for tools whose results depend on it.
 </Note>
 
 ### Rate Limiting
@@ -18922,10 +18948,11 @@ if __name__ == "__main__":
 Or expose a local server via HTTP:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp.server import create_proxy
 
 # Bridge local server to HTTP
-local_proxy = create_proxy("local_server.py", name="stdio-to-HTTP")
+local_proxy = create_proxy(Path("local_server.py"), name="stdio-to-HTTP")
 
 if __name__ == "__main__":
     local_proxy.run(transport="http", host="0.0.0.0", port=8080)
@@ -18938,10 +18965,11 @@ if __name__ == "__main__":
 `create_proxy()` provides session isolation - each request gets its own isolated backend session:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp.server import create_proxy
 
 # Each request creates a fresh backend session (recommended)
-proxy = create_proxy("backend_server.py")
+proxy = create_proxy(Path("backend_server.py"))
 
 # Multiple clients can use this proxy simultaneously:
 # - Client A calls a tool → gets isolated session
@@ -18954,10 +18982,11 @@ proxy = create_proxy("backend_server.py")
 If you pass an already-connected client, the proxy reuses that session:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.server import create_proxy
 
-async with Client("backend_server.py") as connected_client:
+async with Client(Path("backend_server.py")) as connected_client:
     # This proxy reuses the connected session
     proxy = create_proxy(connected_client)
 
@@ -18983,10 +19012,11 @@ Proxies automatically forward MCP protocol features:
 | Progress    | Progress notifications          |
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp.server import create_proxy
 
 # All features forwarded automatically
-proxy = create_proxy("advanced_backend.py")
+proxy = create_proxy(Path("advanced_backend.py"))
 
 # When the backend:
 # - Requests LLM sampling → forwarded to your client
@@ -18999,10 +19029,12 @@ proxy = create_proxy("advanced_backend.py")
 Selectively disable forwarding:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
 from fastmcp.server.providers.proxy import ProxyClient
 
 backend = ProxyClient(
-    "backend_server.py",
+    Path("backend_server.py"),
     sampling_handler=None,  # Disable LLM sampling
     log_handler=None        # Disable log forwarding
 )
@@ -19017,10 +19049,11 @@ A proxy passes a backend's tool results through untouched, including results tha
 This matters when a backend's declared schema is subtly wrong — an enum missing a variant it actually returns, say. A proxy that enforced the schema would replace the backend's working response with an error of its own, and the client would never see what the backend actually said.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.server import create_proxy
 
-proxy = create_proxy("backend_server.py")
+proxy = create_proxy(Path("backend_server.py"))
 
 async with Client(proxy) as client:
     # The backend's response arrives as the backend sent it. If it violates
@@ -19039,11 +19072,12 @@ A proxy is a server on its front and a client on its back, and the two MCP proto
 By default the proxy relays the era: whatever era your client negotiates on the front, the proxy negotiates the same era on its backend connection, per request. A handshake client reaches a handshake backend, so server-initiated forwarding works; a modern client reaches a modern backend, so a guard tool's input request round-trips. Different clients hitting the same proxy each get a backend session in their own era — the eras never cross.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from fastmcp.server import create_proxy
 
 # No mode: the backend mirrors each client's negotiated era.
-proxy = create_proxy("backend_server.py")
+proxy = create_proxy(Path("backend_server.py"))
 
 # A handshake client gets a handshake backend (push-forwarding works).
 async with Client(proxy, mode="legacy") as client:
@@ -19057,8 +19091,9 @@ async with Client(proxy, mode="auto") as client:
 Passing an explicit `mode` pins the backend to one era regardless of the client:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 # Always negotiate the modern era upstream, whatever the client speaks.
-proxy = create_proxy("backend_server.py", mode="auto")
+proxy = create_proxy(Path("backend_server.py"), mode="auto")
 ```
 
 Pinning breaks the end-to-end era agreement, so reserve it for a backend that only speaks one era. When the client's era and the pinned backend era disagree on a feature — a modern client asking for a guard round-trip against a handshake-pinned backend, say — the mismatch surfaces through the normal era gates rather than silently degrading. Mirroring applies to proxies created from a target the proxy connects itself (a URL, path, config, or `FastMCP` instance); when you hand `create_proxy` an already-configured `Client`, that client carries its own mode and mirroring does not override it.
@@ -19149,10 +19184,11 @@ Components from a proxy server are "mirrored" - they reflect the remote server's
 To modify a proxied component (like disabling it), create a local copy:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import FastMCP
 from fastmcp.server import create_proxy
 
-proxy = create_proxy("backend_server.py")
+proxy = create_proxy(Path("backend_server.py"))
 
 # Get mirrored tool
 mirrored_tool = await proxy.get_tool("useful_tool")
@@ -19253,11 +19289,12 @@ By default the gateway keeps its own `serverInfo`; pass `identity="upstream"` to
 For explicit session control, use `FastMCPProxy` directly:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp.server.providers.proxy import FastMCPProxy, ProxyClient
 
 # Custom session factory
 def create_client():
-    return ProxyClient("backend_server.py")
+    return ProxyClient(Path("backend_server.py"))
 
 proxy = FastMCPProxy(client_factory=create_client)
 ```
@@ -20521,7 +20558,7 @@ Returning an `InputRequiredResult` needs a `2026-07-28` connection, and FastMCP 
 
 `Context` has no `sample()` and no `sample_step()`; touching either raises `AttributeError` on every protocol era, rather than failing at runtime only against modern clients. `FastMCP()` accepts neither `sampling_handler=` nor `sampling_handler_behavior=`, and naming one raises a `TypeError` that points at the migration.
 
-The reason is the distinction MCP draws between telling and asking. A notification is fire-and-forget: the server emits it and moves on, and it travels down the response stream the caller already opened, so nothing has to be held open on the server's behalf. That is why [logging](/servers/logging) is untouched by any of this — `ctx.info()` and its siblings reach the client mid-call on every era. Sampling is the other kind. `sampling/createMessage` goes out and the caller must answer before the tool can continue, which needs a live, addressable connection the server can reach into, and the `2026-07-28` revision removed server-initiated requests ([SEP-2577](https://modelcontextprotocol.io/community/sep-guidelines)) precisely because a stateless protocol has no such thing.
+The reason is the distinction MCP draws between telling and asking. A notification is fire-and-forget: the server emits it and moves on, and it travels down the response stream the caller already opened, so nothing has to be held open on the server's behalf. That is why [logging](/servers/logging) is untouched by any of this — `ctx.info()` and its siblings reach the client mid-call on every era. Sampling is the other kind. `sampling/createMessage` goes out and the caller must answer before the tool can continue, which needs a live, addressable connection the server can reach into, and the `2026-07-28` revision removed server-initiated requests ([SEP-2322](https://modelcontextprotocol.io/specification/2026-07-28/changelog)) because a stateless protocol has no such thing, and separately deprecated sampling as a feature (SEP-2577).
 
 What the protocol removed is the pushing, not the asking, so the capability survives in the shape described above. Keeping `ctx.sample()` alongside it would mean shipping a method whose outcome against a default client — one that negotiates the modern era — is a runtime failure.
 
@@ -21525,8 +21562,10 @@ The `Progress` dependency lets you report progress back to clients. Inject it as
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp import FastMCP
 from fastmcp.dependencies import Progress
+from fastmcp_tasks import TasksExtension
 
 mcp = FastMCP("MyServer")
+mcp.add_extension(TasksExtension())
 
 @mcp.tool(task=True)
 async def process_files(files: list[str], progress: Progress = Progress()) -> str:
@@ -21556,9 +21595,11 @@ FastMCP exposes Docket's full dependency injection system within your task-enabl
 from docket import Docket, Worker
 from fastmcp import FastMCP
 from fastmcp.dependencies import Progress
+from fastmcp_tasks import TasksExtension
 from fastmcp_tasks.dependencies import CurrentDocket, CurrentWorker
 
 mcp = FastMCP("MyServer")
+mcp.add_extension(TasksExtension())
 
 @mcp.tool(task=True)
 async def my_task(
@@ -22828,7 +22869,7 @@ When your tool returns a dictionary, dataclass, or Pydantic model, FastMCP autom
 
 #### Primitives and Collections
 
-When your tool returns a primitive type (int, str, bool) or a collection (list, set), FastMCP needs a return type annotation to generate structured content. The annotation tells FastMCP how to validate and serialize the result.
+When your tool returns a primitive type (int, str, bool) or a collection (list, set), FastMCP needs a return type annotation to generate structured content. The annotation tells FastMCP how to validate and serialize the result. The annotation has to say something about the items: a bare `list`, `tuple`, or `Sequence` (or `list[Any]`) describes nothing, so FastMCP infers no output schema for it, the same as for `Any`. Use `list[int]`, `list[dict]`, and so on when you want structured output for a collection.
 
 Without a type annotation, the tool only produces `content`:
 
@@ -24936,13 +24977,14 @@ def add(x: int, y: int) -> int:
 def add(x: int, y: int) -> int:
     return x + y + 100  # Different behavior
 
-# Get highest version (default)
-tool = await mcp.get_tool("add")
-print(tool.version)  # "2.0"
+async def main():
+    # Get highest version (default)
+    tool = await mcp.get_tool("add")
+    print(tool.version)  # "2.0"
 
-# Get specific version
-tool_v1 = await mcp.get_tool("add", version="1.0")
-print(tool_v1.version)  # "1.0"
+    # Get specific version
+    tool_v1 = await mcp.get_tool("add", version="1.0")
+    print(tool_v1.version)  # "1.0"
 ```
 
 If the requested version doesn't exist, a `NotFoundError` is raised.
@@ -25230,6 +25272,7 @@ Server-level visibility state applies to all components from all providers. When
 from fastmcp import FastMCP
 
 main = FastMCP("Main")
+sub_server = FastMCP("Sub")
 main.mount(sub_server, namespace="api")
 
 @main.tool(tags={"internal"})
@@ -25490,6 +25533,363 @@ Server-level transforms override provider-level transforms. If a component is di
 Source: https://gofastmcp.com/changelog
 
 
+
+<Update label="v4.0.3" description="2026-09-04">
+  **[v4.0.3: Once Is Enough](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3)**
+
+  Multi-server clients with legacy-only backends now avoid unnecessary startup retries, and tools returning unconstrained sequences no longer send images twice. This patch also fixes task timing values rejected by strict clients and cleans up unfinished Monty callbacks when execution ends.
+
+  ### Enhancements ✨
+
+  * ci: deploy docs through Mintlify's admin API and wait for a verdict by [@zzstoatzz](https://github.com/zzstoatzz) in [#4996](https://github.com/PrefectHQ/fastmcp/pull/4996)
+  * perf: avoid duplicate startup for mixed-era backends by [@ningmao-hlyz](https://github.com/ningmao-hlyz) in [#4971](https://github.com/PrefectHQ/fastmcp/pull/4971)
+  * docs: clarify release title history lookup by [@zzstoatzz](https://github.com/zzstoatzz) in [#5006](https://github.com/PrefectHQ/fastmcp/pull/5006)
+
+  ### Fixes 🐞
+
+  * fix: don't infer an output schema for unconstrained sequences by [@fsecada01](https://github.com/fsecada01) in [#4999](https://github.com/PrefectHQ/fastmcp/pull/4999)
+  * Clean up unfinished Monty callbacks by [@zzstoatzz](https://github.com/zzstoatzz) in [#5005](https://github.com/PrefectHQ/fastmcp/pull/5005)
+  * Fix task timing field serialization by [@LarryHu0217](https://github.com/LarryHu0217) in [#5003](https://github.com/PrefectHQ/fastmcp/pull/5003)
+
+  ### Docs 📚
+
+  * docs: point What's New at the changelog for later releases by [@zzstoatzz](https://github.com/zzstoatzz) in [#4992](https://github.com/PrefectHQ/fastmcp/pull/4992)
+  * docs: attribute the back-channel removal to SEP-2322/2575, not SEP-2577 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4988](https://github.com/PrefectHQ/fastmcp/pull/4988)
+
+  ## New Contributors
+
+  * @fsecada01 made their first contribution in [#4999](https://github.com/PrefectHQ/fastmcp/pull/4999)
+  * @ningmao-hlyz made their first contribution in [#4971](https://github.com/PrefectHQ/fastmcp/pull/4971)
+
+  **Full Changelog**: [v4.0.2...v4.0.3](https://github.com/PrefectHQ/fastmcp/compare/v4.0.2...v4.0.3)
+</Update>
+
+<Update label="v4.0.2" description="2026-09-02">
+  **[v4.0.2: Root Access](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.2)**
+
+  `ClientGroup` is now importable from the package root, `from fastmcp import ClientGroup`, with the same lazy export and install hint as `Client`, so integrations no longer couple to FastMCP's internal module layout.
+
+  ### Enhancements ✨
+
+  * Expose ClientGroup from package root by [@jlowin](https://github.com/jlowin) in [#4987](https://github.com/PrefectHQ/fastmcp/pull/4987)
+  * skills: add release skill with changelog entry helper by [@zzstoatzz](https://github.com/zzstoatzz) in [#4982](https://github.com/PrefectHQ/fastmcp/pull/4982)
+
+  ### Fixes 🐞
+
+  * docs: escape `<1` in changelog so MDX parses by [@zzstoatzz](https://github.com/zzstoatzz) in [#4978](https://github.com/PrefectHQ/fastmcp/pull/4978)
+
+  ### Docs 📚
+
+  * docs: note the 4.0.1 floor for ClientGroup reentrancy by [@zzstoatzz](https://github.com/zzstoatzz) in [#4980](https://github.com/PrefectHQ/fastmcp/pull/4980)
+  * docs: link the GA announcement and blog from What's New by [@zzstoatzz](https://github.com/zzstoatzz) in [#4984](https://github.com/PrefectHQ/fastmcp/pull/4984)
+
+  **Full Changelog**: [v4.0.1...v4.0.2](https://github.com/PrefectHQ/fastmcp/compare/v4.0.1...v4.0.2)
+</Update>
+
+<Update label="v4.0.1" description="2026-09-01">
+  **[v4.0.1: Come Back Any Time](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.1)**
+
+  `ClientGroup` now reference-counts its context the way `Client` does, so entering a connected group from a nested block or a concurrent task reuses the existing connections instead of raising. Adapters written against `Client`'s reentrancy can hold a `ClientGroup` the same way.
+
+  ### Fixes 🐞
+
+  * client: make ClientGroup context reentrant by [@zzstoatzz](https://github.com/zzstoatzz) in [#4975](https://github.com/PrefectHQ/fastmcp/pull/4975)
+  * ci: fix the published-docs PR step's working base by [@zzstoatzz](https://github.com/zzstoatzz) in [#4960](https://github.com/PrefectHQ/fastmcp/pull/4960)
+
+  ### Docs 📚
+
+  * docs: update banner for FastMCP 4 GA by [@zzstoatzz](https://github.com/zzstoatzz) in [#4958](https://github.com/PrefectHQ/fastmcp/pull/4958)
+  * docs: correct whats-new and upgrade guide for GA by [@zzstoatzz](https://github.com/zzstoatzz) in [#4961](https://github.com/PrefectHQ/fastmcp/pull/4961)
+  * docs: drop prerelease install framing from installation and SDK migration guides by [@zzstoatzz](https://github.com/zzstoatzz) in [#4963](https://github.com/PrefectHQ/fastmcp/pull/4963)
+  * docs: refresh sidebar tags and fix audit findings by [@zzstoatzz](https://github.com/zzstoatzz) in [#4965](https://github.com/PrefectHQ/fastmcp/pull/4965)
+
+  **Full Changelog**: [v4.0.0...v4.0.1](https://github.com/PrefectHQ/fastmcp/compare/v4.0.0...v4.0.1)
+</Update>
+
+<Update label="v4.0.0" description="2026-08-31">
+  **[v4.0.0: Four Real](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0)**
+
+  FastMCP 4 is the FastMCP release for the new MCP: full support for the `2026-07-28` protocol revision and the rewritten Python SDK v2, with per-connection negotiation so old-protocol clients keep working against upgraded servers. Interactive tools, background tasks via the `io.modelcontextprotocol/tasks` extension, a first-class extension model, identity assertion, dependency injection with call-argument binding, and `ClientGroup` all land as stable surfaces. Most FastMCP 3 applications upgrade without code changes.
+
+  ### New Features 🎉
+
+  * Migrate to MCP Python SDK v2 by [@jlowin](https://github.com/jlowin) in [#4437](https://github.com/PrefectHQ/fastmcp/pull/4437)
+  * Teach fastmcp.Client the modern protocol: mode negotiation, MRTR driver, response cache by [@jlowin](https://github.com/jlowin) in [#4450](https://github.com/PrefectHQ/fastmcp/pull/4450)
+  * Forward-port Hugging Face auth provider by [@jlowin](https://github.com/jlowin) in [#4475](https://github.com/PrefectHQ/fastmcp/pull/4475)
+  * Add server-side identity assertion (SEP-990 ID-JAG) by [@jlowin](https://github.com/jlowin) in [#4483](https://github.com/PrefectHQ/fastmcp/pull/4483)
+  * Add guard-mode multi-round-trip tools (SEP-2322) by [@jlowin](https://github.com/jlowin) in [#4544](https://github.com/PrefectHQ/fastmcp/pull/4544)
+  * Add FastMCP-native server extension API (SEP-2133) by [@jlowin](https://github.com/jlowin) in [#4602](https://github.com/PrefectHQ/fastmcp/pull/4602)
+  * Add stateless session state (UserSession / SessionId) by [@jlowin](https://github.com/jlowin) in [#4604](https://github.com/PrefectHQ/fastmcp/pull/4604)
+  * Add background tasks via the io.modelcontextprotocol/tasks extension (SEP-2663) by [@jlowin](https://github.com/jlowin) in [#4603](https://github.com/PrefectHQ/fastmcp/pull/4603)
+
+  ### Breaking Changes ⚠️
+
+  * Emit one SERVER span per request and adopt spec-correct error codes by [@jlowin](https://github.com/jlowin) in [#4445](https://github.com/PrefectHQ/fastmcp/pull/4445)
+  * Remove 3.x deprecated module shims and dead parameters by [@jlowin](https://github.com/jlowin) in [#4447](https://github.com/PrefectHQ/fastmcp/pull/4447)
+  * Remove 3.0-deprecated FastMCP server methods by [@jlowin](https://github.com/jlowin) in [#4451](https://github.com/PrefectHQ/fastmcp/pull/4451)
+  * Remove 3.x deprecated parameters and object-mode decorators by [@jlowin](https://github.com/jlowin) in [#4453](https://github.com/PrefectHQ/fastmcp/pull/4453)
+  * Migrate to MCP SDK v2.0.0b2 (httpx2) by [@jlowin](https://github.com/jlowin) in [#4503](https://github.com/PrefectHQ/fastmcp/pull/4503)
+  * Fix typos by [@szepeviktor](https://github.com/szepeviktor) in [#4498](https://github.com/PrefectHQ/fastmcp/pull/4498)
+  * Stop proxies from validating backend results or mutating shared transports by [@jlowin](https://github.com/jlowin) in [#4552](https://github.com/PrefectHQ/fastmcp/pull/4552)
+  * Surface resource, prompt, and proxy errors on the modern protocol by [@jlowin](https://github.com/jlowin) in [#4579](https://github.com/PrefectHQ/fastmcp/pull/4579)
+  * Negotiate the best mutual protocol era by default by [@jlowin](https://github.com/jlowin) in [#4572](https://github.com/PrefectHQ/fastmcp/pull/4572)
+  * Remove server-initiated sampling and roots from the server API by [@jlowin](https://github.com/jlowin) in [#4648](https://github.com/PrefectHQ/fastmcp/pull/4648)
+  * Remove 3.x-era compatibility shims by [@jlowin](https://github.com/jlowin) in [#4661](https://github.com/PrefectHQ/fastmcp/pull/4661)
+
+  ### Enhancements ✨
+
+  * Deprecate ctx.sample and add clear errors for push features on 2026 connections by [@jlowin](https://github.com/jlowin) in [#4448](https://github.com/PrefectHQ/fastmcp/pull/4448)
+  * Add server-level cache hints (SEP-2549) by [@jlowin](https://github.com/jlowin) in [#4464](https://github.com/PrefectHQ/fastmcp/pull/4464)
+  * Add KeyValueResponseCacheStore for distributed client response caching by [@jlowin](https://github.com/jlowin) in [#4479](https://github.com/PrefectHQ/fastmcp/pull/4479)
+  * Test lifespan fires once per process over HTTP by [@jlowin](https://github.com/jlowin) in [#4480](https://github.com/PrefectHQ/fastmcp/pull/4480)
+  * Add telemetry off-switch and mcp.protocol.version span attribute by [@jlowin](https://github.com/jlowin) in [#4481](https://github.com/PrefectHQ/fastmcp/pull/4481)
+  * Trace client task management requests by [@jlowin](https://github.com/jlowin) in [#4525](https://github.com/PrefectHQ/fastmcp/pull/4525)
+  * Stabilize upgraded ty checks by [@jlowin](https://github.com/jlowin) in [#4526](https://github.com/PrefectHQ/fastmcp/pull/4526)
+  * Improve DescopeProvider scope discovery and well-known URL support by [@gaokevin1](https://github.com/gaokevin1) in [#4489](https://github.com/PrefectHQ/fastmcp/pull/4489)
+  * Add examples/ to the ty static-analysis gate by [@jlowin](https://github.com/jlowin) in [#4466](https://github.com/PrefectHQ/fastmcp/pull/4466)
+  * Expose telemetry attributes on span start by [@zzstoatzz](https://github.com/zzstoatzz) in [#4487](https://github.com/PrefectHQ/fastmcp/pull/4487)
+  * Fix-issue-4284 : Add Auth0MCPProvider for Auth0 Auth for MCP by [@vijaydeepsinha](https://github.com/vijaydeepsinha) in [#4411](https://github.com/PrefectHQ/fastmcp/pull/4411)
+  * Run FastMCP middleware for every inbound message by [@jlowin](https://github.com/jlowin) in [#4553](https://github.com/PrefectHQ/fastmcp/pull/4553)
+  * Add 'prs welcome' label to waive the PR assignment gate by [@jlowin](https://github.com/jlowin) in [#4557](https://github.com/PrefectHQ/fastmcp/pull/4557)
+  * Rename martian workflows to marvin by [@jlowin](https://github.com/jlowin) in [#4558](https://github.com/PrefectHQ/fastmcp/pull/4558)
+  * Bump pinned Claude models to current versions by [@jlowin](https://github.com/jlowin) in [#4561](https://github.com/PrefectHQ/fastmcp/pull/4561)
+  * Make the unit suite fast: in-process HTTP tests, no real sleeps, parallel Windows CI by [@jlowin](https://github.com/jlowin) in [#4554](https://github.com/PrefectHQ/fastmcp/pull/4554)
+  * Mirror the frontend's protocol era on a proxy's backend connection by [@jlowin](https://github.com/jlowin) in [#4573](https://github.com/PrefectHQ/fastmcp/pull/4573)
+  * Drop forked client protocol helpers in favor of the SDK's by [@jlowin](https://github.com/jlowin) in [#4574](https://github.com/PrefectHQ/fastmcp/pull/4574)
+  * Bring the v4 developer notes up to date with what shipped by [@jlowin](https://github.com/jlowin) in [#4581](https://github.com/PrefectHQ/fastmcp/pull/4581)
+  * Trim fastmcp.types to FastMCP-unique types by [@jlowin](https://github.com/jlowin) in [#4584](https://github.com/PrefectHQ/fastmcp/pull/4584)
+  * Let a server answer argument-completion requests by [@jlowin](https://github.com/jlowin) in [#4582](https://github.com/PrefectHQ/fastmcp/pull/4582)
+  * Add machine-to-machine client authentication by [@jlowin](https://github.com/jlowin) in [#4583](https://github.com/PrefectHQ/fastmcp/pull/4583)
+  * Expose era-neutral client server metadata by [@zzstoatzz](https://github.com/zzstoatzz) in [#4599](https://github.com/PrefectHQ/fastmcp/pull/4599)
+  * Support routable transport headers for gateways (SEP-2243) by [@jlowin](https://github.com/jlowin) in [#4622](https://github.com/PrefectHQ/fastmcp/pull/4622)
+  * Emit scope step-up challenges for incremental authorization (SEP-2350) by [@jlowin](https://github.com/jlowin) in [#4623](https://github.com/PrefectHQ/fastmcp/pull/4623)
+  * Honor OAuth application\_type in DCR (SEP-837) by [@jlowin](https://github.com/jlowin) in [#4621](https://github.com/PrefectHQ/fastmcp/pull/4621)
+  * Drop stale label-noting instructions from CLAUDE.md by [@jlowin](https://github.com/jlowin) in [#4654](https://github.com/PrefectHQ/fastmcp/pull/4654)
+  * Add require\_roles auth check by [@jlowin](https://github.com/jlowin) in [#4656](https://github.com/PrefectHQ/fastmcp/pull/4656)
+  * Add `valid_scopes` parameter to OIDC proxy valid scopes by [@Educg550](https://github.com/Educg550) in [#4660](https://github.com/PrefectHQ/fastmcp/pull/4660)
+  * feat: Add telemetry interop mode for FastMCP by [@strawgate](https://github.com/strawgate) in [#4046](https://github.com/PrefectHQ/fastmcp/pull/4046)
+  * Note that review comment threads should get an acknowledgement by [@jlowin](https://github.com/jlowin) in [#4678](https://github.com/PrefectHQ/fastmcp/pull/4678)
+  * Soften the review-comment reply guidance by [@jlowin](https://github.com/jlowin) in [#4683](https://github.com/PrefectHQ/fastmcp/pull/4683)
+  * Resolve review threads on fix, reply on decline by [@jlowin](https://github.com/jlowin) in [#4685](https://github.com/PrefectHQ/fastmcp/pull/4685)
+  * Move to the stable MCP Python SDK 2.0.0 by [@jlowin](https://github.com/jlowin) in [#4655](https://github.com/PrefectHQ/fastmcp/pull/4655)
+  * Add comprehensive Codex code review rules by [@jlowin](https://github.com/jlowin) in [#4710](https://github.com/PrefectHQ/fastmcp/pull/4710)
+  * Give parallel Windows CI more timeout headroom by [@zzstoatzz](https://github.com/zzstoatzz) in [#4680](https://github.com/PrefectHQ/fastmcp/pull/4680)
+  * add language dropdown to docs sidebar by [@znicholasbrown](https://github.com/znicholasbrown) in [#4716](https://github.com/PrefectHQ/fastmcp/pull/4716)
+  * Route published docs through pull requests by [@jlowin](https://github.com/jlowin) in [#4713](https://github.com/PrefectHQ/fastmcp/pull/4713)
+  * Improve HTTP server startup performance by [@jlowin](https://github.com/jlowin) in [#4729](https://github.com/PrefectHQ/fastmcp/pull/4729)
+  * Avoid loading MCP and CLI stacks during lightweight imports by [@jlowin](https://github.com/jlowin) in [#4763](https://github.com/PrefectHQ/fastmcp/pull/4763)
+  * Preserve legacy httpx compatibility without importing it by [@jlowin](https://github.com/jlowin) in [#4766](https://github.com/PrefectHQ/fastmcp/pull/4766)
+  * Clarify review of closed contributor PRs by [@jlowin](https://github.com/jlowin) in [#4780](https://github.com/PrefectHQ/fastmcp/pull/4780)
+  * Support EdDSA verification in JWTVerifier by [@zzstoatzz](https://github.com/zzstoatzz) in [#4752](https://github.com/PrefectHQ/fastmcp/pull/4752)
+  * Forward proxy server metadata across protocol eras by [@jakekaplan](https://github.com/jakekaplan) in [#4776](https://github.com/PrefectHQ/fastmcp/pull/4776)
+  * feat(renovate): migrate to Renovate, retire Dependabot by [@jamiezieziula](https://github.com/jamiezieziula) in [#4754](https://github.com/PrefectHQ/fastmcp/pull/4754)
+  * Add Prefect Horizon authentication client and local state by [@parkedwards](https://github.com/parkedwards) in [#4785](https://github.com/PrefectHQ/fastmcp/pull/4785)
+  * Clarify auto-closed PR message by [@jlowin](https://github.com/jlowin) in [#4820](https://github.com/PrefectHQ/fastmcp/pull/4820)
+  * Support CallArgument and Depends bindings from uncalled-for 0.4.0 by [@chrisguidry](https://github.com/chrisguidry) in [#4802](https://github.com/PrefectHQ/fastmcp/pull/4802)
+  * Fix static analysis under newer ty releases by [@zzstoatzz](https://github.com/zzstoatzz) in [#4831](https://github.com/PrefectHQ/fastmcp/pull/4831)
+  * Cover CallArgument resolution in background tasks by [@zzstoatzz](https://github.com/zzstoatzz) in [#4833](https://github.com/PrefectHQ/fastmcp/pull/4833)
+  * Scalekit issuer updates backward compatibility by [@AkshayParihar33](https://github.com/AkshayParihar33) in [#4798](https://github.com/PrefectHQ/fastmcp/pull/4798)
+  * Add Prefect Horizon account commands by [@parkedwards](https://github.com/parkedwards) in [#4786](https://github.com/PrefectHQ/fastmcp/pull/4786)
+  * Cap anthropic dependency to `<1` by [@craigie-ant](https://github.com/craigie-ant) in [#4864](https://github.com/PrefectHQ/fastmcp/pull/4864)
+  * Remove obsolete Docket memory-server reset fixtures by [@TyceHerrman](https://github.com/TyceHerrman) in [#4912](https://github.com/PrefectHQ/fastmcp/pull/4912)
+  * add independent client groups by [@zzstoatzz](https://github.com/zzstoatzz) in [#4904](https://github.com/PrefectHQ/fastmcp/pull/4904)
+
+  ### Security 🔒
+
+  * Drive the FastMCP lifespan through the SDK session manager by [@jlowin](https://github.com/jlowin) in [#4446](https://github.com/PrefectHQ/fastmcp/pull/4446)
+  * Route skill file access through SDK path-security primitives by [@jlowin](https://github.com/jlowin) in [#4449](https://github.com/PrefectHQ/fastmcp/pull/4449)
+  * Screen templated resource parameters for path traversal by default by [@jlowin](https://github.com/jlowin) in [#4482](https://github.com/PrefectHQ/fastmcp/pull/4482)
+  * \[codex] Add OAuthProxy RFC 9207 issuer responses by [@jlowin](https://github.com/jlowin) in [#4438](https://github.com/PrefectHQ/fastmcp/pull/4438)
+  * Apply app visibility where no host can by [@jlowin](https://github.com/jlowin) in [#4692](https://github.com/PrefectHQ/fastmcp/pull/4692)
+  * Encrypt task context snapshots at rest by [@chrisguidry](https://github.com/chrisguidry) in [#4772](https://github.com/PrefectHQ/fastmcp/pull/4772)
+  * Add audience pinning to GoogleTokenVerifier by [@zzstoatzz](https://github.com/zzstoatzz) in [#4827](https://github.com/PrefectHQ/fastmcp/pull/4827)
+  * Bump cryptography to 50.0.0 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4836](https://github.com/PrefectHQ/fastmcp/pull/4836)
+  * Scope Marvin App token to each job's declared permissions by [@zzstoatzz](https://github.com/zzstoatzz) in [#4834](https://github.com/PrefectHQ/fastmcp/pull/4834)
+  * Exclude Cookie from forwarded HTTP headers by [@zzstoatzz](https://github.com/zzstoatzz) in [#4843](https://github.com/PrefectHQ/fastmcp/pull/4843)
+  * Bump cryptography to 50.0.0 in the testing\_demo example by [@zzstoatzz](https://github.com/zzstoatzz) in [#4844](https://github.com/PrefectHQ/fastmcp/pull/4844)
+  * Bound CIMD cache growth by [@jlowin](https://github.com/jlowin) in [#4852](https://github.com/PrefectHQ/fastmcp/pull/4852)
+  * client: deprecate inferring stdio transports from str, prefer Path by [@zzstoatzz](https://github.com/zzstoatzz) in [#4941](https://github.com/PrefectHQ/fastmcp/pull/4941)
+
+  ### Fixes 🐞
+
+  * Capture SharedContext for task-enabled Docket servers by [@jlowin](https://github.com/jlowin) in [#4443](https://github.com/PrefectHQ/fastmcp/pull/4443)
+  * Fix stale mcp.types imports in examples by [@jlowin](https://github.com/jlowin) in [#4452](https://github.com/PrefectHQ/fastmcp/pull/4452)
+  * Forward-port HTTP host guard compatibility by [@jlowin](https://github.com/jlowin) in [#4474](https://github.com/PrefectHQ/fastmcp/pull/4474)
+  * Fix Azure scope fallback by [@zzstoatzz](https://github.com/zzstoatzz) in [#4469](https://github.com/PrefectHQ/fastmcp/pull/4469)
+  * fix(server): omit ScalarElicitationType wrapper title from elicitation schemas by [@syf2211](https://github.com/syf2211) in [#4502](https://github.com/PrefectHQ/fastmcp/pull/4502)
+  * Skip unsupported JWKS keys instead of failing the whole key set (#4515) by [@earfman](https://github.com/earfman) in [#4517](https://github.com/PrefectHQ/fastmcp/pull/4517)
+  * Don't mutate the caller's schema in compress\_schema by [@winklemad](https://github.com/winklemad) in [#4492](https://github.com/PrefectHQ/fastmcp/pull/4492)
+  * Forward upstream instructions through create\_proxy by [@verdie-g](https://github.com/verdie-g) in [#4512](https://github.com/PrefectHQ/fastmcp/pull/4512)
+  * Serialize deep object query parameters by [@jlowin](https://github.com/jlowin) in [#4523](https://github.com/PrefectHQ/fastmcp/pull/4523)
+  * Reject positional-only tool parameters by [@jlowin](https://github.com/jlowin) in [#4524](https://github.com/PrefectHQ/fastmcp/pull/4524)
+  * Clarify PR-reopen flow and fix label-race that broke auto-reopen by [@jlowin](https://github.com/jlowin) in [#4518](https://github.com/PrefectHQ/fastmcp/pull/4518)
+  * Clean up disconnected task sessions by [@jlowin](https://github.com/jlowin) in [#4519](https://github.com/PrefectHQ/fastmcp/pull/4519)
+  * Handle expired OAuth client registrations by [@jlowin](https://github.com/jlowin) in [#4520](https://github.com/PrefectHQ/fastmcp/pull/4520)
+  * Fix OAuth request annotation after httpx2 migration by [@jlowin](https://github.com/jlowin) in [#4534](https://github.com/PrefectHQ/fastmcp/pull/4534)
+  * Fix docs banner contrast by [@jlowin](https://github.com/jlowin) in [#4522](https://github.com/PrefectHQ/fastmcp/pull/4522)
+  * Preserve component metadata in response cache by [@jlowin](https://github.com/jlowin) in [#4521](https://github.com/PrefectHQ/fastmcp/pull/4521)
+  * Clean up task sessions on connection exit by [@jlowin](https://github.com/jlowin) in [#4535](https://github.com/PrefectHQ/fastmcp/pull/4535)
+  * Include scopes in auth challenges by [@jlowin](https://github.com/jlowin) in [#4527](https://github.com/PrefectHQ/fastmcp/pull/4527)
+  * Make examples/ actually trigger the ty gate by [@jlowin](https://github.com/jlowin) in [#4541](https://github.com/PrefectHQ/fastmcp/pull/4541)
+  * Add subject field to AccessToken initialization by [@piaudonn](https://github.com/piaudonn) in [#4267](https://github.com/PrefectHQ/fastmcp/pull/4267)
+  * Restore Mintlify's fixed banner positioning by [@jlowin](https://github.com/jlowin) in [#4542](https://github.com/PrefectHQ/fastmcp/pull/4542)
+  * Fix #4292: SSRF guard breaks OAuth/JWKS fetches behind a corporate HTTP proxy by [@endofcake](https://github.com/endofcake) in [#4412](https://github.com/PrefectHQ/fastmcp/pull/4412)
+  * Preserve telemetry attributes when a sampler does not forward them by [@jlowin](https://github.com/jlowin) in [#4539](https://github.com/PrefectHQ/fastmcp/pull/4539)
+  * Speed up the unit test suite, and fix the task-notification race it surfaced by [@jlowin](https://github.com/jlowin) in [#4550](https://github.com/PrefectHQ/fastmcp/pull/4550)
+  * Fix label triage applying no labels, and make blocked tool calls fail by [@jlowin](https://github.com/jlowin) in [#4555](https://github.com/PrefectHQ/fastmcp/pull/4555)
+  * Fix AI workflow allowlists being destroyed by tokenization by [@jlowin](https://github.com/jlowin) in [#4560](https://github.com/PrefectHQ/fastmcp/pull/4560)
+  * Make transformed tool `required` order deterministic by [@Kludex](https://github.com/Kludex) in [#4564](https://github.com/PrefectHQ/fastmcp/pull/4564)
+  * Stop gather() from creating coroutines it may never schedule by [@jlowin](https://github.com/jlowin) in [#4559](https://github.com/PrefectHQ/fastmcp/pull/4559)
+  * Restore upgraded dependency checks by [@zzstoatzz](https://github.com/zzstoatzz) in [#4576](https://github.com/PrefectHQ/fastmcp/pull/4576)
+  * Fix skill frontmatter parsing with UTF-8 BOM by [@hxaxd](https://github.com/hxaxd) in [#4533](https://github.com/PrefectHQ/fastmcp/pull/4533)
+  * Fix File helper extension handling by [@VectorPeak](https://github.com/VectorPeak) in [#4531](https://github.com/PrefectHQ/fastmcp/pull/4531)
+  * Fix percent-encoded skill file names unreadable in resources mode by [@jlowin](https://github.com/jlowin) in [#4590](https://github.com/PrefectHQ/fastmcp/pull/4590)
+  * Fix flaky stdio crash-recovery tests by [@jlowin](https://github.com/jlowin) in [#4594](https://github.com/PrefectHQ/fastmcp/pull/4594)
+  * Bridge camelCase ToolAnnotations reads by [@zzstoatzz](https://github.com/zzstoatzz) in [#4597](https://github.com/PrefectHQ/fastmcp/pull/4597)
+  * Preserve raw CallToolResult tool returns by [@LarryHu0217](https://github.com/LarryHu0217) in [#4587](https://github.com/PrefectHQ/fastmcp/pull/4587)
+  * Advertise only supported token endpoint auth methods in OAuthProxy metadata by [@jlowin](https://github.com/jlowin) in [#4608](https://github.com/PrefectHQ/fastmcp/pull/4608)
+  * Fix OAuth proxy override typing by [@zzstoatzz](https://github.com/zzstoatzz) in [#4612](https://github.com/PrefectHQ/fastmcp/pull/4612)
+  * Pin burner-redis below the Windows-crashing 0.1.7 release by [@jlowin](https://github.com/jlowin) in [#4618](https://github.com/PrefectHQ/fastmcp/pull/4618)
+  * fix : canonical mime type mapping from formats to remove inconsistency #4627 by [@Aman071106](https://github.com/Aman071106) in [#4628](https://github.com/PrefectHQ/fastmcp/pull/4628)
+  * fix: accept callable roots handlers by [@ShuyingZhang](https://github.com/ShuyingZhang) in [#4639](https://github.com/PrefectHQ/fastmcp/pull/4639)
+  * Pass the MCP conformance suite's draft and pending scenarios by [@jlowin](https://github.com/jlowin) in [#4650](https://github.com/PrefectHQ/fastmcp/pull/4650)
+  * Use issuer\_url for OAuth issuer identity by [@jlowin](https://github.com/jlowin) in [#4652](https://github.com/PrefectHQ/fastmcp/pull/4652)
+  * Fix the ty failure blocking upgrade checks on main by [@jlowin](https://github.com/jlowin) in [#4657](https://github.com/PrefectHQ/fastmcp/pull/4657)
+  * Bind CIMD assertion audience to the advertised token endpoint by [@jlowin](https://github.com/jlowin) in [#4659](https://github.com/PrefectHQ/fastmcp/pull/4659)
+  * Record effective scopes on the OAuth transaction by [@jlowin](https://github.com/jlowin) in [#4670](https://github.com/PrefectHQ/fastmcp/pull/4670)
+  * Copy schemas iteratively so deep nesting still compresses by [@jlowin](https://github.com/jlowin) in [#4671](https://github.com/PrefectHQ/fastmcp/pull/4671)
+  * Fix OpenAPI allOf reference fields by [@hxaxd](https://github.com/hxaxd) in [#4653](https://github.com/PrefectHQ/fastmcp/pull/4653)
+  * Flatten OpenAPI discriminator subtypes into request bodies by [@jlowin](https://github.com/jlowin) in [#4677](https://github.com/PrefectHQ/fastmcp/pull/4677)
+  * Let maintenance releases publish without fastmcp-tasks by [@jlowin](https://github.com/jlowin) in [#4676](https://github.com/PrefectHQ/fastmcp/pull/4676)
+  * Read CLI-scanned MCP config files as UTF-8 explicitly by [@jlowin](https://github.com/jlowin) in [#4690](https://github.com/PrefectHQ/fastmcp/pull/4690)
+  * Late-bind app tool names so UIs survive composition by [@jlowin](https://github.com/jlowin) in [#4682](https://github.com/PrefectHQ/fastmcp/pull/4682)
+  * Always emit a tool title, derived from name when unset by [@jlowin](https://github.com/jlowin) in [#4694](https://github.com/PrefectHQ/fastmcp/pull/4694)
+  * Fix self-referential connection error causes by [@jakekaplan](https://github.com/jakekaplan) in [#4720](https://github.com/PrefectHQ/fastmcp/pull/4720)
+  * Write downloaded skill text as UTF-8 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4715](https://github.com/PrefectHQ/fastmcp/pull/4715)
+  * Fix CodeMode tool error propagation by [@YAO-001](https://github.com/YAO-001) in [#4704](https://github.com/PrefectHQ/fastmcp/pull/4704)
+  * Forward enable\_cimd to Auth0, AWS Cognito and OCI providers by [@StykMartin](https://github.com/StykMartin) in [#4719](https://github.com/PrefectHQ/fastmcp/pull/4719)
+  * fix: preserve valid servers during CLI discovery by [@ShuyingZhang](https://github.com/ShuyingZhang) in [#4714](https://github.com/PrefectHQ/fastmcp/pull/4714)
+  * Preserve string-compatible prompt arguments by [@jlowin](https://github.com/jlowin) in [#4730](https://github.com/PrefectHQ/fastmcp/pull/4730)
+  * Canonicalize response cache arguments by [@jlowin](https://github.com/jlowin) in [#4753](https://github.com/PrefectHQ/fastmcp/pull/4753)
+  * Serve empty list results from the response cache by [@LHMQ878](https://github.com/LHMQ878) in [#4738](https://github.com/PrefectHQ/fastmcp/pull/4738)
+  * Don't cache error results in ResponseCachingMiddleware by [@SaiMouli3](https://github.com/SaiMouli3) in [#4705](https://github.com/PrefectHQ/fastmcp/pull/4705)
+  * Declare run-claude extra allowed tools input by [@zzstoatzz](https://github.com/zzstoatzz) in [#4740](https://github.com/PrefectHQ/fastmcp/pull/4740)
+  * Sanitize forwarded request metadata where the proxy copies it by [@jakekaplan](https://github.com/jakekaplan) in [#4770](https://github.com/PrefectHQ/fastmcp/pull/4770)
+  * fix(context): move elicit overload docs inside the stubs so mypy sees the chain by [@yonatangross](https://github.com/yonatangross) in [#4774](https://github.com/PrefectHQ/fastmcp/pull/4774)
+  * Delegate typed tool output serialization to Pydantic by [@jlowin](https://github.com/jlowin) in [#4771](https://github.com/PrefectHQ/fastmcp/pull/4771)
+  * Serialize the event store's stream list read-modify-write by [@SaiMouli3](https://github.com/SaiMouli3) in [#4758](https://github.com/PrefectHQ/fastmcp/pull/4758)
+  * Fix partial parameter hints on Python 3.14 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4796](https://github.com/PrefectHQ/fastmcp/pull/4796)
+  * fix(openapi): extract parameter-level example and examples by [@doneman536](https://github.com/doneman536) in [#4793](https://github.com/PrefectHQ/fastmcp/pull/4793)
+  * Keep earlier consent CSRF tokens valid within a transaction by [@trevhud](https://github.com/trevhud) in [#4818](https://github.com/PrefectHQ/fastmcp/pull/4818)
+  * Fix StatefulProxyClient reconnection after session failure by [@jlowin](https://github.com/jlowin) in [#4829](https://github.com/PrefectHQ/fastmcp/pull/4829)
+  * Fix instructions in MCP inspect output by [@zzstoatzz](https://github.com/zzstoatzz) in [#4873](https://github.com/PrefectHQ/fastmcp/pull/4873)
+  * fix: support Unicode tokens in BM25 search by [@zzstoatzz](https://github.com/zzstoatzz) in [#4889](https://github.com/PrefectHQ/fastmcp/pull/4889)
+  * fix: support modern protocol in multi-server clients by [@zzstoatzz](https://github.com/zzstoatzz) in [#4893](https://github.com/PrefectHQ/fastmcp/pull/4893)
+  * fix(ci): satisfy latest ty control-flow checks by [@zzstoatzz](https://github.com/zzstoatzz) in [#4928](https://github.com/PrefectHQ/fastmcp/pull/4928)
+  * fix(middleware): align response limits with output schemas by [@zzstoatzz](https://github.com/zzstoatzz) in [#4931](https://github.com/PrefectHQ/fastmcp/pull/4931)
+  * Accept any issuer scoped to the Descope project by [@gaokevin1](https://github.com/gaokevin1) in [#4909](https://github.com/PrefectHQ/fastmcp/pull/4909)
+  * Fix response cache partitioning for versioned components by [@CoralGarden52](https://github.com/CoralGarden52) in [#4948](https://github.com/PrefectHQ/fastmcp/pull/4948)
+
+  ### Docs 📚
+
+  * Docs: forward-port v3.4.4 changelog entries by [@jlowin](https://github.com/jlowin) in [#4476](https://github.com/PrefectHQ/fastmcp/pull/4476)
+  * Document icon theme support by [@jlowin](https://github.com/jlowin) in [#4537](https://github.com/PrefectHQ/fastmcp/pull/4537)
+  * Add missing 4.0.0 version badge to Path Security docs by [@jlowin](https://github.com/jlowin) in [#4540](https://github.com/PrefectHQ/fastmcp/pull/4540)
+  * Align server component docs by [@strawgate](https://github.com/strawgate) in [#4260](https://github.com/PrefectHQ/fastmcp/pull/4260)
+  * Align CLI, deployment, and config docs by [@strawgate](https://github.com/strawgate) in [#4259](https://github.com/PrefectHQ/fastmcp/pull/4259)
+  * Align client, Apps, and integration docs by [@strawgate](https://github.com/strawgate) in [#4261](https://github.com/PrefectHQ/fastmcp/pull/4261)
+  * Fix stale MRTR/elicitation framing in client and upgrade docs by [@jlowin](https://github.com/jlowin) in [#4551](https://github.com/PrefectHQ/fastmcp/pull/4551)
+  * docs: quote pip extras install examples by [@RachGranville](https://github.com/RachGranville) in [#4568](https://github.com/PrefectHQ/fastmcp/pull/4568)
+  * Document Windows CI parallelism and the subprocess\_heavy marker by [@jlowin](https://github.com/jlowin) in [#4575](https://github.com/PrefectHQ/fastmcp/pull/4575)
+  * Document v3->v4 removals and add upgrade-reality tests by [@jlowin](https://github.com/jlowin) in [#4585](https://github.com/PrefectHQ/fastmcp/pull/4585)
+  * Archive v3 docs and publish v4 as the primary version by [@jlowin](https://github.com/jlowin) in [#4613](https://github.com/PrefectHQ/fastmcp/pull/4613)
+  * Document targeted v4 prerelease installation by [@zzstoatzz](https://github.com/zzstoatzz) in [#4598](https://github.com/PrefectHQ/fastmcp/pull/4598)
+  * Fix stale Mac/Windows-vs-Linux OAuth key/storage docs by [@jlowin](https://github.com/jlowin) in [#4617](https://github.com/PrefectHQ/fastmcp/pull/4617)
+  * v4 docs quality pass: stale task/era claims, broken links, polish by [@jlowin](https://github.com/jlowin) in [#4619](https://github.com/PrefectHQ/fastmcp/pull/4619)
+  * whats-new: add the argument completion capability by [@jlowin](https://github.com/jlowin) in [#4620](https://github.com/PrefectHQ/fastmcp/pull/4620)
+  * docs: fix ProxyProvider docstring example calling nonexistent with\_namespace() by [@andrew-stelmach-fleet](https://github.com/andrew-stelmach-fleet) in [#4633](https://github.com/PrefectHQ/fastmcp/pull/4633)
+  * Unpublish v4 development notes; prep docs for beta 1 by [@jlowin](https://github.com/jlowin) in [#4644](https://github.com/PrefectHQ/fastmcp/pull/4644)
+  * Expand the FAQ for the v4 transition by [@jlowin](https://github.com/jlowin) in [#4649](https://github.com/PrefectHQ/fastmcp/pull/4649)
+  * Document the issuer\_url identity change for upgraders by [@jlowin](https://github.com/jlowin) in [#4658](https://github.com/PrefectHQ/fastmcp/pull/4658)
+  * Cover require\_roles in the v4 highlights by [@jlowin](https://github.com/jlowin) in [#4666](https://github.com/PrefectHQ/fastmcp/pull/4666)
+  * Fix FAQ: sampling/roots/elicitation legacy-mode advice, SessionProvider registration by [@jlowin](https://github.com/jlowin) in [#4672](https://github.com/PrefectHQ/fastmcp/pull/4672)
+  * Audit v4 docs: fix missing version badges, fill whats-new gaps by [@jlowin](https://github.com/jlowin) in [#4668](https://github.com/PrefectHQ/fastmcp/pull/4668)
+  * Docs: add v3.4.5 changelog entries to main by [@jlowin](https://github.com/jlowin) in [#4674](https://github.com/PrefectHQ/fastmcp/pull/4674)
+  * Split the SDK upgrade guides by SDK version by [@jlowin](https://github.com/jlowin) in [#4684](https://github.com/PrefectHQ/fastmcp/pull/4684)
+  * Add v4.0.0b1 changelog and updates entries by [@jlowin](https://github.com/jlowin) in [#4681](https://github.com/PrefectHQ/fastmcp/pull/4681)
+  * Use mcp.types directly instead of aliasing to mcp\_types in docs by [@jlowin](https://github.com/jlowin) in [#4696](https://github.com/PrefectHQ/fastmcp/pull/4696)
+  * Rewrite the v4 What's New page and document server extensions by [@jlowin](https://github.com/jlowin) in [#4698](https://github.com/PrefectHQ/fastmcp/pull/4698)
+  * Improve the v4 docs by [@jlowin](https://github.com/jlowin) in [#4707](https://github.com/PrefectHQ/fastmcp/pull/4707)
+  * Rewrite the FastMCP docs welcome page by [@jlowin](https://github.com/jlowin) in [#4709](https://github.com/PrefectHQ/fastmcp/pull/4709)
+  * docs: clarify external OAuth consent mode by [@jlowin](https://github.com/jlowin) in [#4746](https://github.com/PrefectHQ/fastmcp/pull/4746)
+  * Docs: mirror v3.4.6 changelog entries by [@jlowin](https://github.com/jlowin) in [#4764](https://github.com/PrefectHQ/fastmcp/pull/4764)
+  * Document MCP protocol support and conformance by [@jlowin](https://github.com/jlowin) in [#4781](https://github.com/PrefectHQ/fastmcp/pull/4781)
+  * Docs language dropdown  by [@znicholasbrown](https://github.com/znicholasbrown) in [#4801](https://github.com/PrefectHQ/fastmcp/pull/4801)
+  * Docs: mirror v3.4.7 release notes by [@jlowin](https://github.com/jlowin) in [#4811](https://github.com/PrefectHQ/fastmcp/pull/4811)
+  * docs: prepare FastMCP 4 beta 3 by [@jlowin](https://github.com/jlowin) in [#4840](https://github.com/PrefectHQ/fastmcp/pull/4840)
+  * docs: add FastMCP 4 beta 3 release entries by [@jlowin](https://github.com/jlowin) in [#4841](https://github.com/PrefectHQ/fastmcp/pull/4841)
+  * docs: fix idempotent tool hint wording by [@Theater-ahyeon](https://github.com/Theater-ahyeon) in [#4875](https://github.com/PrefectHQ/fastmcp/pull/4875)
+  * docs: prepare FastMCP 4 beta 4 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4914](https://github.com/PrefectHQ/fastmcp/pull/4914)
+  * docs: fix beta 4 changelog MDX by [@zzstoatzz](https://github.com/zzstoatzz) in [#4916](https://github.com/PrefectHQ/fastmcp/pull/4916)
+  * docs: prepare FastMCP 4 beta 5 by [@zzstoatzz](https://github.com/zzstoatzz) in [#4934](https://github.com/PrefectHQ/fastmcp/pull/4934)
+  * docs: cover list\_tools and restore client modules in the SDK reference by [@zzstoatzz](https://github.com/zzstoatzz) in [#4936](https://github.com/PrefectHQ/fastmcp/pull/4936)
+  * docs: transport inference trust contract; trim SDK session-group comparison by [@zzstoatzz](https://github.com/zzstoatzz) in [#4940](https://github.com/PrefectHQ/fastmcp/pull/4940)
+
+  ### Dependencies 📦
+
+  * chore(deps): bump mcp from 1.26.0 to 1.27.2 in /examples/testing\_demo in the uv group across 1 directory by [@dependabot\[bot\]](https://github.com/dependabot\[bot]) in [#4514](https://github.com/PrefectHQ/fastmcp/pull/4514)
+  * chore(deps): bump actions/setup-node from 6 to 7 by [@dependabot\[bot\]](https://github.com/dependabot\[bot]) in [#4546](https://github.com/PrefectHQ/fastmcp/pull/4546)
+  * Bump actions/upload-artifact from 4 to 7 by [@dependabot\[bot\]](https://github.com/dependabot\[bot]) in [#4640](https://github.com/PrefectHQ/fastmcp/pull/4640)
+  * Bump actions/setup-python from 6 to 7 by [@dependabot\[bot\]](https://github.com/dependabot\[bot]) in [#4641](https://github.com/PrefectHQ/fastmcp/pull/4641)
+  * chore(deps): bump mcp from 1.27.2 to 1.28.1 in /examples/testing\_demo in the uv group across 1 directory by [@dependabot\[bot\]](https://github.com/dependabot\[bot]) in [#4614](https://github.com/PrefectHQ/fastmcp/pull/4614)
+
+  ### Other Changes 🦾
+
+  * Test: HTTP lifespan fires once per process across sessions by [@jlowin](https://github.com/jlowin) in [#4470](https://github.com/PrefectHQ/fastmcp/pull/4470)
+  * Fix static analysis with latest ty by [@zzstoatzz](https://github.com/zzstoatzz) in [#4739](https://github.com/PrefectHQ/fastmcp/pull/4739)
+  * Quote run-claude allowed tools argument by [@zzstoatzz](https://github.com/zzstoatzz) in [#4741](https://github.com/PrefectHQ/fastmcp/pull/4741)
+  * chore(deps): Update j178/prek-action action to v3 by [@prefect-renovate\[bot\]](https://github.com/prefect-renovate\[bot]) in [#4808](https://github.com/PrefectHQ/fastmcp/pull/4808)
+  * chore(deps): Update dependency node to v24 by [@prefect-renovate\[bot\]](https://github.com/prefect-renovate\[bot]) in [#4807](https://github.com/PrefectHQ/fastmcp/pull/4807)
+  * chore(deps): Update astral-sh/setup-uv action to v9 by [@prefect-renovate\[bot\]](https://github.com/prefect-renovate\[bot]) in [#4806](https://github.com/PrefectHQ/fastmcp/pull/4806)
+  * Fix proxy forwarding of MCP transport headers by [@jakekaplan](https://github.com/jakekaplan) in [#4853](https://github.com/PrefectHQ/fastmcp/pull/4853)
+  * Add FastMCP security report review skill by [@zzstoatzz](https://github.com/zzstoatzz) in [#4859](https://github.com/PrefectHQ/fastmcp/pull/4859)
+
+  ## New Contributors
+
+  * @syf2211 made their first contribution in [#4502](https://github.com/PrefectHQ/fastmcp/pull/4502)
+  * @earfman made their first contribution in [#4517](https://github.com/PrefectHQ/fastmcp/pull/4517)
+  * @winklemad made their first contribution in [#4492](https://github.com/PrefectHQ/fastmcp/pull/4492)
+  * @verdie-g made their first contribution in [#4512](https://github.com/PrefectHQ/fastmcp/pull/4512)
+  * @vijaydeepsinha made their first contribution in [#4411](https://github.com/PrefectHQ/fastmcp/pull/4411)
+  * @piaudonn made their first contribution in [#4267](https://github.com/PrefectHQ/fastmcp/pull/4267)
+  * @szepeviktor made their first contribution in [#4498](https://github.com/PrefectHQ/fastmcp/pull/4498)
+  * @endofcake made their first contribution in [#4412](https://github.com/PrefectHQ/fastmcp/pull/4412)
+  * @Kludex made their first contribution in [#4564](https://github.com/PrefectHQ/fastmcp/pull/4564)
+  * @RachGranville made their first contribution in [#4568](https://github.com/PrefectHQ/fastmcp/pull/4568)
+  * @hxaxd made their first contribution in [#4533](https://github.com/PrefectHQ/fastmcp/pull/4533)
+  * @VectorPeak made their first contribution in [#4531](https://github.com/PrefectHQ/fastmcp/pull/4531)
+  * @LarryHu0217 made their first contribution in [#4587](https://github.com/PrefectHQ/fastmcp/pull/4587)
+  * @andrew-stelmach-fleet made their first contribution in [#4633](https://github.com/PrefectHQ/fastmcp/pull/4633)
+  * @Aman071106 made their first contribution in [#4628](https://github.com/PrefectHQ/fastmcp/pull/4628)
+  * @ShuyingZhang made their first contribution in [#4639](https://github.com/PrefectHQ/fastmcp/pull/4639)
+  * @Educg550 made their first contribution in [#4660](https://github.com/PrefectHQ/fastmcp/pull/4660)
+  * @znicholasbrown made their first contribution in [#4716](https://github.com/PrefectHQ/fastmcp/pull/4716)
+  * @YAO-001 made their first contribution in [#4704](https://github.com/PrefectHQ/fastmcp/pull/4704)
+  * @StykMartin made their first contribution in [#4719](https://github.com/PrefectHQ/fastmcp/pull/4719)
+  * @LHMQ878 made their first contribution in [#4738](https://github.com/PrefectHQ/fastmcp/pull/4738)
+  * @SaiMouli3 made their first contribution in [#4705](https://github.com/PrefectHQ/fastmcp/pull/4705)
+  * @yonatangross made their first contribution in [#4774](https://github.com/PrefectHQ/fastmcp/pull/4774)
+  * @jamiezieziula made their first contribution in [#4754](https://github.com/PrefectHQ/fastmcp/pull/4754)
+  * @parkedwards made their first contribution in [#4785](https://github.com/PrefectHQ/fastmcp/pull/4785)
+  * @trevhud made their first contribution in [#4818](https://github.com/PrefectHQ/fastmcp/pull/4818)
+  * @prefect-renovate\[bot] made their first contribution in [#4808](https://github.com/PrefectHQ/fastmcp/pull/4808)
+  * @craigie-ant made their first contribution in [#4864](https://github.com/PrefectHQ/fastmcp/pull/4864)
+  * @Theater-ahyeon made their first contribution in [#4875](https://github.com/PrefectHQ/fastmcp/pull/4875)
+  * @TyceHerrman made their first contribution in [#4912](https://github.com/PrefectHQ/fastmcp/pull/4912)
+  * @CoralGarden52 made their first contribution in [#4948](https://github.com/PrefectHQ/fastmcp/pull/4948)
+
+  **Full Changelog**: [v3.4.7...v4.0.0](https://github.com/PrefectHQ/fastmcp/compare/v3.4.7...v4.0.0)
+</Update>
 
 <Update label="v4.0.0b5" description="2026-08-28">
   **[v4.0.0b5: Group Effourt](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b5)**
@@ -31075,6 +31475,7 @@ Our test organization mirrors the source package structure, creating a predictab
 We use pytest markers to categorize tests that require special resources or take longer to run:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 @pytest.mark.integration
 async def test_github_api_integration():
     """Test GitHub API integration with real service."""
@@ -31091,7 +31492,7 @@ async def test_github_api_integration():
 async def test_stdio_transport():
     """Test STDIO transport with separate process."""
     # This spawns a subprocess
-    async with Client("python examples/simple_echo.py") as client:
+    async with Client(Path("examples/simple_echo.py")) as client:
         result = await client.call_tool("echo", {"message": "test"})
         assert result.content[0].text == "test"
 ```
@@ -31991,25 +32392,22 @@ FastMCP 4 absorbs almost all of this for you. Field access is bridged so your ex
 
 The sections below cover what FastMCP handles for you, the changes you must make in your own code, the surfaces removed outright in 4.0, the behavior shifts that compile fine but act differently, and the deprecation timeline for the compatibility shims.
 
-## Install the v4 Prerelease
+## Install FastMCP 4
 
-While FastMCP 4 is in prerelease, pin the beta explicitly. The `fastmcp` package is a thin wrapper that depends on `fastmcp-slim` at the same version, so asking for a prerelease of one means asking for a prerelease of the other. pip infers that on its own:
+FastMCP 4 is a stable release:
 
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-pip install "fastmcp==4.0.0b4"
+pip install "fastmcp>=4"
 ```
 
-uv is stricter: it allows prereleases only for packages you name, and `fastmcp-slim` arrives transitively. Constrain it alongside the requirement in `pyproject.toml`:
+Or in `pyproject.toml`:
 
 ```toml theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 [project]
-dependencies = ["fastmcp==4.0.0b4"]
-
-[tool.uv]
-constraint-dependencies = ["fastmcp-slim==4.0.0b4"]
+dependencies = ["fastmcp>=4"]
 ```
 
-Then run `uv lock` or `uv sync` normally. Naming the one package keeps the rest of your graph on stable releases, where `--prerelease allow` would opt every dependency into prereleases. The MCP SDK needs no constraint at all now that it ships stable releases — pinning `mcp==2.0.0b2` here would in fact break the resolution, since a prerelease does not satisfy FastMCP's own `mcp>=2.0.0` requirement.
+The `fastmcp` package is a thin wrapper that depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
 
 <Prompt description="Copy this prompt into any LLM along with your server code to get automated upgrade guidance.">
   You are upgrading an MCP server or client from FastMCP 3.x to FastMCP 4, which is built on the MCP Python SDK v2.
@@ -32030,7 +32428,7 @@ Then run `uv lock` or `uv sync` normally. Naming the one package keeps the rest 
   * `fastmcp.experimental.sampling.handlers`
   * `fastmcp.server.apps`, `fastmcp.server.app`
   * `fastmcp.tools.tool`, `fastmcp.resources.resource`, `fastmcp.prompts.prompt`
-  * `fastmcp.server.tasks`, `fastmcp.server.sampling`
+  * `fastmcp.server.tasks` (`TaskConfig` now imports from `fastmcp.utilities.tasks`), `fastmcp.server.sampling`
   * `fastmcp.server.auth.authorization`
   * `CurrentDocket` or `CurrentWorker` from `fastmcp.dependencies`
   * `SkillsProvider`
@@ -32067,6 +32465,7 @@ Then run `uv lock` or `uv sync` normally. Naming the one package keeps the rest 
   * clients matching on the resource-not-found error code -32002
   * templated resources whose parameters legitimately carry `..` or absolute paths
   * an OAuth server (`OAuthProxy` or anything built on it) with `issuer_url` set to something other than `base_url` — this forces a one-time re-authorization of every client
+  * `Client("server.py")` or any bare string path handed to `Client` — inferring a stdio transport from a string is deprecated, warns, and is removed in FastMCP 5; pass `Path(...)` or `StdioTransport`
 
   BACKGROUND TASKS
 
@@ -32096,16 +32495,17 @@ The SDK v2 raises FastMCP's dependency floors, which matters before any of your 
 Objects that FastMCP hands back to you — the results of `client.list_tools()`, `client.call_tool_mcp()`, `client.read_resource()`, and the parameter objects passed to your sampling and elicitation handlers — are SDK v2 objects with snake\_case fields. FastMCP installs a compatibility bridge at import time that routes the old camelCase names to their new snake\_case fields, so code written against FastMCP 2.x still reads correctly:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 
 
 async def read_schema():
-    async with Client("my_mcp_server.py") as client:
+    async with Client(Path("my_mcp_server.py")) as client:
         tools = await client.list_tools()
         return tools[0].inputSchema  # still works, warns once
 ```
 
-Each bridged read emits a `FastMCPDeprecationWarning` pointing you at the snake\_case name (`tools[0].input_schema` here). The bridge covers the fields users actually read: `inputSchema`/`outputSchema` on tools; `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint` on tool annotations; `mimeType` on resources and content; `isError`/`structuredContent` on tool results; `nextCursor` on paginated results; `serverInfo`/`protocolVersion` on the initialize result; the sampling parameter fields (`systemPrompt`, `maxTokens`, `stopSequences`, `modelPreferences`, `toolChoice`); and `requestedSchema` on elicitation parameters.
+Each bridged read emits a `FastMCPDeprecationWarning` pointing you at the snake\_case name (`tools[0].input_schema` here). The bridge covers the fields users actually read: `inputSchema`/`outputSchema` on tools; `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint` on tool annotations; `mimeType` on resources and content; `isError`/`structuredContent` on tool results; `nextCursor` on paginated results; `serverInfo`/`protocolVersion` on the initialize result; the sampling parameter fields (`systemPrompt`, `maxTokens`, `stopSequences`, `modelPreferences`, `toolChoice`); `requestedSchema` on elicitation parameters; `hasMore` and `resourceTemplates` on list results; and `uriTemplate` on resource templates.
 
 The bridge is controlled by the `mcp_camelcase_compat` setting, which defaults to on. Set it to `False` (or the environment variable `FASTMCP_MCP_CAMELCASE_COMPAT=false`) to turn the shims off, in which case only the snake\_case names resolve:
 
@@ -32125,7 +32525,7 @@ Every protocol type — `TextContent`, `ImageContent`, `Tool`, `ErrorData`, `Ico
 from mcp.types import TextContent, Tool, ToolAnnotations
 ```
 
-Both names resolve to the same objects, so `from mcp_types import X` is equally valid — useful if you depend on the types without the rest of the SDK. What did change is the fields on those types: they are snake\_case now (`input_schema`, not `inputSchema`), which the [compatibility bridge](#legacy-camelcase-field-access-keeps-working) covers for the objects FastMCP hands you.
+Both names resolve to the same objects, so `from mcp_types import X` is equally valid — useful if you depend on the types without the rest of the SDK. What did change is the fields on those types: they are snake\_case now (`input_schema`, not `inputSchema`), which the [compatibility bridge](#camelcase-field-access) covers for the objects FastMCP hands you.
 
 `fastmcp.types` still exists, but holds only types FastMCP defines itself (currently just `Textarea`, used to render a multiline textarea in form-based UIs) — it does not re-export protocol types.
 
@@ -32147,7 +32547,7 @@ except McpError as err:
 A few client behaviors that touch the SDK are preserved so you don't have to change anything:
 
 * `Client(timeout=...)` accepts both a `timedelta` and a plain float number of seconds, as before.
-* `client.ping()` returns a `bool`.
+* `client.ping()` returns a `bool` on handshake-era connections. On the sessionless `2026-07-28` era `ping` is not routed and raises `MCPError: Method not found` — pin `mode="legacy"` if your health checks depend on it.
 * `client.transport.get_session_id()` returns `None` on protocol eras that have no session, rather than raising. (The SDK v2 removed session-id access from its streamable HTTP transport; FastMCP reconstructs it on the transport object.)
 
 ## What You Must Change
@@ -32244,7 +32644,7 @@ The proxy, OpenAPI, and app integrations moved to their permanent homes, and the
 | `CurrentDocket` / `CurrentWorker` from `fastmcp.dependencies`                                                                                  | `fastmcp_tasks.dependencies`                                                |
 | `fastmcp.server.sampling` (and `SamplingTool`)                                                                                                 | removed with [server-side sampling](#protocol-version-support)              |
 
-Two renames in the same family are worth calling out because they have no compatibility alias. The response-caching wrapper models lost a spelling typo — `CachableToolResult`, `CachablePromptResult`, and their siblings became `CacheableToolResult`, `CacheablePromptResult`, etc. — so an import of the old spelling from `fastmcp.server.middleware.caching` raises `ImportError`. And `PromptToolMiddleware` / `ResourceToolMiddleware` are gone in favor of the `PromptsAsTools` / `ResourcesAsTools` transforms from `fastmcp.server.transforms` (the `ToolInjectionMiddleware` base class is retained).
+Two renames in the same family are worth calling out because they have no compatibility alias. The response-caching wrapper models lost a spelling typo — `CachableToolResult`, `CachablePromptResult`, and their siblings became `CacheableToolResult`, `CacheablePromptResult`, etc. — so an import of the old spelling from `fastmcp.server.middleware.caching` raises `ImportError`. And `PromptToolMiddleware` / `ResourceToolMiddleware` are gone in favor of the `PromptsAsTools` / `ResourcesAsTools` transforms from `fastmcp.server.transforms` (the `ToolInjectionMiddleware` base class is retained at `fastmcp.server.middleware.tool_injection`).
 
 ### Removed Server Methods
 
@@ -32257,7 +32657,7 @@ These `FastMCP` methods and keywords have warned since 3.0 and are now removed:
 | `mcp.mount(sub, prefix="x")`             | `mcp.mount(sub, namespace="x")`                                  |
 | `mcp.mount(sub, as_proxy=True)`          | wrap with `create_proxy(sub)`, then `mount` the proxy            |
 | `mcp.add_tool_transformation(name, cfg)` | `mcp.add_transform(ToolTransform({name: cfg}))`                  |
-| `mcp.remove_tool_transformation(name)`   | removed (was a no-op); hide tools with `mcp.disable(keys=[...])` |
+| `mcp.remove_tool_transformation(name)`   | removed (was a no-op); hide tools with `mcp.disable(keys={...})` |
 | `mcp.remove_tool(name)`                  | `mcp.local_provider.remove_tool(name)`                           |
 
 Two of these replacements are not exact behavioral swaps. `create_proxy` takes its target as the first positional argument (`target`), so a keyword call like `as_proxy(backend=server)` becomes `create_proxy(server)` rather than reusing the old keyword. And `local_provider.remove_tool` raises a plain `KeyError` when the tool is missing, where `FastMCP.remove_tool` raised a `NotFoundError` — update any `except NotFoundError` cleanup around a removal.
@@ -32290,17 +32690,11 @@ Several parameters and settings that warned in 3.x are gone:
 
 Background tasks left the core MCP spec during the SDK v2 rebuild and came back as the `io.modelcontextprotocol/tasks` extension (SEP-2663). FastMCP follows the protocol: what was a built-in server feature in 3.x is now a registered extension, and the authoring surface changed on both sides of the connection.
 
-The extension ships in a separate package, so the pin from [Install the v4 Prerelease](#install-the-v4-prerelease) needs one more entry before any of this imports:
+The extension ships in a separate package — install the `tasks` extra before any of this imports:
 
 ```toml theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 [project]
-dependencies = ["fastmcp[tasks]==4.0.0b4"]
-
-[tool.uv]
-constraint-dependencies = [
-    "fastmcp-slim==4.0.0b4",
-    "fastmcp-tasks==4.0.0b4",
-]
+dependencies = ["fastmcp[tasks]>=4"]
 ```
 
 On the server, `task=True` still marks a tool as capable of running in the background, but it no longer runs anything by itself — the extension does. Register it, or the server refuses to start:
@@ -32323,6 +32717,8 @@ Without the registration, a `task=True` tool raises at startup rather than the f
 ```
 RuntimeError: Task-enabled tools (slow_computation) require the tasks extension,
 but no extension with identifier 'io.modelcontextprotocol/tasks' is registered.
+Install it with `pip install 'fastmcp[tasks]'` and register it via
+`mcp.add_extension(TasksExtension(...))`.
 ```
 
 `TaskConfig` moved from `fastmcp.server.tasks` to `fastmcp.utilities.tasks`, and the `CurrentDocket` and `CurrentWorker` dependencies moved to `fastmcp_tasks.dependencies`.
@@ -32367,6 +32763,15 @@ ToolError: elicitation via server-initiated requests is unavailable on 2026-07-2
 ```
 
 The gate is strict in both directions, which is what makes it debuggable: a guard tool that returns an input request on a handshake connection raises the mirror-image error rather than misbehaving quietly. You have three ways forward. Rewrite the tool as a guard tool that *returns* a description of the input it needs, which is the form that works on modern connections. Branch on `ctx.request_context.protocol_version` and keep both paths if you serve both eras. Or keep this server's clients on the handshake era with `Client(server, mode="legacy")`, which leaves `ctx.elicit()` working as written. See [Elicitation](/servers/elicitation#which-approach-to-use) for the two shapes side by side.
+
+**`Client("server.py")` warns.** Inferring a stdio transport from a string is deprecated and will be removed in FastMCP 5, when a string will only ever mean a URL. Today a string that names an existing `.py` or `.js` file still starts that script, but emits a `FastMCPDeprecationWarning`. Pass a `pathlib.Path` to say explicitly that the value is a script, or build a `StdioTransport`:
+
+```python test="skip" theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+from fastmcp import Client
+
+client = Client(Path("server.py"))
+```
 
 **Middleware sees traffic it never saw before.** Dispatch now begins in the SDK's middleware layer, the single point every inbound message passes through, so `on_message`, `on_request`, and `on_notification` observe *every* message a client sends — including `notifications/cancelled`, `notifications/initialized`, and `notifications/progress`, and including requests that fail before reaching a handler, such as an unknown method or a `tools/call` whose params fail validation. In 3.x those never reached your hooks. Middleware that assumed every message it saw was a routable request, or that counted messages to measure tool traffic, needs a guard on the message type. The operation hooks (`on_call_tool`, `on_list_tools`, and the rest) are unaffected: they still fire exactly once per request and still receive typed component results. See [What middleware sees](/servers/middleware#what-middleware-sees).
 
@@ -32526,13 +32931,13 @@ Both directions are reasonable, and the choice is about which code you'd rather 
 
 ## Install
 
-FastMCP 4 is in prerelease, so pin the exact version rather than installing unqualified — a bare `pip install fastmcp` resolves to the latest *stable* release, which today is FastMCP 3:
+FastMCP 4 is a stable release:
 
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-pip install "fastmcp==4.0.0b4"
+pip install "fastmcp>=4"
 ```
 
-An exact pip pin installs even though it's a prerelease; it does not need `--pre`. uv also needs an explicit constraint for the transitive `fastmcp-slim` prerelease, so follow [Install the v4 Prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease) for a reproducible uv setup.
+The `fastmcp` package depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
 
 FastMCP depends on the `mcp` package, so the SDK stays installed. FastMCP 4 builds on SDK v2, where the protocol types live in a standalone `mcp_types` package that stays importable as `mcp.types`. Most of your `mcp.types` imports disappear entirely in the rewrite below, since FastMCP derives the protocol types from your function signatures.
 
@@ -33125,13 +33530,13 @@ Migrating from SDK v2 is the most direct of the four upgrade paths, because you 
 
 ## Install
 
-FastMCP 4 is in prerelease, so pin the exact version rather than installing unqualified — a bare `pip install fastmcp` resolves to the latest *stable* release, which today is FastMCP 3:
+FastMCP 4 is a stable release:
 
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-pip install "fastmcp==4.0.0b4"
+pip install "fastmcp>=4"
 ```
 
-An exact pip pin installs even though it's a prerelease; it does not need `--pre`. uv also needs an explicit constraint for the transitive `fastmcp-slim` prerelease, so follow [Install the v4 Prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease) for a reproducible uv setup.
+The `fastmcp` package depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
 
 FastMCP 4 depends on the MCP SDK v2 you are already using, so `mcp_types` stays importable and every protocol type keeps its current name and fields. Most of those imports vanish from your code anyway — FastMCP derives them — but the ones you keep need no changes.
 
@@ -33718,13 +34123,13 @@ If you have already moved to SDK v2 and write against `MCPServer` today, see [Up
 
 ## Install
 
-FastMCP 4 is in prerelease, so pin the exact version rather than installing unqualified — a bare `pip install fastmcp` resolves to the latest *stable* release, which today is FastMCP 3:
+FastMCP 4 is a stable release:
 
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-pip install "fastmcp==4.0.0b4"
+pip install "fastmcp>=4"
 ```
 
-An exact pip pin installs even though it's a prerelease; it does not need `--pre`. uv also needs an explicit constraint for the transitive `fastmcp-slim` prerelease, so follow [Install the v4 Prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease) for a reproducible uv setup.
+The `fastmcp` package depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
 
 FastMCP depends on the `mcp` package, so the SDK stays installed and importable. What changes is which parts of it you reach for. FastMCP 4 builds on SDK v2, where `mcp.server.fastmcp` is gone — anything you imported from it needs a new home, and the sections below cover that. `mcp.types` still resolves (it aliases the standalone `mcp_types` package), though its fields are snake\_case now. Update your import, run your server, and if your tools work, you're done.
 
@@ -34033,13 +34438,13 @@ That resemblance is not a coincidence. `MCPServer` is the SDK's successor to Fas
 
 ## Install
 
-FastMCP 4 is in prerelease, so pin the exact version rather than installing unqualified — a bare `pip install fastmcp` resolves to the latest *stable* release, which today is FastMCP 3:
+FastMCP 4 is a stable release:
 
 ```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-pip install "fastmcp==4.0.0b4"
+pip install "fastmcp>=4"
 ```
 
-An exact pip pin installs even though it's a prerelease; it does not need `--pre`. uv also needs an explicit constraint for the transitive `fastmcp-slim` prerelease, so follow [Install the v4 Prerelease](/getting-started/upgrading/from-fastmcp-3#install-the-v4-prerelease) for a reproducible uv setup.
+The `fastmcp` package depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
 
 FastMCP 4 depends on the MCP SDK v2, so nothing you already import from `mcp_types` moves. That is the practical benefit of migrating at this version rather than an earlier one: you and FastMCP are on the same protocol layer, with the same snake\_case field names and the same type package, so the migration touches only the server API.
 
@@ -35888,11 +36293,12 @@ export GEMINI_API_KEY="your-api-key"
 Gemini's SDK interacts directly with the MCP client session. To call the server, you'll need to instantiate a FastMCP client, enter its connection context, and pass the client session to the Gemini SDK.
 
 ```python {5, 9, 15} theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from fastmcp import Client
 from google import genai
 import asyncio
 
-mcp_client = Client("server.py")
+mcp_client = Client(Path("server.py"))
 gemini_client = genai.Client()
 
 async def main():    
@@ -37755,10 +38161,11 @@ For [SSE](/clients/transports#sse-transport), use a `/sse` URL instead.
 To launch a FastMCP server as a subprocess, pass a script path and the toolset will use the [STDIO transport](/clients/transports#stdio-transport).
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
 from pydantic_ai import Agent
 from pydantic_ai.toolsets.fastmcp import FastMCPToolset
 
-toolset = FastMCPToolset("server.py")
+toolset = FastMCPToolset(Path("server.py"))
 agent = Agent("openai:gpt-4.1", toolsets=[toolset])
 ```
 
@@ -41601,12 +42008,15 @@ Each client retains its own transport, session, capabilities, and protocol
 version. The group only combines tool discovery and routes tool calls.
 
 Callers may manage the clients' connections themselves or use the group as
-a convenience context manager. Entering an already-connected FastMCP client
-is safe because client contexts are reference counted.
+a convenience context manager. The group's context is reentrant in the
+same way a client's is: entries are reference counted, the first entry
+connects every client, and the last exit disconnects them. Entering an
+already-connected FastMCP client is likewise safe because client contexts
+are reference counted.
 
 **Methods:**
 
-#### `clients` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L53"><Icon icon="github" /></a></sup>
+#### `clients` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L58"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 clients(self) -> Mapping[str, Client[Any]]
@@ -41618,7 +42028,7 @@ Read-only: membership is fixed at construction, since discovered routes
 hold the client that advertised each tool and would silently go stale
 if the mapping were swapped underneath them.
 
-#### `from_config` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L63"><Icon icon="github" /></a></sup>
+#### `from_config` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L68"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from_config(cls, config: MCPConfig | dict[str, Any]) -> ClientGroup
@@ -41629,13 +42039,13 @@ Create one independent client for each configured server.
 A server entry may include a FastMCP-specific `mode` field. It applies
 only to that server; entries without one use `default_mode`.
 
-#### `protocol_versions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L88"><Icon icon="github" /></a></sup>
+#### `protocol_versions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L93"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 protocol_versions(self) -> dict[str, str | None]
 ```
 
-#### `list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L152"><Icon icon="github" /></a></sup>
+#### `list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L161"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 list_tools(self) -> list[mcp_types.Tool]
@@ -41649,7 +42059,7 @@ defaults to `cache_mode="refresh"`: a client-side response cache
 what every server advertises now. Pass `cache_mode="use"` to allow
 cache hits when staleness within the server's hint is acceptable.
 
-#### `resolve_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L189"><Icon icon="github" /></a></sup>
+#### `resolve_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L198"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 resolve_tool(self, name: str) -> ToolRoute
@@ -41662,7 +42072,7 @@ server does not couple failures onto calls routed to healthy servers.
 Loading the catalog (the first resolution, or after a refresh) still
 requires every client, since discovery queries them all.
 
-#### `call_tool_mcp` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L224"><Icon icon="github" /></a></sup>
+#### `call_tool_mcp` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L233"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 call_tool_mcp(self, name: str, arguments: dict[str, Any] | None = None) -> mcp_types.CallToolResult
@@ -41670,7 +42080,7 @@ call_tool_mcp(self, name: str, arguments: dict[str, Any] | None = None) -> mcp_t
 
 Call a namespaced tool and return its raw MCP result.
 
-#### `call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L243"><Icon icon="github" /></a></sup>
+#### `call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/group.py#L252"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> CallToolResult
@@ -42966,6 +43376,42 @@ Source: https://gofastmcp.com/updates
 
 
 
+<Update label="FastMCP 4.0.3" description="September 4, 2026">
+  <Card title="FastMCP v4.0.3: Once Is Enough" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3">
+    Multi-server clients with legacy-only backends now avoid unnecessary startup retries, and tools returning unconstrained sequences no longer send images twice. This patch also fixes task timing values rejected by strict clients and cleans up unfinished Monty callbacks when execution ends.
+  </Card>
+</Update>
+
+<Update label="FastMCP 4.0.2" description="September 2, 2026">
+  <Card title="FastMCP v4.0.2: Root Access" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.2">
+    `ClientGroup` is now importable from the package root, `from fastmcp import ClientGroup`, with the same lazy export and install hint as `Client`, so integrations no longer couple to FastMCP's internal module layout.
+  </Card>
+</Update>
+
+<Update label="FastMCP 4.0.1" description="September 1, 2026">
+  <Card title="FastMCP v4.0.1: Come Back Any Time" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.1">
+    `ClientGroup` is now reentrant like `Client`: nested or concurrent entries reuse the group's connections, and only the last exit closes them.
+  </Card>
+</Update>
+
+<Update label="FastMCP 4.0.0" description="August 31, 2026">
+  <Card title="FastMCP v4.0.0: Four Real" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0">
+    FastMCP 4 is stable: the FastMCP release for the new MCP protocol and the rewritten Python SDK v2, with old-protocol clients supported through per-connection negotiation. Read the announcement: [FastMCP 4 is GA](https://blog.gofastmcp.com/3mufbh2vcv22o).
+
+    🌐 **Every protocol era** — one deployment serves `2026-07-28` and legacy clients; `Client(url)` negotiates from the other side.
+
+    🔁 **Interactive tools** — tools request follow-up input across complete request-response rounds.
+
+    ⚙️ **Background tasks** — `@mcp.tool(task=True)` via the `io.modelcontextprotocol/tasks` extension in the optional `fastmcp-tasks` package.
+
+    🧩 **Extensions** — `add_extension()` registers capability-negotiated protocol extensions with their own methods and lifespan.
+
+    💉 **Dependency injection** — `Depends` + `CallArgument` bind dependencies to call arguments while keeping them out of tool schemas.
+
+    🤝 **Client groups** — `ClientGroup` manages one client per server with collision-checked namespacing.
+  </Card>
+</Update>
+
 <Update label="FastMCP 4.0.0b5" description="August 28, 2026">
   <Card title="FastMCP v4.0.0b5: Group Effourt" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b5">
     FastMCP 4 beta 5 introduces client groups: coordinate several independent MCP server connections through one tool catalog, without a proxy in the middle.
@@ -43758,7 +44204,7 @@ legacy backend moves every leg to the handshake era.
 connect_session(self, **session_kwargs: Unpack[SessionKwargs]) -> AsyncIterator[ClientSession]
 ```
 
-#### `close` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/transports/config.py#L329"><Icon icon="github" /></a></sup>
+#### `close` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/transports/config.py#L393"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 close(self)
@@ -43810,7 +44256,7 @@ Source: https://gofastmcp.com/python-sdk/fastmcp-client-transports-inference
 
 ## Functions
 
-### `infer_transport` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/transports/inference.py#L65"><Icon icon="github" /></a></sup>
+### `infer_transport` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/transports/inference.py#L88"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 infer_transport(transport: ClientTransport | FastMCP | SDKServer | AnyUrl | Path | MCPConfig | dict[str, Any] | str) -> ClientTransport
@@ -43826,8 +44272,10 @@ The function supports these input types:
 
 * ClientTransport: Used directly without modification
 * FastMCP or SDKServer: Creates an in-memory FastMCPTransport
-* Path or str (file path): Creates PythonStdioTransport (.py) or NodeStdioTransport (.js)
-* AnyUrl or str (URL): Creates StreamableHttpTransport (default) or SSETransport (for /sse endpoints)
+* Path: Creates PythonStdioTransport (.py) or NodeStdioTransport (.js)
+* AnyUrl or str (URL): Creates StreamableHttpTransport (default) or SSETransport (for /sse endpoints).
+  A str naming an existing .py or .js file still infers a stdio transport but
+  emits a FastMCPDeprecationWarning; pass a Path instead.
 * MCPConfig or dict: Creates MCPConfigTransport, potentially connecting to multiple servers
 
 For HTTP URLs, they are assumed to be Streamable HTTP URLs unless they end in `/sse`.
@@ -43842,7 +44290,7 @@ If the MCPConfig contains only one server, a direct connection is established wi
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 # Connect to a local Python script
-transport = infer_transport("my_script.py")
+transport = infer_transport(Path("my_script.py"))
 
 # Connect to a remote server via HTTP
 transport = infer_transport("http://example.com/mcp")
@@ -43986,7 +44434,7 @@ Source: https://gofastmcp.com/python-sdk/fastmcp-experimental-transforms-code_mo
 
 ## Classes
 
-### `SandboxProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L77"><Icon icon="github" /></a></sup>
+### `SandboxProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L78"><Icon icon="github" /></a></sup>
 
 Interface for executing LLM-generated Python code in a sandbox.
 
@@ -43997,13 +44445,13 @@ sandbox — never with plain `exec()`.  Use `MontySandboxProvider`
 
 **Methods:**
 
-#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L86"><Icon icon="github" /></a></sup>
+#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L87"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 run(self, code: str) -> Any
 ```
 
-### `MontySandboxProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L114"><Icon icon="github" /></a></sup>
+### `MontySandboxProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L115"><Icon icon="github" /></a></sup>
 
 Sandbox provider backed by `pydantic-monty`.
 
@@ -44023,13 +44471,13 @@ to set your own.
 
 **Methods:**
 
-#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L143"><Icon icon="github" /></a></sup>
+#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L144"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 run(self, code: str) -> Any
 ```
 
-### `Search` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L238"><Icon icon="github" /></a></sup>
+### `Search` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L269"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that searches the catalog by query.
 
@@ -44045,7 +44493,7 @@ Discovery tool factory that searches the catalog by query.
 * `default_limit`: Maximum number of results to return.
   The LLM can override this per call.  `None` means no limit.
 
-### `GetSchemas` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L320"><Icon icon="github" /></a></sup>
+### `GetSchemas` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L351"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that returns schemas for tools by name.
 
@@ -44058,7 +44506,7 @@ Discovery tool factory that returns schemas for tools by name.
   types, and required markers.
   `"full"` returns the complete JSON schema.
 
-### `GetTags` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L381"><Icon icon="github" /></a></sup>
+### `GetTags` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L412"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that lists tool tags from the catalog.
 
@@ -44072,7 +44520,7 @@ without tags appear under `"untagged"`.
   `"brief"` returns tag names with tool counts.
   `"full"` lists all tools under each tag.
 
-### `ListTools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L448"><Icon icon="github" /></a></sup>
+### `ListTools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L479"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that lists all tools in the catalog.
 
@@ -44084,7 +44532,7 @@ Discovery tool factory that lists all tools in the catalog.
   `"detailed"` returns compact markdown with parameter schemas.
   `"full"` returns the complete JSON schema.
 
-### `CodeMode` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L497"><Icon icon="github" /></a></sup>
+### `CodeMode` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L528"><Icon icon="github" /></a></sup>
 
 Transform that collapses all tools into discovery + execute meta-tools.
 
@@ -44099,13 +44547,13 @@ environment with `call_tool(name, params)` in scope.
 
 **Methods:**
 
-#### `transform_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L549"><Icon icon="github" /></a></sup>
+#### `transform_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L580"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 transform_tools(self, tools: Sequence[Tool]) -> Sequence[Tool]
 ```
 
-#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L552"><Icon icon="github" /></a></sup>
+#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L583"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_tool(self, name: str, call_next: GetToolNext) -> Tool | None
@@ -47286,14 +47734,19 @@ for seamless MCP client authentication.
 
 ## Classes
 
-### `DescopeProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/descope.py#L79"><Icon icon="github" /></a></sup>
+### `DescopeProvider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/descope.py#L124"><Icon icon="github" /></a></sup>
 
 Descope metadata provider for Dynamic Client Registration (DCR).
 
 The provider accepts either a resource-specific Descope MCP Server URL such
 as `/v1/apps/agentic/P.../M.../.well-known/openid-configuration` or a
 project-level inbound app URL such as
-`/v1/apps/P.../.well-known/openid-configuration`.
+`/v1/apps/P.../.well-known/openid-configuration`. The project-level URL is
+the recommended configuration.
+
+Tokens are accepted from any issuer the project mints: the project-level
+issuer, the resource-scoped issuer of an MCP server, and the tenant-scoped
+issuer used by cross-app access (XAA).
 
 When neither `scopes_supported` nor `required_scopes` is provided, advertised
 scopes are discovered lazily from the OpenID configuration. Use
@@ -47305,7 +47758,7 @@ for DCR setup instructions.
 
 **Methods:**
 
-#### `get_routes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/descope.py#L267"><Icon icon="github" /></a></sup>
+#### `get_routes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/descope.py#L324"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_routes(self, mcp_path: str | None = None) -> list[Route]
@@ -47803,7 +48256,7 @@ Use this when:
 
 **Methods:**
 
-#### `load_access_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L485"><Icon icon="github" /></a></sup>
+#### `load_access_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L497"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 load_access_token(self, token: str) -> AccessToken | None
@@ -47819,7 +48272,7 @@ Validate a JWT bearer token and return an AccessToken when the token is valid.
 
 * AccessToken | None: An AccessToken populated from token claims if the token is valid; `None` if the token is expired, has an invalid signature or format, fails issuer/audience/scope validation, or any other validation error occurs.
 
-#### `verify_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L628"><Icon icon="github" /></a></sup>
+#### `verify_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L631"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 verify_token(self, token: str) -> AccessToken | None
@@ -47838,7 +48291,7 @@ to our existing load\_access\_token method.
 
 * AccessToken object if valid, None if invalid or expired
 
-### `StaticTokenVerifier` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L644"><Icon icon="github" /></a></sup>
+### `StaticTokenVerifier` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L647"><Icon icon="github" /></a></sup>
 
 Simple static token verifier for testing and development.
 
@@ -47858,7 +48311,7 @@ WARNING: Never use this in production - tokens are stored in plain text!
 
 **Methods:**
 
-#### `verify_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L678"><Icon icon="github" /></a></sup>
+#### `verify_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/providers/jwt.py#L681"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 verify_token(self, token: str) -> AccessToken | None
@@ -50879,109 +51332,109 @@ A middleware for response caching.
 
 ## Classes
 
-### `CacheableResourceContent` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L85"><Icon icon="github" /></a></sup>
+### `CacheableResourceContent` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L86"><Icon icon="github" /></a></sup>
 
 A wrapper for ResourceContent that can be cached.
 
-### `CacheableResourceResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L93"><Icon icon="github" /></a></sup>
+### `CacheableResourceResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L94"><Icon icon="github" /></a></sup>
 
 A wrapper for ResourceResult that can be cached.
 
 **Methods:**
 
-#### `get_size` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L99"><Icon icon="github" /></a></sup>
+#### `get_size` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L100"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_size(self) -> int
 ```
 
-#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L103"><Icon icon="github" /></a></sup>
+#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L104"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 wrap(cls, value: ResourceResult) -> Self
 ```
 
-#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L114"><Icon icon="github" /></a></sup>
+#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L115"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 unwrap(self) -> ResourceResult
 ```
 
-### `CacheableToolResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L126"><Icon icon="github" /></a></sup>
+### `CacheableToolResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L127"><Icon icon="github" /></a></sup>
 
 **Methods:**
 
-#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L133"><Icon icon="github" /></a></sup>
+#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L134"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 wrap(cls, value: ToolResult) -> Self
 ```
 
-#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L141"><Icon icon="github" /></a></sup>
+#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L142"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 unwrap(self) -> ToolResult
 ```
 
-### `CacheableMessage` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L150"><Icon icon="github" /></a></sup>
+### `CacheableMessage` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L151"><Icon icon="github" /></a></sup>
 
 A wrapper for Message that can be cached.
 
-### `CacheablePromptResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L162"><Icon icon="github" /></a></sup>
+### `CacheablePromptResult` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L163"><Icon icon="github" /></a></sup>
 
 A wrapper for PromptResult that can be cached.
 
 **Methods:**
 
-#### `get_size` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L169"><Icon icon="github" /></a></sup>
+#### `get_size` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L170"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_size(self) -> int
 ```
 
-#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L173"><Icon icon="github" /></a></sup>
+#### `wrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L174"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 wrap(cls, value: PromptResult) -> Self
 ```
 
-#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L182"><Icon icon="github" /></a></sup>
+#### `unwrap` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L183"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 unwrap(self) -> PromptResult
 ```
 
-### `SharedMethodSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L193"><Icon icon="github" /></a></sup>
+### `SharedMethodSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L194"><Icon icon="github" /></a></sup>
 
 Shared config for a cache method.
 
-### `ListToolsSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L200"><Icon icon="github" /></a></sup>
+### `ListToolsSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L201"><Icon icon="github" /></a></sup>
 
 Configuration options for Tool-related caching.
 
-### `ListResourcesSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L204"><Icon icon="github" /></a></sup>
+### `ListResourcesSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L205"><Icon icon="github" /></a></sup>
 
 Configuration options for Resource-related caching.
 
-### `ListPromptsSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L208"><Icon icon="github" /></a></sup>
+### `ListPromptsSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L209"><Icon icon="github" /></a></sup>
 
 Configuration options for Prompt-related caching.
 
-### `CallToolSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L212"><Icon icon="github" /></a></sup>
+### `CallToolSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L213"><Icon icon="github" /></a></sup>
 
 Configuration options for Tool-related caching.
 
-### `ReadResourceSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L219"><Icon icon="github" /></a></sup>
+### `ReadResourceSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L220"><Icon icon="github" /></a></sup>
 
 Configuration options for Resource-related caching.
 
-### `GetPromptSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L223"><Icon icon="github" /></a></sup>
+### `GetPromptSettings` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L224"><Icon icon="github" /></a></sup>
 
 Configuration options for Prompt-related caching.
 
-### `ResponseCachingStatistics` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L227"><Icon icon="github" /></a></sup>
+### `ResponseCachingStatistics` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L228"><Icon icon="github" /></a></sup>
 
-### `ResponseCachingMiddleware` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L236"><Icon icon="github" /></a></sup>
+### `ResponseCachingMiddleware` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L237"><Icon icon="github" /></a></sup>
 
 The response caching middleware offers a simple way to cache responses to mcp methods. The Middleware
 supports cache invalidation via notifications from the server. The Middleware implements TTL-based caching
@@ -50993,15 +51446,16 @@ this means that response caching may not be compatible with other middleware tha
 Notes:
 
 * Caches `tools/call`, `resources/read`, `prompts/get`, `tools/list`, `resources/list`, and `prompts/list` requests.
-* Cache keys are derived from the method name, arguments, and the caller's
-  access token. Entries are partitioned per-token so that responses filtered
-  by per-component authorization (e.g. `auth=require_scopes(...)`) cannot
-  leak across users with different permissions. Unauthenticated callers
-  (including STDIO) share a single anonymous partition.
+* Cache keys are derived from the method name, requested component version,
+  arguments, and the caller's access token. Entries are partitioned per-token
+  so that responses filtered by per-component authorization (e.g.
+  `auth=require_scopes(...)`) cannot leak across users with different
+  permissions. Unauthenticated callers (including STDIO) share a single
+  anonymous partition.
 
 **Methods:**
 
-#### `on_list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L346"><Icon icon="github" /></a></sup>
+#### `on_list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L348"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_list_tools(self, context: MiddlewareContext[mcp_types.ListToolsRequest], call_next: CallNext[mcp_types.ListToolsRequest, Sequence[Tool]]) -> Sequence[Tool]
@@ -51010,7 +51464,7 @@ on_list_tools(self, context: MiddlewareContext[mcp_types.ListToolsRequest], call
 List tools from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `on_list_resources` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L379"><Icon icon="github" /></a></sup>
+#### `on_list_resources` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L381"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_list_resources(self, context: MiddlewareContext[mcp_types.ListResourcesRequest], call_next: CallNext[mcp_types.ListResourcesRequest, Sequence[Resource]]) -> Sequence[Resource]
@@ -51019,7 +51473,7 @@ on_list_resources(self, context: MiddlewareContext[mcp_types.ListResourcesReques
 List resources from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `on_list_prompts` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L412"><Icon icon="github" /></a></sup>
+#### `on_list_prompts` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L414"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_list_prompts(self, context: MiddlewareContext[mcp_types.ListPromptsRequest], call_next: CallNext[mcp_types.ListPromptsRequest, Sequence[Prompt]]) -> Sequence[Prompt]
@@ -51028,7 +51482,7 @@ on_list_prompts(self, context: MiddlewareContext[mcp_types.ListPromptsRequest], 
 List prompts from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `on_call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L443"><Icon icon="github" /></a></sup>
+#### `on_call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L445"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_call_tool(self, context: MiddlewareContext[mcp_types.CallToolRequestParams], call_next: CallNext[mcp_types.CallToolRequestParams, ToolResult]) -> ToolResult
@@ -51037,7 +51491,7 @@ on_call_tool(self, context: MiddlewareContext[mcp_types.CallToolRequestParams], 
 Call a tool from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `on_read_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L507"><Icon icon="github" /></a></sup>
+#### `on_read_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L509"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_read_resource(self, context: MiddlewareContext[mcp_types.ReadResourceRequestParams], call_next: CallNext[mcp_types.ReadResourceRequestParams, ResourceResult]) -> ResourceResult
@@ -51046,7 +51500,7 @@ on_read_resource(self, context: MiddlewareContext[mcp_types.ReadResourceRequestP
 Read a resource from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `on_get_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L548"><Icon icon="github" /></a></sup>
+#### `on_get_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L550"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 on_get_prompt(self, context: MiddlewareContext[mcp_types.GetPromptRequestParams], call_next: CallNext[mcp_types.GetPromptRequestParams, PromptResult]) -> PromptResult
@@ -51055,7 +51509,7 @@ on_get_prompt(self, context: MiddlewareContext[mcp_types.GetPromptRequestParams]
 Get a prompt from the cache, if caching is enabled, and the result is in the cache. Otherwise,
 otherwise call the next middleware and store the result in the cache if caching is enabled.
 
-#### `statistics` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L600"><Icon icon="github" /></a></sup>
+#### `statistics` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/middleware/caching.py#L602"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 statistics(self) -> ResponseCachingStatistics
@@ -53431,7 +53885,7 @@ A handshake-era backend can still issue `roots/list`, and the proxy is that
 backend's client, so it relays the request onto its own front session. This
 reaches the wire through the SDK session rather than a `Context` method:
 `ctx.list_roots()` is not part of FastMCP's server-authoring API, because
-SEP-2577 removed server-initiated requests from the modern protocol. The
+SEP-2322 removed server-initiated requests from the modern protocol. The
 relay exists only for handshake-era interop on both legs.
 
 ### `default_proxy_sampling_handler` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/providers/proxy.py#L1547"><Icon icon="github" /></a></sup>
@@ -56657,11 +57111,11 @@ Function introspection and schema generation for FastMCP tools.
 
 ## Classes
 
-### `ParsedFunction` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/tools/function_parsing.py#L240"><Icon icon="github" /></a></sup>
+### `ParsedFunction` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/tools/function_parsing.py#L268"><Icon icon="github" /></a></sup>
 
 **Methods:**
 
-#### `from_function` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/tools/function_parsing.py#L249"><Icon icon="github" /></a></sup>
+#### `from_function` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/tools/function_parsing.py#L277"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from_function(cls, fn: Callable[..., Any], validate: bool = True, wrap_non_object_output_schema: bool = True) -> ParsedFunction

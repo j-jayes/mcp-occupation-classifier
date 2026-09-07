@@ -26,7 +26,7 @@ This approach allows you to learn and build incrementally – starting with foun
 
   Create an agent for handling streamed content.
 
-  [Build a streaming agent](https://adk.dev/get-started/streaming/index.md)
+  [Build a streaming agent](https://adk.dev/live/get-started/index.md)
 
 - **Discover sample agents**
 
