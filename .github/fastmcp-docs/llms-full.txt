@@ -215,40 +215,40 @@ Each tile below is a working FastMCP server you can run with `fastmcp dev apps` 
 <Columns>
   <Tile href="#sales-dashboard" title="Sales Dashboard" description="Metrics, charts, and deal pipeline">
     <div>
-      <img />
+      <img alt="" />
     </div>
   </Tile>
 
   <Tile href="#system-monitor" title="System Monitor" description="Live CPU, memory, disk with auto-refresh">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="#quiz" title="Quiz" description="LLM-generated trivia with scoring">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="#interactive-map" title="Interactive Map" description="Geocoded addresses on Leaflet">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="/apps/providers/file-upload" title="File Upload" description="Drag-and-drop upload provider">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="/apps/providers/approval" title="Approval" description="Human-in-the-loop confirmation">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="/apps/providers/choice" title="Choice" description="Clickable option selection">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="/apps/providers/form" title="Form Input" description="Pydantic model forms">
-    <img />
+    <img alt="" />
   </Tile>
 
   <Tile href="/apps/generative" title="Generative UI" description="LLM writes the UI at runtime">
-    <img />
+    <img alt="" />
   </Tile>
 </Columns>
 
@@ -4370,7 +4370,9 @@ client = Client(
 ```
 
 <Note>
-  Install the Anthropic handler with `pip install 'fastmcp[anthropic]'`.
+  Install the Anthropic handler with `pip install 'fastmcp[anthropic]'`. The handler supports Anthropic SDK 0.48.0 through 1.x.
+
+  When upgrading to Anthropic SDK 1.x, custom HTTP clients passed to `AsyncAnthropic` must use `httpx2` instead of `httpx`. See Anthropic's [migration guide](https://github.com/anthropics/anthropic-sdk-python/blob/main/MIGRATION.md) for changes to SDK integrations. The handler continues to forward an explicitly requested temperature, including zero, for models that support it.
 </Note>
 
 ### Google Gemini Handler
@@ -4589,7 +4591,7 @@ For page-by-page control over large catalogs, `list_tools_mcp()` returns one raw
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 async with client:
     page = await client.list_tools_mcp()
-    while page.next_cursor:
+    while page.next_cursor is not None:
         page = await client.list_tools_mcp(cursor=page.next_cursor)
 ```
 
@@ -7499,8 +7501,8 @@ FastMCP follows semantic versioning with pragmatic adaptations for the rapidly e
 
 For production use, always pin to exact versions:
 
-```
-fastmcp==4.0.0    # Good - an exact version
+```text theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+fastmcp==4.0.5    # Good - an exact version
 fastmcp>=4.0.0    # Bad - may install breaking changes
 ```
 
@@ -12447,7 +12449,7 @@ FastMCP's OAuth proxy defends against confused deputy attacks with two layers of
 
 **Consent screen.** Before any authorization happens, you see a consent page showing the client's details, redirect URI, and requested scopes. This gives you the opportunity to review and deny suspicious requests. By default (`require_authorization_consent=True`), the page is shown on every flow, which is the strongest protection. Setting `require_authorization_consent="remember"` approves previously-approved `(client_id, redirect_uri)` pairs silently on return visits, trading some protection for UX (see below). The consent mechanism is implemented with CSRF tokens and cryptographically signed cookies to prevent tampering.
 
-<img alt="" />
+<img alt="Consent page listing the client name, redirect URI, and requested scopes with approve and deny buttons" />
 
 The consent page automatically displays your server's name, icon, and website URL, if available. These visual identifiers help users confirm they're authorizing the correct server.
 
@@ -18886,6 +18888,8 @@ The Proxy Provider enables:
 * **Add security**: Act as a controlled gateway with authentication and authorization
 * **Simplify access**: Provide a stable endpoint even if backend servers change
 
+The proxy sits between your client and the source server: the client sends an MCP request to the proxy, the proxy forwards it over whichever transport the backend speaks, and the response comes back the same way.
+
 ```mermaid theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 sequenceDiagram
     participant Client as Your Client
@@ -19932,7 +19936,7 @@ While `@mcp.resource` is ideal for dynamic content, you can directly register pr
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from pathlib import Path
 from fastmcp import FastMCP
-from fastmcp.resources import FileResource, TextResource, DirectoryResource
+from fastmcp.resources import DirectoryResource, FileResource, HttpResource, TextResource
 
 mcp = FastMCP(name="DataServer")
 
@@ -19970,14 +19974,25 @@ if data_dir_path.is_dir():
         recursive=False # Set to True to list subdirectories
     )
     mcp.add_resource(data_listing_resource) # Returns JSON list of files
+
+# 4. Serving a web page fetched by the server
+page_resource = HttpResource(
+    uri="docs://service-public/f23533",
+    url="https://entreprendre.service-public.gouv.fr/vosdroits/F23533",
+    name="Service Public F23533",
+    mime_type="text/html",
+)
+mcp.add_resource(page_resource)
 ```
+
+`HttpResource` has two addresses. `uri` is the identity clients see in the resource list, and `url` is what the server fetches when a client reads it. Keep them different: the MCP specification reserves `https://` URIs for content the client can fetch on its own, so advertising the fetched URL as the `uri` tells clients they don't need your server for it. A custom scheme like `docs://` makes it clear the content comes through the server.
 
 **Common Resource Classes:**
 
 * `TextResource`: For simple string content.
 * `BinaryResource`: For raw `bytes` content.
 * `FileResource`: Reads content from a local file path. Handles text/binary modes, encoding, and lazy reading.
-* `HttpResource`: Fetches content from an HTTP(S) URL (requires `httpx2`).
+* `HttpResource`: Fetches content from an HTTP(S) URL on the server side when a client reads it (requires `httpx2`).
 * `DirectoryResource`: Lists files in a local directory (returns JSON).
 * (`FunctionResource`: Internal class used by `@mcp.resource`).
 
@@ -23138,7 +23153,7 @@ def get_config() -> ToolResult:
 
 If your tool encounters an error, you can raise a standard Python exception (`ValueError`, `TypeError`, `FileNotFoundError`, custom exceptions, etc.) or a FastMCP `ToolError`.
 
-By default, all exceptions (including their details) are logged and converted into an MCP error response to be sent back to the client LLM. This helps the LLM understand failures and react appropriately.
+By default, exceptions are converted into an MCP error response to be sent back to the client LLM. This helps the LLM understand failures and react appropriately. Validation warnings identify the tool and, for Pydantic errors, include the error count and built-in error types (such as `int_parsing`). Custom error codes are reported as `custom_error`. Argument values, validation locations, and validator messages are omitted because they may contain private client data. This does not change the validation details returned to the caller or redact explicit debug logging or custom middleware logs.
 
 If you want to mask internal error details for security reasons, you can:
 
@@ -23582,11 +23597,11 @@ CodeMode ships with four built-in discovery tools: `Search`, `GetSchemas`, `GetT
 
 `Search` and `GetSchemas` share the same three detail levels, so the same `detail` value produces the same output format regardless of which tool the LLM calls:
 
-| Level        | Output                                                             | Token cost                          |
-| ------------ | ------------------------------------------------------------------ | ----------------------------------- |
-| `"brief"`    | Tool names and one-line descriptions                               | Cheapest — good for scanning        |
-| `"detailed"` | Compact markdown with parameter names, types, and required markers | Medium — often enough to write code |
-| `"full"`     | Complete JSON schema                                               | Most expensive — everything         |
+| Level        | Output                                                                                                                                                               | Token cost                          |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `"brief"`    | Tool names and one-line descriptions                                                                                                                                 | Cheapest — good for scanning        |
+| `"detailed"` | Compact markdown with parameter names, types, literal values, defaults, required markers, and the field names one level inside any object-valued parameter or return | Medium — often enough to write code |
+| `"full"`     | Complete JSON schema                                                                                                                                                 | Most expensive — everything         |
 
 `Search` defaults to `"brief"` and `GetSchemas` defaults to `"detailed"`.
 
@@ -23606,7 +23621,7 @@ If your tools use [tags](/servers/visibility#tags), Search also accepts a `tags`
 
 ### GetSchemas
 
-`GetSchemas` returns parameter details for specific tools by name. At its default `"detailed"` level, it renders compact markdown with parameter names, types, and required markers. At `"full"`, it returns the complete JSON schema — useful when tools have deeply nested parameters that the compact format doesn't capture.
+`GetSchemas` returns parameter details for specific tools by name. At its default `"detailed"` level, it renders compact markdown with parameter names, types, literal values, defaults, and required markers. Object-valued parameters and return values also list their own field names one level down, following `$ref`s into `$defs`, so a tool returning `list[Card]` renders as ``- `items` (object[]): `id`, `url`, `title`, …`` rather than an opaque `object[]`. At `"full"`, it returns the complete JSON schema — useful when tools have deeply nested parameters that the compact format doesn't capture.
 
 ### GetTags
 
@@ -23619,6 +23634,14 @@ If your tools use [tags](/servers/visibility#tags), Search also accepts a `tags`
 ```
 
 `GetTags` isn't included in the defaults — add it when browsing by category would help the LLM orient itself in a large catalog. The LLM can browse tags first, then pass specific tags into Search to narrow results.
+
+For example, a parameter declared as `sort: Literal["top", "recent"] = "recent"` appears as:
+
+```text theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+- `sort` (string, one of "top"/"recent", default "recent")
+```
+
+Single-value literals also show their allowed value. Literal value lists are included up to eight values; parameter descriptions and complete constraints remain available at `"full"` detail.
 
 ### ListTools
 
@@ -23749,14 +23772,14 @@ mcp = FastMCP("Server", transforms=[code_mode])
 
 The default `MontySandboxProvider` enforces execution limits — timeouts, memory caps, recursion depth, and more.
 
-Constructed with no arguments, it applies a conservative baseline so the out-of-box configuration is not unbounded: `max_duration_secs=30` and `max_memory=100_000_000` (100 MB). Pass an explicit `limits` dict to override it, or `limits=None` to run with no limits at all:
+Constructed with no arguments, it applies a conservative baseline so the out-of-box configuration is not unbounded: `max_duration_secs=30` and `max_memory=100_000_000` (100 MB). Pass an explicit `limits` dict to override it, or `limits=None` to disable the configurable time, memory, and GC limits. Monty's standard recursion limit still applies:
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp.experimental.transforms.code_mode import MontySandboxProvider
 
 MontySandboxProvider()                  # baseline: 30s, 100 MB
 MontySandboxProvider(limits={...})      # your own limits
-MontySandboxProvider(limits=None)       # explicitly uncapped
+MontySandboxProvider(limits=None)       # no time, memory, or GC limits
 ```
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
@@ -23770,15 +23793,16 @@ sandbox = MontySandboxProvider(
 mcp = FastMCP("Server", transforms=[CodeMode(sandbox_provider=sandbox)])
 ```
 
-All keys are optional — omit any to leave that dimension uncapped:
+Time, memory, and GC limits are optional; omit a key to disable that limit. Recursion depth defaults to Monty's standard maximum of 1,000:
 
 | Key                   | Type    | Description                       |
 | --------------------- | ------- | --------------------------------- |
 | `max_duration_secs`   | `float` | Maximum wall-clock execution time |
 | `max_memory`          | `int`   | Memory ceiling in bytes           |
-| `max_allocations`     | `int`   | Cap on total object allocations   |
 | `max_recursion_depth` | `int`   | Maximum recursion depth           |
 | `gc_interval`         | `int`   | Garbage collection frequency      |
+
+Unsupported keys raise `ValueError` rather than being silently ignored. Monty no longer supports `max_allocations`; use `max_memory` to cap memory usage.
 
 ### Tool Call Limits
 
@@ -25533,6 +25557,81 @@ Server-level transforms override provider-level transforms. If a component is di
 Source: https://gofastmcp.com/changelog
 
 
+
+<Update label="v4.0.5" description="2026-09-17">
+  **[v4.0.5: No Country for Loose Ints](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.5)**
+
+  Tool parameters declared strict with `Field(strict=True)`, `StrictInt`, or a strict model config are honored again, on both direct calls and task submission. Since the SDK v2 migration the server's lax default overrode them and silently coerced values.
+
+  ### Security 🔒
+
+  * Add regression test for the unconfigured ID-JAG guard by [@zzstoatzz](https://github.com/zzstoatzz) in [#5146](https://github.com/PrefectHQ/fastmcp/pull/5146)
+
+  ### Fixes 🐞
+
+  * Preserve field-level strict validation in lax mode by [@zzstoatzz](https://github.com/zzstoatzz) in [#5141](https://github.com/PrefectHQ/fastmcp/pull/5141)
+
+  **Full Changelog**: [v4.0.4...v4.0.5](https://github.com/PrefectHQ/fastmcp/compare/v4.0.4...v4.0.5)
+</Update>
+
+<Update label="v4.0.4" description="2026-09-15">
+  **[v4.0.4: Here Be No Dragons](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.4)**
+
+  OpenAPI request bodies get most of the attention in this patch: multipart string arrays are sent as repeated fields, whole-body arguments no longer clobber same-named HTTP parameters, dictionary bodies and raw content types survive intact, and JSON scalar bodies are encoded. On the auth side, OAuthProxy rejects ID-JAG tokens unless identity assertion is configured and refuses non-positive upstream token expiries. Clients now follow empty pagination cursors and servers reject malformed ones.
+
+  ### Enhancements ✨
+
+  * Refresh the smart-home example with Hue V2 and native effects by [@zzstoatzz](https://github.com/zzstoatzz) in [#5009](https://github.com/PrefectHQ/fastmcp/pull/5009)
+  * Update CodeMode for pydantic-monty 0.0.21 by [@strawgate](https://github.com/strawgate) in [#5033](https://github.com/PrefectHQ/fastmcp/pull/5033)
+  * Keep linked contributor PRs open while awaiting assignment by [@zzstoatzz](https://github.com/zzstoatzz) in [#5048](https://github.com/PrefectHQ/fastmcp/pull/5048)
+  * Reduce redundant CI execution while preserving required checks by [@zzstoatzz](https://github.com/zzstoatzz) in [#5049](https://github.com/PrefectHQ/fastmcp/pull/5049)
+  * Share and streamline repository skills by [@zzstoatzz](https://github.com/zzstoatzz) in [#5013](https://github.com/PrefectHQ/fastmcp/pull/5013)
+  * Support anthropic 1.x alongside 0.x by [@tdsmith](https://github.com/tdsmith) in [#5066](https://github.com/PrefectHQ/fastmcp/pull/5066)
+  * renovate: cap routine PRs at 5 concurrent and 5 per hour by [@zzstoatzz](https://github.com/zzstoatzz) in [#5110](https://github.com/PrefectHQ/fastmcp/pull/5110)
+  * Give docs quality checks a corpus-wide timeout by [@zzstoatzz](https://github.com/zzstoatzz) in [#5109](https://github.com/PrefectHQ/fastmcp/pull/5109)
+  * Resolve ty 0.0.79 warnings from upgrade checks by [@zzstoatzz](https://github.com/zzstoatzz) in [#5123](https://github.com/PrefectHQ/fastmcp/pull/5123)
+
+  ### Security 🔒
+
+  * Fix #5115: OAuthProxy accepts self-contained ID-JAG tokens even when identity\_ass by [@nandanadileep](https://github.com/nandanadileep) in [#5119](https://github.com/PrefectHQ/fastmcp/pull/5119)
+
+  ### Fixes 🐞
+
+  * Fix upgrade checks for the M2M storage warning test by [@zzstoatzz](https://github.com/zzstoatzz) in [#5040](https://github.com/PrefectHQ/fastmcp/pull/5040)
+  * Fix OpenAPI query explode defaults by [@zzstoatzz](https://github.com/zzstoatzz) in [#5065](https://github.com/PrefectHQ/fastmcp/pull/5065)
+  * fix(openapi): encode JSON scalar request bodies by [@Gonghan-Princess](https://github.com/Gonghan-Princess) in [#5052](https://github.com/PrefectHQ/fastmcp/pull/5052)
+  * fix(versions): deterministic meta.fastmcp.versions ordering by [@feiiiiii5](https://github.com/feiiiiii5) in [#4880](https://github.com/PrefectHQ/fastmcp/pull/4880)
+  * Parse skills frontmatter with yaml.safe\_load, falling back to the line parser by [@vishnujayvel](https://github.com/vishnujayvel) in [#4701](https://github.com/PrefectHQ/fastmcp/pull/4701)
+  * Keep client data out of tool validation warnings by [@zzstoatzz](https://github.com/zzstoatzz) in [#5106](https://github.com/PrefectHQ/fastmcp/pull/5106)
+  * fix: follow empty pagination cursors in client lists by [@sicauzxl](https://github.com/sicauzxl) in [#5026](https://github.com/PrefectHQ/fastmcp/pull/5026)
+  * fix: reject non-positive upstream token expiry by [@sui-ni2](https://github.com/sui-ni2) in [#4849](https://github.com/PrefectHQ/fastmcp/pull/4849)
+  * fix(server): reject a malformed pagination cursor offset by [@L4XB](https://github.com/L4XB) in [#5071](https://github.com/PrefectHQ/fastmcp/pull/5071)
+  * fix(openapi): preserve dictionary request bodies by [@asts-top](https://github.com/asts-top) in [#5097](https://github.com/PrefectHQ/fastmcp/pull/5097)
+  * Preserve OpenAPI raw body content types by [@pentaoa](https://github.com/pentaoa) in [#5093](https://github.com/PrefectHQ/fastmcp/pull/5093)
+  * fix(openapi): preserve HTTP parameters that match whole-body names by [@asts-top](https://github.com/asts-top) in [#5113](https://github.com/PrefectHQ/fastmcp/pull/5113)
+  * fix(local-provider): apply transforms in get\_tasks by [@BlueX888](https://github.com/BlueX888) in [#5117](https://github.com/PrefectHQ/fastmcp/pull/5117)
+  * Fix multipart string-array default encoding by [@zzstoatzz](https://github.com/zzstoatzz) in [#5121](https://github.com/PrefectHQ/fastmcp/pull/5121)
+
+  ### Other Changes 🦾
+
+  * chore(deps): Update github actions (major) by @prefect-renovate\[bot] in [https://github.com/PrefectHQ/fastmcp/pull/4890](https://github.com/PrefectHQ/fastmcp/pull/4890)
+
+  ## New Contributors
+
+  * @Gonghan-Princess made their first contribution in [#5052](https://github.com/PrefectHQ/fastmcp/pull/5052)
+  * @tdsmith made their first contribution in [#5066](https://github.com/PrefectHQ/fastmcp/pull/5066)
+  * @feiiiiii5 made their first contribution in [#4880](https://github.com/PrefectHQ/fastmcp/pull/4880)
+  * @vishnujayvel made their first contribution in [#4701](https://github.com/PrefectHQ/fastmcp/pull/4701)
+  * @sicauzxl made their first contribution in [#5026](https://github.com/PrefectHQ/fastmcp/pull/5026)
+  * @sui-ni2 made their first contribution in [#4849](https://github.com/PrefectHQ/fastmcp/pull/4849)
+  * @L4XB made their first contribution in [#5071](https://github.com/PrefectHQ/fastmcp/pull/5071)
+  * @asts-top made their first contribution in [#5097](https://github.com/PrefectHQ/fastmcp/pull/5097)
+  * @pentaoa made their first contribution in [#5093](https://github.com/PrefectHQ/fastmcp/pull/5093)
+  * @BlueX888 made their first contribution in [#5117](https://github.com/PrefectHQ/fastmcp/pull/5117)
+  * @nandanadileep made their first contribution in [#5119](https://github.com/PrefectHQ/fastmcp/pull/5119)
+
+  **Full Changelog**: [v4.0.3...v4.0.4](https://github.com/PrefectHQ/fastmcp/compare/v4.0.3...v4.0.4)
+</Update>
 
 <Update label="v4.0.3" description="2026-09-04">
   **[v4.0.3: Once Is Enough](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3)**
@@ -37874,14 +37973,14 @@ await client.call_tool("get_user", {"user_id": None})
 
 FastMCP handles array parameters according to OpenAPI specifications:
 
-* **Query arrays**: Serialized based on the `explode` parameter (default: `True`)
+* **Query arrays**: Serialized based on `style` and `explode`. When omitted, `explode` defaults to `True` for `form` (the default query style) and `False` for other styles. With `explode=False`, `form` uses commas, `pipeDelimited` uses pipes, and `spaceDelimited` uses spaces.
 * **Path arrays**: Serialized as comma-separated values (OpenAPI 'simple' style)
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-# Query array with explode=true (default)
+# Query array with style=form, explode=true (defaults)
 # ?tags=red&tags=blue&tags=green
 
-# Query array with explode=false  
+# Query array with style=form, explode=false
 # ?tags=red,blue,green
 
 # Path array (always comma-separated)
@@ -37891,6 +37990,24 @@ FastMCP handles array parameters according to OpenAPI specifications:
 ### Headers
 
 Header parameters are automatically converted to strings and included in the HTTP request.
+
+### Multipart Request Bodies
+
+For `multipart/form-data`, non-empty string arrays use one form field per element. Calling a tool with `{"tags": ["a", "b"]}` sends two `tags` fields, so a backend reading repeated fields receives `["a", "b"]`.
+
+This applies when the property's `encoding` is omitted or explicitly uses the defaults: `style: form`, `explode: true`, `contentType: text/plain`, `allowReserved: false`, and no custom headers. Existing scalar fields and binary file parts keep their serialization.
+
+Empty arrays still send one field containing `[]`, and non-string arrays still use their Python string representation. Custom encodings, including `explode: false`, JSON parts, and charset overrides, are not implemented by this fix and retain their existing serialization. If a backend depended on Python list strings for non-empty string arrays, adapt it to read repeated fields.
+
+### JSON Request Bodies
+
+Dictionary bodies without named properties use one tool argument containing the entire dictionary. For a dictionary schema titled `Labels`, calling the tool with `{"labels": {"team": "infra"}}` sends `{"team": "infra"}` to the API. Schemas without a title use the argument name `body`.
+
+If a whole-body argument shares a name with a path, query, header, or cookie parameter, the HTTP parameter receives a location suffix. For example, an array body titled `Values` and a query parameter named `values` become `values` and `values__query`; calling with `{"values": [1, 2], "values__query": "active"}` sends `[1, 2]` as the body and `?values=active` in the URL.
+
+For request bodies declared as `application/json` or a `+json` media type, pass strings, numbers, and booleans as their actual values. FastMCP JSON-encodes them and preserves the declared Content-Type, including media-type parameters. Do not JSON-encode a string yourself: passing `"true"` sends the JSON string `"true"`, while passing `True` sends the JSON boolean `true`.
+
+Earlier versions sent string bodies as raw text even when the schema declared JSON. If you worked around that behavior by pre-encoding a string, remove the extra encoding. Bodies declared as `text/plain` continue to be sent as raw text.
 
 ### Composed Request Bodies
 
@@ -43376,6 +43493,18 @@ Source: https://gofastmcp.com/updates
 
 
 
+<Update label="FastMCP 4.0.5" description="September 17, 2026">
+  <Card title="FastMCP v4.0.5: No Country for Loose Ints" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.5">
+    Tool parameters declared strict with `Field(strict=True)`, `StrictInt`, or a strict model config are honored again, on both direct calls and task submission. Since the SDK v2 migration the server's lax default overrode them and silently coerced values.
+  </Card>
+</Update>
+
+<Update label="FastMCP 4.0.4" description="September 15, 2026">
+  <Card title="FastMCP v4.0.4: Here Be No Dragons" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.4">
+    OpenAPI request bodies get most of the attention in this patch: multipart string arrays are sent as repeated fields, whole-body arguments no longer clobber same-named HTTP parameters, dictionary bodies and raw content types survive intact, and JSON scalar bodies are encoded. On the auth side, OAuthProxy rejects ID-JAG tokens unless identity assertion is configured and refuses non-positive upstream token expiries. Clients now follow empty pagination cursors and servers reject malformed ones.
+  </Card>
+</Update>
+
 <Update label="FastMCP 4.0.3" description="September 4, 2026">
   <Card title="FastMCP v4.0.3: Once Is Enough" href="https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3">
     Multi-server clients with legacy-only backends now avoid unnecessary startup retries, and tools returning unconstrained sequences no longer send images twice. This patch also fixes task timing values rejected by strict clients and cleans up unfinished Monty callbacks when execution ends.
@@ -44458,26 +44587,29 @@ Sandbox provider backed by `pydantic-monty`.
 **Args:**
 
 * `limits`: Resource limits for sandbox execution. Supported keys:
-  `max_duration_secs` (float), `max_allocations` (int),
-  `max_memory` (int), `max_recursion_depth` (int),
-  `gc_interval` (int).  All are optional; omit a key to
-  leave that limit uncapped.
+  `max_duration_secs` (float), `max_memory` (int),
+  `max_recursion_depth` (int), and `gc_interval` (int).
+  Time, memory, and GC limits are optional; omit a key to disable
+  it. Recursion depth defaults to Monty's standard maximum of 1,000.
+  Unsupported keys raise `ValueError` rather than being silently
+  ignored.
 
 When the argument is omitted entirely, a conservative baseline
 is applied (`max_duration_secs=30`, `max_memory=100 MB`) so
 the out-of-box configuration is not unbounded. Pass
-`limits=None` to explicitly run without any limits, or a dict
-to set your own.
+`limits=None` to disable configurable time, memory, and GC
+limits, or a dict to set your own. Monty's standard recursion
+limit still applies.
 
 **Methods:**
 
-#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L144"><Icon icon="github" /></a></sup>
+#### `run` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L147"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 run(self, code: str) -> Any
 ```
 
-### `Search` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L269"><Icon icon="github" /></a></sup>
+### `Search` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L288"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that searches the catalog by query.
 
@@ -44493,7 +44625,7 @@ Discovery tool factory that searches the catalog by query.
 * `default_limit`: Maximum number of results to return.
   The LLM can override this per call.  `None` means no limit.
 
-### `GetSchemas` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L351"><Icon icon="github" /></a></sup>
+### `GetSchemas` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L370"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that returns schemas for tools by name.
 
@@ -44506,7 +44638,7 @@ Discovery tool factory that returns schemas for tools by name.
   types, and required markers.
   `"full"` returns the complete JSON schema.
 
-### `GetTags` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L412"><Icon icon="github" /></a></sup>
+### `GetTags` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L431"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that lists tool tags from the catalog.
 
@@ -44520,7 +44652,7 @@ without tags appear under `"untagged"`.
   `"brief"` returns tag names with tool counts.
   `"full"` lists all tools under each tag.
 
-### `ListTools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L479"><Icon icon="github" /></a></sup>
+### `ListTools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L498"><Icon icon="github" /></a></sup>
 
 Discovery tool factory that lists all tools in the catalog.
 
@@ -44532,7 +44664,7 @@ Discovery tool factory that lists all tools in the catalog.
   `"detailed"` returns compact markdown with parameter schemas.
   `"full"` returns the complete JSON schema.
 
-### `CodeMode` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L528"><Icon icon="github" /></a></sup>
+### `CodeMode` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L547"><Icon icon="github" /></a></sup>
 
 Transform that collapses all tools into discovery + execute meta-tools.
 
@@ -44547,13 +44679,13 @@ environment with `call_tool(name, params)` in scope.
 
 **Methods:**
 
-#### `transform_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L580"><Icon icon="github" /></a></sup>
+#### `transform_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L599"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 transform_tools(self, tools: Sequence[Tool]) -> Sequence[Tool]
 ```
 
-#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L583"><Icon icon="github" /></a></sup>
+#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/experimental/transforms/code_mode.py#L602"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_tool(self, name: str, call_next: GetToolNext) -> Tool | None
@@ -46858,7 +46990,7 @@ Implements the token factory pattern:
 
 PKCE validation is handled by the MCP framework before this method is called.
 
-#### `exchange_identity_assertion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1510"><Icon icon="github" /></a></sup>
+#### `exchange_identity_assertion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1519"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 exchange_identity_assertion(self, client: OAuthClientInformationFull, params: IdentityAssertionParams) -> OAuthToken
@@ -46876,7 +47008,7 @@ refresh token is issued — the client re-exchanges a fresh assertion.
 * `TokenError`: `invalid_grant` if the assertion is rejected, or
   `unsupported_grant_type` if identity assertion is not configured.
 
-#### `load_refresh_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1722"><Icon icon="github" /></a></sup>
+#### `load_refresh_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1731"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 load_refresh_token(self, client: OAuthClientInformationFull, refresh_token: str) -> RefreshToken | None
@@ -46887,7 +47019,7 @@ Load refresh token metadata from distributed storage.
 Looks up by token hash and reconstructs the RefreshToken object.
 Validates that the token belongs to the requesting client.
 
-#### `exchange_refresh_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1758"><Icon icon="github" /></a></sup>
+#### `exchange_refresh_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L1767"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 exchange_refresh_token(self, client: OAuthClientInformationFull, refresh_token: RefreshToken, scopes: list[str]) -> OAuthToken
@@ -46904,7 +47036,7 @@ Implements two-tier refresh:
 5. Issue new FastMCP access token
 6. Keep same FastMCP refresh token (unless upstream rotates)
 
-#### `load_access_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2135"><Icon icon="github" /></a></sup>
+#### `load_access_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2152"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 load_access_token(self, token: str) -> AccessToken | None
@@ -46924,7 +47056,7 @@ This implements the token swap pattern:
 The FastMCP JWT is a reference token - all authorization data comes
 from validating the upstream token via the TokenVerifier.
 
-#### `revoke_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2318"><Icon icon="github" /></a></sup>
+#### `revoke_token` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2341"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 revoke_token(self, token: AccessToken | RefreshToken) -> None
@@ -46936,7 +47068,7 @@ For refresh tokens, removes from local storage by hash.
 For all tokens, attempts upstream revocation if endpoint is configured.
 Access token JTI mappings expire via TTL.
 
-#### `get_routes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2386"><Icon icon="github" /></a></sup>
+#### `get_routes` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/auth/oauth_proxy/proxy.py#L2409"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_routes(self, mcp_path: str | None = None) -> list[Route]
@@ -51066,7 +51198,7 @@ combined = ContextManagerLifespan(legacy_lifespan) | new_lifespan
 
 ## Functions
 
-### `lifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L172"><Icon icon="github" /></a></sup>
+### `lifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L176"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 lifespan(fn: LifespanFn) -> Lifespan
@@ -51095,13 +51227,13 @@ Composable lifespan wrapper.
 Wraps an async generator function and enables composition via the `|` operator.
 The wrapped function should yield a dict that becomes part of the lifespan context.
 
-### `ContextManagerLifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L110"><Icon icon="github" /></a></sup>
+### `ContextManagerLifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L114"><Icon icon="github" /></a></sup>
 
 Lifespan wrapper for already-wrapped context manager functions.
 
 Use this for functions already decorated with @asynccontextmanager.
 
-### `ComposedLifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L137"><Icon icon="github" /></a></sup>
+### `ComposedLifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/lifespan.py#L141"><Icon icon="github" /></a></sup>
 
 Two lifespans composed together.
 
@@ -54498,7 +54630,7 @@ FastMCP - A more ergonomic interface for MCP servers.
 
 ## Functions
 
-### `default_lifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L237"><Icon icon="github" /></a></sup>
+### `default_lifespan` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L262"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 default_lifespan(server: FastMCP[LifespanResultT]) -> AsyncIterator[Any]
@@ -54514,7 +54646,7 @@ Default lifespan context manager that does nothing.
 
 * An empty dictionary as the lifespan result.
 
-### `create_proxy` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2501"><Icon icon="github" /></a></sup>
+### `create_proxy` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2523"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 create_proxy(target: Client[ClientTransportT] | ClientTransport | FastMCP[Any] | SDKServer | AnyUrl | Path | MCPConfig | dict[str, Any] | str, **settings: Any) -> FastMCPProxy
@@ -54553,51 +54685,51 @@ use `FastMCPProxy` or `ProxyProvider` directly from `fastmcp.server.providers.pr
 
 ## Classes
 
-### `StateValue` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L272"><Icon icon="github" /></a></sup>
+### `StateValue` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L297"><Icon icon="github" /></a></sup>
 
 Wrapper for stored context state values.
 
-### `FastMCP` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L278"><Icon icon="github" /></a></sup>
+### `FastMCP` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L303"><Icon icon="github" /></a></sup>
 
 **Methods:**
 
-#### `name` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L507"><Icon icon="github" /></a></sup>
+#### `name` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L532"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 name(self) -> str
 ```
 
-#### `instructions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L511"><Icon icon="github" /></a></sup>
+#### `instructions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L536"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 instructions(self) -> str | None
 ```
 
-#### `instructions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L515"><Icon icon="github" /></a></sup>
+#### `instructions` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L540"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 instructions(self, value: str | None) -> None
 ```
 
-#### `version` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L519"><Icon icon="github" /></a></sup>
+#### `version` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L544"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 version(self) -> str | None
 ```
 
-#### `website_url` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L523"><Icon icon="github" /></a></sup>
+#### `website_url` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L548"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 website_url(self) -> str | None
 ```
 
-#### `icons` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L527"><Icon icon="github" /></a></sup>
+#### `icons` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L552"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 icons(self) -> list[mcp_types.Icon]
 ```
 
-#### `local_provider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L534"><Icon icon="github" /></a></sup>
+#### `local_provider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L559"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 local_provider(self) -> LocalProvider
@@ -54611,13 +54743,13 @@ mcp.local\_provider.remove\_tool("my\_tool")
 mcp.local\_provider.remove\_resource("data://info")
 mcp.local\_provider.remove\_prompt("my\_prompt")
 
-#### `add_middleware` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L598"><Icon icon="github" /></a></sup>
+#### `add_middleware` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L623"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_middleware(self, middleware: Middleware) -> None
 ```
 
-#### `add_extension` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L601"><Icon icon="github" /></a></sup>
+#### `add_extension` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L626"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_extension(self, extension: ServerExtension) -> None
@@ -54645,7 +54777,7 @@ wire, so only root-registered extensions advertise capabilities and
 answer methods (matching the lifespan, which also defers to the root).
 Register extensions on the server you run.
 
-#### `add_provider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L673"><Icon icon="github" /></a></sup>
+#### `add_provider` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L698"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_provider(self, provider: Provider) -> None
@@ -54665,7 +54797,7 @@ always take precedence over providers.
 * Resources become "protocol://namespace/path"
 * Prompts become "namespace\_promptname"
 
-#### `get_tasks` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L785"><Icon icon="github" /></a></sup>
+#### `get_tasks` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L810"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_tasks(self) -> Sequence[FastMCPComponent]
@@ -54676,7 +54808,7 @@ Get task-eligible components with all transforms applied.
 Overrides AggregateProvider.get\_tasks() to apply server-level transforms
 after aggregation. AggregateProvider handles provider-level namespacing.
 
-#### `add_transform` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L814"><Icon icon="github" /></a></sup>
+#### `add_transform` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L839"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_transform(self, transform: Transform) -> None
@@ -54691,7 +54823,7 @@ They transform tools, resources, and prompts from ALL providers.
 
 * `transform`: The transform to add.
 
-#### `list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L834"><Icon icon="github" /></a></sup>
+#### `list_tools` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L859"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 list_tools(self) -> Sequence[Tool]
@@ -54703,7 +54835,7 @@ Overrides Provider.list\_tools() to add enabled filtering, auth filtering,
 and middleware execution. Returns all versions (no deduplication).
 Protocol handlers deduplicate for MCP wire format.
 
-#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L917"><Icon icon="github" /></a></sup>
+#### `get_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L942"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_tool(self, name: str, version: VersionSpec | None = None) -> Tool | None
@@ -54727,7 +54859,7 @@ requested, falls back to the next-highest enabled version.
 
 * The tool if found and enabled, None otherwise.
 
-#### `list_resources` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L971"><Icon icon="github" /></a></sup>
+#### `list_resources` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L996"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 list_resources(self) -> Sequence[Resource]
@@ -54739,7 +54871,7 @@ Overrides Provider.list\_resources() to add visibility filtering, auth filtering
 and middleware execution. Returns all versions (no deduplication).
 Protocol handlers deduplicate for MCP wire format.
 
-#### `get_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1056"><Icon icon="github" /></a></sup>
+#### `get_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1081"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_resource(self, uri: str, version: VersionSpec | None = None) -> Resource | None
@@ -54762,7 +54894,7 @@ requested, falls back to the next-highest enabled version.
 
 * The resource if found and enabled, None otherwise.
 
-#### `list_resource_templates` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1106"><Icon icon="github" /></a></sup>
+#### `list_resource_templates` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1131"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 list_resource_templates(self) -> Sequence[ResourceTemplate]
@@ -54774,7 +54906,7 @@ Overrides Provider.list\_resource\_templates() to add visibility filtering,
 auth filtering, and middleware execution. Returns all versions (no deduplication).
 Protocol handlers deduplicate for MCP wire format.
 
-#### `get_resource_template` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1188"><Icon icon="github" /></a></sup>
+#### `get_resource_template` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1213"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_resource_template(self, uri: str, version: VersionSpec | None = None) -> ResourceTemplate | None
@@ -54797,7 +54929,7 @@ requested, falls back to the next-highest enabled version.
 
 * The template if found and enabled, None otherwise.
 
-#### `list_prompts` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1242"><Icon icon="github" /></a></sup>
+#### `list_prompts` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1267"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 list_prompts(self) -> Sequence[Prompt]
@@ -54809,7 +54941,7 @@ Overrides Provider.list\_prompts() to add visibility filtering, auth filtering,
 and middleware execution. Returns all versions (no deduplication).
 Protocol handlers deduplicate for MCP wire format.
 
-#### `get_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1314"><Icon icon="github" /></a></sup>
+#### `get_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1339"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 get_prompt(self, name: str, version: VersionSpec | None = None) -> Prompt | None
@@ -54832,7 +54964,7 @@ requested, falls back to the next-highest enabled version.
 
 * The prompt if found and enabled, None otherwise.
 
-#### `call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1364"><Icon icon="github" /></a></sup>
+#### `call_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1389"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> ToolResult
@@ -54865,7 +54997,7 @@ wire handler unwraps it into an `InputRequiredResult` on the response.
 * `ToolError`: If tool execution fails
 * `ValidationError`: If arguments fail validation
 
-#### `read_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1557"><Icon icon="github" /></a></sup>
+#### `read_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1579"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 read_resource(self, uri: str) -> ResourceResult
@@ -54892,7 +55024,7 @@ Checks concrete resources first, then templates.
 * `NotFoundError`: If resource not found or disabled
 * `ResourceError`: If resource read fails
 
-#### `render_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1715"><Icon icon="github" /></a></sup>
+#### `render_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1737"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 render_prompt(self, name: str, arguments: dict[str, Any] | None = None) -> PromptResult
@@ -54920,7 +55052,7 @@ Use get\_prompt() to retrieve the prompt definition without rendering.
 * `NotFoundError`: If prompt not found or disabled
 * `PromptError`: If prompt rendering fails
 
-#### `add_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1795"><Icon icon="github" /></a></sup>
+#### `add_tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1817"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_tool(self, tool: Tool | Callable[..., Any]) -> Tool
@@ -54939,19 +55071,19 @@ with the Context type annotation. See the @tool decorator for examples.
 
 * The tool instance that was added to the server.
 
-#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1810"><Icon icon="github" /></a></sup>
+#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1832"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 tool(self, name_or_fn: F) -> F
 ```
 
-#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1831"><Icon icon="github" /></a></sup>
+#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1853"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 tool(self, name_or_fn: str | None = None) -> Callable[[F], F]
 ```
 
-#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1851"><Icon icon="github" /></a></sup>
+#### `tool` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1873"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 tool(self, name_or_fn: str | AnyFunction | None = None) -> Callable[[AnyFunction], FunctionTool] | FunctionTool | partial[Callable[[AnyFunction], FunctionTool] | FunctionTool]
@@ -55007,7 +55139,7 @@ def my_tool(x: int) -> str:
 server.tool(my_function, name="custom_name")
 ```
 
-#### `add_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1948"><Icon icon="github" /></a></sup>
+#### `add_resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1970"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_resource(self, resource: Resource | Callable[..., Any]) -> Resource | ResourceTemplate
@@ -55023,7 +55155,7 @@ Add a resource to the server.
 
 * The resource instance that was added to the server.
 
-#### `add_template` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1961"><Icon icon="github" /></a></sup>
+#### `add_template` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1983"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_template(self, template: ResourceTemplate) -> ResourceTemplate
@@ -55039,7 +55171,7 @@ Add a resource template to the server.
 
 * The template instance that was added to the server.
 
-#### `resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1972"><Icon icon="github" /></a></sup>
+#### `resource` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L1994"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 resource(self, uri: str) -> Callable[[F], F]
@@ -55100,7 +55232,7 @@ async def get_weather(city: str) -> str:
     return f"Weather for {city}: {data}"
 ```
 
-#### `add_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2091"><Icon icon="github" /></a></sup>
+#### `add_prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2113"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_prompt(self, prompt: Prompt | Callable[..., Any]) -> Prompt
@@ -55116,19 +55248,19 @@ Add a prompt to the server.
 
 * The prompt instance that was added to the server.
 
-#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2103"><Icon icon="github" /></a></sup>
+#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2125"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 prompt(self, name_or_fn: F) -> F
 ```
 
-#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2118"><Icon icon="github" /></a></sup>
+#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2140"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 prompt(self, name_or_fn: str | None = None) -> Callable[[F], F]
 ```
 
-#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2132"><Icon icon="github" /></a></sup>
+#### `prompt` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2154"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 prompt(self, name_or_fn: str | AnyFunction | None = None) -> Callable[[AnyFunction], FunctionPrompt] | FunctionPrompt | partial[Callable[[AnyFunction], FunctionPrompt] | FunctionPrompt]
@@ -55205,7 +55337,7 @@ def another_prompt(data: str) -> list[Message]:
 server.prompt(my_function, name="custom_name")
 ```
 
-#### `add_completion_handler` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2230"><Icon icon="github" /></a></sup>
+#### `add_completion_handler` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2252"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 add_completion_handler(self, handler: CompletionHandler) -> None
@@ -55228,19 +55360,19 @@ replaces the handler.
   returning candidate values (a `Completion`, a list of strings,
   or None). May be sync or async.
 
-#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2251"><Icon icon="github" /></a></sup>
+#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2273"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 completion(self, handler: CompletionHandler) -> CompletionHandler
 ```
 
-#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2254"><Icon icon="github" /></a></sup>
+#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2276"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 completion(self) -> Callable[[CompletionHandler], CompletionHandler]
 ```
 
-#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2258"><Icon icon="github" /></a></sup>
+#### `completion` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2280"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 completion(self, handler: CompletionHandler | None = None) -> CompletionHandler | Callable[[CompletionHandler], CompletionHandler]
@@ -55283,7 +55415,7 @@ def complete(ref, argument, context):
     return None
 ```
 
-#### `mount` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2308"><Icon icon="github" /></a></sup>
+#### `mount` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2330"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 mount(self, server: FastMCP[LifespanResultT], namespace: str | None = None, tool_names: dict[str, str] | None = None) -> None
@@ -55326,7 +55458,7 @@ middleware chain is invoked for all operations (tool calls, resource reads, prom
   to override namespaced names. Keys are the original tool names from the
   mounted server.
 
-#### `from_openapi` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2379"><Icon icon="github" /></a></sup>
+#### `from_openapi` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2401"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from_openapi(cls, openapi_spec: dict[str, Any], client: httpx2.AsyncClient | None = None, name: str = 'OpenAPI Server', route_maps: list[RouteMap] | None = None, route_map_fn: OpenAPIRouteMapFn | None = None, mcp_component_fn: OpenAPIComponentFn | None = None, mcp_names: dict[str, str] | None = None, tags: set[str] | None = None, validate_output: bool = True, **settings: Any) -> Self
@@ -55358,7 +55490,7 @@ Create a FastMCP server from an OpenAPI specification.
 
 * A FastMCP server with an OpenAPIProvider attached.
 
-#### `from_fastapi` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2432"><Icon icon="github" /></a></sup>
+#### `from_fastapi` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2454"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from_fastapi(cls, app: Any, name: str | None = None, route_maps: list[RouteMap] | None = None, route_map_fn: OpenAPIRouteMapFn | None = None, mcp_component_fn: OpenAPIComponentFn | None = None, mcp_names: dict[str, str] | None = None, httpx_client_kwargs: dict[str, Any] | None = None, tags: set[str] | None = None, **settings: Any) -> Self
@@ -55383,7 +55515,7 @@ Create a FastMCP server from a FastAPI application.
 
 * A FastMCP server with an OpenAPIProvider attached.
 
-#### `generate_name` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2487"><Icon icon="github" /></a></sup>
+#### `generate_name` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/server/server.py#L2509"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 generate_name(cls, name: str | None = None) -> str
@@ -59124,13 +59256,13 @@ Request director using openapi-core for stateless HTTP request building.
 
 ## Classes
 
-### `RequestDirector` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/director.py#L29"><Icon icon="github" /></a></sup>
+### `RequestDirector` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/director.py#L44"><Icon icon="github" /></a></sup>
 
 Builds httpx2.Request objects from HTTPRoute and arguments using openapi-core.
 
 **Methods:**
 
-#### `build` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/director.py#L36"><Icon icon="github" /></a></sup>
+#### `build` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/director.py#L51"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 build(self, route: HTTPRoute, flat_args: dict[str, Any], base_url: str = 'http://localhost') -> httpx2.Request
@@ -59323,11 +59455,11 @@ Represents a single parameter for an HTTP operation in our IR.
 
 Represents the request body for an HTTP operation in our IR.
 
-### `ResponseInfo` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/models.py#L39"><Icon icon="github" /></a></sup>
+### `ResponseInfo` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/models.py#L40"><Icon icon="github" /></a></sup>
 
 Represents response information in our IR.
 
-### `HTTPRoute` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/models.py#L47"><Icon icon="github" /></a></sup>
+### `HTTPRoute` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/models.py#L48"><Icon icon="github" /></a></sup>
 
 Intermediate Representation for a single OpenAPI operation.
 
@@ -59362,7 +59494,7 @@ Unified parser for OpenAPI schemas with generic type parameters to handle both 3
 
 **Methods:**
 
-#### `parse` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/parser.py#L697"><Icon icon="github" /></a></sup>
+#### `parse` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/parser.py#L702"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 parse(self) -> list[HTTPRoute]
@@ -59382,7 +59514,7 @@ Schema manipulation utilities for OpenAPI operations.
 
 ## Functions
 
-### `clean_schema_for_display` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/schemas.py#L14"><Icon icon="github" /></a></sup>
+### `clean_schema_for_display` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/schemas.py#L15"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 clean_schema_for_display(schema: JsonSchema | None) -> JsonSchema | None
@@ -59390,7 +59522,7 @@ clean_schema_for_display(schema: JsonSchema | None) -> JsonSchema | None
 
 Clean up a schema dictionary for display by removing internal/complex fields.
 
-### `extract_output_schema_from_responses` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/schemas.py#L643"><Icon icon="github" /></a></sup>
+### `extract_output_schema_from_responses` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/openapi/schemas.py#L634"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 extract_output_schema_from_responses(responses: dict[str, ResponseInfo], schema_definitions: dict[str, Any] | None = None, openapi_version: str | None = None) -> dict[str, Any] | None
@@ -59424,7 +59556,7 @@ Pagination utilities for MCP list operations.
 
 ## Functions
 
-### `paginate_sequence` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/pagination.py#L50"><Icon icon="github" /></a></sup>
+### `paginate_sequence` <sup><a href="https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/utilities/pagination.py#L60"><Icon icon="github" /></a></sup>
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 paginate_sequence(items: Sequence[T], cursor: str | None, page_size: int) -> tuple[list[T], str | None]

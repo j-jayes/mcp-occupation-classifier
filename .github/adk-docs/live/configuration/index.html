@@ -862,6 +862,8 @@
       
         
       
+        
+      
     
     
     
@@ -1127,6 +1129,34 @@
     
   
     Google Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to ADK
   
 
     
@@ -7514,7 +7544,7 @@ matters under <code>run_live()</code>, plus the voice-facing settings that only 
 <td><strong>response_modalities</strong></td>
 <td>list[str]</td>
 <td>Output format. Live agents must use <code>AUDIO</code> — Live models do not accept <code>TEXT</code></td>
-<td><a href="#response-modalities">Details</a></td>
+<td><a href="#response-modes">Details</a></td>
 </tr>
 <tr>
 <td><strong>streaming_mode</strong></td>
@@ -7949,9 +7979,9 @@ client must translate its own turn signals into those calls on the server.</p>
 </span></code></pre></div>
 <p>Both behaviors are probabilistic and make responses less predictable, so leave them off for
 formal or high-precision contexts and while debugging.</p>
-<p>These settings apply to <code>gemini-live-2.5-flash-native-audio</code>. Some Live models build the
-behavior in and ignore both settings, so you do not need to set them. See
-<a href="../models/#live-models">Supported models</a>.</p>
+<p>Both settings are model-dependent: Gemini 2.5 Flash Live supports them, Gemini 3.1 Flash
+Live does not, and leaving them set is the most common failure when moving to 3.1. See
+<a href="../models/#per-model-feature-support">Per-model feature support</a>.</p>
 
 
 
