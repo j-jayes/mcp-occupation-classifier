@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -139,10 +251,11 @@
             
             
 <span class="announce-item">
+  <strong>Released!</strong>
   <a href="/2.0/">
-    ADK Go 2.0 GA
+    ADK TypeScript 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
+  is now available with graph workflows support! <a href="/graphs/#typescript">Get started</a>
 </span>
 
           </div>
@@ -303,52 +416,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -789,6 +860,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -990,6 +1065,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../get-started/installation/" class="md-nav__link">
         
   
@@ -1039,6 +1142,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../get-started/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to ADK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1058,8 +1189,6 @@
       
         
           
-        
-      
         
       
         
@@ -1175,141 +1304,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../get-started/streaming/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming agent
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_2_4" id="__nav_2_2_4_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Streaming agent
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../get-started/streaming/quickstart-streaming/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Python
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../get-started/streaming/quickstart-streaming-java/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Java
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -2104,6 +2098,8 @@
       
         
       
+        
+      
     
     
     
@@ -2313,6 +2309,34 @@
     
   
     Model routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../agents/models/openai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenAI
   
 
     
@@ -3707,10 +3731,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -4025,9 +4045,40 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../../tools-custom/mcp-tools/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tools-custom/mcp-tools/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -4041,7 +4092,143 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_3" id="__nav_4_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools-custom/mcp-tools/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced configuration
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools-custom/mcp-tools/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools-custom/mcp-tools/agent-as-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent as MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tools-custom/mcp-tools/agent-managed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sub-agent delegation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -4534,144 +4721,6 @@
                 
   
   
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../context/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Context
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4_6" id="__nav_4_6_label" tabindex="">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Context
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../context/caching/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Context caching
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../context/compaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Context compression
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -4681,6 +4730,12 @@
       
         
           
+        
+      
+        
+      
+        
+      
         
       
         
@@ -4707,18 +4762,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../context/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Sessions and Memory
+    Agent context
   
 
     
@@ -4729,23 +4784,51 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_6" id="__nav_4_6_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_7">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Sessions and Memory
+    Agent context
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conversational context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -4780,7 +4863,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -4802,14 +4885,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_7_2" id="__nav_4_7_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_6_3" id="__nav_4_6_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_7_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_6_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5049,55 +5132,21 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
               
                 
   
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../../../context/compaction/" class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-          
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../mcp/" class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
     
   
-    MCP
+    Context compression
   
 
     
@@ -5105,21 +5154,38 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    MCP
+      </a>
+    </li>
   
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
+              
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../context/caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model context caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -5167,7 +5233,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5189,14 +5255,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5264,10 +5330,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_3" id="__nav_4_7_3_label" tabindex="0">
             
   
   
@@ -5285,8 +5351,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5403,6 +5469,8 @@
       
         
       
+        
+      
     
     
     
@@ -5416,10 +5484,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_4" id="__nav_4_9_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_4" id="__nav_4_7_4_label" tabindex="0">
             
   
   
@@ -5437,8 +5505,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5532,6 +5600,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5595,6 +5691,8 @@
       
         
       
+        
+      
     
     
     
@@ -5611,18 +5709,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../streaming/" class="md-nav__link ">
+            <a href="../../../live/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
     
@@ -5633,18 +5731,18 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
           </label>
@@ -5660,6 +5758,143 @@
   
     
     
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../live/get-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8_2" id="__nav_4_8_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/get-started/streaming-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/get-started/streaming-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
       
         
       
@@ -5684,17 +5919,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_10_2" id="__nav_4_10_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_8_3" id="__nav_4_8_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit development guide series
+    Building
   
 
     
@@ -5705,12 +5940,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_10_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit development guide series
+    Building
   
 
           </label>
@@ -5723,14 +5958,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/dev-guide/part1/" class="md-nav__link">
+      <a href="../../../live/workflows/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 1. Intro to streaming
+    Workflows
   
 
     
@@ -5751,14 +5986,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/dev-guide/part2/" class="md-nav__link">
+      <a href="../../../live/tools/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 2. Sending messages
+    Tools
   
 
     
@@ -5779,14 +6014,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/dev-guide/part3/" class="md-nav__link">
+      <a href="../../../live/sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 3. Event handling
+    Sessions
   
 
     
@@ -5807,14 +6042,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/dev-guide/part4/" class="md-nav__link">
+      <a href="../../../live/events/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 4. Run configuration
+    Events
   
 
     
@@ -5835,14 +6070,194 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/dev-guide/part5/" class="md-nav__link">
+      <a href="../../../live/audio-video/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 5. Audio, Images, and Video
+    Audio and video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8_4" id="__nav_4_8_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Production
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../live/custom-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a custom server
   
 
     
@@ -5871,42 +6286,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../streaming/streaming-tools/" class="md-nav__link">
+      <a href="../../../live/models/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Streaming Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../streaming/configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuring streaming behavior
+    Supported models
   
 
     
@@ -5961,7 +6348,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5983,14 +6370,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_11" id="__nav_4_11_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_11">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6325,7 +6712,7 @@
   <span class="md-ellipsis">
     
   
-    Typescript ADK
+    TypeScript ADK
   
 
     
@@ -6937,10 +7324,10 @@
     
     
       <li class="md-path__item">
-        <a href="../../" class="md-path__link">
+        <a href="../../../context/" class="md-path__link">
           
   <span class="md-ellipsis">
-    Sessions and Memory
+    Agent context
   </span>
 
         </a>
@@ -6971,7 +7358,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -6997,7 +7384,7 @@
 
 <h1 id="rewind-sessions-for-agents">Rewind sessions for agents<a class="headerlink" href="#rewind-sessions-for-agents" title="Permanent link">&para;</a></h1>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.17.0</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.17.0</span><span class="lst-kotlin">Kotlin v0.3.0</span>
 </div>
 
 <p>The ADK session Rewind feature allows you to revert a session to a previous
@@ -7012,6 +7399,9 @@ request A, you specify B, which undoes the changes from requests B and C. You
 rewind a session by using the rewind method on a <strong><em>Runner</em></strong> instance,
 specifying the user, session, and invocation id, as shown in the following code
 snippet:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="kotlin" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="kotlin">Kotlin</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create runner</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">runner</span> <span class="o">=</span> <span class="n">InMemoryRunner</span><span class="p">(</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="o">.</span><span class="n">root_agent</span><span class="p">,</span>
@@ -7022,13 +7412,13 @@ snippet:</p>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">session</span> <span class="o">=</span> <span class="k">await</span> <span class="n">runner</span><span class="o">.</span><span class="n">session_service</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">app_name</span><span class="o">=</span><span class="n">APP_NAME</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">USER_ID</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># call agent with wrapper function &quot;call_agent_async()&quot;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># call agent with wrapper function "call_agent_async()"</span>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">await</span> <span class="n">call_agent_async</span><span class="p">(</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">runner</span><span class="p">,</span> <span class="n">USER_ID</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;set state color to red&quot;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">runner</span><span class="p">,</span> <span class="n">USER_ID</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"set state color to red"</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">)</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># ... more agent calls ...</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">events_list</span> <span class="o">=</span> <span class="k">await</span> <span class="n">call_agent_async</span><span class="p">(</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">runner</span><span class="p">,</span> <span class="n">USER_ID</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;update state color to blue&quot;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">runner</span><span class="p">,</span> <span class="n">USER_ID</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"update state color to blue"</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">)</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># get invocation id</span>
@@ -7041,6 +7431,48 @@ snippet:</p>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">rewind_before_invocation_id</span><span class="o">=</span><span class="n">rewind_invocation_id</span><span class="p">,</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p">)</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">rewindSession</span><span class="p">(</span><span class="n">rootAgent</span><span class="p">:</span><span class="w"> </span><span class="n">BaseAgent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InMemorySessionService</span><span class="p">()</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">runner</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="n">InMemoryRunner</span><span class="p">(</span><span class="n">agent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="n">appName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">APP_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">sessionService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionService</span><span class="p">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="c1">// Create a session. The service assigns the id, which is held on Session.key.</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionService</span><span class="p">.</span><span class="na">createSession</span><span class="p">(</span><span class="n">SessionKey</span><span class="p">(</span><span class="n">APP_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">USER_ID</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">))</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">checkNotNull</span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="na">key</span><span class="p">.</span><span class="na">id</span><span class="p">)</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="c1">// Call the agent</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="n">callAgent</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="s">"set state color to red"</span><span class="p">)</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="c1">// ... more agent calls ...</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callAgent</span><span class="p">(</span><span class="n">runner</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="s">"update state color to blue"</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="c1">// Get the invocation id of the request to undo</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">rewindInvocationId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">events</span><span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="p">.</span><span class="na">invocationId</span><span class="w"> </span><span class="o">?:</span><span class="w"> </span><span class="k">return</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="c1">// Rewind invocations (state color: red)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="n">runner</span><span class="p">.</span><span class="na">rewindAsync</span><span class="p">(</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">USER_ID</span><span class="p">,</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">        </span><span class="n">rewindBeforeInvocationId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewindInvocationId</span><span class="p">,</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="p">}</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="kd">private</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">callAgent</span><span class="p">(</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="n">runner</span><span class="p">:</span><span class="w"> </span><span class="n">InMemoryRunner</span><span class="p">,</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="n">sessionId</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">    </span><span class="n">query</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">,</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="p">):</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="n">runner</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">        </span><span class="p">.</span><span class="na">runAsync</span><span class="p">(</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">            </span><span class="n">userId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">USER_ID</span><span class="p">,</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">            </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">            </span><span class="n">newMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Content</span><span class="p">(</span><span class="n">role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Role</span><span class="p">.</span><span class="na">USER</span><span class="p">,</span><span class="w"> </span><span class="n">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="n">Part</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">query</span><span class="p">))),</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">        </span><span class="p">).</span><span class="na">toList</span><span class="p">()</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <p>When you call the <strong><em>rewind</em></strong> method, all ADK managed session-level resources
 are restored to the state they were in <em>before</em> the request you specified with
 the <strong><em>invocation id</em></strong>. However, global resources, such as app-level or

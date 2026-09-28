@@ -117,7 +117,7 @@
 - [Anthropic API 🤝 FastMCP](https://gofastmcp.com/integrations/anthropic.md): Connect FastMCP servers to the Anthropic API
 - [Gemini SDK 🤝 FastMCP](https://gofastmcp.com/integrations/gemini.md): Connect FastMCP servers to the Google Gemini SDK
 - [OpenAI API 🤝 FastMCP](https://gofastmcp.com/integrations/openai.md): Connect FastMCP servers to the OpenAI API
-- [Pydantic AI 🤝 FastMCP](https://gofastmcp.com/integrations/pydantic-ai.md): Connect FastMCP servers to Pydantic AI agents using the FastMCPToolset
+- [Pydantic AI 🤝 FastMCP](https://gofastmcp.com/integrations/pydantic-ai.md): Connect FastMCP servers to Pydantic AI agents with MCPToolset
 - [MCP JSON Configuration 🤝 FastMCP](https://gofastmcp.com/integrations/mcp-json-configuration.md): Generate standard MCP configuration files for any compatible client
 - [Settings](https://gofastmcp.com/more/settings.md): Configure FastMCP behavior through environment variables or a .env file.
 - [CLI](https://gofastmcp.com/cli/overview.md): The fastmcp command-line interface
@@ -212,6 +212,7 @@
 - [sse](https://gofastmcp.com/python-sdk/fastmcp-client-transports-sse.md)
 - [stdio](https://gofastmcp.com/python-sdk/fastmcp-client-transports-stdio.md)
 - [code_mode](https://gofastmcp.com/python-sdk/fastmcp-experimental-transforms-code_mode.md)
+- [jev_search](https://gofastmcp.com/python-sdk/fastmcp-experimental-transforms-jev_search.md)
 - [base](https://gofastmcp.com/python-sdk/fastmcp-prompts-base.md)
 - [function_prompt](https://gofastmcp.com/python-sdk/fastmcp-prompts-function_prompt.md)
 - [base](https://gofastmcp.com/python-sdk/fastmcp-resources-base.md)

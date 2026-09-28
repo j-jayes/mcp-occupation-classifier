@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -139,10 +251,11 @@
             
             
 <span class="announce-item">
+  <strong>Released!</strong>
   <a href="/2.0/">
-    ADK Go 2.0 GA
+    ADK TypeScript 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
+  is now available with graph workflows support! <a href="/graphs/#typescript">Get started</a>
 </span>
 
           </div>
@@ -303,52 +416,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -791,6 +862,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -992,6 +1067,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../get-started/installation/" class="md-nav__link">
         
   
@@ -1041,6 +1144,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../get-started/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to ADK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1060,8 +1191,6 @@
       
         
           
-        
-      
         
       
         
@@ -1177,141 +1306,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../get-started/streaming/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming agent
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_2_2_4" id="__nav_2_2_4_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Streaming agent
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../get-started/streaming/quickstart-streaming/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Python
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../get-started/streaming/quickstart-streaming-java/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Java
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -2106,6 +2100,8 @@
       
         
       
+        
+      
     
     
     
@@ -2315,6 +2311,34 @@
     
   
     Model routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/openai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenAI
   
 
     
@@ -2938,7 +2962,7 @@
   <a href="#enable-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enable streaming
+        Text response options
       
     </span>
   </a>
@@ -3842,10 +3866,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -4154,9 +4174,40 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../tools-custom/mcp-tools/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tools-custom/mcp-tools/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -4170,7 +4221,143 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_3" id="__nav_4_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-custom/mcp-tools/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced configuration
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-custom/mcp-tools/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-custom/mcp-tools/agent-as-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent as MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools-custom/mcp-tools/agent-managed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sub-agent delegation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -4667,6 +4854,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -4691,7 +4888,7 @@
   <span class="md-ellipsis">
     
   
-    Context
+    Agent context
   
 
     
@@ -4713,7 +4910,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Context
+    Agent context
   
 
           </label>
@@ -4728,14 +4925,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../context/caching/" class="md-nav__link">
+      <a href="../../sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Context caching
+    Conversational context
   
 
     
@@ -4747,117 +4944,6 @@
     </li>
   
 
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../context/compaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Context compression
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../sessions/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sessions and Memory
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Sessions and Memory
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
             
               
@@ -4890,7 +4976,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6_3" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -4912,14 +4998,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_7_2" id="__nav_4_7_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_6_3" id="__nav_4_6_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5079,52 +5165,21 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
               
                 
   
   
   
   
-    
-    
-      
+    <li class="md-nav__item">
+      <a href="../../context/compaction/" class="md-nav__link">
         
-          
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../mcp/" class="md-nav__link ">
-              
   
   
   <span class="md-ellipsis">
     
   
-    MCP
+    Context compression
   
 
     
@@ -5132,21 +5187,38 @@
   
   
 
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    MCP
+      </a>
+    </li>
   
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
+              
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../context/caching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model context caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
           </ul>
@@ -5191,7 +5263,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5213,14 +5285,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5288,10 +5360,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_3" id="__nav_4_7_3_label" tabindex="0">
             
   
   
@@ -5309,8 +5381,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5427,6 +5499,8 @@
       
         
       
+        
+      
     
     
     
@@ -5440,10 +5514,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_4" id="__nav_4_9_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_4" id="__nav_4_7_4_label" tabindex="0">
             
   
   
@@ -5461,8 +5535,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5556,6 +5630,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5619,6 +5721,8 @@
       
         
       
+        
+      
     
     
     
@@ -5632,18 +5736,18 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../streaming/" class="md-nav__link ">
+            <a href="../../live/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
     
@@ -5654,299 +5758,23 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit
+    Live and Voice Agents
   
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_10_2" id="__nav_4_10_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Gemini Live API Toolkit development guide series
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_10_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Gemini Live API Toolkit development guide series
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 1. Intro to streaming
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 2. Sending messages
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part3/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 3. Event handling
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part4/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 4. Run configuration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/dev-guide/part5/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Part 5. Audio, Images, and Video
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/streaming-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../streaming/configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configuring streaming behavior
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
               
             
               
@@ -5979,7 +5807,572 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../live/get-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_8_2" id="__nav_4_8_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/get-started/streaming-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/get-started/streaming-java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8_3" id="__nav_4_8_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Building
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/sessions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sessions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/audio-video/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio and video
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8_4" id="__nav_4_8_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Production
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/custom-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a custom server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../live/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supported models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -6001,14 +6394,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_11" id="__nav_4_11_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_11">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6343,7 +6736,7 @@
   <span class="md-ellipsis">
     
   
-    Typescript ADK
+    TypeScript ADK
   
 
     
@@ -6876,7 +7269,7 @@
   <a href="#enable-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enable streaming
+        Text response options
       
     </span>
   </a>
@@ -7012,7 +7405,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
 
@@ -7062,7 +7455,7 @@ to <code>runner.run_async()</code> or <code>runner.run_live()</code> to override
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
@@ -7071,7 +7464,7 @@ to <code>runner.run_async()</code> or <code>runner.run_live()</code> to override
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/v2/agent&quot;</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">"google.golang.org/adk/v2/agent"</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeSSE</span><span class="p">,</span>
@@ -7092,10 +7485,12 @@ to <code>runner.run_async()</code> or <code>runner.run_live()</code> to override
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">val</span><span class="w"> </span><span class="nv">config</span><span class="w"> </span><span class="o">=</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">(</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="n">streamingMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">// Pass it to runner.runAsync</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">// runner.runAsync(..., runConfig = config)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="c1">// Cap the LLM calls a single run may make. Defaults to 500.</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span><span class="n">maxLlmCalls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">200</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">// Pass it to runner.runAsync</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">// runner.runAsync(..., runConfig = config)</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -7110,9 +7505,16 @@ whether the context window is compressed:</p>
 <ul>
 <li><code>get_session_config</code>: Limits which events are fetched when loading a session.
   Use <code>num_recent_events</code> or <code>after_timestamp</code> to avoid loading the full event
-  history on every invocation.</li>
+  history on every invocation. These filters limit the loaded view without
+  deleting stored events. New events are appended to the stored history,
+  preserving older events excluded from the loaded view.</li>
 <li><code>context_window_compression</code>: Enables context window compression for LLM
   input, useful when sessions approach model context limits.</li>
+<li><code>include_thoughts_from_other_agents</code>: Controls whether thought parts from
+  other agents are included in the LLM context. Disabled by default.</li>
+<li><code>model_input_context</code>: A list of <code>types.Content</code> added to the LLM request for
+  this invocation only. The runner does not persist it to the session, so you
+  can supply per-turn context without changing the conversation history.</li>
 </ul>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="python_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label></div>
 <div class="tabbed-content">
@@ -7127,18 +7529,21 @@ whether the context window is compressed:</p>
 </div>
 </div>
 </div>
-<h2 id="enable-streaming">Enable streaming<a class="headerlink" href="#enable-streaming" title="Permanent link">&para;</a></h2>
-<p>To control how the agent delivers responses, set the <code>streaming_mode</code> parameter:</p>
+<h2 id="enable-streaming">Text response options<a class="headerlink" href="#enable-streaming" title="Permanent link">&para;</a></h2>
+<p>You can control how an agent responds in text mode, word-by-word as it is
+generated, or as one full response, with the <strong><em>Streaming Mode</em></strong> parameter, as
+described below:</p>
 <ul>
 <li><strong><code>StreamingMode.NONE</code></strong> (default): The runner returns one complete response
   per turn. Suitable for CLI tools, batch processing, and synchronous workflows.</li>
 <li><strong><code>StreamingMode.SSE</code></strong>: Server-Sent Events streaming. The runner yields
   partial events as the LLM generates, enabling typewriter-style UIs and
   real-time chat displays.</li>
-<li><strong><code>StreamingMode.BIDI</code></strong>: Reserved for bidirectional streaming, but <strong>not
-  used</strong> in the standard <code>run_async()</code> path. For bidirectional streaming, use
-  <code>runner.run_live()</code> instead.</li>
 </ul>
+<p>There is another setting for the <strong><em>Streaming Mode</em></strong> parameter which enables
+bidirectional streaming of data, including voice input and output. This feature
+requires additional configuration beyond simple agents. For more information
+about this feature, see <a href="../../live/">Live and Voice Agents</a>.</p>
 <p>Set <code>support_cfc=True</code> alongside <code>StreamingMode.SSE</code> to enable Compositional
 Function Calling (CFC), which allows the model to dynamically compose and
 execute function calls. CFC uses the Live API under the hood.</p>
@@ -7160,17 +7565,16 @@ releases.</p>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nx">supportCfc</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">150</span><span class="p">,</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">};</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">150</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">};</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;google.golang.org/adk/v2/agent&quot;</span>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">"google.golang.org/adk/v2/agent"</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">RunConfig</span><span class="p">{</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nx">StreamingMode</span><span class="p">:</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">StreamingModeSSE</span><span class="p">,</span>
@@ -7188,10 +7592,12 @@ releases.</p>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">val</span><span class="w"> </span><span class="nv">streamingConfig</span><span class="w"> </span><span class="o">=</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">(</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">        </span><span class="n">streamingMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">,</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="p">)</span>
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Note: Kotlin currently has no supportCfc equivalent</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">val</span><span class="w"> </span><span class="nv">streamingConfig</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">(</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">        </span><span class="n">streamingMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="n">maxLlmCalls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">150</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="p">)</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -7203,11 +7609,20 @@ releases.</p>
 
 <p>For voice-enabled agents, configure speech synthesis, audio transcription, and
 response modalities.</p>
+<div class="admonition tip">
+<p class="admonition-title">Live agents</p>
+<p>This section covers the audio fields shared across languages. For the full live
+(<code>run_live()</code>) configuration reference — transcription streaming, voice selection,
+voice activity detection, and proactive/affective dialog — see
+<a href="../../live/configuration/">Live agent configuration</a>.</p>
+</div>
 <ul>
 <li><code>speech_config</code>: Sets the voice and language for speech output (e.g., the
   "Kore" voice with <code>en-US</code>).</li>
-<li><code>response_modalities</code>: Controls output formats. Set to <code>["AUDIO", "TEXT"]</code> for
-  agents that both speak and return text.</li>
+<li><code>response_modalities</code>: Controls the output format. A session accepts exactly one
+  modality — use <code>["AUDIO"]</code> for voice agents and <code>["TEXT"]</code> for text-only ones.
+  To get both speech and text, set <code>["AUDIO"]</code> and read the text from the output
+  audio transcription.</li>
 <li><code>output_audio_transcription</code> / <code>input_audio_transcription</code>: Enable
   transcription of audio output from the model and audio input from the user.
   Both default to <code>AudioTranscriptionConfig()</code> in Python.</li>
@@ -7220,33 +7635,33 @@ response modalities.</p>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
 </span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">config</span> <span class="o">=</span> <span class="n">RunConfig</span><span class="p">(</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">speech_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">SpeechConfig</span><span class="p">(</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="n">language_code</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>        <span class="n">language_code</span><span class="o">=</span><span class="s2">"en-US"</span><span class="p">,</span>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="n">voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">VoiceConfig</span><span class="p">(</span>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>            <span class="n">prebuilt_voice_config</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">PrebuiltVoiceConfig</span><span class="p">(</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                <span class="n">voice_name</span><span class="o">=</span><span class="s2">&quot;Kore&quot;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                <span class="n">voice_name</span><span class="o">=</span><span class="s2">"Kore"</span>
 </span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>            <span class="p">)</span>
 </span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="p">),</span>
 </span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="p">),</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;AUDIO&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">],</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">response_modalities</span><span class="o">=</span><span class="p">[</span><span class="s2">"AUDIO"</span><span class="p">],</span>
 </span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="n">streaming_mode</span><span class="o">=</span><span class="n">StreamingMode</span><span class="o">.</span><span class="n">SSE</span><span class="p">,</span>
 </span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="n">max_llm_calls</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
 </span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="p">)</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Modality</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/genai&#39;</span><span class="p">;</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="p">,</span><span class="w"> </span><span class="nx">StreamingMode</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Modality</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/genai'</span><span class="p">;</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="nx">speechConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">        </span><span class="nx">languageCode</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">        </span><span class="nx">languageCode</span><span class="o">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">        </span><span class="nx">voiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">            </span><span class="nx">prebuiltVoiceConfig</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">                </span><span class="nx">voiceName</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Kore&quot;</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">                </span><span class="nx">voiceName</span><span class="o">:</span><span class="w"> </span><span class="s2">"Kore"</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">            </span><span class="p">}</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="p">},</span>
 </span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="p">},</span>
-</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="nx">responseModalities</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">Modality</span><span class="p">.</span><span class="nx">AUDIO</span><span class="p">,</span><span class="w"> </span><span class="nx">Modality</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">],</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="nx">responseModalities</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">Modality</span><span class="p">.</span><span class="nx">AUDIO</span><span class="p">],</span>
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="nx">streamingMode</span><span class="o">:</span><span class="w"> </span><span class="kt">StreamingMode.SSE</span><span class="p">,</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="nx">maxLlmCalls</span><span class="o">:</span><span class="w"> </span><span class="kt">1000</span><span class="p">,</span>
 </span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="p">};</span>
@@ -7265,15 +7680,15 @@ response modalities.</p>
 </span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">        </span><span class="p">.</span><span class="na">streamingMode</span><span class="p">(</span><span class="n">StreamingMode</span><span class="p">.</span><span class="na">SSE</span><span class="p">)</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">        </span><span class="p">.</span><span class="na">maxLlmCalls</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">        </span><span class="p">.</span><span class="na">responseModalities</span><span class="p">(</span><span class="n">ImmutableList</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="n">Modality</span><span class="p">.</span><span class="na">Known</span><span class="p">.</span><span class="na">AUDIO</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="n">Modality</span><span class="p">.</span><span class="na">Known</span><span class="p">.</span><span class="na">TEXT</span><span class="p">)))</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">        </span><span class="p">.</span><span class="na">responseModalities</span><span class="p">(</span><span class="n">ImmutableList</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Modality</span><span class="p">(</span><span class="n">Modality</span><span class="p">.</span><span class="na">Known</span><span class="p">.</span><span class="na">AUDIO</span><span class="p">)))</span>
 </span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">        </span><span class="p">.</span><span class="na">speechConfig</span><span class="p">(</span>
 </span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">            </span><span class="n">SpeechConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
 </span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">                </span><span class="p">.</span><span class="na">voiceConfig</span><span class="p">(</span>
 </span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">                    </span><span class="n">VoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
 </span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">                        </span><span class="p">.</span><span class="na">prebuiltVoiceConfig</span><span class="p">(</span>
-</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">                            </span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">&quot;Kore&quot;</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">                            </span><span class="n">PrebuiltVoiceConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">voiceName</span><span class="p">(</span><span class="s">"Kore"</span><span class="p">).</span><span class="na">build</span><span class="p">())</span>
 </span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">                        </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">                </span><span class="p">.</span><span class="na">languageCode</span><span class="p">(</span><span class="s">&quot;en-US&quot;</span><span class="p">)</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">                </span><span class="p">.</span><span class="na">languageCode</span><span class="p">(</span><span class="s">"en-US"</span><span class="p">)</span>
 </span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">                </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
 </span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
 </span></code></pre></div>
@@ -7282,28 +7697,30 @@ response modalities.</p>
 </div>
 <h2 id="configure-live-agents">Configure live agents<a class="headerlink" href="#configure-live-agents" title="Permanent link">&para;</a></h2>
 <div class="language-support-tag">
-  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-typescript">TypeScript</span>
+  <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python</span><span class="lst-typescript">TypeScript</span><span class="lst-java">Java</span>
 </div>
 
-<p>When using <code>runner.run_live()</code>, configure real-time behavior with these
-additional parameters:</p>
+<p>ADK agents can support <a href="../../live/">Live and Voice Agents</a> to create
+interactive agent experiences. You configure agents that support this
+functionality using the <code>runner.run_live()</code> method.
+Live agent (<code>run_live()</code>) sessions add a set of real-time parameters, including
+<code>realtime_input_config</code>, <code>session_resumption</code>, <code>save_live_blob</code>,
+<code>tool_thread_pool_config</code>, <code>proactivity</code>, <code>enable_affective_dialog</code>, and more.
+For more information, see the live agent docs:</p>
 <ul>
-<li><code>realtime_input_config</code>: Configures how audio input is received from users.</li>
-<li><code>proactivity</code>: Allows the model to respond proactively and ignore irrelevant
-  input.</li>
-<li><code>enable_affective_dialog</code>: When <code>True</code>, the model detects user emotions and
-  adapts its tone accordingly.</li>
-<li><code>avatar_config</code>: Configures an avatar for live agents.</li>
-<li><code>session_resumption</code>: Enables transparent session resumption across
-  disconnects.</li>
-<li><code>save_live_blob</code>: When <code>True</code>, saves live audio and video data to the session
-  and artifact service.</li>
-<li><code>tool_thread_pool_config</code>: Runs tool executions in a background thread pool
-  to keep the event loop responsive to user interruptions.</li>
+<li><strong><a href="../../live/configuration/">Live agent configuration</a></strong>: <code>RunConfig</code>
+  reference for live agents.</li>
+<li><strong><a href="../../live/sessions/#session-resumption">Sessions</a></strong>: resume and reconnect
+   sessions.</li>
+<li><strong><a href="../../live/configuration/#proactivity-and-affective-dialog">Configuration: proactivity and affective dialog</a></strong>:
+  native-audio conversational features and the models that support them.</li>
 </ul>
-<p>Not all parameters are available in every language. See the
+<p>The <code>tool_thread_pool_config</code> setting is an exception: it is a runtime concern rather than a
+Live API one, so it stays here. It runs tool executions in a background thread
+pool so the event loop keeps responding to user interruptions.
+Not all parameters are available in every language. See the
 <a href="#api-reference">API reference</a> for language-specific details.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="python_4" name="__tabbed_5" type="radio" /><input id="typescript_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="python_4">Python</label><label for="typescript_3">TypeScript</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:3"><input checked="checked" id="python_4" name="__tabbed_5" type="radio" /><input id="typescript_3" name="__tabbed_5" type="radio" /><input id="java_3" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="python_4">Python</label><label for="typescript_3">TypeScript</label><label for="java_3">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.run_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunConfig</span><span class="p">,</span> <span class="n">ToolThreadPoolConfig</span>
@@ -7322,7 +7739,7 @@ execution of Python bytecode.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@google/adk&#39;</span><span class="p">;</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">RunConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">RunConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nx">enableAffectiveDialog</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
@@ -7332,6 +7749,18 @@ execution of Python bytecode.</p>
 </span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">};</span>
 </span></code></pre></div>
 </div>
+<div class="tabbed-block">
+<div class="language-java highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.RunConfig</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.AvatarConfig</span><span class="p">;</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="n">RunConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RunConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">    </span><span class="p">.</span><span class="na">avatarConfig</span><span class="p">(</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="n">AvatarConfig</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">            </span><span class="p">.</span><span class="na">avatarName</span><span class="p">(</span><span class="s">"PREBUILT_AVATAR_ID"</span><span class="p">)</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span></code></pre></div>
+</div>
 </div>
 </div>
 <h2 id="configure-runtime-limits-and-debugging">Configure runtime limits and debugging<a class="headerlink" href="#configure-runtime-limits-and-debugging" title="Permanent link">&para;</a></h2>
@@ -7339,9 +7768,11 @@ execution of Python bytecode.</p>
 <ul>
 <li><code>max_llm_calls</code>: Caps the total number of LLM calls per run (default: 500).
   Set to 0 or negative for unlimited calls, though this is not recommended for
-  production. Values at or above <code>sys.maxsize</code> raise an error.</li>
+  production. Passing your language's largest integer raises an error:
+  <code>sys.maxsize</code> in Python, <code>Int.MAX_VALUE</code> in Kotlin.</li>
 <li><code>save_input_blobs_as_artifacts</code>: When <code>True</code>, saves input blobs (e.g.,
-  uploaded files) as run artifacts for debugging and auditing.</li>
+  uploaded files) as run artifacts for debugging and auditing. Deprecated in
+  Python in favor of <code>SaveFilesAsArtifactsPlugin</code>.</li>
 <li><code>custom_metadata</code>: A <code>dict[str, Any]</code> of arbitrary metadata attached to the
   invocation, useful for tracing or logging.</li>
 </ul>

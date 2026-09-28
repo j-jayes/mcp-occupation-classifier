@@ -108,6 +108,118 @@
   <meta name="twitter:description" content="Build powerful multi-agent systems with Agent Development Kit (ADK)">
   <meta name="twitter:image" content="https://adk.dev/assets/adk-social-card.png">
 
+  <!-- Pagefind search UI. hooks/pagefind.py builds the index and guards both
+       filenames, so a third asset added here needs adding there too. -->
+  <link rel="stylesheet" href="../pagefind/pagefind-component-ui.css">
+  <script type="module" src="../pagefind/pagefind-component-ui.js"></script>
+  <!-- `| url` covers only the assets above. document.currentScript is null in a
+       module script, so the bundle always fetches its index from the origin
+       root: correct at a root domain, wrong under a subpath. -->
+
+  <!-- Raise termSimilarity so "LlmAgent" beats pages that merely say "agent"
+       often. Set on pagefindOptions, which is read lazily; configureInstance()
+       is ignored once the components create the instance on connect. -->
+  <script type="module">
+    window.PagefindComponents
+      .getInstanceManager()
+      .getInstance("default")
+      .pagefindOptions.ranking = { termSimilarity: 2.0 };
+  </script>
+
+  <!-- Mirror Material's data-md-color-scheme onto data-pf-theme, the only
+       thing that switches Pagefind's dark palette. -->
+  <script>
+    (function () {
+      var sync = function () {
+        var root = document.documentElement;
+        if (document.body.getAttribute("data-md-color-scheme") === "slate") {
+          root.setAttribute("data-pf-theme", "dark");
+        } else {
+          root.removeAttribute("data-pf-theme");
+        }
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        sync();
+        new MutationObserver(sync).observe(document.body, {
+          attributes: true,
+          attributeFilter: ["data-md-color-scheme"],
+        });
+      });
+    })();
+  </script>
+
+  <!-- Upstream bug: reset-on-close clears the results but never the input, so
+       the next keystroke appends to the old query. Writing through the native
+       setter keeps the component in step. Delete this once Pagefind fixes it. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.querySelector("pagefind-modal");
+        // Bind once: the modal outlives instant navigation.
+        if (!modal || modal.dataset.adkPfClearOnClose) return;
+        modal.dataset.adkPfClearOnClose = "1";
+        modal.addEventListener(
+          "close",
+          function () {
+            var input =
+              modal.querySelector("input") ||
+              (modal.shadowRoot && modal.shadowRoot.querySelector("input"));
+            if (!input || !input.value) return;
+            Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              "value",
+            ).set.call(input, "");
+            input.dispatchEvent(
+              new Event("input", { bubbles: true, composed: true }),
+            );
+          },
+          true, // `close` does not bubble, but capture still reaches it.
+        );
+      });
+    })();
+  </script>
+
+  <!-- Result links are light DOM, so navigation.instant swaps the page without
+       unloading the header and the modal stays open. document$ emits after every
+       swap; close() no-ops when the modal is already closed. -->
+  <script>
+    (function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!window.document$ || window.__adkPagefindCloseOnNav) return;
+        window.__adkPagefindCloseOnNav = true;
+        window.document$.subscribe(function () {
+          var modal = document.querySelector("pagefind-modal");
+          if (modal && typeof modal.close === "function") modal.close();
+        });
+      });
+    })();
+  </script>
+
+  <!-- Restore the `/` and `s` shortcuts lost with Material's search plugin;
+       Pagefind's trigger parses one binding only, already spent on mod+k.
+       Ignore them with a modifier held, while typing, or while already open. -->
+  <script>
+    (function () {
+      if (window.__adkPagefindSearchKeys) return;
+      window.__adkPagefindSearchKeys = true;
+      document.addEventListener("keydown", function (event) {
+        if (event.key !== "/" && event.key !== "s") return;
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
+        var target = event.target;
+        if (target instanceof Element) {
+          if (target.isContentEditable) return;
+          if (target.closest("input, textarea, select")) return;
+        }
+        var modal = document.querySelector("pagefind-modal");
+        if (!modal || typeof modal.open !== "function") return;
+        var dialog = modal.querySelector("dialog");
+        if (dialog && dialog.open) return;
+        event.preventDefault();
+        modal.open();
+      });
+    })();
+  </script>
+
   </head>
   
   
@@ -139,10 +251,11 @@
             
             
 <span class="announce-item">
+  <strong>Released!</strong>
   <a href="/2.0/">
-    ADK Go 2.0 GA
+    ADK TypeScript 2.0 GA
   </a>
-  is LIVE with graph workflows and collaborative agents! <a href="/get-started/go/">Get started.</a>
+  is now available with graph workflows support! <a href="/graphs/#typescript">Get started</a>
 </span>
 
           </div>
@@ -303,52 +416,10 @@
     <!-- Site language selector -->
     
 
-    <!-- Button to open search modal -->
-    
-      
-
-      <!-- Check if search is actually enabled - see https://t.ly/DT_0V -->
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-
-        <!-- Search interface -->
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
-    
+    <!-- Pagefind search. Both live in the header nav, which survives
+         navigation.instant DOM swaps, so the modal keeps its state. -->
+    <pagefind-modal-trigger placeholder="Search"></pagefind-modal-trigger>
+    <pagefind-modal reset-on-close></pagefind-modal>
   </nav>
 
   <!-- Navigation tabs (sticky) -->
@@ -791,6 +862,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -992,6 +1067,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../get-started/agents-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../get-started/installation/" class="md-nav__link">
         
   
@@ -1028,6 +1131,34 @@
     
   
     Google Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-started/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to ADK
   
 
     
@@ -3600,8 +3731,6 @@
       
         
       
-        
-      
     
     
     
@@ -3910,9 +4039,40 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../tools-custom/mcp-tools/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../tools-custom/mcp-tools/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -3926,7 +4086,143 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_3" id="__nav_4_2_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools-custom/mcp-tools/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced configuration
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools-custom/mcp-tools/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools-custom/mcp-tools/agent-as-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent as MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools-custom/mcp-tools/agent-managed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sub-agent delegation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -4811,6 +5107,14 @@
           
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -4825,84 +5129,6 @@
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../mcp/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_7">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    MCP
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -4924,14 +5150,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4999,10 +5225,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_8_3" id="__nav_4_8_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_3" id="__nav_4_7_3_label" tabindex="0">
             
   
   
@@ -5020,8 +5246,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5138,6 +5364,8 @@
       
         
       
+        
+      
     
     
     
@@ -5151,10 +5379,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_8_4" id="__nav_4_8_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_7_4" id="__nav_4_7_4_label" tabindex="0">
             
   
   
@@ -5172,8 +5400,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5267,6 +5495,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../a2a/quickstart-consuming-kotlin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kotlin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -5345,7 +5601,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5367,14 +5623,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5416,7 +5672,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_2" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5438,14 +5694,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_9_2" id="__nav_4_9_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_8_2" id="__nav_4_8_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -5540,6 +5796,8 @@
       
         
       
+        
+      
     
     
     
@@ -5553,17 +5811,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_3" >
         
           
-          <label class="md-nav__link" for="__nav_4_9_3" id="__nav_4_9_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_8_3" id="__nav_4_8_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
     
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
     
@@ -5574,12 +5832,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_9_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_9_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_3">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Gemini Live API Toolkit development guide
+    Building
   
 
           </label>
@@ -5592,14 +5850,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../live/dev-guide/part1/" class="md-nav__link">
+      <a href="../live/workflows/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 1. Intro to streaming
+    Workflows
   
 
     
@@ -5620,14 +5878,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../live/dev-guide/part2/" class="md-nav__link">
+      <a href="../live/tools/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 2. Sending messages
+    Tools
   
 
     
@@ -5648,14 +5906,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../live/dev-guide/part3/" class="md-nav__link">
+      <a href="../live/sessions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 3. Event handling
+    Sessions
   
 
     
@@ -5676,14 +5934,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../live/dev-guide/part4/" class="md-nav__link">
+      <a href="../live/events/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 4. Run configuration
+    Events
   
 
     
@@ -5704,50 +5962,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../live/dev-guide/part5/" class="md-nav__link">
+      <a href="../live/audio-video/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Part 5. Audio, Images, and Video
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../live/streaming-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Streaming Tools
+    Audio and video
   
 
     
@@ -5775,7 +5997,195 @@
   <span class="md-ellipsis">
     
   
-    Configuring streaming behavior
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8_4" id="__nav_4_8_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Production
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Production
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live/guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live/evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live/custom-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build a custom server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supported models
   
 
     
@@ -5827,7 +6237,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_9" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -5849,14 +6259,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_4_10" id="__nav_4_10_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_4_9" id="__nav_4_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_10">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6769,7 +7179,7 @@
   </nav>
 
               
-              <article class="md-content__inner md-typeset">
+              <article class="md-content__inner md-typeset" data-pagefind-body>
                 
                   
   
@@ -7113,6 +7523,17 @@ integrations to this catalog, see the
 </a>
 
 
+<a href="/integrations/clickhouse/" class="tool-card" data-tags="data,mcp">
+    <div class="tool-card-image-wrapper">
+        <img src="/integrations/assets/toolbox.svg" alt="ClickHouse Cloud">
+    </div>
+    <div class="tool-card-content">
+        <h3>ClickHouse Cloud</h3>
+        <p>Query data, explore schemas, monitor services and costs</p>
+    </div>
+</a>
+
+
 <a href="/integrations/cloud-trace/" class="tool-card" data-tags="observability,google">
     <div class="tool-card-image-wrapper">
         <img src="/integrations/assets/cloud-trace.svg" alt="Google Cloud Trace">
@@ -7153,6 +7574,17 @@ integrations to this catalog, see the
     <div class="tool-card-content">
         <h3>Computer Use</h3>
         <p>Operate computer user interfaces using Gemini models</p>
+    </div>
+</a>
+
+
+<a href="/integrations/copilotkit/" class="tool-card" data-tags="">
+    <div class="tool-card-image-wrapper">
+        <img src="/integrations/assets/copilotkit.png" alt="CopilotKit">
+    </div>
+    <div class="tool-card-content">
+        <h3>CopilotKit</h3>
+        <p>Add React, Angular, Vue, mobile, and Slack frontends to your agents</p>
     </div>
 </a>
 
@@ -7454,6 +7886,17 @@ integrations to this catalog, see the
 </a>
 
 
+<a href="/integrations/langfuse/" class="tool-card" data-tags="observability,evaluation">
+    <div class="tool-card-image-wrapper">
+        <img src="/integrations/assets/langfuse.png" alt="Langfuse">
+    </div>
+    <div class="tool-card-content">
+        <h3>Langfuse</h3>
+        <p>Open-source AI engineering platform to debug, analyze, and iterate on LLM applications</p>
+    </div>
+</a>
+
+
 <a href="/integrations/langwatch/" class="tool-card" data-tags="observability,evaluation">
     <div class="tool-card-image-wrapper">
         <img src="/integrations/assets/langwatch.png" alt="LangWatch">
@@ -7483,6 +7926,17 @@ integrations to this catalog, see the
     <div class="tool-card-content">
         <h3>Linear</h3>
         <p>Manage issues, track projects, and streamline development</p>
+    </div>
+</a>
+
+
+<a href="/integrations/livekit/" class="tool-card" data-tags="connectors">
+    <div class="tool-card-image-wrapper">
+        <img src="/integrations/assets/livekit.png" alt="LiveKit">
+    </div>
+    <div class="tool-card-content">
+        <h3>LiveKit</h3>
+        <p>Put a live voice agent in a WebRTC room or on a phone call</p>
     </div>
 </a>
 
@@ -7560,6 +8014,17 @@ integrations to this catalog, see the
     <div class="tool-card-content">
         <h3>MLflow Tracing</h3>
         <p>Ingest OpenTelemetry traces for agent runs, tool calls, and model requests</p>
+    </div>
+</a>
+
+
+<a href="/integrations/model-armor/" class="tool-card" data-tags="google">
+    <div class="tool-card-image-wrapper">
+        <img src="/integrations/assets/model-armor.png" alt="Model Armor">
+    </div>
+    <div class="tool-card-content">
+        <h3>Model Armor</h3>
+        <p>Screen agent input and output against Google Cloud security templates</p>
     </div>
 </a>
 
