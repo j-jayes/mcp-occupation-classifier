@@ -1,6 +1,6 @@
 # AI Models for ADK agents
 
-Supported in ADKPythonTypescriptGoJava
+Supported in ADKPythonTypeScriptGoJava
 
 Agent Development Kit (ADK) is designed for flexibility, allowing you to integrate various Large Language Models (LLMs) into your agents. This section details how to leverage Gemini and integrate other popular models effectively, including those hosted externally or running locally.
 

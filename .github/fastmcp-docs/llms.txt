@@ -133,9 +133,9 @@
 - [Upgrading from MCP SDK v2](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk-v2.md): Move a server built on the MCP Python SDK v2's MCPServer class to FastMCP
 - [Upgrading from the Low-Level SDK v1](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk-v1.md): Upgrade your MCP server from v1 of the low-level Python SDK's Server class to FastMCP
 - [Upgrading from the Low-Level SDK v2](https://gofastmcp.com/getting-started/upgrading/from-low-level-sdk-v2.md): Move a server built on v2 of the low-level Python SDK's Server class to FastMCP
-- [Contributing](https://gofastmcp.com/development/contributing.md): Development workflow for FastMCP contributors
-- [Tests](https://gofastmcp.com/development/tests.md): Testing patterns and requirements for FastMCP
-- [Releases](https://gofastmcp.com/development/releases.md): FastMCP versioning and release process
+- [Contributing](https://gofastmcp.com/development/contributing.md): Choose a contribution, set up FastMCP, and prepare it for review
+- [Tests](https://gofastmcp.com/development/tests.md): Verify FastMCP behavior through real clients, HTTP applications, and targeted regressions
+- [Releases](https://gofastmcp.com/development/releases.md): Compatibility decisions, release branches, and documentation publishing
 - [Contrib Modules](https://gofastmcp.com/patterns/contrib.md): Community-contributed modules extending FastMCP
 - [FastMCP Updates](https://gofastmcp.com/updates.md)
 - [Changelog](https://gofastmcp.com/changelog.md)
@@ -157,6 +157,7 @@
 - [generative](https://gofastmcp.com/python-sdk/fastmcp-apps-generative.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-cli-__init__.md)
 - [apps_dev](https://gofastmcp.com/python-sdk/fastmcp-cli-apps_dev.md)
+- [apps_dev_security](https://gofastmcp.com/python-sdk/fastmcp-cli-apps_dev_security.md)
 - [auth](https://gofastmcp.com/python-sdk/fastmcp-cli-auth.md)
 - [cimd](https://gofastmcp.com/python-sdk/fastmcp-cli-cimd.md)
 - [cli](https://gofastmcp.com/python-sdk/fastmcp-cli-cli.md)
@@ -276,6 +277,7 @@
 - [timing](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-timing.md)
 - [tool_injection](https://gofastmcp.com/python-sdk/fastmcp-server-middleware-tool_injection.md)
 - [__init__](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-__init__.md)
+- [extensions](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-extensions.md)
 - [lifespan](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-lifespan.md)
 - [mcp_operations](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-mcp_operations.md)
 - [transport](https://gofastmcp.com/python-sdk/fastmcp-server-mixins-transport.md)
@@ -573,3 +575,6 @@
 - [Releases](https://gofastmcp.com/v2/development/releases.md): FastMCP versioning and release process
 - [Upgrade Guide](https://gofastmcp.com/v2/development/upgrade-guide.md): Migration instructions for upgrading between FastMCP versions
 - [Changelog](https://gofastmcp.com/v2/changelog.md)
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

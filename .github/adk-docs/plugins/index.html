@@ -2160,9 +2160,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2201,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7843,9 +7920,15 @@ immediately:</p>
     Plugin that provides global instructions functionality at the App level.</li>
 <li><a href="https://github.com/google/adk-python/blob/main/src/google/adk/plugins/save_files_as_artifacts_plugin.py"><strong>Save Files as Artifacts</strong></a>:
     Saves files included in user messages as Artifacts.</li>
-<li><a href="https://github.com/google/adk-python/blame/main/src/google/adk/plugins/logging_plugin.py"><strong>Logging</strong></a>:
+<li><a href="https://github.com/google/adk-python/blob/main/src/google/adk/plugins/auto_tracing_plugin.py"><strong>Auto Tracing</strong></a>:
+    Wraps the functions in your agent's own packages in OpenTelemetry spans.</li>
+<li><a href="https://github.com/google/adk-python/blob/main/src/google/adk/plugins/multimodal_tool_results_plugin.py"><strong>Multimodal Tool Results</strong></a>:
+    Lets function tools return content parts directly to the model.</li>
+<li><a href="https://github.com/google/adk-python/blob/main/src/google/adk/plugins/logging_plugin.py"><strong>Logging</strong></a>:
     Log important information at each agent workflow callback point.</li>
 </ul>
+<p>Check out the <a href="/integrations/">ADK Integrations</a> page for more native and 
+third party plugins for your agents.</p>
 <h2 id="define-and-register-plugins">Define and register Plugins<a class="headerlink" href="#define-and-register-plugins" title="Permanent link">&para;</a></h2>
 <p>This section explains how to define Plugin classes and register them as part of
 your agent workflow. For a complete code example, see
@@ -8644,9 +8727,9 @@ callback in the event of an error, as detailed below:</p>
     is triggered instead, allowing for graceful recovery.</li>
 </ul>
 <p><strong>Caution:</strong> Plugins that implement the <strong><code>before_model</code></strong> and  <code>**after_model</code>
-<em><em>callback methods are executed </em>before</em> the Model-level callbacks are executed.
+*<em>callback methods are executed </em>before<em> the Model-level callbacks are executed.
 Furthermore, if a Plugin-level model callback returns anything other than a
-<code>None</code> or null response, the Model-level callback is <em>not executed</em> (skipped).</p>
+<code>None</code> or null response, the Model-level callback is </em>not executed* (skipped).</p>
 <h4 id="model-on-error-callback-details">Model on error callback details<a class="headerlink" href="#model-on-error-callback-details" title="Permanent link">&para;</a></h4>
 <p>The on error callback for Model objects is only supported by the Plugins
 feature works as follows:</p>

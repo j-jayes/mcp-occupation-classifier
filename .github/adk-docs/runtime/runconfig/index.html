@@ -2162,9 +2162,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2178,7 +2203,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7775,6 +7852,11 @@ execution of Python bytecode.</p>
   Python in favor of <code>SaveFilesAsArtifactsPlugin</code>.</li>
 <li><code>custom_metadata</code>: A <code>dict[str, Any]</code> of arbitrary metadata attached to the
   invocation, useful for tracing or logging.</li>
+<li><code>service_tier</code>: Selects the serving capacity for the run's model calls. ADK
+  Python only, and applies only to Gemini models that use the Interactions API.
+  <code>ServiceTier.DEFERRED</code> queues each model call to run on off-peak capacity and
+  cannot be combined with <code>StreamingMode.SSE</code>. See
+  <a href="/agents/models/google-gemini/deferred-schedule/">Deferred scheduling</a>.</li>
 </ul>
 <h2 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <p>For the complete list of fields, types, and defaults, see the API reference for

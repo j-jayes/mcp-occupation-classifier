@@ -2160,9 +2160,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2201,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7277,6 +7354,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#render-ui-widgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Render UI Widgets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#advanced-direct-invocationcontext-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9083,119 +9171,151 @@ Here are the primary context flavors you will encounter:</p>
 </div>
 </div>
 </div>
+<h3 id="render-ui-widgets">Render UI Widgets<a class="headerlink" href="#render-ui-widgets" title="Permanent link">&para;</a></h3>
+<div class="language-support-tag">
+    <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v1.27.0</span>
+</div>
+
+<p>To send rich UI components (such as MCP App iframes) to the client alongside
+agent responses, use <code>context.render_ui_widget()</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:1"><input checked="checked" id="python_14" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="python_14">Python</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-python highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.events.ui_widget</span><span class="w"> </span><span class="kn">import</span> <span class="n">UiWidget</span>
+</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolContext</span>
+</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>
+</span><span id="__span-58-4"><a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">render_styled_widget</span><span class="p">(</span><span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ToolContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-58-5"><a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a><span class="w">    </span><span class="sd">"""Render a UI widget utilizing the user-specified color."""</span>
+</span><span id="__span-58-6"><a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a>
+</span><span id="__span-58-7"><a id="__codelineno-58-7" name="__codelineno-58-7" href="#__codelineno-58-7"></a>    <span class="n">widget</span> <span class="o">=</span> <span class="n">UiWidget</span><span class="p">(</span>
+</span><span id="__span-58-8"><a id="__codelineno-58-8" name="__codelineno-58-8" href="#__codelineno-58-8"></a>        <span class="nb">id</span><span class="o">=</span><span class="s2">"my_status_dashboard"</span><span class="p">,</span>
+</span><span id="__span-58-9"><a id="__codelineno-58-9" name="__codelineno-58-9" href="#__codelineno-58-9"></a>        <span class="n">provider</span><span class="o">=</span><span class="s2">"mcp"</span><span class="p">,</span>
+</span><span id="__span-58-10"><a id="__codelineno-58-10" name="__codelineno-58-10" href="#__codelineno-58-10"></a>        <span class="n">payload</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-58-11"><a id="__codelineno-58-11" name="__codelineno-58-11" href="#__codelineno-58-11"></a>            <span class="s2">"resource_uri"</span><span class="p">:</span> <span class="s2">"ui://analytics/status"</span><span class="p">,</span>
+</span><span id="__span-58-12"><a id="__codelineno-58-12" name="__codelineno-58-12" href="#__codelineno-58-12"></a>            <span class="s2">"tool"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"get_system_status"</span><span class="p">},</span>
+</span><span id="__span-58-13"><a id="__codelineno-58-13" name="__codelineno-58-13" href="#__codelineno-58-13"></a>            <span class="s2">"tool_args"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"theme_color"</span><span class="p">:</span> <span class="n">color</span><span class="p">}</span> <span class="c1"># Dynamically passed from user interaction</span>
+</span><span id="__span-58-14"><a id="__codelineno-58-14" name="__codelineno-58-14" href="#__codelineno-58-14"></a>        <span class="p">}</span>
+</span><span id="__span-58-15"><a id="__codelineno-58-15" name="__codelineno-58-15" href="#__codelineno-58-15"></a>    <span class="p">)</span>
+</span><span id="__span-58-16"><a id="__codelineno-58-16" name="__codelineno-58-16" href="#__codelineno-58-16"></a>
+</span><span id="__span-58-17"><a id="__codelineno-58-17" name="__codelineno-58-17" href="#__codelineno-58-17"></a>    <span class="n">context</span><span class="o">.</span><span class="n">render_ui_widget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+</span><span id="__span-58-18"><a id="__codelineno-58-18" name="__codelineno-58-18" href="#__codelineno-58-18"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Widget successfully rendered with color: </span><span class="si">{</span><span class="n">color</span><span class="si">}</span><span class="s2">"</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
 <h3 id="advanced-direct-invocationcontext-usage">Advanced: Direct <code>InvocationContext</code> Usage<a class="headerlink" href="#advanced-direct-invocationcontext-usage" title="Permanent link">&para;</a></h3>
 <div class="language-support-tag">
     <span class="lst-supported">Supported in ADK</span><span class="lst-python">Python v0.1.0</span><span class="lst-typescript">TypeScript v0.2.0</span><span class="lst-java">Java v0.2.0</span>
 </div>
 
 <p>While most interactions happen via <code>CallbackContext</code> or <code>ToolContext</code>, sometimes the agent's core logic (<code>_run_async_impl</code>/<code>_run_live_impl</code>) needs direct access.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="15:3"><input checked="checked" id="python_14" name="__tabbed_15" type="radio" /><input id="typescript_14" name="__tabbed_15" type="radio" /><input id="java_14" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="python_14">Python</label><label for="typescript_14">TypeScript</label><label for="java_14">Java</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:3"><input checked="checked" id="python_15" name="__tabbed_16" type="radio" /><input id="typescript_14" name="__tabbed_16" type="radio" /><input id="java_14" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="python_15">Python</label><label for="typescript_14">TypeScript</label><label for="java_14">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-python highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="c1"># Example: Inside agent's _run_async_impl</span>
-</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAgent</span>
-</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.invocation_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvocationContext</span>
-</span><span id="__span-58-4"><a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
-</span><span id="__span-58-5"><a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
-</span><span id="__span-58-6"><a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncGenerator</span>
-</span><span id="__span-58-7"><a id="__codelineno-58-7" name="__codelineno-58-7" href="#__codelineno-58-7"></a>
-</span><span id="__span-58-8"><a id="__codelineno-58-8" name="__codelineno-58-8" href="#__codelineno-58-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyControllingAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
-</span><span id="__span-58-9"><a id="__codelineno-58-9" name="__codelineno-58-9" href="#__codelineno-58-9"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run_async_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">InvocationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Event</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-</span><span id="__span-58-10"><a id="__codelineno-58-10" name="__codelineno-58-10" href="#__codelineno-58-10"></a>        <span class="c1"># Example: Check if a specific service is available</span>
-</span><span id="__span-58-11"><a id="__codelineno-58-11" name="__codelineno-58-11" href="#__codelineno-58-11"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">memory_service</span><span class="p">:</span>
-</span><span id="__span-58-12"><a id="__codelineno-58-12" name="__codelineno-58-12" href="#__codelineno-58-12"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">"Memory service is not available for this invocation."</span><span class="p">)</span>
-</span><span id="__span-58-13"><a id="__codelineno-58-13" name="__codelineno-58-13" href="#__codelineno-58-13"></a>            <span class="c1"># Potentially change agent behavior</span>
-</span><span id="__span-58-14"><a id="__codelineno-58-14" name="__codelineno-58-14" href="#__codelineno-58-14"></a>
-</span><span id="__span-58-15"><a id="__codelineno-58-15" name="__codelineno-58-15" href="#__codelineno-58-15"></a>        <span class="c1"># Example: Early termination based on some condition</span>
-</span><span id="__span-58-16"><a id="__codelineno-58-16" name="__codelineno-58-16" href="#__codelineno-58-16"></a>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"critical_error_flag"</span><span class="p">):</span>
-</span><span id="__span-58-17"><a id="__codelineno-58-17" name="__codelineno-58-17" href="#__codelineno-58-17"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">"Critical error detected, ending invocation."</span><span class="p">)</span>
-</span><span id="__span-58-18"><a id="__codelineno-58-18" name="__codelineno-58-18" href="#__codelineno-58-18"></a>            <span class="n">ctx</span><span class="o">.</span><span class="n">end_invocation</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Signal framework to stop processing</span>
-</span><span id="__span-58-19"><a id="__codelineno-58-19" name="__codelineno-58-19" href="#__codelineno-58-19"></a>            <span class="k">yield</span> <span class="n">Event</span><span class="p">(</span>
-</span><span id="__span-58-20"><a id="__codelineno-58-20" name="__codelineno-58-20" href="#__codelineno-58-20"></a>            <span class="n">author</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-58-21"><a id="__codelineno-58-21" name="__codelineno-58-21" href="#__codelineno-58-21"></a>            <span class="n">invocation_id</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">invocation_id</span><span class="p">,</span>
-</span><span id="__span-58-22"><a id="__codelineno-58-22" name="__codelineno-58-22" href="#__codelineno-58-22"></a>            <span class="n">content</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span>
-</span><span id="__span-58-23"><a id="__codelineno-58-23" name="__codelineno-58-23" href="#__codelineno-58-23"></a>                <span class="n">role</span><span class="o">=</span><span class="s2">"model"</span><span class="p">,</span>
-</span><span id="__span-58-24"><a id="__codelineno-58-24" name="__codelineno-58-24" href="#__codelineno-58-24"></a>                <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Stopping due to critical error."</span><span class="p">)],</span>
-</span><span id="__span-58-25"><a id="__codelineno-58-25" name="__codelineno-58-25" href="#__codelineno-58-25"></a>            <span class="p">),</span>
-</span><span id="__span-58-26"><a id="__codelineno-58-26" name="__codelineno-58-26" href="#__codelineno-58-26"></a>        <span class="p">)</span>
-</span><span id="__span-58-27"><a id="__codelineno-58-27" name="__codelineno-58-27" href="#__codelineno-58-27"></a>            <span class="k">return</span> <span class="c1"># Stop this agent's execution</span>
-</span><span id="__span-58-28"><a id="__codelineno-58-28" name="__codelineno-58-28" href="#__codelineno-58-28"></a>
-</span><span id="__span-58-29"><a id="__codelineno-58-29" name="__codelineno-58-29" href="#__codelineno-58-29"></a>        <span class="c1"># ... Normal agent processing ...</span>
-</span><span id="__span-58-30"><a id="__codelineno-58-30" name="__codelineno-58-30" href="#__codelineno-58-30"></a>        <span class="k">yield</span> <span class="c1"># ... event ...</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="c1"># Example: Inside agent's _run_async_impl</span>
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAgent</span>
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.agents.invocation_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvocationContext</span>
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
+</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.genai</span><span class="w"> </span><span class="kn">import</span> <span class="n">types</span>
+</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncGenerator</span>
+</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a>
+</span><span id="__span-59-8"><a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyControllingAgent</span><span class="p">(</span><span class="n">BaseAgent</span><span class="p">):</span>
+</span><span id="__span-59-9"><a id="__codelineno-59-9" name="__codelineno-59-9" href="#__codelineno-59-9"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_run_async_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">InvocationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Event</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span><span id="__span-59-10"><a id="__codelineno-59-10" name="__codelineno-59-10" href="#__codelineno-59-10"></a>        <span class="c1"># Example: Check if a specific service is available</span>
+</span><span id="__span-59-11"><a id="__codelineno-59-11" name="__codelineno-59-11" href="#__codelineno-59-11"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">memory_service</span><span class="p">:</span>
+</span><span id="__span-59-12"><a id="__codelineno-59-12" name="__codelineno-59-12" href="#__codelineno-59-12"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">"Memory service is not available for this invocation."</span><span class="p">)</span>
+</span><span id="__span-59-13"><a id="__codelineno-59-13" name="__codelineno-59-13" href="#__codelineno-59-13"></a>            <span class="c1"># Potentially change agent behavior</span>
+</span><span id="__span-59-14"><a id="__codelineno-59-14" name="__codelineno-59-14" href="#__codelineno-59-14"></a>
+</span><span id="__span-59-15"><a id="__codelineno-59-15" name="__codelineno-59-15" href="#__codelineno-59-15"></a>        <span class="c1"># Example: Early termination based on some condition</span>
+</span><span id="__span-59-16"><a id="__codelineno-59-16" name="__codelineno-59-16" href="#__codelineno-59-16"></a>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"critical_error_flag"</span><span class="p">):</span>
+</span><span id="__span-59-17"><a id="__codelineno-59-17" name="__codelineno-59-17" href="#__codelineno-59-17"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">"Critical error detected, ending invocation."</span><span class="p">)</span>
+</span><span id="__span-59-18"><a id="__codelineno-59-18" name="__codelineno-59-18" href="#__codelineno-59-18"></a>            <span class="n">ctx</span><span class="o">.</span><span class="n">end_invocation</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Signal framework to stop processing</span>
+</span><span id="__span-59-19"><a id="__codelineno-59-19" name="__codelineno-59-19" href="#__codelineno-59-19"></a>            <span class="k">yield</span> <span class="n">Event</span><span class="p">(</span>
+</span><span id="__span-59-20"><a id="__codelineno-59-20" name="__codelineno-59-20" href="#__codelineno-59-20"></a>            <span class="n">author</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-59-21"><a id="__codelineno-59-21" name="__codelineno-59-21" href="#__codelineno-59-21"></a>            <span class="n">invocation_id</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">invocation_id</span><span class="p">,</span>
+</span><span id="__span-59-22"><a id="__codelineno-59-22" name="__codelineno-59-22" href="#__codelineno-59-22"></a>            <span class="n">content</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Content</span><span class="p">(</span>
+</span><span id="__span-59-23"><a id="__codelineno-59-23" name="__codelineno-59-23" href="#__codelineno-59-23"></a>                <span class="n">role</span><span class="o">=</span><span class="s2">"model"</span><span class="p">,</span>
+</span><span id="__span-59-24"><a id="__codelineno-59-24" name="__codelineno-59-24" href="#__codelineno-59-24"></a>                <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Part</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">"Stopping due to critical error."</span><span class="p">)],</span>
+</span><span id="__span-59-25"><a id="__codelineno-59-25" name="__codelineno-59-25" href="#__codelineno-59-25"></a>            <span class="p">),</span>
+</span><span id="__span-59-26"><a id="__codelineno-59-26" name="__codelineno-59-26" href="#__codelineno-59-26"></a>        <span class="p">)</span>
+</span><span id="__span-59-27"><a id="__codelineno-59-27" name="__codelineno-59-27" href="#__codelineno-59-27"></a>            <span class="k">return</span> <span class="c1"># Stop this agent's execution</span>
+</span><span id="__span-59-28"><a id="__codelineno-59-28" name="__codelineno-59-28" href="#__codelineno-59-28"></a>
+</span><span id="__span-59-29"><a id="__codelineno-59-29" name="__codelineno-59-29" href="#__codelineno-59-29"></a>        <span class="c1"># ... Normal agent processing ...</span>
+</span><span id="__span-59-30"><a id="__codelineno-59-30" name="__codelineno-59-30" href="#__codelineno-59-30"></a>        <span class="k">yield</span> <span class="c1"># ... event ...</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-typescript highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="c1">// Pseudocode: Inside agent's runAsyncImpl</span>
-</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BaseAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">InvocationContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
-</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Event</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
-</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a>
-</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a><span class="kd">class</span><span class="w"> </span><span class="nx">MyControllingAgent</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">BaseAgent</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="o">*</span><span class="nx">runAsyncImpl</span><span class="p">(</span><span class="nx">ctx</span><span class="o">:</span><span class="w"> </span><span class="kt">InvocationContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">AsyncGenerator</span><span class="o">&lt;</span><span class="nx">Event</span><span class="p">,</span><span class="w"> </span><span class="ow">void</span><span class="p">,</span><span class="w"> </span><span class="kc">undefined</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a><span class="w">    </span><span class="c1">// Example: Check if a specific service is available</span>
-</span><span id="__span-59-8"><a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">memoryService</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-59-9"><a id="__codelineno-59-9" name="__codelineno-59-9" href="#__codelineno-59-9"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Memory service is not available for this invocation.'</span><span class="p">);</span>
-</span><span id="__span-59-10"><a id="__codelineno-59-10" name="__codelineno-59-10" href="#__codelineno-59-10"></a><span class="w">      </span><span class="c1">// Potentially change agent behavior</span>
-</span><span id="__span-59-11"><a id="__codelineno-59-11" name="__codelineno-59-11" href="#__codelineno-59-11"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-59-12"><a id="__codelineno-59-12" name="__codelineno-59-12" href="#__codelineno-59-12"></a>
-</span><span id="__span-59-13"><a id="__codelineno-59-13" name="__codelineno-59-13" href="#__codelineno-59-13"></a><span class="w">    </span><span class="c1">// Example: Early termination based on some condition</span>
-</span><span id="__span-59-14"><a id="__codelineno-59-14" name="__codelineno-59-14" href="#__codelineno-59-14"></a><span class="w">    </span><span class="c1">// Direct access to state via ctx.session.state or through ctx.session.state property if wrapped</span>
-</span><span id="__span-59-15"><a id="__codelineno-59-15" name="__codelineno-59-15" href="#__codelineno-59-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">state</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'critical_error_flag'</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">})[</span><span class="s1">'critical_error_flag'</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-59-16"><a id="__codelineno-59-16" name="__codelineno-59-16" href="#__codelineno-59-16"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Critical error detected, ending invocation.'</span><span class="p">);</span>
-</span><span id="__span-59-17"><a id="__codelineno-59-17" name="__codelineno-59-17" href="#__codelineno-59-17"></a><span class="w">      </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">endInvocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w"> </span><span class="c1">// Signal framework to stop processing</span>
-</span><span id="__span-59-18"><a id="__codelineno-59-18" name="__codelineno-59-18" href="#__codelineno-59-18"></a><span class="w">      </span><span class="k">yield</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-59-19"><a id="__codelineno-59-19" name="__codelineno-59-19" href="#__codelineno-59-19"></a><span class="w">        </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="kt">this.name</span><span class="p">,</span>
-</span><span id="__span-59-20"><a id="__codelineno-59-20" name="__codelineno-59-20" href="#__codelineno-59-20"></a><span class="w">        </span><span class="nx">invocationId</span><span class="o">:</span><span class="w"> </span><span class="kt">ctx.invocationId</span><span class="p">,</span>
-</span><span id="__span-59-21"><a id="__codelineno-59-21" name="__codelineno-59-21" href="#__codelineno-59-21"></a><span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">parts</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Stopping due to critical error.'</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-59-22"><a id="__codelineno-59-22" name="__codelineno-59-22" href="#__codelineno-59-22"></a><span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Event</span><span class="p">;</span>
-</span><span id="__span-59-23"><a id="__codelineno-59-23" name="__codelineno-59-23" href="#__codelineno-59-23"></a><span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Stop this agent's execution</span>
-</span><span id="__span-59-24"><a id="__codelineno-59-24" name="__codelineno-59-24" href="#__codelineno-59-24"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-59-25"><a id="__codelineno-59-25" name="__codelineno-59-25" href="#__codelineno-59-25"></a>
-</span><span id="__span-59-26"><a id="__codelineno-59-26" name="__codelineno-59-26" href="#__codelineno-59-26"></a><span class="w">    </span><span class="c1">// ... Normal agent processing ...</span>
-</span><span id="__span-59-27"><a id="__codelineno-59-27" name="__codelineno-59-27" href="#__codelineno-59-27"></a><span class="w">    </span><span class="k">yield</span><span class="p">;</span><span class="w"> </span><span class="c1">// ... event ...</span>
-</span><span id="__span-59-28"><a id="__codelineno-59-28" name="__codelineno-59-28" href="#__codelineno-59-28"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-59-29"><a id="__codelineno-59-29" name="__codelineno-59-29" href="#__codelineno-59-29"></a><span class="p">}</span>
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-java highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1">// Example: Inside agent's runAsyncImpl</span>
-</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.BaseAgent</span><span class="p">;</span>
-</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.InvocationContext</span><span class="p">;</span>
-</span><span id="__span-60-4"><a id="__codelineno-60-4" name="__codelineno-60-4" href="#__codelineno-60-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.events.Event</span><span class="p">;</span>
-</span><span id="__span-60-5"><a id="__codelineno-60-5" name="__codelineno-60-5" href="#__codelineno-60-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Content</span><span class="p">;</span>
-</span><span id="__span-60-6"><a id="__codelineno-60-6" name="__codelineno-60-6" href="#__codelineno-60-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Part</span><span class="p">;</span>
-</span><span id="__span-60-7"><a id="__codelineno-60-7" name="__codelineno-60-7" href="#__codelineno-60-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">io.reactivex.rxjava3.core.Flowable</span><span class="p">;</span>
-</span><span id="__span-60-8"><a id="__codelineno-60-8" name="__codelineno-60-8" href="#__codelineno-60-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
-</span><span id="__span-60-9"><a id="__codelineno-60-9" name="__codelineno-60-9" href="#__codelineno-60-9"></a>
-</span><span id="__span-60-10"><a id="__codelineno-60-10" name="__codelineno-60-10" href="#__codelineno-60-10"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyControllingAgent</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BaseAgent</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-60-11"><a id="__codelineno-60-11" name="__codelineno-60-11" href="#__codelineno-60-11"></a>
-</span><span id="__span-60-12"><a id="__codelineno-60-12" name="__codelineno-60-12" href="#__codelineno-60-12"></a><span class="w">  </span><span class="nd">@Override</span>
-</span><span id="__span-60-13"><a id="__codelineno-60-13" name="__codelineno-60-13" href="#__codelineno-60-13"></a><span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">Flowable</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">runAsyncImpl</span><span class="p">(</span><span class="n">InvocationContext</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-60-14"><a id="__codelineno-60-14" name="__codelineno-60-14" href="#__codelineno-60-14"></a><span class="w">    </span><span class="c1">// Example: Check if a specific service is available</span>
-</span><span id="__span-60-15"><a id="__codelineno-60-15" name="__codelineno-60-15" href="#__codelineno-60-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="na">memoryService</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-60-16"><a id="__codelineno-60-16" name="__codelineno-60-16" href="#__codelineno-60-16"></a><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"Memory service is not available for this invocation."</span><span class="p">);</span>
-</span><span id="__span-60-17"><a id="__codelineno-60-17" name="__codelineno-60-17" href="#__codelineno-60-17"></a><span class="w">      </span><span class="c1">// Potentially change agent behavior</span>
-</span><span id="__span-60-18"><a id="__codelineno-60-18" name="__codelineno-60-18" href="#__codelineno-60-18"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-60-19"><a id="__codelineno-60-19" name="__codelineno-60-19" href="#__codelineno-60-19"></a>
-</span><span id="__span-60-20"><a id="__codelineno-60-20" name="__codelineno-60-20" href="#__codelineno-60-20"></a><span class="w">    </span><span class="c1">// Example: Early termination based on some condition</span>
-</span><span id="__span-60-21"><a id="__codelineno-60-21" name="__codelineno-60-21" href="#__codelineno-60-21"></a><span class="w">    </span><span class="n">Boolean</span><span class="w"> </span><span class="n">criticalError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Boolean</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">session</span><span class="p">().</span><span class="na">state</span><span class="p">().</span><span class="na">getOrDefault</span><span class="p">(</span><span class="s">"critical_error_flag"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
-</span><span id="__span-60-22"><a id="__codelineno-60-22" name="__codelineno-60-22" href="#__codelineno-60-22"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">criticalError</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">criticalError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-60-23"><a id="__codelineno-60-23" name="__codelineno-60-23" href="#__codelineno-60-23"></a><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"Critical error detected, ending invocation."</span><span class="p">);</span>
-</span><span id="__span-60-24"><a id="__codelineno-60-24" name="__codelineno-60-24" href="#__codelineno-60-24"></a><span class="w">      </span><span class="n">ctx</span><span class="p">.</span><span class="na">setEndInvocation</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// Signal framework to stop processing</span>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="c1">// Pseudocode: Inside agent's runAsyncImpl</span>
+</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">BaseAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">InvocationContext</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
+</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a><span class="k">import</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Event</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
+</span><span id="__span-60-4"><a id="__codelineno-60-4" name="__codelineno-60-4" href="#__codelineno-60-4"></a>
+</span><span id="__span-60-5"><a id="__codelineno-60-5" name="__codelineno-60-5" href="#__codelineno-60-5"></a><span class="kd">class</span><span class="w"> </span><span class="nx">MyControllingAgent</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">BaseAgent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-6"><a id="__codelineno-60-6" name="__codelineno-60-6" href="#__codelineno-60-6"></a><span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="o">*</span><span class="nx">runAsyncImpl</span><span class="p">(</span><span class="nx">ctx</span><span class="o">:</span><span class="w"> </span><span class="kt">InvocationContext</span><span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">AsyncGenerator</span><span class="o">&lt;</span><span class="nx">Event</span><span class="p">,</span><span class="w"> </span><span class="ow">void</span><span class="p">,</span><span class="w"> </span><span class="kc">undefined</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-7"><a id="__codelineno-60-7" name="__codelineno-60-7" href="#__codelineno-60-7"></a><span class="w">    </span><span class="c1">// Example: Check if a specific service is available</span>
+</span><span id="__span-60-8"><a id="__codelineno-60-8" name="__codelineno-60-8" href="#__codelineno-60-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">memoryService</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-9"><a id="__codelineno-60-9" name="__codelineno-60-9" href="#__codelineno-60-9"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Memory service is not available for this invocation.'</span><span class="p">);</span>
+</span><span id="__span-60-10"><a id="__codelineno-60-10" name="__codelineno-60-10" href="#__codelineno-60-10"></a><span class="w">      </span><span class="c1">// Potentially change agent behavior</span>
+</span><span id="__span-60-11"><a id="__codelineno-60-11" name="__codelineno-60-11" href="#__codelineno-60-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-60-12"><a id="__codelineno-60-12" name="__codelineno-60-12" href="#__codelineno-60-12"></a>
+</span><span id="__span-60-13"><a id="__codelineno-60-13" name="__codelineno-60-13" href="#__codelineno-60-13"></a><span class="w">    </span><span class="c1">// Example: Early termination based on some condition</span>
+</span><span id="__span-60-14"><a id="__codelineno-60-14" name="__codelineno-60-14" href="#__codelineno-60-14"></a><span class="w">    </span><span class="c1">// Direct access to state via ctx.session.state or through ctx.session.state property if wrapped</span>
+</span><span id="__span-60-15"><a id="__codelineno-60-15" name="__codelineno-60-15" href="#__codelineno-60-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">session</span><span class="p">.</span><span class="nx">state</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">'critical_error_flag'</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="p">})[</span><span class="s1">'critical_error_flag'</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-16"><a id="__codelineno-60-16" name="__codelineno-60-16" href="#__codelineno-60-16"></a><span class="w">      </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Critical error detected, ending invocation.'</span><span class="p">);</span>
+</span><span id="__span-60-17"><a id="__codelineno-60-17" name="__codelineno-60-17" href="#__codelineno-60-17"></a><span class="w">      </span><span class="nx">ctx</span><span class="p">.</span><span class="nx">endInvocation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w"> </span><span class="c1">// Signal framework to stop processing</span>
+</span><span id="__span-60-18"><a id="__codelineno-60-18" name="__codelineno-60-18" href="#__codelineno-60-18"></a><span class="w">      </span><span class="k">yield</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-19"><a id="__codelineno-60-19" name="__codelineno-60-19" href="#__codelineno-60-19"></a><span class="w">        </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="kt">this.name</span><span class="p">,</span>
+</span><span id="__span-60-20"><a id="__codelineno-60-20" name="__codelineno-60-20" href="#__codelineno-60-20"></a><span class="w">        </span><span class="nx">invocationId</span><span class="o">:</span><span class="w"> </span><span class="kt">ctx.invocationId</span><span class="p">,</span>
+</span><span id="__span-60-21"><a id="__codelineno-60-21" name="__codelineno-60-21" href="#__codelineno-60-21"></a><span class="w">        </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">parts</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nx">text</span><span class="o">:</span><span class="w"> </span><span class="s1">'Stopping due to critical error.'</span><span class="w"> </span><span class="p">}]</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-60-22"><a id="__codelineno-60-22" name="__codelineno-60-22" href="#__codelineno-60-22"></a><span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">Event</span><span class="p">;</span>
+</span><span id="__span-60-23"><a id="__codelineno-60-23" name="__codelineno-60-23" href="#__codelineno-60-23"></a><span class="w">      </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// Stop this agent's execution</span>
+</span><span id="__span-60-24"><a id="__codelineno-60-24" name="__codelineno-60-24" href="#__codelineno-60-24"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-60-25"><a id="__codelineno-60-25" name="__codelineno-60-25" href="#__codelineno-60-25"></a>
-</span><span id="__span-60-26"><a id="__codelineno-60-26" name="__codelineno-60-26" href="#__codelineno-60-26"></a><span class="w">      </span><span class="n">Event</span><span class="w"> </span><span class="n">errorEvent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Event</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
-</span><span id="__span-60-27"><a id="__codelineno-60-27" name="__codelineno-60-27" href="#__codelineno-60-27"></a><span class="w">          </span><span class="p">.</span><span class="na">author</span><span class="p">(</span><span class="n">name</span><span class="p">())</span>
-</span><span id="__span-60-28"><a id="__codelineno-60-28" name="__codelineno-60-28" href="#__codelineno-60-28"></a><span class="w">          </span><span class="p">.</span><span class="na">invocationId</span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="na">invocationId</span><span class="p">())</span>
-</span><span id="__span-60-29"><a id="__codelineno-60-29" name="__codelineno-60-29" href="#__codelineno-60-29"></a><span class="w">          </span><span class="p">.</span><span class="na">content</span><span class="p">(</span><span class="n">Content</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">parts</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Part</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">text</span><span class="p">(</span><span class="s">"Stopping due to critical error."</span><span class="p">).</span><span class="na">build</span><span class="p">())).</span><span class="na">build</span><span class="p">())</span>
-</span><span id="__span-60-30"><a id="__codelineno-60-30" name="__codelineno-60-30" href="#__codelineno-60-30"></a><span class="w">          </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
-</span><span id="__span-60-31"><a id="__codelineno-60-31" name="__codelineno-60-31" href="#__codelineno-60-31"></a>
-</span><span id="__span-60-32"><a id="__codelineno-60-32" name="__codelineno-60-32" href="#__codelineno-60-32"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">Flowable</span><span class="p">.</span><span class="na">just</span><span class="p">(</span><span class="n">errorEvent</span><span class="p">);</span><span class="w"> </span><span class="c1">// Stop this agent's execution</span>
-</span><span id="__span-60-33"><a id="__codelineno-60-33" name="__codelineno-60-33" href="#__codelineno-60-33"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-60-34"><a id="__codelineno-60-34" name="__codelineno-60-34" href="#__codelineno-60-34"></a>
-</span><span id="__span-60-35"><a id="__codelineno-60-35" name="__codelineno-60-35" href="#__codelineno-60-35"></a><span class="w">    </span><span class="c1">// ... Normal agent processing ...</span>
-</span><span id="__span-60-36"><a id="__codelineno-60-36" name="__codelineno-60-36" href="#__codelineno-60-36"></a><span class="w">    </span><span class="c1">// return Flowable.just(normalEvent);</span>
-</span><span id="__span-60-37"><a id="__codelineno-60-37" name="__codelineno-60-37" href="#__codelineno-60-37"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Flowable</span><span class="p">.</span><span class="na">empty</span><span class="p">();</span>
-</span><span id="__span-60-38"><a id="__codelineno-60-38" name="__codelineno-60-38" href="#__codelineno-60-38"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-60-39"><a id="__codelineno-60-39" name="__codelineno-60-39" href="#__codelineno-60-39"></a><span class="p">}</span>
+</span><span id="__span-60-26"><a id="__codelineno-60-26" name="__codelineno-60-26" href="#__codelineno-60-26"></a><span class="w">    </span><span class="c1">// ... Normal agent processing ...</span>
+</span><span id="__span-60-27"><a id="__codelineno-60-27" name="__codelineno-60-27" href="#__codelineno-60-27"></a><span class="w">    </span><span class="k">yield</span><span class="p">;</span><span class="w"> </span><span class="c1">// ... event ...</span>
+</span><span id="__span-60-28"><a id="__codelineno-60-28" name="__codelineno-60-28" href="#__codelineno-60-28"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-60-29"><a id="__codelineno-60-29" name="__codelineno-60-29" href="#__codelineno-60-29"></a><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-java highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="c1">// Example: Inside agent's runAsyncImpl</span>
+</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.BaseAgent</span><span class="p">;</span>
+</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.agents.InvocationContext</span><span class="p">;</span>
+</span><span id="__span-61-4"><a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.adk.events.Event</span><span class="p">;</span>
+</span><span id="__span-61-5"><a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Content</span><span class="p">;</span>
+</span><span id="__span-61-6"><a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.google.genai.types.Part</span><span class="p">;</span>
+</span><span id="__span-61-7"><a id="__codelineno-61-7" name="__codelineno-61-7" href="#__codelineno-61-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">io.reactivex.rxjava3.core.Flowable</span><span class="p">;</span>
+</span><span id="__span-61-8"><a id="__codelineno-61-8" name="__codelineno-61-8" href="#__codelineno-61-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+</span><span id="__span-61-9"><a id="__codelineno-61-9" name="__codelineno-61-9" href="#__codelineno-61-9"></a>
+</span><span id="__span-61-10"><a id="__codelineno-61-10" name="__codelineno-61-10" href="#__codelineno-61-10"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyControllingAgent</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BaseAgent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-61-11"><a id="__codelineno-61-11" name="__codelineno-61-11" href="#__codelineno-61-11"></a>
+</span><span id="__span-61-12"><a id="__codelineno-61-12" name="__codelineno-61-12" href="#__codelineno-61-12"></a><span class="w">  </span><span class="nd">@Override</span>
+</span><span id="__span-61-13"><a id="__codelineno-61-13" name="__codelineno-61-13" href="#__codelineno-61-13"></a><span class="w">  </span><span class="kd">protected</span><span class="w"> </span><span class="n">Flowable</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">runAsyncImpl</span><span class="p">(</span><span class="n">InvocationContext</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-61-14"><a id="__codelineno-61-14" name="__codelineno-61-14" href="#__codelineno-61-14"></a><span class="w">    </span><span class="c1">// Example: Check if a specific service is available</span>
+</span><span id="__span-61-15"><a id="__codelineno-61-15" name="__codelineno-61-15" href="#__codelineno-61-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="na">memoryService</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-61-16"><a id="__codelineno-61-16" name="__codelineno-61-16" href="#__codelineno-61-16"></a><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"Memory service is not available for this invocation."</span><span class="p">);</span>
+</span><span id="__span-61-17"><a id="__codelineno-61-17" name="__codelineno-61-17" href="#__codelineno-61-17"></a><span class="w">      </span><span class="c1">// Potentially change agent behavior</span>
+</span><span id="__span-61-18"><a id="__codelineno-61-18" name="__codelineno-61-18" href="#__codelineno-61-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-61-19"><a id="__codelineno-61-19" name="__codelineno-61-19" href="#__codelineno-61-19"></a>
+</span><span id="__span-61-20"><a id="__codelineno-61-20" name="__codelineno-61-20" href="#__codelineno-61-20"></a><span class="w">    </span><span class="c1">// Example: Early termination based on some condition</span>
+</span><span id="__span-61-21"><a id="__codelineno-61-21" name="__codelineno-61-21" href="#__codelineno-61-21"></a><span class="w">    </span><span class="n">Boolean</span><span class="w"> </span><span class="n">criticalError</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Boolean</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">session</span><span class="p">().</span><span class="na">state</span><span class="p">().</span><span class="na">getOrDefault</span><span class="p">(</span><span class="s">"critical_error_flag"</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+</span><span id="__span-61-22"><a id="__codelineno-61-22" name="__codelineno-61-22" href="#__codelineno-61-22"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">criticalError</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">criticalError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-61-23"><a id="__codelineno-61-23" name="__codelineno-61-23" href="#__codelineno-61-23"></a><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"Critical error detected, ending invocation."</span><span class="p">);</span>
+</span><span id="__span-61-24"><a id="__codelineno-61-24" name="__codelineno-61-24" href="#__codelineno-61-24"></a><span class="w">      </span><span class="n">ctx</span><span class="p">.</span><span class="na">setEndInvocation</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w"> </span><span class="c1">// Signal framework to stop processing</span>
+</span><span id="__span-61-25"><a id="__codelineno-61-25" name="__codelineno-61-25" href="#__codelineno-61-25"></a>
+</span><span id="__span-61-26"><a id="__codelineno-61-26" name="__codelineno-61-26" href="#__codelineno-61-26"></a><span class="w">      </span><span class="n">Event</span><span class="w"> </span><span class="n">errorEvent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Event</span><span class="p">.</span><span class="na">builder</span><span class="p">()</span>
+</span><span id="__span-61-27"><a id="__codelineno-61-27" name="__codelineno-61-27" href="#__codelineno-61-27"></a><span class="w">          </span><span class="p">.</span><span class="na">author</span><span class="p">(</span><span class="n">name</span><span class="p">())</span>
+</span><span id="__span-61-28"><a id="__codelineno-61-28" name="__codelineno-61-28" href="#__codelineno-61-28"></a><span class="w">          </span><span class="p">.</span><span class="na">invocationId</span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="na">invocationId</span><span class="p">())</span>
+</span><span id="__span-61-29"><a id="__codelineno-61-29" name="__codelineno-61-29" href="#__codelineno-61-29"></a><span class="w">          </span><span class="p">.</span><span class="na">content</span><span class="p">(</span><span class="n">Content</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">parts</span><span class="p">(</span><span class="n">List</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">Part</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">text</span><span class="p">(</span><span class="s">"Stopping due to critical error."</span><span class="p">).</span><span class="na">build</span><span class="p">())).</span><span class="na">build</span><span class="p">())</span>
+</span><span id="__span-61-30"><a id="__codelineno-61-30" name="__codelineno-61-30" href="#__codelineno-61-30"></a><span class="w">          </span><span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</span><span id="__span-61-31"><a id="__codelineno-61-31" name="__codelineno-61-31" href="#__codelineno-61-31"></a>
+</span><span id="__span-61-32"><a id="__codelineno-61-32" name="__codelineno-61-32" href="#__codelineno-61-32"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">Flowable</span><span class="p">.</span><span class="na">just</span><span class="p">(</span><span class="n">errorEvent</span><span class="p">);</span><span class="w"> </span><span class="c1">// Stop this agent's execution</span>
+</span><span id="__span-61-33"><a id="__codelineno-61-33" name="__codelineno-61-33" href="#__codelineno-61-33"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-61-34"><a id="__codelineno-61-34" name="__codelineno-61-34" href="#__codelineno-61-34"></a>
+</span><span id="__span-61-35"><a id="__codelineno-61-35" name="__codelineno-61-35" href="#__codelineno-61-35"></a><span class="w">    </span><span class="c1">// ... Normal agent processing ...</span>
+</span><span id="__span-61-36"><a id="__codelineno-61-36" name="__codelineno-61-36" href="#__codelineno-61-36"></a><span class="w">    </span><span class="c1">// return Flowable.just(normalEvent);</span>
+</span><span id="__span-61-37"><a id="__codelineno-61-37" name="__codelineno-61-37" href="#__codelineno-61-37"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Flowable</span><span class="p">.</span><span class="na">empty</span><span class="p">();</span>
+</span><span id="__span-61-38"><a id="__codelineno-61-38" name="__codelineno-61-38" href="#__codelineno-61-38"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-61-39"><a id="__codelineno-61-39" name="__codelineno-61-39" href="#__codelineno-61-39"></a><span class="p">}</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -9207,6 +9327,7 @@ Here are the primary context flavors you will encounter:</p>
 <li><strong>State for Data Flow:</strong> <code>context.state</code> is the primary way to share data, remember preferences, and manage conversational memory <em>within</em> an invocation. Use prefixes (<code>app:</code>, <code>user:</code>, <code>temp:</code>) thoughtfully when using persistent storage.</li>
 <li><strong>Artifacts for Files:</strong> Use <code>context.save_artifact</code> and <code>context.load_artifact</code> for managing file references (like paths or URIs) or larger data blobs. Store references, load content on demand.</li>
 <li><strong>Tracked Changes:</strong> Modifications to state or artifacts made via context methods are automatically linked to the current step's <code>EventActions</code> and handled by the <code>SessionService</code>.</li>
+<li><strong>UI Rendering:</strong> Use <code>context.render_ui_widget(widget)</code> to send rich UI components (like MCP App iframes) to the client.</li>
 <li><strong>Start Simple:</strong> Focus on <code>state</code> and basic artifact usage first. Explore authentication, memory, and advanced <code>InvocationContext</code> fields (like those for live streaming) as your needs become more complex.</li>
 </ul>
 <p>By understanding and effectively using these context objects, you can build more sophisticated, stateful, and capable agents with ADK.</p>

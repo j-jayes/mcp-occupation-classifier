@@ -2372,9 +2372,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2388,7 +2413,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -8129,13 +8206,20 @@ schema definitions.</p>
   output structure. If set, the agent's final response <em>must</em> be a JSON string
   conforming to this schema.</p>
 </li>
+<li>In Python, supported schema types include:<ul>
+<li>A Pydantic model class, for example <code>MySchema</code></li>
+<li>Lists of primitives, such as <code>list[str]</code>, <code>list[int]</code>, <code>list[bool]</code>, <code>list[float]</code></li>
+<li><code>dict</code></li>
+<li><code>google.genai.types.Schema</code></li>
+</ul>
+</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning: Using <code>output_schema</code> with <code>tools</code></p>
 <p>Using <code>output_schema</code> with <code>tools</code> in the same LLM request is only supported
 by specific models, including <a href="https://ai.google.dev/gemini-api/docs/function-calling?example=meeting#structured-output">Gemini
 3.0</a>.
-For other models, ADK falls back to a <a href="https://github.com/google/adk-python/blob/main/src/google/adk/flows/llm_flows/_output_schema_processor.py"><code>set_model_response</code> function
+For other models, ADK falls back to a <a href="https://github.com/google/adk-python/blob/main/src/google/adk/tools/set_model_response_tool.py"><code>set_model_response</code> function
 tool</a>
 to collect the structured output, which may not work reliably. In such
 cases, consider using sub-agents that handle output formatting separately.</p>
