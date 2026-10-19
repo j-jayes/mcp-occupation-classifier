@@ -7536,7 +7536,7 @@ parent after completing a task.</p>
 <p>When using this self-managed agent team approach, the subagents are assigned an
 operating <strong><em>mode</em></strong> to manage their behavior and limit their scope of work.
 These <strong><em>modes</em></strong> set general behavior guidelines for subagents and create more
-predictable and reliable mulit-agent workflows. The following settings are
+predictable and reliable multi-agent workflows. The following settings are
 available for collaboration modes:</p>
 <ul>
 <li><strong><em>Chat</em></strong>: Full user interaction, manual return to parent agent
@@ -7742,6 +7742,15 @@ setting.</p>
 
 <p><strong>Table 1.</strong> Comparison of ADK Collaboration agent <strong><em>mode</em></strong> behavior and
 limitations.</p>
+<div class="admonition tip">
+<p class="admonition-title">Global instructions for all agents</p>
+<p>Apply consistent rules across your workflow using the <code>GlobalInstructionPlugin</code> 
+on your <code>App</code> (<a href="https://github.com/google/adk-python/blob/main/src/google/adk/plugins/global_instruction_plugin.py">Python</a>, 
+<a href="https://github.com/google/adk-js/blob/main/core/src/plugins/global_instruction_plugin.ts">TypeScript</a>, 
+<a href="https://github.com/google/adk-java/blob/main/core/src/main/java/com/google/adk/plugins/GlobalInstructionPlugin.java">Java</a>) 
+or the <code>GlobalInstruction</code> parameter on your agent 
+(<a href="https://github.com/google/adk-go/blob/main/agent/llmagent/llmagent.go">Go</a>).</p>
+</div>
 <h2 id="operating-considerations">Operating considerations<a class="headerlink" href="#operating-considerations" title="Permanent link">&para;</a></h2>
 <p>When using collaboration agent modes, there are a few control transfer and
 context management considerations to consider, as described in the following

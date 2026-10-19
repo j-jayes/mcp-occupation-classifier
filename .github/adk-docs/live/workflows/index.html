@@ -2160,9 +2160,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2201,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7454,7 +7531,7 @@ single live session:</p>
 <p>Serve this with <code>adk web</code> and start a live session, or pass it to <code>Runner.run_live()</code>.
 The runner detects a <code>Workflow</code> root and drives it over the live connection; you consume
 one event stream across all nodes. See the runnable
-<a href="https://github.com/google/adk-python/tree/main/contributing/samples/live/live_workflow"><code>live_workflow</code> sample</a>
+<a href="https://github.com/google/adk-python/tree/main/contributing/samples/live/workflow"><code>workflow</code> sample</a>
 for a three-stage voice intake flow with typed handoffs and a live eval set.</p>
 <p><strong>Every agent that speaks needs <code>mode='task'</code> or <code>mode='chat'</code>.</strong> As a node in a workflow, an
 <code>LlmAgent</code> with no <code>mode</code> falls back to <code>single_turn</code>, which runs outside the live connection
