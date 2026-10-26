@@ -1552,6 +1552,8 @@
       
         
       
+        
+      
     
     
     
@@ -1652,6 +1654,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -7621,7 +7651,7 @@ project dependencies:</p>
 </span></code></pre></div>
 <h3 id="define-the-agent-code">Define the agent code<a class="headerlink" href="#define-the-agent-code" title="Permanent link">&para;</a></h3>
 <p>Create the code for a basic agent, including a simple implementation of an ADK
-<a href="/tools-custom/function-tools/">Function Tool</a>, called <code>getCurrentTime</code>.
+<a href="/tools-custom/function-tools/">Function Tool</a>, called <code>get_current_time</code>.
 Create an <code>agent.ts</code> file in your project directory and add the following code:</p>
 <div class="language-typescript highlight"><span class="filename">my-agent/agent.ts</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">FunctionTool</span><span class="p">,</span><span class="w"> </span><span class="nx">LlmAgent</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'@google/adk'</span><span class="p">;</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="nx">z</span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">'zod'</span><span class="p">;</span>
@@ -7643,7 +7673,7 @@ Create an <code>agent.ts</code> file in your project directory and add the follo
 </span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="nx">model</span><span class="o">:</span><span class="w"> </span><span class="s1">'gemini-flash-latest'</span><span class="p">,</span>
 </span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">'Tells the current time in a specified city.'</span><span class="p">,</span>
 </span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span><span class="nx">instruction</span><span class="o">:</span><span class="w"> </span><span class="sb">`You are a helpful assistant that tells the current time in a city.</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="sb">                Use the 'getCurrentTime' tool for this purpose.`</span><span class="p">,</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="sb">                Use the 'get_current_time' tool for this purpose.`</span><span class="p">,</span>
 </span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="nx">tools</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">getCurrentTime</span><span class="p">],</span>
 </span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="p">});</span>
 </span></code></pre></div>

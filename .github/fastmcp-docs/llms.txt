@@ -5,6 +5,7 @@
 - [FastMCP: The Framework for MCP](https://gofastmcp.com/getting-started/welcome.md): FastMCP is the standard framework for building Model Context Protocol (MCP) servers, clients, and interactive applications.
 - [Installation](https://gofastmcp.com/getting-started/installation.md): Install FastMCP and verify your setup
 - [Quickstart](https://gofastmcp.com/getting-started/quickstart.md)
+- [AI-assisted Development](https://gofastmcp.com/getting-started/ai-assisted-development.md): Give your coding agent FastMCP authoring guidance and documentation matched to your project.
 - [What's New in FastMCP 4](https://gofastmcp.com/getting-started/whats-new.md): FastMCP 4 makes stateful MCP applications work on the sessionless protocol while one server serves every protocol era.
 - [The FastMCP Server](https://gofastmcp.com/servers/server.md): The core FastMCP server class for building MCP applications
 - [Tools](https://gofastmcp.com/servers/tools.md): Expose functions as executable capabilities for your MCP client.
@@ -25,6 +26,7 @@
 - [Filesystem Provider](https://gofastmcp.com/servers/providers/filesystem.md): Automatic component discovery from Python files
 - [MCP Proxy Provider](https://gofastmcp.com/servers/providers/proxy.md): Source components from other MCP servers
 - [Skills Provider](https://gofastmcp.com/servers/providers/skills.md): Expose agent skills as MCP resources
+- [Experimental Skills Extension](https://gofastmcp.com/servers/providers/experimental-skills.md): Publish filesystem skills through standard MCP skills discovery
 - [Composing Servers](https://gofastmcp.com/servers/composition.md): Combine multiple servers into one
 - [Custom Providers](https://gofastmcp.com/servers/providers/custom.md): Build providers that source components from any data source
 - [User Elicitation](https://gofastmcp.com/servers/elicitation.md): Ask users for input while a tool is running, on both the handshake and modern protocols.

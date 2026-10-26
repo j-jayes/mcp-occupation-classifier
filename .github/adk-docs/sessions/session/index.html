@@ -1390,6 +1390,8 @@
       
         
       
+        
+      
     
     
     
@@ -1487,6 +1489,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -2160,9 +2190,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2231,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7609,7 +7716,7 @@ session object:</p>
 </div>
 </div>
 </div>
-<p><em>(</em><em>Note:</em><em> The state shown above is only the initial state. State updates
+<p><em>(<strong>Note:</strong> The state shown above is only the initial state. State updates
 happen via events, as discussed in the State section.)</em></p>
 <h2 id="session-lifecycle">Session lifecycle<a class="headerlink" href="#session-lifecycle" title="Permanent link">&para;</a></h2>
 <p><img src="../../assets/event-loop.png" alt="Session lifecycle"></p>
@@ -7825,11 +7932,15 @@ Android; use it from a server-side agent.</p>
 <li><strong>How it works:</strong> Connects to a relational database (e.g., PostgreSQL, MySQL,
   SQLite) to store session data persistently in tables.</li>
 <li><strong>Persistence:</strong> Yes. Data survives application restarts.</li>
-<li><strong>Requires:</strong> A configured database and the <code>db</code> extra, installed with
-  <code>pip install google-adk[db]</code>.</li>
+<li><strong>Requires:</strong> A configured database. In Python, also the <code>db</code> extra,
+  installed with <code>pip install google-adk[db]</code>. In Go, a
+  <a href="https://gorm.io/">GORM</a> driver for your database.</li>
 <li><strong>Best for:</strong> Applications needing reliable, persistent storage that you
   manage yourself.</li>
 </ul>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="python_3" name="__tabbed_4" type="radio" /><input id="go_3" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="python_3">Python</label><label for="go_3">Go</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="language-py highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">google.adk.sessions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseSessionService</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Example using a local SQLite file:</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Note: The implementation requires an async database driver.</span>
@@ -7837,6 +7948,42 @@ Android; use it from a server-side agent.</p>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">db_url</span> <span class="o">=</span> <span class="s2">"sqlite+aiosqlite:///./my_agent_data.db"</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">session_service</span> <span class="o">=</span> <span class="n">DatabaseSessionService</span><span class="p">(</span><span class="n">db_url</span><span class="o">=</span><span class="n">db_url</span><span class="p">)</span>
 </span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-go highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="s">"log"</span><span class="w">    </span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="s">"github.com/glebarez/sqlite"</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="s">"gorm.io/gorm"</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="s">"google.golang.org/adk/v2/session/database"</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1">// Example using a local SQLite file. Any GORM dialector works, for</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1">// example gorm.io/driver/postgres for PostgreSQL.</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="nx">sessionService</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">database</span><span class="p">.</span><span class="nx">NewSessionService</span><span class="p">(</span><span class="nx">sqlite</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">"my_agent_data.db"</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">gorm</span><span class="p">.</span><span class="nx">Config</span><span class="p">{})</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="p">}</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1">// Creates the tables and adds any columns a newer ADK release needs.</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1">// Run it every time the application starts.</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">database</span><span class="p">.</span><span class="nx">AutoMigrate</span><span class="p">(</span><span class="nx">sessionService</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Run <code>AutoMigrate</code> on every startup</p>
+<p>The Go session service does not create or update its tables. Call
+<code>database.AutoMigrate</code> each time your application starts, before it
+serves traffic. It creates missing tables and columns and does not
+drop existing ones, so a database keeps working after an ADK upgrade
+adds a column. It can also change the type of an existing column to
+match what ADK expects. If you manage the schema yourself instead of
+running <code>AutoMigrate</code>, add the new columns before deploying the ADK
+release that introduces them. Otherwise, writes to that table fail.</p>
+</div>
+</div>
+</div>
+</div>
 <h4 id="concurrency-and-locking">Concurrency and locking<a class="headerlink" href="#concurrency-and-locking" title="Permanent link">&para;</a></h4>
 <p>The <code>DatabaseSessionService</code> ensures data integrity during concurrent operations
 through a two-tiered locking architecture:</p>

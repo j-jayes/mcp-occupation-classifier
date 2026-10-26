@@ -1,6 +1,6 @@
 # Build agents with Agent Config
 
-Supported in ADKPython v1.11.0Java v0.3.0Go v0.3.0Experimental
+Supported in ADKPython v1.11.0Java v0.3.0Experimental
 
 The ADK Agent Config feature lets you build an ADK workflow without writing code. An Agent Config uses a YAML format text file with a brief description of the agent, allowing just about anyone to assemble and run an ADK agent. The following is a simple example of a basic Agent Config definition:
 
@@ -31,7 +31,7 @@ The Agent Config feature currently only supports Gemini models. For more informa
 
 To set up ADK for use with Agent Config:
 
-1. Install the ADK Python libraries by following the [Installation](/get-started/installation/#python) instructions. *Python is currently required.* For more information, see the [Known limitations](#known-limitations).
+1. Install the ADK Python libraries by following the [Installation](/get-started/installation/) instructions. *Python is currently required.* For more information, see the [Known limitations](#known-limitations).
 
 1. Verify that ADK is installed by running the following command in your terminal:
 
@@ -43,7 +43,7 @@ To set up ADK for use with Agent Config:
 
 Tip
 
-If the `adk` command fails to run and the version is not listed in step 2, make sure your Python environment is active. Execute `source .venv/bin/activate` in your terminal on Mac and Linux. For other platform commands, see the [Installation](/get-started/installation/#python) page.
+If the `adk` command fails to run and the version is not listed in step 2, make sure your Python environment is active. Execute `source .venv/bin/activate` in your terminal on Mac and Linux. For other platform commands, see the [Installation](/get-started/installation/) page.
 
 ### Build an agent
 
@@ -233,4 +233,4 @@ The Agent Config feature is experimental and includes the following limitations:
 
 ## Next steps
 
-For ideas on what to build, see the [sample agent configs](https://github.com/search?q=repo:google/adk-python+path:/%5Econtributing%5C/samples%5C//+root_agent.yaml&type=code) in the `adk-python` repository. For detailed information on the syntax and settings supported by the Agent Config format, see the [Agent Config syntax reference](/api-reference/agentconfig/).
+For ideas on what to build, see the [sample agent configs](https://github.com/search?q=repo:google/adk-python+path:/%5Econtributing%5C/samples%5C/.*%5C/root_agent%5C.yaml$/&type=code) in the `adk-python` repository. For detailed information on the syntax and settings supported by the Agent Config format, see the [Agent Config syntax reference](/api-reference/agentconfig/).

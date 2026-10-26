@@ -1390,6 +1390,8 @@
       
         
       
+        
+      
     
     
     
@@ -1487,6 +1489,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -2160,9 +2190,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2231,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7647,7 +7754,10 @@ exception, and becomes the tool result.</p>
 </details>
 <h3 id="before-agent-callback">Before Agent Callback<a class="headerlink" href="#before-agent-callback" title="Permanent link">&para;</a></h3>
 <p><strong>When:</strong> Called <em>immediately before</em> the agent's <code>_run_async_impl</code> (or <code>_run_live_impl</code>) method is executed. It runs after the agent's <code>InvocationContext</code> is created but <em>before</em> its core logic begins.</p>
-<p><strong>Purpose:</strong> Ideal for setting up resources or state needed only for this specific agent's run, performing validation checks on the session state (callback_context.state) before execution starts, logging the entry point of the agent's activity, or potentially modifying the invocation context before the core logic uses it.</p>
+<p><strong>Purpose:</strong> Validate the session state through the callback context,
+log the start of the agent's run, or return content to skip the agent's core
+logic. In ADK Python, changes made through <code>callback_context.state</code> are tracked in
+<code>callback_context.actions.state_delta</code>.</p>
 <details>
 <summary>Code</summary>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="python" name="__tabbed_1" type="radio" /><input id="typescript" name="__tabbed_1" type="radio" /><input id="go" name="__tabbed_1" type="radio" /><input id="java" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="python">Python</label><label for="typescript">TypeScript</label><label for="go">Go</label><label for="java">Java</label></div>
@@ -8750,8 +8860,8 @@ exception, and becomes the tool result.</p>
 <li><strong>Understanding Callbacks:</strong> This example highlights how <code>after_</code> callbacks allow <strong>post-processing</strong>. You can inspect the result of a step and decide whether to let it pass through or add to it. An <code>after_agent_callback</code> cannot replace the agent's output: the content it returns is emitted as an <em>additional</em> event after the agent's own events.</li>
 </ul>
 <h2 id="llm-interaction-callbacks">LLM Interaction Callbacks<a class="headerlink" href="#llm-interaction-callbacks" title="Permanent link">&para;</a></h2>
-<p>These callbacks are specific to <code>LlmAgent</code> and provide hooks around the interaction with the Large Language Model. In Python, <code>LlmAgent</code> also accepts an <code>on_model_error_callback</code>, which runs when the model call raises an exception. If it returns an <code>LlmResponse</code>, the exception is suppressed and that response is used instead.</p>
-<p>The model callbacks also run in a live bidirectional session, where the callbacks fire at different points in the turn and blocking has different effects than in a request-response flow. See <a href="../../live/guardrails/">Guardrails for live agents</a>.</p>
+<p>These callbacks are specific to <code>LlmAgent</code> and provide hooks around the interaction with the Large Language Model. In Python, <code>LlmAgent</code> also accepts an <code>on_model_error_callback</code>, which runs when the model call raises an exception. If it returns an <code>LlmResponse</code>, the exception is suppressed and that response is used instead. In Go, set <code>OnModelErrorCallbacks</code> on <code>llmagent.Config</code>. These callbacks run when the model call returns an error. If a callback returns a non-nil <code>*model.LLMResponse</code> and a nil error, that response is used instead. If it returns an error, that error replaces the original one.</p>
+<p>The model callbacks also run in a live bidirectional session, where the callbacks fire at different points in the turn and blocking has different effects than in a request-response flow. See <a href="../../live/guardrails/">Guardrails for live agents</a>. In Go, model callbacks, including <code>OnModelErrorCallbacks</code>, don't run in a live session.</p>
 <h3 id="before-model-callback">Before Model Callback<a class="headerlink" href="#before-model-callback" title="Permanent link">&para;</a></h3>
 <p><strong>When:</strong> Called just before the <code>generate_content_async</code> (or equivalent) request is sent to the LLM within an <code>LlmAgent</code>'s flow.</p>
 <p><strong>Purpose:</strong> Allows inspection and modification of the request going to the LLM. Use cases include adding dynamic instructions, injecting few-shot examples based on state, modifying model config, implementing guardrails (like profanity filters), or implementing request-level caching.</p>
@@ -9765,7 +9875,7 @@ If the callback returns <code>None</code> (or a <code>Maybe.empty()</code> objec
 </div>
 </details>
 <h2 id="tool-execution-callbacks">Tool Execution Callbacks<a class="headerlink" href="#tool-execution-callbacks" title="Permanent link">&para;</a></h2>
-<p>These callbacks are also specific to <code>LlmAgent</code> and trigger around the execution of tools that the LLM might request, including <code>FunctionTool</code> and <code>AgentTool</code>. In Python, <code>LlmAgent</code> also accepts an <code>on_tool_error_callback</code>, which runs when the tool raises an exception. If it returns a <code>dict</code>, the exception is suppressed and that <code>dict</code> value is used as the tool result.</p>
+<p>These callbacks are also specific to <code>LlmAgent</code> and trigger around the execution of tools that the LLM might request, including <code>FunctionTool</code> and <code>AgentTool</code>. In Python, <code>LlmAgent</code> also accepts an <code>on_tool_error_callback</code>, which runs when the tool raises an exception. If it returns a <code>dict</code>, the exception is suppressed and that <code>dict</code> value is used as the tool result. In Go, set <code>OnToolErrorCallbacks</code> on <code>llmagent.Config</code>. These callbacks run when a tool call fails, except for errors from streaming tools. If a callback returns a non-nil <code>map[string]any</code> and a nil error, that map is used as the tool result. If it returns an error, that error replaces the original one.</p>
 <h3 id="before-tool-callback">Before Tool Callback<a class="headerlink" href="#before-tool-callback" title="Permanent link">&para;</a></h3>
 <p><strong>When:</strong> Called just before a specific tool's <code>run_async</code> method is invoked, after the LLM has generated a function call for it.</p>
 <p><strong>Purpose:</strong> Allows inspection and modification of tool arguments, performing authorization checks before execution, logging tool usage attempts, or implementing tool-level caching.</p>

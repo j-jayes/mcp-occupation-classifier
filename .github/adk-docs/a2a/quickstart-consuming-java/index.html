@@ -1390,6 +1390,8 @@
       
         
       
+        
+      
     
     
     
@@ -1487,6 +1489,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -2160,9 +2190,34 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../agents/models/google-gemini/" class="md-nav__link">
+    
+    
+      
         
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../agents/models/google-gemini/" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -2176,7 +2231,59 @@
   
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_6_2" id="__nav_2_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gemini
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/models/google-gemini/deferred-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deferred scheduling
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -7539,14 +7646,14 @@
 <h2 id="consuming-your-agent-using-the-adk-java-sdk">Consuming Your Agent Using the ADK Java SDK<a class="headerlink" href="#consuming-your-agent-using-the-adk-java-sdk" title="Permanent link">&para;</a></h2>
 <p>In Java, rather than manually generating requests, ADK relies on the official A2A SDK <code>Client</code> wrapped precisely over a <code>RemoteA2AAgent</code> entity. Note that the Java SDK currently uses A2A Protocol 0.3.</p>
 <h3 id="getting-the-sample-code">1. Getting the Sample Code<a class="headerlink" href="#getting-the-sample-code" title="Permanent link">&para;</a></h3>
-<p>The native sample matching this quickstart workflow in Java can be found in the <code>adk-java</code> source code under <code>contrib/samples/a2a_basic</code>.</p>
-<p>You can navigate to the <a href="https://github.com/google/adk-java/tree/main/contrib/samples/a2a_basic"><strong><code>a2a_basic</code></strong> sample</a>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>contrib/samples/a2a_basic
+<p>The native sample matching this quickstart workflow in Java can be found in the <code>adk-java</code> source code under <code>examples/a2a_basic</code>.</p>
+<p>You can navigate to the <a href="https://github.com/google/adk-java/tree/main/examples/a2a_basic"><strong><code>a2a_basic</code></strong> sample</a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>examples/a2a_basic
 </span></code></pre></div>
 <h3 id="start-the-remote-prime-agent-server">2. Start the Remote Prime Agent server<a class="headerlink" href="#start-the-remote-prime-agent-server" title="Permanent link">&para;</a></h3>
 <p>To show how your ADK agent can consume a remote agent via A2A, you'll first need a remote agent server running. While you can write your own custom A2A server in any language, ADK provides the <code>a2a_server</code> sample which starts a Quarkus service hosting the agent on <code>:9090</code>.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># In adk-java root, start the pre-configured Quarkus remote service on port 9090</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./mvnw<span class="w"> </span>-f<span class="w"> </span>contrib/samples/a2a_server/pom.xml<span class="w"> </span>quarkus:dev
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./mvnw<span class="w"> </span>-f<span class="w"> </span>examples/a2a_server/pom.xml<span class="w"> </span>quarkus:dev
 </span></code></pre></div>
 <p>Once running successfully, the agent will be accessible via HTTP endpoints locally.</p>
 <h3 id="look-out-for-the-required-agent-card-of-the-remote-agent">3. Look out for the required agent card of the remote agent<a class="headerlink" href="#look-out-for-the-required-agent-card-of-the-remote-agent" title="Permanent link">&para;</a></h3>
@@ -7554,7 +7661,7 @@
 <p>For an ADK Java webservice, the agent card is generally accessible dynamically using the <a href="http://localhost:9090/.well-known/agent-card.json"><code>.well-known/agent-card.json</code></a> standard endpoint format relative to its base URL.</p>
 <h3 id="run-the-main-consuming-agent">4. Run the Main (Consuming) Agent<a class="headerlink" href="#run-the-main-consuming-agent" title="Permanent link">&para;</a></h3>
 <p>In another terminal, you can run the client agent:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./mvnw<span class="w"> </span>-f<span class="w"> </span>contrib/samples/a2a_basic/pom.xml<span class="w"> </span>exec:java<span class="w"> </span>-Dexec.args<span class="o">=</span><span class="s2">"http://localhost:9090"</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./mvnw<span class="w"> </span>-f<span class="w"> </span>examples/a2a_basic/pom.xml<span class="w"> </span>exec:java<span class="w"> </span>-Dexec.args<span class="o">=</span><span class="s2">"http://localhost:9090"</span>
 </span></code></pre></div>
 <h4 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h4>
 <p>The main agent accesses the required A2A JSON-RPC transport wrapper to consume the remote agent (<code>prime_agent</code> in our example). As you can see below, it queries for the <code>AgentCard</code> from the target host and registers it locally inside an official A2A <code>Client</code>. </p>

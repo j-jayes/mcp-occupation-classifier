@@ -1390,6 +1390,8 @@
       
         
       
+        
+      
     
     
     
@@ -1487,6 +1489,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -7753,9 +7783,10 @@ and would carry over, corrupting the next session. Create a fresh queue for ever
 <code>run_live()</code> call.</p>
 </div>
 <h2 id="liverequestqueue">LiveRequestQueue<a class="headerlink" href="#liverequestqueue" title="Permanent link">&para;</a></h2>
-<p><code>LiveRequestQueue</code> is your channel for sending messages to the agent. Every message is a
+<p><a href="../../api-reference/python/google-adk.html#google.adk.agents.LiveRequestQueue"><code>LiveRequestQueue</code></a>
+is your channel for sending messages to the agent. Every message is a
 <code>LiveRequest</code>, a single container for the different kinds of input:</p>
-<div class="language-python highlight"><span class="filename">Reference: &lt;a href=&quot;../api-reference/python/google-adk.html#google.adk.agents.LiveRequestQueue&quot;&gt;LiveRequestQueue&lt;/a&gt;</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LiveRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="language-python highlight"><span class="filename">Reference: LiveRequestQueue</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LiveRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Content</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>            <span class="c1"># Text and structured data</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">blob</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Blob</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>                  <span class="c1"># Audio/video bytes</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">activity_start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ActivityStart</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Manual turn start</span>
@@ -7827,11 +7858,12 @@ one Part per call keeps behavior consistent across models.</p>
 <code>run_live()</code>. <code>asyncio.Queue</code> is safe for concurrent access within a single event loop
 thread; to feed it from another thread, use <code>loop.call_soon_threadsafe()</code>.</p>
 <h2 id="the-run_live-loop">The run_live() loop<a class="headerlink" href="#the-run_live-loop" title="Permanent link">&para;</a></h2>
-<p><code>run_live()</code> is an async generator. It yields <code>Event</code> objects the moment they are generated,
+<p><a href="../../api-reference/python/google-adk.html#google.adk.runners.Runner.run_live"><code>run_live()</code></a> is an async
+generator. It yields <code>Event</code> objects the moment they are generated,
 with no buffering or polling, while you send new input concurrently through the queue. That
 concurrency is what makes interruption work: the agent can be speaking while the user starts
 talking over it.</p>
-<div class="language-python highlight"><span class="filename">Reference: &lt;a href=&quot;../api-reference/python/google-adk.html#google.adk.runners.Runner.run_live&quot;&gt;Runner.run_live()&lt;/a&gt;</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
+<div class="language-python highlight"><span class="filename">Reference: Runner.run_live()</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">runner</span><span class="o">.</span><span class="n">run_live</span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">live_request_queue</span><span class="o">=</span><span class="n">live_request_queue</span><span class="p">,</span>

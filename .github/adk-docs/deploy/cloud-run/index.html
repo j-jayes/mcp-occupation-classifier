@@ -1392,6 +1392,8 @@
       
         
       
+        
+      
     
     
     
@@ -1489,6 +1491,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -8825,6 +8855,7 @@ unless you specify it as deployment setting, such as the <code>--with_ui</code> 
 <li><code>--memory_service_uri TEXT</code>: (Optional) The URI of the memory service, for example: <code>rag://&lt;rag_corpus_id&gt;</code>, <code>agentengine://&lt;agent_engine&gt;</code>, or <code>memory://</code>.</li>
 <li><code>--port INTEGER</code>: (Optional) The port number the ADK API server will listen on within the container. Defaults to 8000.</li>
 <li><code>--with_ui</code>: (Optional) If included, deploys the ADK dev UI alongside the agent API server. By default, only the API server is deployed.</li>
+<li><code>--with_cloud_run_sandbox</code>: (Optional) Enables the Cloud Run sandbox for code execution. Disabled by default. When enabled, ADK uses <code>gcloud beta run deploy</code> with <code>--sandbox-launcher</code>.</li>
 <li><code>--temp_folder TEXT</code>: (Optional) Specifies a directory for storing intermediate files generated during the deployment process. Defaults to a timestamped folder in the system's temporary directory. <em>(Note: This option is generally not needed unless troubleshooting issues).</em></li>
 <li><code>--help</code>: Show the help message and exit.</li>
 </ul>

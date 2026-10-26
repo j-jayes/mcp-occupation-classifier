@@ -102,7 +102,7 @@ When using Agents CLI, you deploy using the `agents-cli deploy` command. This co
 
 Important
 
-*Make sure your Google Cloud target deployment project is set as your* **current project** *before performing these steps*. The `agents-cli deploy` command uses your currently set Google Cloud project when it performs a deployment. For information on setting and checking your current project, see [Connect to your Google Cloud project](#connect-ad).
+*Make sure your Google Cloud target deployment project is set as your ***current project*** before performing these steps*. The `agents-cli deploy` command uses your currently set Google Cloud project when it performs a deployment. For information on setting and checking your current project, see [Connect to your Google Cloud project](#connect-ad).
 
 To deploy your ADK project to Agent Runtime in your Google Cloud project:
 

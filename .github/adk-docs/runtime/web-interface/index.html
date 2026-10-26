@@ -1392,6 +1392,8 @@
       
         
       
+        
+      
     
     
     
@@ -1489,6 +1491,34 @@
     
   
     Managed agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../agents/service-registration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service registration
   
 
     
@@ -7442,6 +7472,16 @@ subcommands on the command line:</p>
 backend, and <code>webui</code> serves the browser-based chat interface. Both <code>api</code>
 and <code>webui</code> are required to use the web interface together; either can be
 omitted if you only need the API or UI independently.</p>
+<p>The <code>AgentLoader</code> field of <code>launcher.Config</code> sets which agents the
+launcher serves. To serve several agents from one launcher, create it with
+<code>agent.NewMultiLoader</code>. Each agent is listed as a separate app that you can
+select in the web interface. Agent names must be unique:</p>
+<div class="language-go highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nx">loader</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">agent</span><span class="p">.</span><span class="nx">NewMultiLoader</span><span class="p">(</span><span class="nx">rootAgent</span><span class="p">,</span><span class="w"> </span><span class="nx">otherAgent</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">log</span><span class="p">.</span><span class="nx">Fatalf</span><span class="p">(</span><span class="s">"Failed to create agent loader: %v"</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="p">)</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nx">config</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">launcher</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span><span class="nx">AgentLoader</span><span class="p">:</span><span class="w"> </span><span class="nx">loader</span><span class="p">}</span>
+</span></code></pre></div>
 </div>
 <div class="tabbed-block">
 <p>Make sure to update the port number.</p>
@@ -7449,27 +7489,27 @@ omitted if you only need the API or UI independently.</p>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>With Maven, compile and run the ADK web server:
-<div class="language-console highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="go">mvn compile exec:java \</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="go"> -Dexec.args="--adk.agents.source-dir=src/main/java/agents --server.port=8000"</span>
+<div class="language-console highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="go">mvn compile exec:java \</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="go"> -Dexec.args="--adk.agents.source-dir=src/main/java/agents --server.port=8000"</span>
 </span></code></pre></div></p>
 </div>
 <div class="tabbed-block">
 <p>With Gradle, the <code>build.gradle</code> or <code>build.gradle.kts</code> build file should have the following Java plugin in its plugins section:</p>
-<p><div class="language-groovy highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">id</span><span class="o">(</span><span class="s1">'java'</span><span class="o">)</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="c1">// other plugins</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="o">}</span>
+<p><div class="language-groovy highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="n">id</span><span class="o">(</span><span class="s1">'java'</span><span class="o">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="c1">// other plugins</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="o">}</span>
 </span></code></pre></div>
 Then, elsewhere in the build file, at the top-level, create a new task:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">tasks</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s1">'runADKWebServer'</span><span class="o">,</span><span class="w"> </span><span class="n">JavaExec</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="n">dependsOn</span><span class="w"> </span><span class="n">classes</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">classpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">runtimeClasspath</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">mainClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'com.google.adk.web.AdkWebServer'</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">args</span><span class="w"> </span><span class="s1">'--adk.agents.source-dir=src/main/java/agents'</span><span class="o">,</span><span class="w"> </span><span class="s1">'--server.port=8000'</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="o">}</span>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">tasks</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="s1">'runADKWebServer'</span><span class="o">,</span><span class="w"> </span><span class="n">JavaExec</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="n">dependsOn</span><span class="w"> </span><span class="n">classes</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">classpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sourceSets</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">runtimeClasspath</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">mainClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'com.google.adk.web.AdkWebServer'</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">args</span><span class="w"> </span><span class="s1">'--adk.agents.source-dir=src/main/java/agents'</span><span class="o">,</span><span class="w"> </span><span class="s1">'--server.port=8000'</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="o">}</span>
 </span></code></pre></div>
 <p>Finally, on the command-line, run the following command:
-<div class="language-console highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">gradle runADKWebServer</span>
+<div class="language-console highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="go">gradle runADKWebServer</span>
 </span></code></pre></div></p>
 </div>
 </div>
@@ -7483,14 +7523,6 @@ browser to use the web interface:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:4"><input checked="checked" id="python_1" name="__tabbed_3" type="radio" /><input id="typescript_1" name="__tabbed_3" type="radio" /><input id="go_1" name="__tabbed_3" type="radio" /><input id="java_1" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="python_1">Python</label><label for="typescript_1">TypeScript</label><label for="go_1">Go</label><label for="java_1">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>+-----------------------------------------------------------------------------+
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">|</span><span class="w"> </span>ADK<span class="w"> </span>Web<span class="w"> </span>Server<span class="w"> </span>started<span class="w">                                                      </span><span class="p">|</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">|</span><span class="w">                                                                             </span><span class="p">|</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">|</span><span class="w"> </span>For<span class="w"> </span><span class="nb">local</span><span class="w"> </span>testing,<span class="w"> </span>access<span class="w"> </span>at<span class="w"> </span>http://localhost:8000.<span class="w">                         </span><span class="p">|</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>+-----------------------------------------------------------------------------+
-</span></code></pre></div>
-</div>
-<div class="tabbed-block">
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>+-----------------------------------------------------------------------------+
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">|</span><span class="w"> </span>ADK<span class="w"> </span>Web<span class="w"> </span>Server<span class="w"> </span>started<span class="w">                                                      </span><span class="p">|</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">|</span><span class="w">                                                                             </span><span class="p">|</span>
@@ -7499,18 +7531,26 @@ browser to use the web interface:</p>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span>Starting<span class="w"> </span>the<span class="w"> </span>web<span class="w"> </span>server:<span class="w"> </span><span class="p">&amp;</span><span class="o">{</span>port:8080<span class="w"> </span>...<span class="o">}</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span>Web<span class="w"> </span>servers<span class="w"> </span>starts<span class="w"> </span>on<span class="w"> </span>http://localhost:8080
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w">        </span>webui:<span class="w">  </span>you<span class="w"> </span>can<span class="w"> </span>access<span class="w"> </span>API<span class="w"> </span>using<span class="w"> </span>http://localhost:8080/ui/
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w">        </span>api:<span class="w">  </span>you<span class="w"> </span>can<span class="w"> </span>access<span class="w"> </span>API<span class="w"> </span>using<span class="w"> </span>http://localhost:8080/api
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>+-----------------------------------------------------------------------------+
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">|</span><span class="w"> </span>ADK<span class="w"> </span>Web<span class="w"> </span>Server<span class="w"> </span>started<span class="w">                                                      </span><span class="p">|</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="p">|</span><span class="w">                                                                             </span><span class="p">|</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">|</span><span class="w"> </span>For<span class="w"> </span><span class="nb">local</span><span class="w"> </span>testing,<span class="w"> </span>access<span class="w"> </span>at<span class="w"> </span>http://localhost:8000.<span class="w">                         </span><span class="p">|</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>+-----------------------------------------------------------------------------+
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>+-----------------------------------------------------------------------------+
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="p">|</span><span class="w"> </span>ADK<span class="w"> </span>Web<span class="w"> </span>Server<span class="w"> </span>started<span class="w">                                                      </span><span class="p">|</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">|</span><span class="w">                                                                             </span><span class="p">|</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">|</span><span class="w"> </span>For<span class="w"> </span><span class="nb">local</span><span class="w"> </span>testing,<span class="w"> </span>access<span class="w"> </span>at<span class="w"> </span>http://localhost:8000.<span class="w">                         </span><span class="p">|</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>+-----------------------------------------------------------------------------+
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span>Starting<span class="w"> </span>the<span class="w"> </span>web<span class="w"> </span>server:<span class="w"> </span><span class="p">&amp;</span><span class="o">{</span>port:8080<span class="w"> </span>...<span class="o">}</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span>Web<span class="w"> </span>servers<span class="w"> </span>starts<span class="w"> </span>on<span class="w"> </span>http://localhost:8080
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w">        </span>webui:<span class="w">  </span>you<span class="w"> </span>can<span class="w"> </span>access<span class="w"> </span>API<span class="w"> </span>using<span class="w"> </span>http://localhost:8080/ui/
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="m">2025</span>/01/01<span class="w"> </span><span class="m">00</span>:00:00<span class="w">        </span>api:<span class="w">  </span>you<span class="w"> </span>can<span class="w"> </span>access<span class="w"> </span>API<span class="w"> </span>using<span class="w"> </span>http://localhost:8080/api
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>+-----------------------------------------------------------------------------+
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="p">|</span><span class="w"> </span>ADK<span class="w"> </span>Web<span class="w"> </span>Server<span class="w"> </span>started<span class="w">                                                      </span><span class="p">|</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">|</span><span class="w">                                                                             </span><span class="p">|</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="p">|</span><span class="w"> </span>For<span class="w"> </span><span class="nb">local</span><span class="w"> </span>testing,<span class="w"> </span>access<span class="w"> </span>at<span class="w"> </span>http://localhost:8000.<span class="w">                         </span><span class="p">|</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>+-----------------------------------------------------------------------------+
 </span></code></pre></div>
 </div>
 </div>
@@ -7560,7 +7600,7 @@ browser to use the web interface:</p>
 <p>Pass <code>--no_use_local_storage</code> to fall back to in-memory session and
 artifact services instead of the local <code>.adk</code> folder.</p>
 <p>For example:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span><span class="w"> </span>--session_service_uri<span class="w"> </span><span class="s2">"sqlite:///sessions.db"</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span><span class="w"> </span>--session_service_uri<span class="w"> </span><span class="s2">"sqlite:///sessions.db"</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -7603,7 +7643,7 @@ artifact services instead of the local <code>.adk</code> folder.</p>
 </tbody>
 </table>
 <p>For example:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span><span class="w"> </span>--session_service_uri<span class="w"> </span><span class="s2">"sqlite:///sessions.db"</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>adk<span class="w"> </span>web<span class="w"> </span>--port<span class="w"> </span><span class="m">3000</span><span class="w"> </span>--session_service_uri<span class="w"> </span><span class="s2">"sqlite:///sessions.db"</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
@@ -7709,7 +7749,7 @@ flags after the relevant subcommand keyword.</p>
 </tbody>
 </table>
 <p>For example, to run on port 9090 with a custom API prefix:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>go<span class="w"> </span>run<span class="w"> </span>agent.go<span class="w"> </span>web<span class="w"> </span>-port<span class="w"> </span><span class="m">9090</span><span class="w"> </span>api<span class="w"> </span>-path_prefix<span class="w"> </span>/myapi<span class="w"> </span>webui<span class="w"> </span>-api_server_address<span class="w"> </span>http://localhost:9090/myapi
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>go<span class="w"> </span>run<span class="w"> </span>agent.go<span class="w"> </span>web<span class="w"> </span>-port<span class="w"> </span><span class="m">9090</span><span class="w"> </span>api<span class="w"> </span>-path_prefix<span class="w"> </span>/myapi<span class="w"> </span>webui<span class="w"> </span>-api_server_address<span class="w"> </span>http://localhost:9090/myapi
 </span></code></pre></div>
 </div>
 </div>
@@ -7717,9 +7757,9 @@ flags after the relevant subcommand keyword.</p>
 <h2 id="usage-telemetry">Usage telemetry<a class="headerlink" href="#usage-telemetry" title="Permanent link">&para;</a></h2>
 <p>The ADK Web UI collects anonymous usage telemetry to understand feature adoption, discover usability issues, and improve your overall developer experience. Data collection is OFF by default until you explicitly choose to enable it. </p>
 <p>You can enable or disable usage telemetry at any time by navigating to User Settings, the user icon on the top right of the screen, in the Web UI. This setting updates a single unified preference stored locally on your machine at <code>~/.adk/config.json</code>. If you prefer, you can manually deactivate data collection by editing this file directly and setting the <code>telemetry</code> attribute to <code>false</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">"telemetry"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">"telemetry"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="p">}</span>
 </span></code></pre></div>
 <p><strong>What data is collected</strong></p>
 <p>When enabled, Web UI telemetry captures standard page events and feature interaction, including:</p>
