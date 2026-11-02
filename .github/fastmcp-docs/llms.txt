@@ -25,8 +25,7 @@
 - [Local Provider](https://gofastmcp.com/servers/providers/local.md): The default provider for decorator-registered components
 - [Filesystem Provider](https://gofastmcp.com/servers/providers/filesystem.md): Automatic component discovery from Python files
 - [MCP Proxy Provider](https://gofastmcp.com/servers/providers/proxy.md): Source components from other MCP servers
-- [Skills Provider](https://gofastmcp.com/servers/providers/skills.md): Expose agent skills as MCP resources
-- [Experimental Skills Extension](https://gofastmcp.com/servers/providers/experimental-skills.md): Publish filesystem skills through standard MCP skills discovery
+- [Skills over MCP](https://gofastmcp.com/servers/skills.md): Serve agent skills from a FastMCP server so every agent reads the same copy.
 - [Composing Servers](https://gofastmcp.com/servers/composition.md): Combine multiple servers into one
 - [Custom Providers](https://gofastmcp.com/servers/providers/custom.md): Build providers that source components from any data source
 - [User Elicitation](https://gofastmcp.com/servers/elicitation.md): Ask users for input while a tool is running, on both the handshake and modern protocols.

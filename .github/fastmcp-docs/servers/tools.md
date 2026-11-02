@@ -63,7 +63,7 @@ def search_products_implementation(query: str, category: str | None = None) -> l
     return [{"id": 2, "name": "Another Product"}]
 ```
 
-> **@tool Decorator Arguments**
+> [card] @tool Decorator Arguments
 >
 > **name** `str | None`
 >

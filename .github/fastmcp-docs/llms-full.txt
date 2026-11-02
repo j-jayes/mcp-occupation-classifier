@@ -27,7 +27,7 @@ When you mark a tool with `app=True` or `@app.ui()`, FastMCP wires up the metada
 
 `app` on `@mcp.tool` accepts `True`, an `AppConfig`, or a dict. When you pass `True`, FastMCP explicitly marks the tool as a Prefab UI tool and stamps placeholder UI metadata so the provider can synthesize the correct renderer resource later. When you omit `app`, FastMCP only applies this automatically if the tool's return type is a Prefab type (`PrefabApp`, `Component`, or unions containing them).
 
-The tool and renderer are linked through a `resourceUri` field in the metadata. Internally, registration uses the placeholder URI `ui://prefab/renderer.html`; when tools and resources are listed or read, FastMCP rewrites that placeholder to a per-tool URI like `ui://prefab/tool/<hash>/renderer.html` and synthesizes the matching renderer resource on demand.
+The tool and renderer are linked through a `resourceUri` field in the metadata. Internally, registration uses the placeholder URI `ui://prefab/renderer.html`; when tools and resources are listed or read, FastMCP rewrites that placeholder to a shared URI like `ui://prefab/renderer/<hash>/renderer.html` and synthesizes the matching renderer resource on demand.
 
 ### FastMCPApp registration
 
@@ -107,7 +107,9 @@ The Prefab renderer is a self-contained JavaScript application that interprets t
 
 ### Renderer resources
 
-FastMCP exposes the renderer through per-tool resources such as `ui://prefab/tool/<hash>/renderer.html`, each with MIME type `text/html;profile=mcp-app`. The HTML is bundled inside the `prefab-ui` Python package; `get_renderer_html()` returns it as a string. The resources are synthesized on demand from each tool's UI metadata, so CSP and permissions can differ per tool even though they use the same Prefab renderer.
+Tools with matching renderer configurations share one resource at `ui://prefab/renderer/<hash>/renderer.html`, with MIME type `text/html;profile=mcp-app`. The identity includes the installed Prefab version, delivery mode, and effective resource metadata. Different CSP, permissions, domains, or border preferences produce separate resources. Explicit resource URI overrides are left unchanged, and previously advertised per-tool URIs remain readable.
+
+Listing tools and resources does not load the renderer HTML. FastMCP generates the page when a host reads the resource. The default delivery mode returns a small HTML page that loads version-pinned assets from a CDN; `PREFAB_BUNDLED_RENDERER=1` serves a self-contained page instead. Shared URIs let hosts recognize equivalent resources, whether or not they choose to cache them.
 
 The resource also carries CSP metadata (via `get_renderer_csp()`) declaring the CDN domains the renderer needs. Hosts use this to configure the iframe's Content Security Policy.
 
@@ -216,37 +218,55 @@ Each tile below is a working FastMCP server you can run with `fastmcp dev apps` 
 
 [Sales Dashboard](#sales-dashboard)
 
+Metrics, charts, and deal pipeline
+
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-example-sales-dashboard.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=49c0933bc736b3ed5ca422571ca0bcb9)
 
 [System Monitor](#system-monitor)
+
+Live CPU, memory, disk with auto-refresh
 
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-example-system-dashboard.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=2ee8939c549618735dcfd78601976b68)
 
 [Quiz](#quiz)
 
+LLM-generated trivia with scoring
+
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-example-quiz.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=774d6875cdcbb885b316e6a7f240b91c)
 
 [Interactive Map](#interactive-map)
+
+Geocoded addresses on Leaflet
 
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-example-map.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=2d91bcba86a78d73985fec8354a4fc10)
 
 [File Upload](/apps/providers/file-upload)
 
+Drag-and-drop upload provider
+
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-file-upload.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=844653a18265bbf6fa4c74be254cc8bd)
 
 [Approval](/apps/providers/approval)
+
+Human-in-the-loop confirmation
 
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-approval.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=a7612b699f039f04ddf85690e46d6695)
 
 [Choice](/apps/providers/choice)
 
+Clickable option selection
+
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-choice.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=254e3d7ebaca6ec7b24cdccb5caa9999)
 
 [Form Input](/apps/providers/form)
 
+Pydantic model forms
+
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-form.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=57b5ffa624312117018e5feefbf6d901)
 
 [Generative UI](/apps/generative)
+
+LLM writes the UI at runtime
 
 ![](https://mintcdn.com/fastmcp/qxtzRAUiJsjdoWFw/apps/images/app-showcase.png?fit=max\&auto=format\&n=qxtzRAUiJsjdoWFw\&q=85\&s=f9775f56a3128c1907fdc8a9f6c5e715)
 
@@ -2736,7 +2756,7 @@ Pass your server instance to `Client(server)` in a test to exercise tool discove
 
 ### Discovering and Downloading Skills
 
-An agent can also use the client to retrieve instructions and supporting files from servers that expose skills as resources. The [skills client utilities](/servers/providers/skills#client-utilities) provide `list_skills()` for discovery, `get_skill_manifest()` for inspecting files, and `download_skill()` or `sync_skills()` for saving them locally.
+An agent can also use the client to retrieve instructions and supporting files from servers that expose skills as resources. The [skills client utilities](/servers/skills#install-skills-into-a-local-agent) provide `list_skill_summaries()` for discovery, `get_skill_manifest()` for inspecting files, and `download_skill()` or `sync_skills()` for saving them locally.
 
 ## Choosing a Transport
 
@@ -3167,6 +3187,25 @@ async with group:
 ```
 
 The group aggregates names and detects collisions; it never stands between the adapter and the client, so everything a single `Client` supports keeps working per tool.
+
+## List skills across servers
+
+`list_skills()` collects [Skills extension](/servers/skills) entries from every client that opted into it, keyed by server name, since two servers can publish the same skill URI. Clients created without `SkillsClientExtension()`, including those from `from_config`, and servers that don't advertise the extension are left out.
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import Client, ClientGroup
+from fastmcp.skills import SkillsClientExtension
+
+docs = Client("https://docs.example.com/mcp", extensions=[SkillsClientExtension()])
+ops = Client("https://ops.example.com/mcp", extensions=[SkillsClientExtension()])
+group = ClientGroup({"docs": docs, "ops": ops})
+
+async with group:
+    for server_name, entries in (await group.list_skills()).items():
+        for entry in entries:
+            print(server_name, entry.uri)
+    deploy = await group.get_skill("ops", "skill://deploy/SKILL.md")
+```
 
 ## Create a group from configuration
 
@@ -4943,6 +4982,23 @@ transport = StdioTransport(command="python", args=["server.py"], keep_alive=Fals
 New in version `2.3.0`
 
 HTTP transport connects to MCP servers running as web services. This is the recommended transport for production deployments.
+
+Incoming SSE events are limited to 1 MiB by default. If a server returns larger
+tool results or resources, set `max_sse_event_size` on `StreamableHttpTransport`
+to a byte limit that accommodates them, or use `None` to disable the limit:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import Client
+from fastmcp.client.transports import StreamableHttpTransport
+
+transport = StreamableHttpTransport(
+    "https://api.example.com/mcp",
+    max_sse_event_size=8 * 1024 * 1024,
+)
+client = Client(transport)
+```
+
+The same field is available as `max_sse_event_size` on an [MCP config](/integrations/mcp-json-configuration)'s remote server entry, which forwards it when building the transport. A client created from a bare URL (`Client("https://api.example.com/mcp")`) keeps the 1 MiB default; pass an explicit `StreamableHttpTransport` as above to raise or disable it.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp import Client
@@ -7525,7 +7581,7 @@ Run the server's tests and inspect the schemas and results that clients receive.
 
 For deployment work, also test the intended transport and authentication. Use local fixtures or a test account for operations that change data.
 
-If your server's users need guidance for workflows spanning several operations, consider supplying skills with the server. The [Skills Provider](/servers/providers/skills) serves skill files as resources; the [Experimental Skills Extension](/servers/providers/experimental-skills) adds standard skills discovery. Check the installed FastMCP version and target host's support, and verify that the host actually reads and uses the skill. Discovery alone does not activate it.
+If your server's users need guidance for workflows spanning several operations, consider supplying skills with the server. [Skills over MCP](/servers/skills) shows how to serve a skills folder as resources and through standard skills discovery. Check the installed FastMCP version and target host's support, and verify that the host actually reads and uses the skill. Discovery alone does not activate it.
 
 
 # Installation
@@ -10637,6 +10693,238 @@ auth = KeycloakAuthProvider(
 ```
 
 
+# OCI IAM OAuth 🤝 FastMCP
+Source: https://gofastmcp.com/integrations/oci
+
+Secure your FastMCP server with OCI IAM OAuth
+
+New in version `2.13.0`
+
+This guide shows you how to secure your FastMCP server using **OCI IAM OAuth**. Since OCI IAM doesn't support Dynamic Client Registration, this integration uses the [**OIDC Proxy**](/servers/auth/oidc-proxy) pattern to bridge OCI's traditional OAuth with MCP's authentication requirements.
+
+## Configuration
+
+### Prerequisites
+
+1. An OCI cloud Account with access to create an Integrated Application in an Identity Domain.
+2. Your FastMCP server's URL (For dev environments, it is [http://localhost:8000](http://localhost:8000). For PROD environments, it could be [https://mcp.yourdomain.com](https://mcp.yourdomain.com))
+
+### Step 1: Make sure client access is enabled for JWK's URL
+
+**1. Navigate to OCI IAM Domain Settings**
+
+Login to OCI console ([https://cloud.oracle.com](https://cloud.oracle.com) for OCI commercial cloud).
+From "Identity & Security" menu, open Domains page.
+On the Domains list page, select the domain that you are using for MCP Authentication.
+Open Settings tab.
+Click on "Edit Domain Settings" button.
+
+![OCI console showing the Edit Domain Settings button in the IAM Domain settings page](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocieditdomainsettingsbutton.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=189e2e2c679c33b33a79164756cb6440)
+
+**2. Update Domain Setting**
+
+Enable "Configure client access" checkbox as shown in the screenshot.
+
+![OCI IAM Domain Settings](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocieditdomainsettings.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=3f4422ba7b3c45fec724b4bb5de6ff31)
+
+### Step 2: Create OAuth client for MCP server authentication
+
+Follow the Steps as mentioned below to create an OAuth client.
+
+**1. Navigate to OCI IAM Integrated Applications**
+
+Login to OCI console ([https://cloud.oracle.com](https://cloud.oracle.com) for OCI commercial cloud).
+From "Identity & Security" menu, open Domains page.
+On the Domains list page, select the domain in which you want to create MCP server OAuth client. If you need help finding the list page for the domain, see [Listing Identity Domains.](https://docs.oracle.com/en-us/iaas/Content/Identity/domains/to-view-identity-domains.htm#view-identity-domains).
+On the details page, select Integrated applications. A list of applications in the domain is displayed.
+
+**2. Add an Integrated Application**
+
+Select Add application.
+In the Add application window, select Confidential Application.
+Select Launch workflow.
+In the Add application details page, Enter name and description as shown below.
+
+![Adding a Confidential Integrated Application in OCI IAM Domain](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ociaddapplication.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=5855c5dc6cd69f8a0c53f3f103e7b4fc)
+
+**3. Update OAuth Configuration for an Integrated Application**
+
+Once the Integrated Application is created, Click on "OAuth configuration" tab.
+Click on "Edit OAuth configuration" button.
+Configure the application as OAuth client by selecting "Configure this application as a client now" radio button.
+Select "Authorization code" grant type. If you are planning to use the same OAuth client application for token exchange, select "Client credentials" grant type as well. In the sample, we will use the same client.
+For Authorization grant type, select redirect URL. In most cases, this will be the MCP server URL followed by "/auth/callback".
+
+![OAuth Configuration for an Integrated Application in OCI IAM Domain](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocioauthconfiguration.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=885b0adc7c2a25ee71cf7e455b6afd62)
+
+**4. Activate the Integrated Application**
+
+Click on "Submit" button to update OAuth configuration for the client application.
+**Note: You don't need to do any special configuration to support PKCE for the OAuth client.**
+Make sure to Activate the client application.
+Note down client ID and client secret for the application. You'll use these values when configuring the OCIProvider in your code.
+
+This is all you need to implement MCP server authentication against OCI IAM. However, you may want to use an authenticated user token to invoke OCI control plane APIs and propagate identity to the OCI control plane instead of using a service user account. In that case, you need to implement token exchange.
+
+### Step 3: Token Exchange Setup (Only if MCP server needs to talk to OCI Control Plane)
+
+Token exchange helps you exchange a logged-in user's OCI IAM token for an OCI control plane session token, also known as UPST (User Principal Session Token). To learn more about token exchange, refer to my [Workload Identity Federation Blog](https://www.ateam-oracle.com/post/workload-identity-federation)
+
+For token exchange, we need to configure Identity propagation trust. The blog above discusses setting up the trust using REST APIs. However, you can also use OCI CLI. Before using the CLI command below, ensure that you have created a token exchange OAuth client. In most cases, you can use the same OAuth client that you created above. Replace `<IAM_GUID>` and `<CLIENT_ID>` in the CLI command below with your actual values.
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+oci identity-domains identity-propagation-trust create \
+--schemas '["urn:ietf:params:scim:schemas:oracle:idcs:IdentityPropagationTrust"]' \
+--public-key-endpoint "https://<IAM_GUID>.identity.oraclecloud.com/admin/v1/SigningCert/jwk" \
+--name "For Token Exchange" --type "JWT" \
+--issuer "https://identity.oraclecloud.com/" --active true \
+--endpoint "https://<IAM_GUID>.identity.oraclecloud.com" \
+--subject-claim-name "sub" --allow-impersonation false \
+--subject-mapping-attribute "username" \
+--subject-type "User" --client-claim-name "iss" \
+--client-claim-values '["https://identity.oraclecloud.com/"]' \
+--oauth-clients '["<CLIENT_ID>"]'
+```
+
+To exchange access token for OCI token and create a signer object, you need to add below code in MCP server. You can then use the signer object to create any OCI control plane client.
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+
+from fastmcp.server.dependencies import get_access_token
+from fastmcp.utilities.logging import get_logger
+from oci.auth.signers import TokenExchangeSigner
+import os
+
+logger = get_logger(__name__)
+
+# Load configuration from environment
+OCI_IAM_GUID = os.environ.get("OCI_IAM_GUID")
+OCI_CLIENT_ID = os.environ.get("OCI_CLIENT_ID")
+OCI_CLIENT_SECRET = os.environ.get("OCI_CLIENT_SECRET")
+
+_global_token_cache = {} #In memory cache for OCI session token signer
+    
+def get_oci_signer() -> TokenExchangeSigner:
+
+    authntoken = get_access_token()
+    tokenID = authntoken.claims.get("jti")
+    token = authntoken.token
+    
+    #Check if the signer exists for the token ID in memory cache
+    cached_signer = _global_token_cache.get(tokenID)
+    logger.debug(f"Global cached signer: {cached_signer}")
+    if cached_signer:
+        logger.debug(f"Using globally cached signer for token ID: {tokenID}")
+        return cached_signer
+
+    #If the signer is not yet created for the token then create new OCI signer object
+    logger.debug(f"Creating new signer for token ID: {tokenID}")
+    signer = TokenExchangeSigner(
+        jwt_or_func=token,
+        oci_domain_id=OCI_IAM_GUID.split(".")[0] if OCI_IAM_GUID else "",
+        client_id=OCI_CLIENT_ID,
+        client_secret=OCI_CLIENT_SECRET,
+    )
+    logger.debug(f"Signer {signer} created for token ID: {tokenID}")
+        
+    #Cache the signer object in memory cache
+    _global_token_cache[tokenID] = signer
+    logger.debug(f"Signer cached for token ID: {tokenID}")
+
+    return signer
+```
+
+## Running MCP server
+
+Once the setup is complete, to run the MCP server, run the below command.
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+fastmcp run server.py:mcp --transport http --port 8000
+```
+
+To run MCP client, run the below command.
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+python3 client.py
+```
+
+MCP Client sample is as below.
+
+```python client.py theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import Client
+import asyncio
+
+async def main():
+    # The client will automatically handle OCI OAuth flows
+    async with Client("http://localhost:8000/mcp/", auth="oauth") as client:
+        # First-time connection will open OCI login in your browser
+        print("✓ Authenticated with OCI IAM")
+
+        tools = await client.list_tools()
+        print(f"🔧 Available tools ({len(tools)}):")
+        for tool in tools:
+            print(f"   - {tool.name}: {tool.description}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+When you run the client for the first time:
+
+1. Your browser will open to OCI IAM's login page
+2. Sign in with your OCI account and grant the requested consent
+3. After authorization, you'll be redirected back to the redirect path
+4. The client receives the token and can make authenticated requests
+
+## Production Configuration
+
+New in version `2.13.0`
+
+For production deployments with persistent token management across server restarts, configure `jwt_signing_key`, and `client_storage`:
+
+```python server.py theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+
+import os
+from fastmcp import FastMCP
+from fastmcp.server.auth.providers.oci import OCIProvider
+
+from key_value.aio.stores.redis import RedisStore
+from key_value.aio.wrappers.encryption import FernetEncryptionWrapper
+from cryptography.fernet import Fernet
+
+# Load configuration from environment
+# Production setup with encrypted persistent token storage
+auth_provider = OCIProvider(
+    config_url=os.environ.get("OCI_CONFIG_URL"),
+    client_id=os.environ.get("OCI_CLIENT_ID"),
+    client_secret=os.environ.get("OCI_CLIENT_SECRET"),
+    base_url=os.environ.get("BASE_URL", "https://your-production-domain.com"),
+
+    # Production token management
+    jwt_signing_key=os.environ["JWT_SIGNING_KEY"],
+    client_storage=FernetEncryptionWrapper(
+        key_value=RedisStore(
+            host=os.environ["REDIS_HOST"],
+            port=int(os.environ["REDIS_PORT"])
+        ),
+        fernet=Fernet(os.environ["STORAGE_ENCRYPTION_KEY"])
+    )
+)
+
+mcp = FastMCP(name="Production OCI App", auth=auth_provider)
+```
+
+> [!NOTE]
+>
+> Parameters (`jwt_signing_key` and `client_storage`) work together to ensure tokens and client registrations survive server restarts. **Wrap your storage in `FernetEncryptionWrapper` to encrypt sensitive OAuth tokens at Rest** - without it, tokens are stored in plaintext. Store secrets in environment variables and use a persistent storage backend like Redis for distributed deployments.
+>
+> For complete details on these parameters, see the [OAuth Proxy documentation](/servers/auth/oauth-proxy#configuration-parameters).
+
+> [!NOTE]
+>
+> The client caches tokens locally, so you won't need to re-authenticate for subsequent runs unless the token expires or you explicitly clear the cache.
+
+
 # Authentication
 Source: https://gofastmcp.com/servers/auth/authentication
 
@@ -12591,8 +12879,13 @@ You can extend `RemoteAuthProvider` to add additional endpoints beyond the stand
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 import httpx2
+from pydantic import AnyHttpUrl
 from starlette.responses import JSONResponse
 from starlette.routing import Route
+
+from fastmcp import FastMCP
+from fastmcp.server.auth import RemoteAuthProvider
+from fastmcp.server.auth.providers.jwt import JWTVerifier
 
 class CompanyAuthProvider(RemoteAuthProvider):
     def __init__(self):
@@ -12608,11 +12901,11 @@ class CompanyAuthProvider(RemoteAuthProvider):
             base_url="https://api.yourcompany.com"  # Your server base URL
         )
     
-    def get_routes(self) -> list[Route]:
+    def get_routes(self, mcp_path: str | None = None) -> list[Route]:
         """Add custom endpoints to the standard protected resource routes."""
         
         # Get the standard OAuth protected resource routes
-        routes = super().get_routes()
+        routes = super().get_routes(mcp_path)
         
         # Add authorization server metadata forwarding for client convenience
         async def authorization_server_metadata(request):
@@ -12632,7 +12925,7 @@ class CompanyAuthProvider(RemoteAuthProvider):
 mcp = FastMCP(name="Company API", auth=CompanyAuthProvider())
 ```
 
-This pattern uses `super().get_routes()` to get the standard protected resource routes, then adds additional endpoints as needed. A common use case is providing authorization server metadata forwarding, which allows MCP clients to discover your identity provider's capabilities through your MCP server rather than contacting the identity provider directly.
+This pattern uses `super().get_routes(mcp_path)` to get the standard protected resource routes, then adds additional endpoints as needed. `http_app()` passes the MCP path into `get_routes`, and the base implementation uses that path for the protected-resource metadata URL. A common use case is providing authorization server metadata forwarding, which allows MCP clients to discover your identity provider's capabilities through your MCP server rather than contacting the identity provider directly.
 
 ## WorkOS AuthKit Integration
 
@@ -14274,7 +14567,7 @@ mcp = FastMCP("app")
 
 class Enrich(Middleware):
     async def on_call_tool(self, context: MiddlewareContext, call_next):
-        await context.fastmcp_context.set_state("caller", "alice")
+        await context.fastmcp_context.set_state("caller", "alice", serializable=False)
         return await call_next(context)
 
 
@@ -14286,7 +14579,9 @@ async def whoami(ctx: Context) -> str:
     return await ctx.get_state("caller") or "unknown"
 ```
 
-The state is scoped to the one request and discarded when it returns. State is also inherited by mounted children, so a value a parent middleware sets is visible to a mounted server's tools within the same request.
+The `serializable=False` value in this example is scoped to one request and discarded when it returns. It is inherited by mounted children, so the value the parent middleware sets is visible to a mounted server's tools within the same request.
+
+With the default `serializable=True`, values live in the current server's state store. Each mounted server has its own store, so those values do not cross mount boundaries by default. To share serializable state, pass the same `session_state_store` to both servers, as shown in the [upgrade guide](/getting-started/upgrading/from-fastmcp-2).
 
 **Method signatures:**
 
@@ -16963,7 +17258,7 @@ Do not return error values or skip `call_next()` to indicate errors—raise exce
 
 ### Authorizing Resource Access
 
-To restrict which resources a caller can read, implement `check_resource_access` rather than `on_read_resource`. The default `on_read_resource` calls it before every read, and features that describe resources without reading them, such as [Skills discovery](/servers/providers/experimental-skills), call it too, so a resource the caller cannot read is not advertised either. Raise `AuthorizationError` to deny access.
+To restrict which resources a caller can read, implement `check_resource_access` rather than `on_read_resource`. The default `on_read_resource` calls it before every read, and features that describe resources without reading them, such as [Skills discovery](/servers/skills#access-control), call it too, so a resource the caller cannot read is not advertised either. Raise `AuthorizationError` to deny access.
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp.exceptions import AuthorizationError
@@ -18173,88 +18468,6 @@ mcp = FastMCP("API Resources", providers=[
 ```
 
 
-# Experimental Skills Extension
-Source: https://gofastmcp.com/servers/providers/experimental-skills
-
-Publish filesystem skills through standard MCP skills discovery
-
-The existing `SkillsDirectoryProvider` can opt into experimental Skills discovery, letting clients discover filesystem skills through `skills/list` and `skills/get`, with frontmatter and a complete file manifest. Files remain ordinary MCP resources, readable through `resources/read`.
-
-> [!WARNING]
->
-> This API is experimental and may change without a deprecation period. It builds on the [MCP Skills extension](https://github.com/modelcontextprotocol/ext-skills/blob/main/specification/stable/skills.mdx). Directory reads, host-side activation, approval, installation, and execution are not implemented.
-
-## Publish skills
-
-Set `experimental_skills=True` on `SkillsDirectoryProvider`, register it directly on your server, and register `SkillsExtension` with the same provider instance. The configured directory contains skill directories; each skill needs a UTF-8 `SKILL.md` with valid Agent Skills frontmatter.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import FastMCP
-from fastmcp.skills.extension import SkillsExtension
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-mcp = FastMCP("Skills")
-skills = SkillsDirectoryProvider("./skills", experimental_skills=True)
-mcp.add_provider(skills)
-mcp.add_extension(SkillsExtension(providers=[skills]))
-
-if __name__ == "__main__":
-    mcp.run(transport="http")
-```
-
-For example, `skills/review/SKILL.md` can contain:
-
-```markdown theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
----
-name: review
-description: Review a code change for correctness and compatibility.
----
-
-Read the changed code and verify the behavior it promises.
-```
-
-Its URI is `skill://review/SKILL.md`. A nested skill at `skills/team/review/SKILL.md` uses `skill://team/review/SKILL.md`. Parent manifests include all supporting files, including nested skills; each nested skill also has its own discovery entry.
-
-The default `supporting_files="template"` exposes the main files and existing synthetic `_manifest` entries as resources and supporting files through resource templates. Use `supporting_files="resources"` to include each supporting file in `resources/list`.
-
-## Discover and read
-
-Explicitly enable the typed client extension and use a modern protocol connection. Listing retrieves metadata; read only the files you need.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import Client
-from fastmcp.skills import SkillsClientExtension
-
-async def inspect_skills() -> None:
-    async with Client(
-        "http://localhost:8000/mcp",
-        mode="auto",
-        extensions=[SkillsClientExtension()],
-    ) as client:
-        entries = await client.list_skills()
-        for entry in entries:
-            print(entry.uri, entry.frontmatter.description)
-```
-
-`client.get_skill(uri)` refreshes one entry. Each static manifest includes the URI, byte size, and SHA-256 digest of every file. A host must verify resource contents against those records before using them, preserve the originating server's identity, and apply the extension's approval rules. The typed client methods transport entries; they do not activate or approve skills.
-
-## Validation and updates
-
-Listing scans the directories and hashes their current bytes. Looking up a skill by URI hashes only that skill; resource reads resolve their path directly without scanning the skill collection. Reads remain live, preserving CRLF newlines and binary content. If a file changes between discovery and reading, the host detects the mismatch and refreshes the entry. This is a point-in-time manifest, not an atomic filesystem snapshot.
-
-Malformed skills are omitted with a warning. Duplicate root-relative skill paths are all omitted. Frontmatter must have unique string keys and JSON-compatible values; timestamps, binary scalars, non-finite numbers, and YAML aliases are rejected. Skill roots and their contents must not be symbolic links. Skills over the extension's limits of 512 files or 16 MiB in total are omitted. Every file in a skill directory is published, including hidden files, so keep version control directories and editor files out of skill roots.
-
-The entire entry is omitted when any supporting resource or template is unavailable to the caller or resolves to a different backing file. Resource reads claimed by the extension bypass `ResponseCachingMiddleware`, so refreshing a manifest cannot leave the host repeatedly receiving old cached bytes.
-
-## Supported composition
-
-Use directly registered providers with `experimental_skills=True`. Server and provider transforms, namespacing, mounted skill sources, and proxies are not supported. Resource authorization uses `Middleware.check_resource_access`, the policy hook also called by the default `on_read_resource`. `AuthMiddleware` implements this hook, including transport handling and scope checks. Custom resource authorization should implement this hook; custom `on_read_resource` overrides must call `super()` to apply it. Arbitrary restrictions or content changes in other middleware hooks cannot be inferred by discovery and are unsupported unless the middleware keeps the skill metadata consistent.
-
-Without `experimental_skills=True`, the [Skills Provider](/servers/providers/skills) keeps its existing behavior, including permissive frontmatter, synthetic `_manifest` resources, first-root duplicate precedence, and the `reload` setting. Opting in enables strict validation, nested skill identities, duplicate rejection, and live byte-preserving reads. The same `SkillProvider` resource implementation serves both modes, including the existing synthetic `_manifest`. Strict frontmatter validation only determines eligibility for `skills/list` and `skills/get`; files without valid frontmatter remain readable as ordinary resources. Experimental resources use generic descriptions without parsing the main file, so malformed frontmatter or non-UTF-8 bytes cannot prevent resource listing or manifest reads. Author-provided descriptions remain available in valid Skills discovery entries. The main file must be `SKILL.md`. Experimental reads are always live, regardless of `reload`.
-
-Removing the extension registration disables standard skills discovery while the provider continues serving resources in its selected mode.
-
-
 # Filesystem Provider
 Source: https://gofastmcp.com/servers/providers/filesystem
 
@@ -19214,310 +19427,6 @@ external = create_proxy("http://external-server/mcp")
 server.mount(external)
 
 # Now server has both local and proxied tools
-```
-
-
-# Skills Provider
-Source: https://gofastmcp.com/servers/providers/skills
-
-Expose agent skills as MCP resources
-
-New in version `3.0.0`
-
-Agent skills are directories containing instructions and supporting files that teach an AI assistant how to perform specific tasks. Tools like Claude Code, Cursor, and VS Code Copilot each have their own skills directories where users can add custom capabilities. The Skills Provider exposes these skill directories as MCP resources, making skills discoverable and shareable across different AI tools and clients.
-
-To opt into standard MCP `skills/list` and `skills/get` discovery, see [Experimental Skills Extension](/servers/providers/experimental-skills). The experimental option is disabled by default.
-
-## Why Skills as Resources
-
-Skills live in platform-specific directories (`~/.claude/skills/`, `~/.cursor/skills/`, etc.) and typically contain a main instruction file plus supporting reference materials. When you want to share skills between tools or access them from a custom client, you need a way to discover and retrieve these files programmatically.
-
-The Skills Provider solves this by exposing each skill as a set of MCP resources. A client can list available skills, read the main instruction file, check the manifest to see what supporting files exist, and fetch any file it needs. This transforms local skill directories into a standardized API that works with any MCP client.
-
-## Quick Start
-
-Create a provider pointing to your skills directory, then add it to your server.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp import FastMCP
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-mcp = FastMCP("Skills Server")
-mcp.add_provider(SkillsDirectoryProvider(roots=Path.home() / ".claude" / "skills"))
-```
-
-Each subdirectory containing a `SKILL.md` file becomes a discoverable skill. Clients can then list resources to see available skills and read them as needed.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import Client
-
-async with Client(mcp) as client:
-    # List each skill's main file and manifest
-    resources = await client.list_resources()
-    for r in resources:
-        print(r.uri)  # skill://my-skill/SKILL.md, skill://my-skill/_manifest
-
-    # Read a skill's main instruction file
-    result = await client.read_resource("skill://my-skill/SKILL.md")
-    print(result[0].text)
-```
-
-## Skill Structure
-
-A skill is a directory containing a main instruction file (default: `SKILL.md`) and optionally supporting files. The directory name becomes the skill's identifier.
-
-```
-~/.claude/skills/
-├── pdf-processing/
-│   ├── SKILL.md           # Main instructions
-│   ├── reference.md       # Supporting documentation
-│   └── examples/
-│       └── sample.pdf
-└── code-review/
-    └── SKILL.md
-```
-
-The main file can include YAML frontmatter to provide metadata. If no frontmatter exists, the provider extracts a description from the first meaningful line of content.
-
-```markdown theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
----
-description: Process and extract information from PDF documents
----
-
-# PDF Processing
-
-Instructions for handling PDFs...
-```
-
-## Resource URIs
-
-Each skill exposes three types of resources, all using the `skill://` URI scheme.
-
-The main instruction file contains the primary skill content. This is the resource clients read to understand what a skill does and how to use it.
-
-```
-skill://pdf-processing/SKILL.md
-```
-
-The manifest is a synthetic JSON resource listing all files in the skill directory with their sizes and SHA256 hashes. Clients use this to discover supporting files and verify content integrity.
-
-```
-skill://pdf-processing/_manifest
-```
-
-Reading the manifest returns structured file information.
-
-```json theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-{
-  "skill": "pdf-processing",
-  "files": [
-    {"path": "SKILL.md", "size": 1234, "hash": "sha256:abc123..."},
-    {"path": "reference.md", "size": 567, "hash": "sha256:def456..."},
-    {"path": "examples/sample.pdf", "size": 89012, "hash": "sha256:ghi789..."}
-  ]
-}
-```
-
-Supporting files are any additional files in the skill directory. These might be reference documentation, code examples, or binary assets.
-
-```
-skill://pdf-processing/reference.md
-skill://pdf-processing/examples/sample.pdf
-```
-
-> [!NOTE]
->
-> Skill files, including the main file, must resolve within the skill directory. Links to files within that directory are supported. A skill folder can itself be a link, such as an entry in `~/.claude/skills` that points to a checkout elsewhere; the skill's files must then resolve within the folder it links to.
-
-## Provider Architecture
-
-The Skills Provider uses a two-layer architecture to handle both single skills and skill directories.
-
-### SkillProvider
-
-`SkillProvider` handles a single skill directory. It loads the main file, parses any frontmatter, scans for supporting files, and creates the appropriate resources.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp import FastMCP
-from fastmcp.server.providers.skills import SkillProvider
-
-mcp = FastMCP("Single Skill")
-mcp.add_provider(SkillProvider(Path.home() / ".claude" / "skills" / "pdf-processing"))
-```
-
-Use `SkillProvider` when you want to expose exactly one skill, or when you need fine-grained control over individual skill configuration.
-
-### SkillsDirectoryProvider
-
-`SkillsDirectoryProvider` scans one or more root directories and creates a `SkillProvider` for each valid skill folder it finds. A folder is considered a valid skill if it contains the main file (default: `SKILL.md`).
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp import FastMCP
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-mcp = FastMCP("Skills")
-mcp.add_provider(SkillsDirectoryProvider(roots=Path.home() / ".claude" / "skills"))
-```
-
-When scanning multiple root directories, provide them as a list. The first directory takes precedence if the same skill name appears in multiple roots.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp import FastMCP
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-mcp = FastMCP("Skills")
-mcp.add_provider(SkillsDirectoryProvider(roots=[
-    Path.cwd() / ".claude" / "skills",      # Project-level skills first
-    Path.home() / ".claude" / "skills",     # User-level fallback
-]))
-```
-
-## Vendor Providers
-
-FastMCP includes pre-configured providers for popular AI coding tools. Each vendor provider extends `SkillsDirectoryProvider` with the appropriate default directory for that platform.
-
-| Provider | Default Directory |
-| - | - |
-| `ClaudeSkillsProvider` | `~/.claude/skills/` |
-| `CursorSkillsProvider` | `~/.cursor/skills/` |
-| `VSCodeSkillsProvider` | `~/.copilot/skills/` |
-| `CodexSkillsProvider` | `/etc/codex/skills/` and `~/.codex/skills/` |
-| `GeminiSkillsProvider` | `~/.gemini/skills/` |
-| `GooseSkillsProvider` | `~/.config/agents/skills/` |
-| `CopilotSkillsProvider` | `~/.copilot/skills/` |
-| `OpenCodeSkillsProvider` | `~/.config/opencode/skills/` |
-
-Vendor providers accept the same configuration options as `SkillsDirectoryProvider` (except for `roots`, which is locked to the platform default).
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import FastMCP
-from fastmcp.server.providers.skills import ClaudeSkillsProvider
-
-mcp = FastMCP("Claude Skills")
-mcp.add_provider(ClaudeSkillsProvider())  # Uses ~/.claude/skills/
-```
-
-`CodexSkillsProvider` scans both system-level (`/etc/codex/skills/`) and user-level (`~/.codex/skills/`) directories, with system skills taking precedence.
-
-## Supporting Files Disclosure
-
-The `supporting_files` parameter controls how supporting files (everything except the main file and manifest) appear to clients.
-
-### Template Mode (Default)
-
-With `supporting_files="template"`, supporting files are accessed through a `ResourceTemplate` rather than being listed as individual resources. Clients see only the main file and manifest in `list_resources()`, then discover supporting files by reading the manifest.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-# Default behavior - supporting files hidden from list_resources()
-provider = SkillsDirectoryProvider(
-    roots=Path.home() / ".claude" / "skills",
-    supporting_files="template",  # This is the default
-)
-```
-
-This keeps the resource list compact when skills contain many files. Clients that need supporting files read the manifest first, then request specific files by URI.
-
-### Resources Mode
-
-With `supporting_files="resources"`, every file in every skill appears as an individual resource in `list_resources()`. Clients get full enumeration upfront without needing to read manifests.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-# All files visible as individual resources
-provider = SkillsDirectoryProvider(
-    roots=Path.home() / ".claude" / "skills",
-    supporting_files="resources",
-)
-```
-
-Use this mode when clients need to discover all available files without additional round trips, or when integrating with tools that expect flat resource lists.
-
-## Reload Mode
-
-Enable reload mode to re-scan the skills directory on every request. Changes to skills take effect immediately without restarting the server.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp.server.providers.skills import SkillsDirectoryProvider
-
-provider = SkillsDirectoryProvider(
-    roots=Path.home() / ".claude" / "skills",
-    reload=True,
-)
-```
-
-With `reload=True`, the provider re-discovers skills on each `list_resources()` or `read_resource()` call. New skills appear, removed skills disappear, and modified content reflects current file state.
-
-> [!WARNING]
->
-> Reload mode adds overhead to every request. Use it during development when you're actively editing skills, but disable it in production.
-
-## Client Utilities
-
-FastMCP provides utilities for downloading skills from any MCP server that exposes them. These are standalone functions in `fastmcp.utilities.skills`.
-
-### Discovering Skills
-
-Use `list_skills()` to see what skills are available on a server.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import Client
-from fastmcp.utilities.skills import list_skills
-
-async with Client("http://skills-server/mcp") as client:
-    skills = await list_skills(client)
-    for skill in skills:
-        print(f"{skill.name}: {skill.description}")
-```
-
-### Downloading Skills
-
-Use `download_skill()` to download a single skill, or `sync_skills()` to download all available skills.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from pathlib import Path
-
-from fastmcp import Client
-from fastmcp.utilities.skills import download_skill, sync_skills
-
-async with Client("http://skills-server/mcp") as client:
-    # Download one skill
-    path = await download_skill(client, "pdf-processing", Path.home() / ".claude" / "skills")
-
-    # Or download all skills
-    paths = await sync_skills(client, Path.home() / ".claude" / "skills")
-```
-
-Both functions accept an `overwrite` parameter. When `False` (default), existing skills are skipped. When `True`, existing files are replaced.
-
-### Inspecting Manifests
-
-Use `get_skill_manifest()` to see what files a skill contains before downloading.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import Client
-from fastmcp.utilities.skills import get_skill_manifest
-
-async with Client("http://skills-server/mcp") as client:
-    manifest = await get_skill_manifest(client, "pdf-processing")
-    for file in manifest.files:
-        print(f"{file.path} ({file.size} bytes, {file.hash})")
 ```
 
 
@@ -20890,6 +20799,120 @@ Now a session expires an hour after its last write, and `end_session` still remo
 The request [context](/servers/context) also carries state, through `ctx.set_state` and `ctx.get_state`, and the two solve different problems. Context state is scoped to a single request — the right place for a value that a middleware sets and a handler reads within the same call. Session state is what persists *across* requests. When you need a value to survive from one tool call to the next, reach for `UserSession` or `SessionId`; when it only needs to live for the current request, keep it on the context.
 
 
+# Skills over MCP
+Source: https://gofastmcp.com/servers/skills
+
+Serve agent skills from a FastMCP server so every agent reads the same copy.
+
+New in version `4.2.0`
+
+A skill is a `SKILL.md` of instructions plus whatever files it points to. Most agents load skills from a local folder, which means every laptop has its own copy and none of them agree. Put the skills on an MCP server instead: one copy, and an update ships when you deploy.
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import FastMCP, Skill
+from fastmcp.skills.provider import SkillCatalogProvider
+
+release_notes = Skill(
+    name="release-notes",
+    description="Write release notes from merged pull requests.",
+    instructions="# Release notes\n\nGroup changes by theme. Follow template.md.\n",
+    files={"template.md": "## Highlights\n\n## Fixes\n"},
+)
+
+mcp = FastMCP("Team Skills")
+mcp.add_provider(SkillCatalogProvider([release_notes]))
+```
+
+That's a skills server. Every client can read `skill://release-notes/SKILL.md` and `template.md` as ordinary resources. Clients that speak the [Skills extension](https://modelcontextprotocol.io/seps/2640-skills-extension) can also call `skills/list` and get each skill's description and a hashed manifest of its files, so a host can offer the skill without an install step. Few hosts do yet, and FastMCP's support is experimental, but you get both from the same provider. Run `fastmcp list server.py --skills` to see what you're serving.
+
+## Where skills come from
+
+A `Skill` is a value: a name, a description, instructions, and any supporting files. Build one in Python as above, or load one from a folder, a package, or a mapping of files:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import Skill
+
+deploy = Skill.from_directory("skills/deploy")
+review = Skill.from_package("my_package", "skills/review")
+triage = Skill.from_files({"SKILL.md": "---\nname: triage\ndescription: Triage issues.\n---\n"})
+```
+
+Skills are validated when you build them and never change afterward. The `description` is what an agent reads to decide whether to use the skill, so make it say when.
+
+If your skills change while the server runs, override `load_skills()`. FastMCP calls it once per request, so a database row or a folder you're still editing shows up on the next request:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
+from fastmcp import Skill
+from fastmcp.skills.provider import SkillCatalogProvider
+
+ROWS = [{"name": "triage", "description": "Triage issues.", "body": "# Triage\n"}]
+
+
+class StoredSkills(SkillCatalogProvider):
+    async def load_skills(self) -> list[Skill]:
+        return [
+            Skill(name=row["name"], description=row["description"], instructions=row["body"])
+            for row in ROWS
+        ]
+
+
+class LiveFolder(SkillCatalogProvider):
+    async def load_skills(self) -> list[Skill]:
+        return [Skill.from_directory(p) for p in Path("skills").iterdir() if p.is_dir()]
+```
+
+`SkillsDirectoryProvider` and presets like `ClaudeSkillsProvider` also serve folders straight from disk; pass `experimental_skills=True` to make them discoverable.
+
+## Access control
+
+Discovery never shows a skill the caller can't read. If any of its files is hidden, denied by `check_resource_access` (what [`AuthMiddleware`](/servers/authorization) uses), or shadowed by another resource, the skill drops out of `skills/list`.
+
+## Mounted servers
+
+Skills come along when you [mount](/servers/composition) a server, at the URIs the parent serves them at: `mount(child, namespace="team")` turns `skill://review/` into `skill://team/review/`. If you'd rather choose exactly which providers are discoverable, register the extension yourself with `mcp.add_extension(SkillsExtension(providers=[...]))` from `fastmcp.skills.extension`.
+
+## Read skills from a client
+
+### Discover and read skills
+
+Opt the client into the extension, list what the server offers, and read a whole skill with `read_skill()`:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from fastmcp import Client
+from fastmcp.skills import SkillsClientExtension
+
+client = Client("http://localhost:8000/mcp", extensions=[SkillsClientExtension()])
+async with client:
+    for entry in await client.list_skills():
+        print(entry.uri, entry.frontmatter.description)
+    skill = await client.read_skill("skill://release-notes/SKILL.md")
+```
+
+`list_skills()` returns metadata only. `read_skill()` reads every file in the skill's manifest, checks each against its digest, and returns a `Skill`, so you can inspect it or serve it again with `SkillCatalogProvider([skill])`. [`ClientGroup.list_skills()`](/clients/client-groups) lists skills across several servers.
+
+### Install skills into a local agent
+
+Most agents still only read skills from disk. `sync_skills()` copies a server's skills into a local folder, and works with any server that serves skills as resources, with or without the extension:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
+from fastmcp import Client
+from fastmcp.utilities.skills import sync_skills
+
+async with Client("http://localhost:8000/mcp") as client:
+    await sync_skills(client, Path.home() / ".claude" / "skills", overwrite=True)
+```
+
+## Current limits
+
+* Skills behind a proxy are readable as resources but don't show up in `skills/list`.
+* A provider added with a namespace or other transforms isn't discoverable; mount a server instead.
+* `directoryRead` isn't implemented.
+
+
 # Storage Backends
 Source: https://gofastmcp.com/servers/storage-backends
 
@@ -21031,6 +21054,8 @@ The py-key-value-aio library includes additional implementations for various sto
 * **Memcached** - Distributed memory caching
 * **RocksDB** - Embedded high-performance key-value store
 * **Valkey** - Redis-compatible server
+
+If you use `KeyringStore` for OS keyring storage, install `py-key-value-aio[keyring]` explicitly. FastMCP does not install the keyring dependency or its CLI by default.
 
 For configuration details on these backends, consult the [py-key-value-aio documentation](https://github.com/strawgate/py-key-value).
 
@@ -21381,6 +21406,47 @@ mcp.add_extension(TasksExtension(url="redis://localhost:6379/0"))
 * **Persistent**: Tasks survive server restarts
 * **Fast**: Single-digit millisecond task pickup latency
 * **Scalable**: Add workers to distribute load across processes or machines
+
+### Rotating Redis Credentials
+
+For backends with expiring credentials, pass a redis-py `CredentialProvider` to `TasksExtension`. Use a URL without a username or password. Docket passes the provider to its Redis connections so a reconnect can obtain fresh credentials.
+
+This example reads credentials from a file on each new connection. Your deployment can replace the file when the password or token changes:
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+from pathlib import Path
+
+from redis.credentials import CredentialProvider
+
+from fastmcp import FastMCP
+from fastmcp_tasks import TasksExtension
+
+
+class FileCredentials(CredentialProvider):
+    def get_credentials(self) -> tuple[str, str]:
+        password = Path("/run/secrets/redis-password").read_text().strip()
+        return "tasks-user", password
+
+
+mcp = FastMCP("MyServer")
+mcp.add_extension(
+    TasksExtension(
+        url="rediss://redis.example.com:6379/0",
+        credential_provider=FileCredentials(),
+    )
+)
+
+
+@mcp.tool(task=True)
+async def double(value: int) -> int:
+    return value * 2
+```
+
+You can also supply a provider that implements `get_credentials_async()`. FastMCP does not generate or refresh cloud tokens itself, and `TasksExtension` rejects streaming providers (such as redis-entraid's) for now, because a token refresh can hand one Redis connection to two commands at once. See [Docket credential providers](https://docket.lol/en/latest/production/#credential-providers) for details about long-lived connections and provider ownership.
+
+Configure the provider in your server module. [Additional workers](#workers) load that same module and use its registered extension, so no separate worker flag is needed. Provider objects are runtime configuration, not `FASTMCP_DOCKET_*` environment settings. The default `memory://` backend ignores them.
+
+`TasksExtension.clone()` copies the resolved settings and shares the credential provider with the original extension. To give servers independent authentication state, construct each extension with its own provider instead.
 
 ### Credentials at Rest
 
@@ -25403,6 +25469,8 @@ mcp.disable(tags={"premium"})
 
 All sessions start with `premium_analysis` hidden. When a session calls `unlock_premium`, that session gains access to premium tools while other sessions remain unaffected. Calling `reset_features` returns the session to the global defaults.
 
+For a mounted server, these rules use that server's session state store and its local component names. Components it enables can be listed and called through the parent, including through a namespace. The parent's visibility rules still apply to the components exposed by the mount.
+
 ### How Session Rules Work
 
 Session rules override global transforms. When listing components, FastMCP first applies global enable/disable rules, then applies session-specific rules on top. Rules within a session accumulate, and later rules override earlier ones for the same component.
@@ -25572,7 +25640,75 @@ Source: https://gofastmcp.com/changelog
 
 
 
+**v4.1.4**
+
+2026-10-26
+
+**[v4.1.4: Token Gesture](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.4)**
+
+Generated CLIs now preserve remote transports, empty arrays, and parameters whose names collide with their own helpers; mounted servers honor session visibility and `mounted_components_raise_on_load_error`, a stale client context no longer closes a newer session, and OAuth provider wrappers accept identity assertions. Tasks accept a redis-py credential provider that returns current credentials for each new connection (streaming providers such as redis-entraid's are rejected until Docket can refresh them safely), Redis 8.1.0 is excluded, and custom `KeyringStore` users must now install `py-key-value-aio[keyring]` explicitly. Thanks to our 16 contributors, including 9 first-time contributors.
+
+### Enhancements ✨
+
+* Add server authoring guidance through the docs site by [@zzstoatzz](https://github.com/zzstoatzz) in [#5703](https://github.com/PrefectHQ/fastmcp/pull/5703)
+* Support rotating Redis credentials for tasks by [@zzstoatzz](https://github.com/zzstoatzz) and [@nazarii-plebanskyi-rf](https://github.com/nazarii-plebanskyi-rf) in [#5970](https://github.com/PrefectHQ/fastmcp/pull/5970)
+* fix(client): forward max\_sse\_event\_size through StreamableHttpTransport by [@PrathmeshPawar2110](https://github.com/PrathmeshPawar2110) in [#6016](https://github.com/PrefectHQ/fastmcp/pull/6016)
+* Add a downstream smoke for Redis credential providers by [@zzstoatzz](https://github.com/zzstoatzz) in [#6044](https://github.com/PrefectHQ/fastmcp/pull/6044)
+
+### Security 🔒
+
+* Bump certifi to 2026.10.19 by [@jakekaplan](https://github.com/jakekaplan) in [#5989](https://github.com/PrefectHQ/fastmcp/pull/5989)
+* Let configured proxy headers replace forwarded ones regardless of case by [@leopranzl](https://github.com/leopranzl) in [#5972](https://github.com/PrefectHQ/fastmcp/pull/5972)
+
+### Fixes 🐞
+
+* Fix maintained skill discovery on the docs site by [@zzstoatzz](https://github.com/zzstoatzz) in [#5954](https://github.com/PrefectHQ/fastmcp/pull/5954)
+* Publish regular skill files for Mintlify discovery by [@zzstoatzz](https://github.com/zzstoatzz) in [#5956](https://github.com/PrefectHQ/fastmcp/pull/5956)
+* Serialize HTTP and SSE transports in generate-cli by [@asasemahmed](https://github.com/asasemahmed) in [#5891](https://github.com/PrefectHQ/fastmcp/pull/5891)
+* fix(cli): preserve empty arrays in generated commands by [@dailyun](https://github.com/dailyun) in [#5961](https://github.com/PrefectHQ/fastmcp/pull/5961)
+* Fix session visibility lookups through mounted servers by [@HootRock](https://github.com/HootRock) and [@leopranzl](https://github.com/leopranzl) in [#5966](https://github.com/PrefectHQ/fastmcp/pull/5966)
+* Fix generated CLI JSON parameter name collisions by [@Vittuu](https://github.com/Vittuu) in [#5959](https://github.com/PrefectHQ/fastmcp/pull/5959)
+* Escape server text in the fastmcp call elicitation prompt by [@asasemahmed](https://github.com/asasemahmed) in [#5909](https://github.com/PrefectHQ/fastmcp/pull/5909)
+* Map common audio extensions when Audio is given a path by [@asasemahmed](https://github.com/asasemahmed) in [#5919](https://github.com/PrefectHQ/fastmcp/pull/5919)
+* Drop clamped log records the logger is not enabled for by [@asasemahmed](https://github.com/asasemahmed) in [#5915](https://github.com/PrefectHQ/fastmcp/pull/5915)
+* Omit the output schema when an OpenAPI success response has no body by [@asasemahmed](https://github.com/asasemahmed) in [#5913](https://github.com/PrefectHQ/fastmcp/pull/5913)
+* Create the MCP config file on install when it is missing or empty by [@asasemahmed](https://github.com/asasemahmed) in [#5887](https://github.com/PrefectHQ/fastmcp/pull/5887)
+* Preserve credential providers when cloning task extensions by [@zzstoatzz](https://github.com/zzstoatzz) and [@nazarii-plebanskyi-rf](https://github.com/nazarii-plebanskyi-rf) in [#5984](https://github.com/PrefectHQ/fastmcp/pull/5984)
+* Exclude Redis 8.1.0 to preserve task reconnection by [@zzstoatzz](https://github.com/zzstoatzz) and [@nazarii-plebanskyi-rf](https://github.com/nazarii-plebanskyi-rf) in [#5985](https://github.com/PrefectHQ/fastmcp/pull/5985)
+* Remove unused keyring dependency by [@zzstoatzz](https://github.com/zzstoatzz) and [@tom42-otera](https://github.com/tom42-otera) in [#5987](https://github.com/PrefectHQ/fastmcp/pull/5987)
+* Fix static checks broken by ty 0.0.89 and pydantic 2.14 by [@zzstoatzz](https://github.com/zzstoatzz) in [#6001](https://github.com/PrefectHQ/fastmcp/pull/6001)
+* Run dev inspector servers over stdio and stop mapping the deployment port to the proxy by [@asasemahmed](https://github.com/asasemahmed) in [#6029](https://github.com/PrefectHQ/fastmcp/pull/6029)
+* fix(json-schema): apply a Draft-4 boolean exclusive bound to its sibling by [@kbkb628](https://github.com/kbkb628) in [#5234](https://github.com/PrefectHQ/fastmcp/pull/5234)
+* Strip a URL scheme from a Clerk domain by [@asasemahmed](https://github.com/asasemahmed) in [#5921](https://github.com/PrefectHQ/fastmcp/pull/5921)
+* Fix generate-cli commands for tools with a json parameter by [@andreivince](https://github.com/andreivince) in [#6032](https://github.com/PrefectHQ/fastmcp/pull/6032)
+* Honor mounted\_components\_raise\_on\_load\_error in AggregateProvider by [@asasemahmed](https://github.com/asasemahmed) in [#6026](https://github.com/PrefectHQ/fastmcp/pull/6026)
+* Reject streaming credential providers in TasksExtension by [@zzstoatzz](https://github.com/zzstoatzz) in [#6043](https://github.com/PrefectHQ/fastmcp/pull/6043)
+* fix(client): keep stale contexts from closing newer sessions by [@mikamikasuki](https://github.com/mikamikasuki) in [#6018](https://github.com/PrefectHQ/fastmcp/pull/6018)
+* fix(auth): expose identity assertions on OAuth provider wrappers by [@computeaholic](https://github.com/computeaholic) and [@jonaseck2](https://github.com/jonaseck2) in [#6006](https://github.com/PrefectHQ/fastmcp/pull/6006)
+* Measure blocking duration with perf\_counter in transform\_fn generator test by [@Lokeshrao69](https://github.com/Lokeshrao69) in [#6014](https://github.com/PrefectHQ/fastmcp/pull/6014)
+
+### Docs 📚
+
+* Clarify request state across mounted servers by [@HootRock](https://github.com/HootRock) and [@leopranzl](https://github.com/leopranzl) in [#5967](https://github.com/PrefectHQ/fastmcp/pull/5967)
+* Pass mcp\_path through the remote OAuth custom routes example by [@asasemahmed](https://github.com/asasemahmed) in [#5925](https://github.com/PrefectHQ/fastmcp/pull/5925)
+
+## New Contributors
+
+* @dailyun made their first contribution in [#5961](https://github.com/PrefectHQ/fastmcp/pull/5961)
+* @Vittuu made their first contribution in [#5959](https://github.com/PrefectHQ/fastmcp/pull/5959)
+* @leopranzl made their first contribution in [#5966](https://github.com/PrefectHQ/fastmcp/pull/5966)
+* @nazarii-plebanskyi-rf made their first contribution in [#5970](https://github.com/PrefectHQ/fastmcp/pull/5970)
+* @tom42-otera made their first contribution in [#5987](https://github.com/PrefectHQ/fastmcp/pull/5987)
+* @computeaholic made their first contribution in [#6006](https://github.com/PrefectHQ/fastmcp/pull/6006)
+* @jonaseck2 made their first contribution in [#6006](https://github.com/PrefectHQ/fastmcp/pull/6006)
+* @PrathmeshPawar2110 made their first contribution in [#6016](https://github.com/PrefectHQ/fastmcp/pull/6016)
+* @Lokeshrao69 made their first contribution in [#6014](https://github.com/PrefectHQ/fastmcp/pull/6014)
+
+**Full Changelog**: [v4.1.3...v4.1.4](https://github.com/PrefectHQ/fastmcp/compare/v4.1.3...v4.1.4)
+
 **v4.1.3**
+
+2026-10-20
 
 **[v4.1.3: Root Awakening](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.3)**
 
@@ -25607,6 +25743,8 @@ This release updates certifi-backed dependencies following the eMudhra CA compro
 **Full Changelog**: [v4.1.2...v4.1.3](https://github.com/PrefectHQ/fastmcp/compare/v4.1.2...v4.1.3)
 
 **v4.1.2**
+
+2026-10-20
 
 **[v4.1.2: License to Deny](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.2)**
 
@@ -25693,6 +25831,8 @@ Component authorization now applies after transforms, denied resources cannot fa
 
 **v4.1.1**
 
+2026-10-17
+
 **[v4.1.1: Regex Marks the Spot](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.1)**
 
 Regex tool search now rejects patterns over 1,000 characters and stops after about a second, and `SkillsDirectoryProvider` discovers skill folders that are links again, including links to folders outside the skills root; a skill's own files must still resolve inside the folder it links to. All 4.x users are encouraged to upgrade. Thanks to our 4 contributors, including 1 first-time contributor.
@@ -25718,6 +25858,8 @@ Regex tool search now rejects patterns over 1,000 characters and stops after abo
 **Full Changelog**: [v4.1.0...v4.1.1](https://github.com/PrefectHQ/fastmcp/compare/v4.1.0...v4.1.1)
 
 **v4.1.0**
+
+2026-10-08
 
 **[v4.1.0: Fourth and One](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.0)**
 
@@ -25891,6 +26033,8 @@ Thanks to our 48 contributors, including 21 first-time contributors!
 
 **v4.0.11**
 
+2026-10-04
+
 **[v4.0.11: Fort Knocks](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.11)**
 
 This release contains important security and bug fixes. All users are encouraged to upgrade. Thanks to our 10 contributors, including 6 first-time contributors.
@@ -25971,6 +26115,8 @@ This release contains important security and bug fixes. All users are encouraged
 
 **v4.0.10**
 
+2026-09-25
+
 **[v4.0.10: Inside Job](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.10)**
 
 Task-enabled tools now work behind search transforms and CodeMode: they're registered with the task backend even when hidden, and a tool, resource, or prompt that calls one through `ctx.fastmcp.call_tool()` (including the search `call_tool` proxy and CodeMode's `execute`) now gets its result instead of an empty task receipt.
@@ -25993,6 +26139,8 @@ Task-enabled tools now work behind search transforms and CodeMode: they're regis
 
 **v4.0.9**
 
+2026-09-24
+
 **[v4.0.9: Cache and Release](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.9)**
 
 `ResourceTemplate` now keeps its compiled URI pattern for its own lifetime while the shared cache is bounded again, preventing dynamic proxies from growing process memory without restoring the 4,096-template performance cliff.
@@ -26004,6 +26152,8 @@ Task-enabled tools now work behind search transforms and CodeMode: they're regis
 **Full Changelog**: [v4.0.8...v4.0.9](https://github.com/PrefectHQ/fastmcp/compare/v4.0.8...v4.0.9)
 
 **v4.0.8**
+
+2026-09-23
 
 **[v4.0.8: Take Three](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.8)**
 
@@ -26026,6 +26176,8 @@ Completion goes back to its 4.0.5 behavior. The visibility check added in 4.0.6 
 
 **v4.0.7**
 
+2026-09-23
+
 **[v4.0.7: Double Take](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.7)**
 
 Fixes two regressions from 4.0.6. The completion visibility check runs only the list-specific middleware hooks, so rate limits, logging, and metrics see a single request per completion again. Resource template patterns are cached, which makes template reads faster than in 4.0.5.
@@ -26038,6 +26190,8 @@ Fixes two regressions from 4.0.6. The completion visibility check runs only the 
 **Full Changelog**: [v4.0.6...v4.0.7](https://github.com/PrefectHQ/fastmcp/compare/v4.0.6...v4.0.7)
 
 **v4.0.6**
+
+2026-09-23
 
 **[v4.0.6: Comma Chameleon](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.6)**
 
@@ -26112,6 +26266,8 @@ Resource templates now match what clients actually send: literals raw or percent
 
 **v4.0.5**
 
+2026-09-17
+
 **[v4.0.5: No Country for Loose Ints](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.5)**
 
 Tool parameters declared strict with `Field(strict=True)`, `StrictInt`, or a strict model config are honored again, on both direct calls and task submission. Since the SDK v2 migration the server's lax default overrode them and silently coerced values.
@@ -26127,6 +26283,8 @@ Tool parameters declared strict with `Field(strict=True)`, `StrictInt`, or a str
 **Full Changelog**: [v4.0.4...v4.0.5](https://github.com/PrefectHQ/fastmcp/compare/v4.0.4...v4.0.5)
 
 **v4.0.4**
+
+2026-09-15
 
 **[v4.0.4: Here Be No Dragons](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.4)**
 
@@ -26187,6 +26345,8 @@ OpenAPI request bodies get most of the attention in this patch: multipart string
 
 **v4.0.3**
 
+2026-09-04
+
 **[v4.0.3: Once Is Enough](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3)**
 
 Multi-server clients with legacy-only backends now avoid unnecessary startup retries, and tools returning unconstrained sequences no longer send images twice. This patch also fixes task timing values rejected by strict clients and cleans up unfinished Monty callbacks when execution ends.
@@ -26217,6 +26377,8 @@ Multi-server clients with legacy-only backends now avoid unnecessary startup ret
 
 **v4.0.2**
 
+2026-09-02
+
 **[v4.0.2: Root Access](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.2)**
 
 `ClientGroup` is now importable from the package root, `from fastmcp import ClientGroup`, with the same lazy export and install hint as `Client`, so integrations no longer couple to FastMCP's internal module layout.
@@ -26239,6 +26401,8 @@ Multi-server clients with legacy-only backends now avoid unnecessary startup ret
 
 **v4.0.1**
 
+2026-09-01
+
 **[v4.0.1: Come Back Any Time](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.1)**
 
 `ClientGroup` now reference-counts its context the way `Client` does, so entering a connected group from a nested block or a concurrent task reuses the existing connections instead of raising. Adapters written against `Client`'s reentrancy can hold a `ClientGroup` the same way.
@@ -26258,6 +26422,8 @@ Multi-server clients with legacy-only backends now avoid unnecessary startup ret
 **Full Changelog**: [v4.0.0...v4.0.1](https://github.com/PrefectHQ/fastmcp/compare/v4.0.0...v4.0.1)
 
 **v4.0.0**
+
+2026-08-31
 
 **[v4.0.0: Four Real](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0)**
 
@@ -26544,6 +26710,8 @@ FastMCP 4 is the FastMCP release for the new MCP: full support for the `2026-07-
 
 **v4.0.0b5**
 
+2026-08-28
+
 **[v4.0.0b5: Group Effourt](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b5)**
 
 FastMCP 4 beta 5 introduces `ClientGroup` — one managed client per server, each negotiating its own protocol era independently, with collision-checked tool namespacing and call routing and no proxy in the middle — and aligns middleware response limits with output schemas.
@@ -26569,6 +26737,8 @@ FastMCP 4 beta 5 introduces `ClientGroup` — one managed client per server, eac
 **Full Changelog**: [v4.0.0b4...v4.0.0b5](https://github.com/PrefectHQ/fastmcp/compare/v4.0.0b4...v4.0.0b5)
 
 **v4.0.0b4**
+
+2026-08-26
 
 **[v4.0.0b4: Calm Befour the Storm](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b4)**
 
@@ -26615,6 +26785,8 @@ FastMCP 4 beta 4 improves modern multi-server clients and adds Prefect Horizon a
 
 **v4.0.0b3**
 
+2026-08-14
+
 **[v4.0.0b3: Fast Fourward](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b3)**
 
 FastMCP 4 beta 3 moves the v4 line toward general availability with Prefect Horizon authentication, `CallArgument` and `Depends` bindings for tools and background tasks, and a round of OAuth, proxy, OpenAPI, and Python 3.14 compatibility hardening.
@@ -26656,6 +26828,8 @@ FastMCP 4 beta 3 moves the v4 line toward general availability with Prefect Hori
 
 **v3.4.7**
 
+2026-08-10
+
 **[v3.4.7: Know Your Audience](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.7)**
 
 FastMCP 3.4.7 fixes CIMD `private_key_jwt` authentication on bare-origin OAuth proxy deployments by validating client assertions against the exact token endpoint advertised in OAuth metadata.
@@ -26672,6 +26846,8 @@ FastMCP 3.4.7 fixes CIMD `private_key_jwt` authentication on bare-origin OAuth p
 
 **v3.4.6**
 
+2026-08-05
+
 **[v3.4.6: Trust, but Proxy](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.6)**
 
 FastMCP 3.4.6 backports trusted-proxy support for SSRF-protected OAuth metadata and JWKS fetches. Deployments can now route these requests through a mandated corporate proxy while preserving custom CA certificates; FastMCP refuses the fetch when no proxy is configured instead of risking an unprotected direct request.
@@ -26687,6 +26863,8 @@ FastMCP 3.4.6 backports trusted-proxy support for SSRF-protected OAuth metadata 
 **Full Changelog**: [v3.4.5...v3.4.6](https://github.com/PrefectHQ/fastmcp/compare/v3.4.5...v3.4.6)
 
 **v4.0.0b1**
+
+2026-07-28
 
 **[v4.0.0b1: Fourgone Conclusion](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b1)**
 
@@ -26879,6 +27057,8 @@ FastMCP 4 makes stateful MCP applications work on the sessionless `2026-07-28` p
 
 **v3.4.5**
 
+2026-07-27
+
 **[v3.4.5: Key Change](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.5)**
 
 FastMCP 3.4.5 collects five fixes for the 3.x line, led by `JWTVerifier` no longer rejecting every token when an authorization server publishes an unrecognized key type such as Ed25519.
@@ -26898,6 +27078,8 @@ FastMCP 3.4.5 collects five fixes for the 3.x line, led by `JWTVerifier` no long
 **Full Changelog**: [v3.4.4...v3.4.5](https://github.com/PrefectHQ/fastmcp/compare/v3.4.4...v3.4.5)
 
 **v3.4.4**
+
+2026-07-08
 
 **[v3.4.4: Host in Translation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.4)**
 
@@ -26919,6 +27101,8 @@ FastMCP 3.4.4 restores HTTP deployment compatibility after the 3.4.3 Host/Origin
 **Full Changelog**: [v3.4.3...v3.4.4](https://github.com/PrefectHQ/fastmcp/compare/v3.4.3...v3.4.4)
 
 **v3.4.3**
+
+2026-07-05
 
 **[v3.4.3: The Fast and the Secure-ious](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.3)**
 
@@ -27000,6 +27184,8 @@ FastMCP 3.4.3 closes out a month of SSRF and OAuth hardening: NAT64, 6to4, Tered
 
 **v3.4.2**
 
+2026-06-06
+
 **[v3.4.2: Heads Up](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.2)**
 
 FastMCP 3.4.2 restores JWT compatibility for providers that include private, non-critical JWS header parameters. Tokens from providers like Clerk can carry header metadata such as `cat` without being rejected before signature and claim validation, while unsupported critical headers are still rejected.
@@ -27015,6 +27201,8 @@ FastMCP 3.4.2 restores JWT compatibility for providers that include private, non
 **Full Changelog**: [v3.4.1...v3.4.2](https://github.com/PrefectHQ/fastmcp/compare/v3.4.1...v3.4.2)
 
 **v3.4.1**
+
+2026-06-05
 
 **[v3.4.1: Floor It](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.1)**
 
@@ -27035,6 +27223,8 @@ FastMCP 3.4.1 floors Starlette at `>=1.0.1` so installs can no longer resolve to
 **Full Changelog**: [v3.4.0...v3.4.1](https://github.com/PrefectHQ/fastmcp/compare/v3.4.0...v3.4.1)
 
 **v3.4.0**
+
+2026-06-02
 
 **[v3.4.0: Remote Control](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.0)**
 
@@ -27126,6 +27316,8 @@ FastMCP 3.4 is about reaching servers that live somewhere else. The headline is 
 
 **v3.3.1**
 
+2026-05-15
+
 **[v3.3.1: Loop There It Is](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.3.1)**
 
 A hotfix for the 3.3 packaging split. Clean installs could fail on standalone component imports like `from fastmcp.tools import tool`, because component modules reached auth and task primitives through `fastmcp.server` and pulled in the full server/provider stack. Those primitives now live in lightweight utility modules, with the old server import paths preserved as compatibility re-exports.
@@ -27138,6 +27330,8 @@ A hotfix for the 3.3 packaging split. Clean installs could fail on standalone co
 **Full Changelog**: [v3.3.0...v3.3.1](https://github.com/PrefectHQ/fastmcp/compare/v3.3.0...v3.3.1)
 
 **v3.3.0**
+
+2026-05-15
 
 **[v3.3.0: Slim Reaper](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.3.0)**
 
@@ -27250,6 +27444,8 @@ FastMCP 3.3 ships `fastmcp-slim`, a dependency-light distribution that separates
 
 **v3.2.4**
 
+2026-04-14
+
 **[v3.2.4: Patch Me If You Can](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.4)**
 
 A grab bag of fixes, hardening, and polish. The headline behavior change: background tasks are now scoped to the authorization context rather than the MCP session, so a task survives session churn and stays tied to who started it — a breaking change for anyone relying on the old session-scoped semantics. Plus actual-size validation in `FileUpload`, a Keycloak OAuth provider, automatic parameter descriptions from docstrings, and dozens of schema and sampling fixes.
@@ -27337,6 +27533,8 @@ A grab bag of fixes, hardening, and polish. The headline behavior change: backgr
 
 **v3.2.3**
 
+2026-04-09
+
 **[v3.2.3: Redis or Not](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.3)**
 
 A stopgap pin: fakeredis 2.35.0 shipped an undocumented rename that broke pydocket's `memory://` backend, causing `fastmcp[tasks]` installs to fail at startup with an `ImportError`. This pins `fakeredis<2.35.0` in the `tasks` extra until a fixed pydocket ships.
@@ -27353,6 +27551,8 @@ A stopgap pin: fakeredis 2.35.0 shipped an undocumented rename that broke pydock
 
 **v3.2.2**
 
+2026-04-09
+
 **[v3.2.2: Audience Appreciation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.2)**
 
 Fixes the Azure audience regression from 3.2.1: validation switched from `client_id` to `identifier_uri`, which fixed custom Application ID URIs but broke the default case where Azure AD v2 tokens set `aud` to the bare client ID GUID. Both formats are now accepted.
@@ -27368,6 +27568,8 @@ Fixes the Azure audience regression from 3.2.1: validation switched from `client
 **Full Changelog**: [v3.2.1...v3.2.2](https://github.com/PrefectHQ/fastmcp/compare/v3.2.1...v3.2.2)
 
 **v3.2.1**
+
+2026-04-08
 
 **[v3.2.1: Audience Participation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.1)**
 
@@ -27433,6 +27635,8 @@ A patch focused on auth-provider audience validation. Cognito tokens now validat
 **Full Changelog**: [v3.2.0...v3.2.1](https://github.com/PrefectHQ/fastmcp/compare/v3.2.0...v3.2.1)
 
 **v3.2.0**
+
+2026-03-30
 
 **[v3.2.0: Show Don't Tool](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.0)**
 
@@ -27653,6 +27857,8 @@ FastMCP 3.2 is the Apps release: your tools can now return interactive UIs — c
 
 **v3.1.1**
 
+2026-03-14
+
 **[v3.1.1: 'Tis But a Patch](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.1.1)**
 
 Pins `pydantic-monty` below 0.0.8 to fix a breaking change in Monty that affects code mode. Monty 0.0.8 removed the `external_functions` constructor parameter, causing `MontySandboxProvider` to fail. This patch caps the version so existing installs work correctly.
@@ -27664,6 +27870,8 @@ Pins `pydantic-monty` below 0.0.8 to fix a breaking change in Monty that affects
 **Full Changelog**: [v3.1.0...v3.1.1](https://github.com/PrefectHQ/fastmcp/compare/v3.1.0...v3.1.1)
 
 **v3.1.0**
+
+2026-03-03
 
 **[v3.1.0: Code to Joy](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.1.0)**
 
@@ -27740,6 +27948,8 @@ FastMCP 3.1 is the Code Mode release. The 3.0 architecture introduced providers 
 
 **v3.0.2**
 
+2026-02-22
+
 **[v3.0.2: Threecovery Mode II](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.2)**
 
 Two community-contributed fixes: auth headers from MCP transport no longer leak through to downstream OpenAPI APIs, and background task workers now correctly receive the originating request ID. Plus a new docs example for context-aware tool factories.
@@ -27757,6 +27967,8 @@ Two community-contributed fixes: auth headers from MCP transport no longer leak 
 **Full Changelog**: [v3.0.1...v3.0.2](https://github.com/PrefectHQ/fastmcp/compare/v3.0.1...v3.0.2)
 
 **v3.0.1**
+
+2026-02-20
 
 **[v3.0.1: Three-covery Mode](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.1)**
 
@@ -27791,6 +28003,8 @@ First patch after 3.0 — mostly smoothing out rough edges discovered in the wil
 **Full Changelog**: [v3.0.0...v3.0.1](https://github.com/PrefectHQ/fastmcp/compare/v3.0.0...v3.0.1)
 
 **v3.0.0**
+
+2026-02-18
 
 **[v3.0.0: Three at Last](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0)**
 
@@ -28024,6 +28238,8 @@ pip install fastmcp -U
 
 **v3.0.0rc1**
 
+2026-02-12
+
 **[v3.0.0rc1: RC-ing is Believing](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0rc1)**
 
 FastMCP 3 RC1 means we believe the API is stable. Beta 2 drew a wave of real-world adoption — production deployments, migration reports, integration testing — and the feedback overwhelmingly confirmed that the architecture works. This release closes gaps that surfaced under load: auth flows that needed to be async, background tasks that needed reliable notification delivery, and APIs still carrying beta-era naming. If nothing unexpected surfaces, this is what 3.0.0 looks like.
@@ -28107,6 +28323,8 @@ async def get_emails(
 **Full Changelog**: [https://github.com/PrefectHQ/fastmcp/compare/v3.0.0b2...v3.0.0rc1](https://github.com/PrefectHQ/fastmcp/compare/v3.0.0b2...v3.0.0rc1)
 
 **v3.0.0b2**
+
+2026-02-07
 
 **[v3.0.0b2: 2 Fast 2 Beta](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0b2)**
 
@@ -28225,6 +28443,8 @@ FastMCP 3 Beta 2 reflects the huge number of people that kicked the tires on Bet
 **Full Changelog**: [https://github.com/PrefectHQ/fastmcp/compare/v3.0.0b1...v3.0.0b2](https://github.com/PrefectHQ/fastmcp/compare/v3.0.0b1...v3.0.0b2)
 
 **v3.0.0b1**
+
+2026-01-20
 
 **[v3.0.0b1: This Beta Work](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0b1)**
 
@@ -28438,6 +28658,8 @@ Breaking changes are minimal: for most servers, updating the import statement is
 
 **v2.14.7**
 
+2026-04-13
+
 **[v2.14.7: Fake It Till You Break It](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.7)**
 
 A 2.x backport of the fakeredis pin: fakeredis 2.35.0 renamed a connection class that pydocket's `memory://` backend depended on, crashing `fastmcp[tasks]` installs at startup. This caps `fakeredis<2.35.0` on the 2.x line.
@@ -28449,6 +28671,8 @@ A 2.x backport of the fakeredis pin: fakeredis 2.35.0 renamed a connection class
 **Full Changelog**: [v2.14.6...v2.14.7](https://github.com/PrefectHQ/fastmcp/compare/v2.14.6...v2.14.7)
 
 **v2.14.6**
+
+2026-03-27
 
 **[v2.14.6: \$Ref Dead Redemption](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.6)**
 
@@ -28464,6 +28688,8 @@ v2.14.4 backported `dereference_refs()` but never wired it into the tool schema 
 
 **v2.14.5**
 
+2026-02-03
+
 **[v2.14.5: Sealed Docket](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.5)**
 
 Fixes a memory leak in the memory:// docket broker where cancelled tasks accumulated instead of being cleaned up. Bumps pydocket to ≥0.17.2.
@@ -28477,6 +28703,8 @@ Fixes a memory leak in the memory:// docket broker where cancelled tasks accumul
 **Full Changelog**: [v2.14.4...v2.14.5](https://github.com/PrefectHQ/fastmcp/compare/v2.14.4...v2.14.5)
 
 **v2.14.4**
+
+2026-01-22
 
 **[v2.14.4: Package Deal](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.4)**
 
@@ -28497,6 +28725,8 @@ Fixes a fresh install bug where the packaging library was missing as a direct de
 **Full Changelog**: [v2.14.3...v2.14.4](https://github.com/PrefectHQ/fastmcp/compare/v2.14.3...v2.14.4)
 
 **v2.14.3**
+
+2026-01-12
 
 **[v2.14.3: Time After Timeout](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.3)**
 
@@ -28520,6 +28750,8 @@ Sometimes five seconds just isn't enough. This release fixes an HTTP transport b
 **Full Changelog**: [v2.14.2...v2.14.3](https://github.com/PrefectHQ/fastmcp/compare/v2.14.2...v2.14.3)
 
 **v2.14.2**
+
+2025-12-31
 
 **[v2.14.2: Port Authority](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.2)**
 
@@ -28555,6 +28787,8 @@ FastMCP 2.14.2 brings a wave of community contributions safely into the 2.x line
 **Full Changelog**: [v2.14.1...v2.14.2](https://github.com/PrefectHQ/fastmcp/compare/v2.14.1...v2.14.2)
 
 **v2.14.1**
+
+2025-12-15
 
 **[v2.14.1: 'Tis a Gift to Be Sample](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.1)**
 
@@ -28603,6 +28837,8 @@ FastMCP 2.14.1 introduces sampling with tools (SEP-1577), enabling servers to pa
 **Full Changelog**: [v2.14.0...v2.14.1](https://github.com/PrefectHQ/fastmcp/compare/v2.14.0...v2.14.1)
 
 **v2.14.0**
+
+2025-12-11
 
 **[v2.14.0: Task and You Shall Receive](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.0)**
 
@@ -28662,6 +28898,8 @@ FastMCP 2.14 begins adopting the MCP 2025-11-25 specification, introducing proto
 
 **v2.13.3**
 
+2025-12-03
+
 **[v2.13.3: Pin-ish Line](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.3)**
 
 FastMCP 2.13.3 pins `mcp<1.23` as a precautionary measure. MCP SDK 1.23 introduced changes related to the November 25, 2025 MCP protocol update that break certain FastMCP patches and workarounds, particularly around OAuth implementation details. FastMCP 2.14 introduces proper support for the updated protocol and requires `mcp>=1.23`.
@@ -28675,6 +28913,8 @@ FastMCP 2.13.3 pins `mcp<1.23` as a precautionary measure. MCP SDK 1.23 introduc
 **Full Changelog**: [v2.13.2...v2.13.3](https://github.com/PrefectHQ/fastmcp/compare/v2.13.2...v2.13.3)
 
 **v2.13.2**
+
+2025-12-01
 
 **[v2.13.2: Refreshing Changes](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.2)**
 
@@ -28709,6 +28949,8 @@ FastMCP 2.13.2 polishes the authentication stack with improvements to token refr
 **Full Changelog**: [v2.13.1...v2.13.2](https://github.com/PrefectHQ/fastmcp/compare/v2.13.1...v2.13.2)
 
 **v2.13.1**
+
+2025-11-15
 
 **[v2.13.1: Heavy Meta](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.1)**
 
@@ -28749,6 +28991,8 @@ FastMCP 2.13.1 introduces meta parameter support for `ToolResult`, enabling tool
 
 **v2.13.0**
 
+2025-10-25
+
 **[v2.13.0: Cache Me If You Can](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.0)**
 
 FastMCP 2.13 "Cache Me If You Can" represents a fundamental maturation of the framework. After months of community feedback on authentication and state management, this release delivers the infrastructure FastMCP needs to handle production workloads: persistent storage, response caching, and pragmatic OAuth improvements that reflect real-world deployment challenges.
@@ -28782,6 +29026,8 @@ This release includes contributions from **20** new contributors and represents 
 
 **v2.12.5**
 
+2025-10-17
+
 **[v2.12.5: Safety Pin](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.5)**
 
 FastMCP 2.12.5 is a point release that pins the MCP SDK version below 1.17, which introduced a change affecting FastMCP users with auth providers mounted as part of a larger application. This ensures the `.well-known` payload appears in the expected location when using FastMCP authentication providers with composite applications.
@@ -28795,6 +29041,8 @@ FastMCP 2.12.5 is a point release that pins the MCP SDK version below 1.17, whic
 **Full Changelog**: [v2.12.4...v2.12.5](https://github.com/PrefectHQ/fastmcp/compare/v2.12.4...v2.12.5)
 
 **v2.12.4**
+
+2025-09-26
 
 **[v2.12.4: OIDC What You Did There](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.4)**
 
@@ -28877,6 +29125,8 @@ FastMCP 2.12.4 adds comprehensive OIDC support and expands authentication option
 
 **v2.12.3**
 
+2025-09-17
+
 **[v2.12.3: Double Time](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.3)**
 
 FastMCP 2.12.3 focuses on performance and developer experience improvements based on community feedback. This release includes optimized auth provider imports that reduce server startup time, enhanced OIDC authentication flows with proper token management, and several reliability fixes for OAuth proxy configurations. The addition of automatic inline snapshot creation significantly improves the testing experience for contributors.
@@ -28930,6 +29180,8 @@ FastMCP 2.12.3 focuses on performance and developer experience improvements base
 
 **v2.12.2**
 
+2025-09-03
+
 **[v2.12.2: Perchance to Stream](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.2)**
 
 This is a hotfix for a bug where the `streamable-http` transport was not recognized as a valid option in `fastmcp.json` configuration files, despite being supported by the CLI. This resulted in a parsing error when the CLI arguments were merged against the configuration spec.
@@ -28943,6 +29195,8 @@ This is a hotfix for a bug where the `streamable-http` transport was not recogni
 **Full Changelog**: [v2.12.1...v2.12.2](https://github.com/PrefectHQ/fastmcp/compare/v2.12.1...v2.12.2)
 
 **v2.12.1**
+
+2025-09-03
 
 **[v2.12.1: OAuth to Joy](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.1)**
 
@@ -28990,6 +29244,8 @@ FastMCP 2.12.1 strengthens the OAuth proxy implementation based on extensive com
 **Full Changelog**: [v2.12.0...v2.12.1](https://github.com/PrefectHQ/fastmcp/compare/v2.12.0...v2.12.1)
 
 **v2.12.0**
+
+2025-08-31
 
 **[v2.12.0: Auth to the Races](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.0)**
 
@@ -29133,6 +29389,8 @@ Thank you to our new contributors and everyone who tested preview builds. Your f
 
 **v2.11.3**
 
+2025-08-11
+
 **[v2.11.3: API-tite for Change](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.11.3)**
 
 This release includes significant enhancements to the experimental OpenAPI parser and fixes a significant bug that led schemas not to be included in input/output schemas if they were transitive dependencies (e.g. A → B → C implies A depends on C). For users naively transforming large OpenAPI specs into MCP servers, this may result in ballooning payload sizes and necessitate curation.
@@ -29186,6 +29444,8 @@ This release includes significant enhancements to the experimental OpenAPI parse
 
 **v2.11.2**
 
+2025-08-06
+
 ## [v2.11.2: Satis-factory](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.11.2)
 
 ## What's Changed
@@ -29212,6 +29472,8 @@ This release includes significant enhancements to the experimental OpenAPI parse
 **Full Changelog**: [v2.11.1...v2.11.2](https://github.com/PrefectHQ/fastmcp/compare/v2.11.1...v2.11.2)
 
 **v2.11.1**
+
+2025-08-04
 
 ## [v2.11.1: You're Better Auth Now](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.11.1)
 
@@ -29244,6 +29506,8 @@ This release includes significant enhancements to the experimental OpenAPI parse
 **Full Changelog**: [v2.11.0...v2.11.1](https://github.com/PrefectHQ/fastmcp/compare/v2.11.0...v2.11.1)
 
 **v2.11.0**
+
+2025-08-01
 
 ## [v2.11.0: Auth to a Good Start](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.11.0)
 
@@ -29361,6 +29625,8 @@ This release represents a TON of community contributions and sets the foundation
 
 **v2.10.6**
 
+2025-07-19
+
 ## [v2.10.6: Hymn for the Weekend](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.6)
 
 A special Saturday release with many fixes.
@@ -29414,6 +29680,8 @@ A special Saturday release with many fixes.
 
 **v2.10.5**
 
+2025-07-11
+
 ## [v2.10.5: Middle Management](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.5)
 
 A maintenance release focused on OpenAPI refinements and middleware fixes, plus console improvements.
@@ -29452,6 +29720,8 @@ A maintenance release focused on OpenAPI refinements and middleware fixes, plus 
 
 **v2.10.4**
 
+2025-07-09
+
 ## [v2.10.4: Transport-ation](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.4)
 
 A quick fix to ensure the CLI accepts "streamable-http" as a valid transport option.
@@ -29465,6 +29735,8 @@ A quick fix to ensure the CLI accepts "streamable-http" as a valid transport opt
 **Full Changelog**: [v2.10.3...v2.10.4](https://github.com/PrefectHQ/fastmcp/compare/v2.10.3...v2.10.4)
 
 **v2.10.3**
+
+2025-07-09
 
 ## [v2.10.3: CLI Me a River](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.3)
 
@@ -29518,6 +29790,8 @@ A major CLI overhaul featuring a complete refactor from typer to cyclopts, new I
 
 **v2.10.2**
 
+2025-07-05
+
 ## [v2.10.2: Forward March](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.2)
 
 The headline feature of this release is the ability to "forward" advanced MCP interactions like logging, progress, and elicitation through proxy servers. If the remote server requests an elicitation, the proxy client will pass that request to the new, "ultimate" client.
@@ -29563,6 +29837,8 @@ The headline feature of this release is the ability to "forward" advanced MCP in
 
 **v2.10.1**
 
+2025-07-02
+
 ## [v2.10.1: Revert to Sender](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.1)
 
 A quick patch to revert the CLI banner that was added in v2.10.0.
@@ -29577,6 +29853,8 @@ A quick patch to revert the CLI banner that was added in v2.10.0.
 **Full Changelog**: [v2.10.0...v2.10.1](https://github.com/PrefectHQ/fastmcp/compare/v2.10.0...v2.10.1)
 
 **v2.10.0**
+
+2024-07-01
 
 ## [v2.10.0: Great Spec-tations](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.0)
 
@@ -29648,6 +29926,8 @@ Tools can now define structured output schemas, ensuring that responses conform 
 
 **v2.9.2**
 
+2024-06-26
+
 ## [v2.9.2: Safety Pin](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.9.2)
 
 This is a patch release to pin `mcp` below 1.10, which includes changes related to the 6/18/2025 MCP spec update and could potentially break functionality for some FastMCP users.
@@ -29665,6 +29945,8 @@ This is a patch release to pin `mcp` below 1.10, which includes changes related 
 **Full Changelog**: [v2.9.1...v2.9.2](https://github.com/PrefectHQ/fastmcp/compare/v2.9.1...v2.9.2)
 
 **v2.9.1**
+
+2024-06-26
 
 ## [v2.9.1: Call Me Maybe](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.9.1)
 
@@ -29705,6 +29987,8 @@ FastMCP 2.9.1 introduces automatic MCP list change notifications, allowing serve
 **Full Changelog**: [v2.9.0...v2.9.1](https://github.com/PrefectHQ/fastmcp/compare/v2.9.0...v2.9.1)
 
 **v2.9.0**
+
+2024-06-23
 
 ## [v2.9.0: Stuck in the Middleware With You](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.9.0)
 
@@ -29779,6 +30063,8 @@ This release also introduces server-side type conversion for prompt arguments, e
 
 **v2.8.1**
 
+2024-06-15
+
 ## [v2.8.1: Sound Judgement](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.8.1)
 
 2.8.1 introduces audio support, as well as minor fixes and updates for deprecated features.
@@ -29822,6 +30108,8 @@ This release adds support for audio content in MCP tools and resources, expandin
 **Full Changelog**: [v2.8.0...v2.8.1](https://github.com/PrefectHQ/fastmcp/compare/v2.8.0...v2.8.1)
 
 **v2.8.0**
+
+2024-06-10
 
 ## [v2.8.0: Transform and Roll Out](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.8.0)
 
@@ -29903,6 +30191,8 @@ Finally, to improve compatibility with a wider range of LLM clients, this releas
 
 **v2.7.1**
 
+2024-06-08
+
 ## [v2.7.1: The Bearer Necessities](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.7.1)
 
 This release primarily contains a fix for parsing string tokens that are provided to FastMCP clients.
@@ -29938,6 +30228,8 @@ This release primarily contains a fix for parsing string tokens that are provide
 **Full Changelog**: [v2.7.0...v2.7.1](https://github.com/PrefectHQ/fastmcp/compare/v2.7.0...v2.7.1)
 
 **v2.7.0**
+
+2024-06-05
 
 ## [v2.7.0: Pare Programming](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.7.0)
 
@@ -29980,6 +30272,8 @@ def my_tool():
 
 **v2.6.1**
 
+2024-06-03
+
 ## [v2.6.1: Blast Auth (second ignition)](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.6.1)
 
 This is a patch release to restore py.typed in #686.
@@ -30004,6 +30298,8 @@ This is a patch release to restore py.typed in #686.
 **Full Changelog**: [v2.6.0...v2.6.1](https://github.com/PrefectHQ/fastmcp/compare/v2.6.0...v2.6.1)
 
 **v2.6.0**
+
+2024-06-02
 
 ## [v2.6.0: Blast Auth](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.6.0)
 
@@ -30046,6 +30342,8 @@ This is a patch release to restore py.typed in #686.
 
 **v2.5.2**
 
+2024-05-29
+
 ## [v2.5.2: Stayin' Alive](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.5.2)
 
 ### New Features 🎉
@@ -30079,6 +30377,8 @@ This is a patch release to restore py.typed in #686.
 
 **v2.5.1**
 
+2024-05-24
+
 ## [v2.5.1: Route Awakening (Part 2)](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.5.1)
 
 ### Fixes 🐞
@@ -30092,6 +30392,8 @@ This is a patch release to restore py.typed in #686.
 **Full Changelog**: [v2.5.0...v2.5.1](https://github.com/PrefectHQ/fastmcp/compare/v2.5.0...v2.5.1)
 
 **v2.5.0**
+
+2024-05-24
 
 ## [v2.5.0: Route Awakening](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.5.0)
 
@@ -30124,6 +30426,8 @@ This release introduces completely new tools for generating and customizing MCP 
 
 **v2.4.0**
 
+2024-05-21
+
 ## [v2.4.0: Config and Conquer](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.4.0)
 
 **Note**: this release includes a backwards-incompatible change to how resources are prefixed when mounted in composed servers. However, it is only backwards-incompatible if users were running tests or manually loading resources by prefixed key; LLMs should not have any issue discovering the new route.
@@ -30155,6 +30459,8 @@ This release introduces completely new tools for generating and customizing MCP 
 **Full Changelog**: [v2.3.5...v2.4.0](https://github.com/PrefectHQ/fastmcp/compare/v2.3.5...v2.4.0)
 
 **v2.3.5**
+
+2024-05-20
 
 ## [v2.3.5: Making Progress](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.5)
 
@@ -30206,6 +30512,8 @@ This release introduces completely new tools for generating and customizing MCP 
 
 **v2.3.4**
 
+2024-05-15
+
 ## [v2.3.4: Error Today, Gone Tomorrow](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.4)
 
 ### New Features 🎉
@@ -30245,6 +30553,8 @@ This release introduces completely new tools for generating and customizing MCP 
 
 **v2.3.3**
 
+2024-05-10
+
 ## [v2.3.3: SSE you later](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.3)
 
 This is a hotfix for a bug introduced in 2.3.2 that broke SSE servers
@@ -30265,6 +30575,8 @@ This is a hotfix for a bug introduced in 2.3.2 that broke SSE servers
 
 **v2.3.2**
 
+2024-05-10
+
 ## [v2.3.2: Stuck in the Middleware With You](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.2)
 
 ### New Features 🎉
@@ -30283,6 +30595,8 @@ This is a hotfix for a bug introduced in 2.3.2 that broke SSE servers
 **Full Changelog**: [v2.3.1...v2.3.2](https://github.com/PrefectHQ/fastmcp/compare/v2.3.1...v2.3.2)
 
 **v2.3.1**
+
+2024-05-09
 
 ## [v2.3.1: For Good-nests Sake](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.1)
 
@@ -30312,6 +30626,8 @@ This release primarily patches a long-standing bug with nested ASGI SSE servers.
 
 **v2.3.0**
 
+2024-05-08
+
 ## [v2.3.0: Stream Me Up, Scotty](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.3.0)
 
 ### New Features 🎉
@@ -30332,6 +30648,8 @@ This release primarily patches a long-standing bug with nested ASGI SSE servers.
 
 **v2.2.10**
 
+2024-05-06
+
 ## [v2.2.10: That's JSON Bourne](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.10)
 
 ### Fixes 🐞
@@ -30351,6 +30669,8 @@ This release primarily patches a long-standing bug with nested ASGI SSE servers.
 **Full Changelog**: [v2.2.9...v2.2.10](https://github.com/PrefectHQ/fastmcp/compare/v2.2.9...v2.2.10)
 
 **v2.2.9**
+
+2024-05-06
 
 ## [v2.2.9: Str-ing the Pot (Hotfix)](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.9)
 
@@ -30378,6 +30698,8 @@ This release is a hotfix for the issue detailed in #330
 
 **v2.2.8**
 
+2024-05-05
+
 ## [v2.2.8: Parse and Recreation](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.8)
 
 ### New Features 🎉
@@ -30404,6 +30726,8 @@ This release is a hotfix for the issue detailed in #330
 
 **v2.2.7**
 
+2024-05-03
+
 ## [v2.2.7: You Auth to Know Better](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.7)
 
 ### New Features 🎉
@@ -30427,6 +30751,8 @@ This release is a hotfix for the issue detailed in #330
 **Full Changelog**: [v2.2.6...v2.2.7](https://github.com/PrefectHQ/fastmcp/compare/v2.2.6...v2.2.7)
 
 **v2.2.6**
+
+2024-04-30
 
 ## [v2.2.6: The REST is History](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.6)
 
@@ -30458,6 +30784,8 @@ This release is a hotfix for the issue detailed in #330
 
 **v2.2.5**
 
+2024-04-26
+
 ## [v2.2.5: Context Switching](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.5)
 
 ### New Features 🎉
@@ -30474,6 +30802,8 @@ This release is a hotfix for the issue detailed in #330
 **Full Changelog**: [v2.2.4...v2.2.5](https://github.com/PrefectHQ/fastmcp/compare/v2.2.4...v2.2.5)
 
 **v2.2.4**
+
+2024-04-25
 
 ## [v2.2.4: The Wild Side, Actually](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.4)
 
@@ -30506,6 +30836,8 @@ The wildcard URI templates exposed in v2.2.3 were blocked by a server-level chec
 
 **v2.2.3**
 
+2024-04-25
+
 ## [v2.2.3: The Wild Side](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.3)
 
 ### New Features 🎉
@@ -30524,6 +30856,8 @@ The wildcard URI templates exposed in v2.2.3 were blocked by a server-level chec
 **Full Changelog**: [v2.2.2...v2.2.3](https://github.com/PrefectHQ/fastmcp/compare/v2.2.2...v2.2.3)
 
 **v2.2.2**
+
+2024-04-24
 
 ## [v2.2.2: Prompt and Circumstance](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.2)
 
@@ -30547,6 +30881,8 @@ The wildcard URI templates exposed in v2.2.3 were blocked by a server-level chec
 
 **v2.2.1**
 
+2024-04-23
+
 ## [v2.2.1: Template for Success](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.1)
 
 ### New Features 🎉
@@ -30568,6 +30904,8 @@ The wildcard URI templates exposed in v2.2.3 were blocked by a server-level chec
 **Full Changelog**: [v2.2.0...v2.2.1](https://github.com/PrefectHQ/fastmcp/compare/v2.2.0...v2.2.1)
 
 **v2.2.0**
+
+2024-04-22
 
 ## [v2.2.0: Compose Yourself](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.2.0)
 
@@ -30599,6 +30937,8 @@ The wildcard URI templates exposed in v2.2.3 were blocked by a server-level chec
 
 **v2.1.2**
 
+2024-04-14
+
 ## [v2.1.2: Copy That, Good Buddy](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.1.2)
 
 The main improvement in this release is a fix that allows FastAPI / OpenAPI-generated servers to be mounted as sub-servers.
@@ -30620,6 +30960,8 @@ The main improvement in this release is a fix that allows FastAPI / OpenAPI-gene
 **Full Changelog**: [v2.1.1...v2.1.2](https://github.com/PrefectHQ/fastmcp/compare/v2.1.1...v2.1.2)
 
 **v2.1.1**
+
+2024-04-14
 
 ## [v2.1.1: Doc Holiday](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.1.1)
 
@@ -30647,6 +30989,8 @@ FastMCP's docs are now available at gofastmcp.com.
 **Full Changelog**: [v2.1.0...v2.1.1](https://github.com/PrefectHQ/fastmcp/compare/v2.1.0...v2.1.1)
 
 **v2.1.0**
+
+2024-04-13
 
 ## [v2.1.0: Tag, You're It](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.1.0)
 
@@ -30677,6 +31021,8 @@ The primary motivation for this release is the fix in #128 for Claude desktop co
 
 **v2.0.0**
 
+2024-04-11
+
 ## [v2.0.0: Second to None](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.0.0)
 
 ### New Features 🎉
@@ -30705,6 +31051,8 @@ The primary motivation for this release is the fix in #128 for Claude desktop co
 
 **v1.0**
 
+2024-04-11
+
 ## [v1.0: It's Official](https://github.com/PrefectHQ/fastmcp/releases/tag/v1.0)
 
 This release commemorates FastMCP 1.0, which is included in the official Model Context Protocol SDK:
@@ -30731,6 +31079,8 @@ To the best of my knowledge, v1 is identical to the upstream version included wi
 
 **v0.4.1**
 
+2024-12-09
+
 ## [v0.4.1: String Theory](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.4.1)
 
 ### Fixes 🐞
@@ -30753,6 +31103,8 @@ To the best of my knowledge, v1 is identical to the upstream version included wi
 **Full Changelog**: [v0.4.0...v0.4.1](https://github.com/PrefectHQ/fastmcp/compare/v0.4.0...v0.4.1)
 
 **v0.4.0**
+
+2024-12-05
 
 ## [v0.4.0: Nice to MIT You](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.4.0)
 
@@ -30784,6 +31136,8 @@ This is a relatively small release in terms of features, but the version is bump
 
 **v0.3.5**
 
+2024-12-03
+
 ## [v0.3.5: Windows of Opportunity](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.5)
 
 This release is highlighted by the ability to handle complex JSON objects as MCP inputs and improved Windows compatibility.
@@ -30811,6 +31165,8 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 
 **v0.3.4**
 
+2024-12-02
+
 ## [v0.3.4: URL's Well That Ends Well](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.4)
 
 ### Fixes 🐞
@@ -30821,6 +31177,8 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 **Full Changelog**: [v0.3.3...v0.3.4](https://github.com/PrefectHQ/fastmcp/compare/v0.3.3...v0.3.4)
 
 **v0.3.3**
+
+2024-12-02
 
 ## [v0.3.3: Dependence Day](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.3)
 
@@ -30837,6 +31195,8 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 
 **v0.3.2**
 
+Green with ENVy
+
 ## [v0.3.2: Green with ENVy](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.2)
 
 ### New Features 🎉
@@ -30850,6 +31210,8 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 **Full Changelog**: [v0.3.1...v0.3.2](https://github.com/PrefectHQ/fastmcp/compare/v0.3.1...v0.3.2)
 
 **v0.3.1**
+
+2024-12-01
 
 ## [v0.3.1](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.1)
 
@@ -30870,6 +31232,8 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 **Full Changelog**: [v0.3.0...v0.3.1](https://github.com/PrefectHQ/fastmcp/compare/v0.3.0...v0.3.1)
 
 **v0.3.0**
+
+2024-12-01
 
 ## [v0.3.0: Prompt and Circumstance](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.3.0)
 
@@ -30908,11 +31272,15 @@ This release is highlighted by the ability to handle complex JSON objects as MCP
 
 **v0.2.0**
 
+2024-11-30
+
 ## [v0.2.0](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.2.0)
 
 **Full Changelog**: [v0.1.0...v0.2.0](https://github.com/PrefectHQ/fastmcp/compare/v0.1.0...v0.2.0)
 
 **v0.1.0**
+
+2024-11-30
 
 ## [v0.1.0](https://github.com/PrefectHQ/fastmcp/releases/tag/v0.1.0)
 
@@ -31041,6 +31409,12 @@ By default, only tools are shown. Add `--resources` or `--prompts` to include th
 fastmcp list server.py --resources --prompts
 ```
 
+`--skills` lists the server's [Skills extension](/servers/skills) entries with each skill's files. A server that doesn't advertise the extension shows no skills and says why.
+
+```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+fastmcp list server.py --skills
+```
+
 ### Machine-Readable Output
 
 The `--json` flag switches to structured JSON with full schemas included. This is the format to use when feeding tool definitions to an LLM or building automation:
@@ -31057,6 +31431,7 @@ fastmcp list server.py --json
 | Transport | `--transport`, `-t` | Force `http` or `sse` for URL targets |
 | Resources | `--resources` | Include resources in output |
 | Prompts | `--prompts` | Include prompts in output |
+| Skills | `--skills` | Include Skills extension entries in output |
 | Input Schema | `--input-schema` | Show full input schemas |
 | Output Schema | `--output-schema` | Show full output schemas |
 | JSON | `--json` | Structured JSON output |
@@ -32277,6 +32652,8 @@ If you pin versions in a requirements file or `pyproject.toml`, update your pin 
 >
 > If you reference the repository URL in dependency specifications (e.g., `git+https://github.com/jlowin/fastmcp.git`), update those to the new location.
 
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
+
 You are upgrading a FastMCP v2 server to FastMCP v3.0. Analyze the provided code and identify every change needed. The full upgrade guide is at [https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2](https://gofastmcp.com/getting-started/upgrading/from-fastmcp-2) and the complete FastMCP documentation is at [https://gofastmcp.com](https://gofastmcp.com) — fetch these for complete context.
 
 BREAKING CHANGES (will crash at import or runtime):
@@ -32729,6 +33106,8 @@ dependencies = ["fastmcp>=4"]
 ```
 
 The `fastmcp` package is a thin wrapper that depends on `fastmcp-slim` at the same version; both resolve together with no extra constraints.
+
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
 
 You are upgrading an MCP server or client from FastMCP 3.x to FastMCP 4, which is built on the MCP Python SDK v2.
 
@@ -33208,6 +33587,8 @@ Both directions are reasonable, and the choice is about which code you'd rather 
 > Already on SDK v2's rebuilt `Server` class, with constructor-registered `on_*` handlers? See [Upgrading from the Low-Level SDK v2](/getting-started/upgrading/from-low-level-sdk-v2) instead — the before-and-after code is different enough to warrant its own guide.
 >
 > Using FastMCP 1.0 via `from mcp.server.fastmcp import FastMCP`? Your upgrade is a single import — see [Upgrading from MCP SDK v1](/getting-started/upgrading/from-mcp-sdk-v1).
+
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
 
 You are rewriting an MCP server built on v1 of the `mcp` package's low-level `Server` class (`mcp.server.Server` or `mcp.server.lowlevel.server.Server`, with decorator-registered handlers) using FastMCP 4's high-level API.
 
@@ -33786,6 +34167,8 @@ Migrating from SDK v2 is the most direct of the four upgrade paths, because you 
 > On SDK v1's decorator-registered `Server` — `@server.list_tools()`, `@server.call_tool()` — instead? See [Upgrading from the Low-Level SDK v1](/getting-started/upgrading/from-low-level-sdk-v1), where the before-and-after code matches that API.
 >
 > Using SDK v2's high-level `MCPServer` class? See [Upgrading from MCP SDK v2](/getting-started/upgrading/from-mcp-sdk-v2) — that migration is mostly renaming.
+
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
 
 You are rewriting an MCP server built on the MCP Python SDK v2's low-level `Server` class (`mcp.server.lowlevel.server.Server`, with `on_*` handlers passed to the constructor) using FastMCP 4's high-level API.
 
@@ -34430,6 +34813,8 @@ The `fastmcp` package depends on `fastmcp-slim` at the same version; both resolv
 
 FastMCP depends on the `mcp` package, so the SDK stays installed and importable. What changes is which parts of it you reach for. FastMCP 4 builds on SDK v2, where `mcp.server.fastmcp` is gone — anything you imported from it needs a new home, and the sections below cover that. `mcp.types` still resolves (it aliases the standalone `mcp_types` package), though its fields are snake\_case now. Update your import, run your server, and if your tools work, you're done.
 
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
+
 You are upgrading an MCP server from FastMCP 1.0 (bundled in v1 of the `mcp` package) to standalone FastMCP 4.
 
 FIRST, fetch [https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk-v1](https://gofastmcp.com/getting-started/upgrading/from-mcp-sdk-v1) — it explains every item below, with the replacement code. Fetch [https://gofastmcp.com](https://gofastmcp.com) for anything the guide doesn't cover. Do not invent a FastMCP API you have not confirmed in the docs.
@@ -34670,6 +35055,8 @@ That resemblance is not a coincidence. `MCPServer` is the SDK's successor to Fas
 > [!NOTE]
 >
 > Building on the low-level `Server` class instead? See [Upgrading from the Low-Level SDK v2](/getting-started/upgrading/from-low-level-sdk-v2). Still on SDK v1's `mcp.server.fastmcp.FastMCP`? Your upgrade is a single import — see [Upgrading from MCP SDK v1](/getting-started/upgrading/from-mcp-sdk-v1).
+
+Copy this prompt into any LLM along with your server code to get automated upgrade guidance.
 
 You are migrating an MCP server from the MCP Python SDK v2's high-level `MCPServer` class (`mcp.server.mcpserver`) to FastMCP 4. The two APIs are close relatives, so most of this is mechanical renaming.
 
@@ -37572,238 +37959,6 @@ brew install uv
 # Linux/Windows  
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-
-
-# OCI IAM OAuth 🤝 FastMCP
-Source: https://gofastmcp.com/integrations/oci
-
-Secure your FastMCP server with OCI IAM OAuth
-
-New in version `2.13.0`
-
-This guide shows you how to secure your FastMCP server using **OCI IAM OAuth**. Since OCI IAM doesn't support Dynamic Client Registration, this integration uses the [**OIDC Proxy**](/servers/auth/oidc-proxy) pattern to bridge OCI's traditional OAuth with MCP's authentication requirements.
-
-## Configuration
-
-### Prerequisites
-
-1. An OCI cloud Account with access to create an Integrated Application in an Identity Domain.
-2. Your FastMCP server's URL (For dev environments, it is [http://localhost:8000](http://localhost:8000). For PROD environments, it could be [https://mcp.yourdomain.com](https://mcp.yourdomain.com))
-
-### Step 1: Make sure client access is enabled for JWK's URL
-
-**1. Navigate to OCI IAM Domain Settings**
-
-Login to OCI console ([https://cloud.oracle.com](https://cloud.oracle.com) for OCI commercial cloud).
-From "Identity & Security" menu, open Domains page.
-On the Domains list page, select the domain that you are using for MCP Authentication.
-Open Settings tab.
-Click on "Edit Domain Settings" button.
-
-![OCI console showing the Edit Domain Settings button in the IAM Domain settings page](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocieditdomainsettingsbutton.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=189e2e2c679c33b33a79164756cb6440)
-
-**2. Update Domain Setting**
-
-Enable "Configure client access" checkbox as shown in the screenshot.
-
-![OCI IAM Domain Settings](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocieditdomainsettings.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=3f4422ba7b3c45fec724b4bb5de6ff31)
-
-### Step 2: Create OAuth client for MCP server authentication
-
-Follow the Steps as mentioned below to create an OAuth client.
-
-**1. Navigate to OCI IAM Integrated Applications**
-
-Login to OCI console ([https://cloud.oracle.com](https://cloud.oracle.com) for OCI commercial cloud).
-From "Identity & Security" menu, open Domains page.
-On the Domains list page, select the domain in which you want to create MCP server OAuth client. If you need help finding the list page for the domain, see [Listing Identity Domains.](https://docs.oracle.com/en-us/iaas/Content/Identity/domains/to-view-identity-domains.htm#view-identity-domains).
-On the details page, select Integrated applications. A list of applications in the domain is displayed.
-
-**2. Add an Integrated Application**
-
-Select Add application.
-In the Add application window, select Confidential Application.
-Select Launch workflow.
-In the Add application details page, Enter name and description as shown below.
-
-![Adding a Confidential Integrated Application in OCI IAM Domain](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ociaddapplication.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=5855c5dc6cd69f8a0c53f3f103e7b4fc)
-
-**3. Update OAuth Configuration for an Integrated Application**
-
-Once the Integrated Application is created, Click on "OAuth configuration" tab.
-Click on "Edit OAuth configuration" button.
-Configure the application as OAuth client by selecting "Configure this application as a client now" radio button.
-Select "Authorization code" grant type. If you are planning to use the same OAuth client application for token exchange, select "Client credentials" grant type as well. In the sample, we will use the same client.
-For Authorization grant type, select redirect URL. In most cases, this will be the MCP server URL followed by "/auth/callback".
-
-![OAuth Configuration for an Integrated Application in OCI IAM Domain](https://mintcdn.com/fastmcp/dDafRTA33FK_2khu/integrations/images/oci/ocioauthconfiguration.png?fit=max\&auto=format\&n=dDafRTA33FK_2khu\&q=85\&s=885b0adc7c2a25ee71cf7e455b6afd62)
-
-**4. Activate the Integrated Application**
-
-Click on "Submit" button to update OAuth configuration for the client application.
-**Note: You don't need to do any special configuration to support PKCE for the OAuth client.**
-Make sure to Activate the client application.
-Note down client ID and client secret for the application. You'll use these values when configuring the OCIProvider in your code.
-
-This is all you need to implement MCP server authentication against OCI IAM. However, you may want to use an authenticated user token to invoke OCI control plane APIs and propagate identity to the OCI control plane instead of using a service user account. In that case, you need to implement token exchange.
-
-### Step 3: Token Exchange Setup (Only if MCP server needs to talk to OCI Control Plane)
-
-Token exchange helps you exchange a logged-in user's OCI IAM token for an OCI control plane session token, also known as UPST (User Principal Session Token). To learn more about token exchange, refer to my [Workload Identity Federation Blog](https://www.ateam-oracle.com/post/workload-identity-federation)
-
-For token exchange, we need to configure Identity propagation trust. The blog above discusses setting up the trust using REST APIs. However, you can also use OCI CLI. Before using the CLI command below, ensure that you have created a token exchange OAuth client. In most cases, you can use the same OAuth client that you created above. Replace `<IAM_GUID>` and `<CLIENT_ID>` in the CLI command below with your actual values.
-
-```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-oci identity-domains identity-propagation-trust create \
---schemas '["urn:ietf:params:scim:schemas:oracle:idcs:IdentityPropagationTrust"]' \
---public-key-endpoint "https://<IAM_GUID>.identity.oraclecloud.com/admin/v1/SigningCert/jwk" \
---name "For Token Exchange" --type "JWT" \
---issuer "https://identity.oraclecloud.com/" --active true \
---endpoint "https://<IAM_GUID>.identity.oraclecloud.com" \
---subject-claim-name "sub" --allow-impersonation false \
---subject-mapping-attribute "username" \
---subject-type "User" --client-claim-name "iss" \
---client-claim-values '["https://identity.oraclecloud.com/"]' \
---oauth-clients '["<CLIENT_ID>"]'
-```
-
-To exchange access token for OCI token and create a signer object, you need to add below code in MCP server. You can then use the signer object to create any OCI control plane client.
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-
-from fastmcp.server.dependencies import get_access_token
-from fastmcp.utilities.logging import get_logger
-from oci.auth.signers import TokenExchangeSigner
-import os
-
-logger = get_logger(__name__)
-
-# Load configuration from environment
-OCI_IAM_GUID = os.environ.get("OCI_IAM_GUID")
-OCI_CLIENT_ID = os.environ.get("OCI_CLIENT_ID")
-OCI_CLIENT_SECRET = os.environ.get("OCI_CLIENT_SECRET")
-
-_global_token_cache = {} #In memory cache for OCI session token signer
-    
-def get_oci_signer() -> TokenExchangeSigner:
-
-    authntoken = get_access_token()
-    tokenID = authntoken.claims.get("jti")
-    token = authntoken.token
-    
-    #Check if the signer exists for the token ID in memory cache
-    cached_signer = _global_token_cache.get(tokenID)
-    logger.debug(f"Global cached signer: {cached_signer}")
-    if cached_signer:
-        logger.debug(f"Using globally cached signer for token ID: {tokenID}")
-        return cached_signer
-
-    #If the signer is not yet created for the token then create new OCI signer object
-    logger.debug(f"Creating new signer for token ID: {tokenID}")
-    signer = TokenExchangeSigner(
-        jwt_or_func=token,
-        oci_domain_id=OCI_IAM_GUID.split(".")[0] if OCI_IAM_GUID else "",
-        client_id=OCI_CLIENT_ID,
-        client_secret=OCI_CLIENT_SECRET,
-    )
-    logger.debug(f"Signer {signer} created for token ID: {tokenID}")
-        
-    #Cache the signer object in memory cache
-    _global_token_cache[tokenID] = signer
-    logger.debug(f"Signer cached for token ID: {tokenID}")
-
-    return signer
-```
-
-## Running MCP server
-
-Once the setup is complete, to run the MCP server, run the below command.
-
-```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-fastmcp run server.py:mcp --transport http --port 8000
-```
-
-To run MCP client, run the below command.
-
-```bash theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-python3 client.py
-```
-
-MCP Client sample is as below.
-
-```python client.py theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-from fastmcp import Client
-import asyncio
-
-async def main():
-    # The client will automatically handle OCI OAuth flows
-    async with Client("http://localhost:8000/mcp/", auth="oauth") as client:
-        # First-time connection will open OCI login in your browser
-        print("✓ Authenticated with OCI IAM")
-
-        tools = await client.list_tools()
-        print(f"🔧 Available tools ({len(tools)}):")
-        for tool in tools:
-            print(f"   - {tool.name}: {tool.description}")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-When you run the client for the first time:
-
-1. Your browser will open to OCI IAM's login page
-2. Sign in with your OCI account and grant the requested consent
-3. After authorization, you'll be redirected back to the redirect path
-4. The client receives the token and can make authenticated requests
-
-## Production Configuration
-
-New in version `2.13.0`
-
-For production deployments with persistent token management across server restarts, configure `jwt_signing_key`, and `client_storage`:
-
-```python server.py theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-
-import os
-from fastmcp import FastMCP
-from fastmcp.server.auth.providers.oci import OCIProvider
-
-from key_value.aio.stores.redis import RedisStore
-from key_value.aio.wrappers.encryption import FernetEncryptionWrapper
-from cryptography.fernet import Fernet
-
-# Load configuration from environment
-# Production setup with encrypted persistent token storage
-auth_provider = OCIProvider(
-    config_url=os.environ.get("OCI_CONFIG_URL"),
-    client_id=os.environ.get("OCI_CLIENT_ID"),
-    client_secret=os.environ.get("OCI_CLIENT_SECRET"),
-    base_url=os.environ.get("BASE_URL", "https://your-production-domain.com"),
-
-    # Production token management
-    jwt_signing_key=os.environ["JWT_SIGNING_KEY"],
-    client_storage=FernetEncryptionWrapper(
-        key_value=RedisStore(
-            host=os.environ["REDIS_HOST"],
-            port=int(os.environ["REDIS_PORT"])
-        ),
-        fernet=Fernet(os.environ["STORAGE_ENCRYPTION_KEY"])
-    )
-)
-
-mcp = FastMCP(name="Production OCI App", auth=auth_provider)
-```
-
-> [!NOTE]
->
-> Parameters (`jwt_signing_key` and `client_storage`) work together to ensure tokens and client registrations survive server restarts. **Wrap your storage in `FernetEncryptionWrapper` to encrypt sensitive OAuth tokens at Rest** - without it, tokens are stored in plaintext. Store secrets in environment variables and use a persistent storage backend like Redis for distributed deployments.
->
-> For complete details on these parameters, see the [OAuth Proxy documentation](/servers/auth/oauth-proxy#configuration-parameters).
-
-> [!NOTE]
->
-> The client caches tokens locally, so you won't need to re-authenticate for subsequent runs unless the token expires or you explicitly clear the cache.
 
 
 # OpenAI API 🤝 FastMCP
@@ -43802,6 +43957,22 @@ create_roots_callback(handler: RootsList | RootsHandler) -> ListRootsFnT
 ```
 
 
+# __init__
+Source: https://gofastmcp.com/python-sdk/fastmcp-client-sampling-__init__
+
+
+
+# `fastmcp.client.sampling`
+
+## Functions
+
+### `create_sampling_callback` <sup>[https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp\_slim/fastmcp/client/sampling/\_\_init\_\_.py#L44](https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/sampling/__init__.py#L44)</sup>
+
+```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
+create_sampling_callback(sampling_handler: SamplingHandler) -> SamplingFnT
+```
+
+
 # decorators
 Source: https://gofastmcp.com/python-sdk/fastmcp-decorators
 
@@ -44388,7 +44559,17 @@ Source: https://gofastmcp.com/updates
 
 
 
+**FastMCP 4.1.4**
+
+October 26, 2026
+
+> **[FastMCP v4.1.4: Token Gesture](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.4)**
+>
+> Generated CLIs now preserve remote transports, empty arrays, and parameters whose names collide with their own helpers; mounted servers honor session visibility and `mounted_components_raise_on_load_error`, a stale client context no longer closes a newer session, and OAuth provider wrappers accept identity assertions. Tasks accept a redis-py credential provider that returns current credentials for each new connection (streaming providers such as redis-entraid's are rejected until Docket can refresh them safely), Redis 8.1.0 is excluded, and custom `KeyringStore` users must now install `py-key-value-aio[keyring]` explicitly. Thanks to our 16 contributors, including 9 first-time contributors.
+
 **FastMCP 4.1.3**
+
+October 20, 2026
 
 > **[FastMCP v4.1.3: Root Awakening](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.3)**
 >
@@ -44396,17 +44577,23 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.1.2**
 
+October 20, 2026
+
 > **[FastMCP v4.1.2: License to Deny](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.2)**
 >
 > Component authorization now applies after transforms, denied resources cannot fall through matching templates, and OAuth client credentials providers support issuer binding across fresh and cached-token flows. Existing configurations remain compatible, but users of `ClientCredentialsOAuthProvider` or `PrivateKeyJWTOAuthProvider` must set `issuer` to enable this protection; upgrading alone is insufficient. Thanks to our 18 contributors, including 9 first-time contributors.
 
 **FastMCP 4.1.1**
 
+October 17, 2026
+
 > **[FastMCP v4.1.1: Regex Marks the Spot](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.1)**
 >
 > Regex tool search now rejects patterns over 1,000 characters and stops after about a second, and `SkillsDirectoryProvider` discovers skill folders that are links again, including links to folders outside the skills root; a skill's own files must still resolve inside the folder it links to. All 4.x users are encouraged to upgrade. Thanks to our 4 contributors, including 1 first-time contributor.
 
 **FastMCP 4.1.0**
+
+October 8, 2026
 
 > **[FastMCP v4.1.0: Fourth and One](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.1.0)**
 >
@@ -44416,11 +44603,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.11**
 
+October 4, 2026
+
 > **[FastMCP v4.0.11: Fort Knocks](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.11)**
 >
 > This release contains important security and bug fixes. All users are encouraged to upgrade. Thanks to our 10 contributors, including 6 first-time contributors.
 
 **FastMCP 4.0.10**
+
+September 25, 2026
 
 > **[FastMCP v4.0.10: Inside Job](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.10)**
 >
@@ -44428,11 +44619,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.9**
 
+September 24, 2026
+
 > **[FastMCP v4.0.9: Cache and Release](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.9)**
 >
 > `ResourceTemplate` now keeps its compiled URI pattern for its own lifetime while the shared cache is bounded again, preventing dynamic proxies from growing process memory without restoring the 4,096-template performance cliff.
 
 **FastMCP 4.0.8**
+
+September 23, 2026
 
 > **[FastMCP v4.0.8: Take Three](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.8)**
 >
@@ -44440,11 +44635,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.7**
 
+September 23, 2026
+
 > **[FastMCP v4.0.7: Double Take](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.7)**
 >
 > Fixes two regressions from 4.0.6. The completion visibility check runs only the list-specific middleware hooks, so rate limits, logging, and metrics see a single request per completion again. Resource template patterns are cached, which makes template reads faster than in 4.0.5.
 
 **FastMCP 4.0.6**
+
+September 23, 2026
 
 > **[FastMCP v4.0.6: Comma Chameleon](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.6)**
 >
@@ -44452,11 +44651,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.5**
 
+September 17, 2026
+
 > **[FastMCP v4.0.5: No Country for Loose Ints](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.5)**
 >
 > Tool parameters declared strict with `Field(strict=True)`, `StrictInt`, or a strict model config are honored again, on both direct calls and task submission. Since the SDK v2 migration the server's lax default overrode them and silently coerced values.
 
 **FastMCP 4.0.4**
+
+September 15, 2026
 
 > **[FastMCP v4.0.4: Here Be No Dragons](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.4)**
 >
@@ -44464,11 +44667,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.3**
 
+September 4, 2026
+
 > **[FastMCP v4.0.3: Once Is Enough](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.3)**
 >
 > Multi-server clients with legacy-only backends now avoid unnecessary startup retries, and tools returning unconstrained sequences no longer send images twice. This patch also fixes task timing values rejected by strict clients and cleans up unfinished Monty callbacks when execution ends.
 
 **FastMCP 4.0.2**
+
+September 2, 2026
 
 > **[FastMCP v4.0.2: Root Access](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.2)**
 >
@@ -44476,11 +44683,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.1**
 
+September 1, 2026
+
 > **[FastMCP v4.0.1: Come Back Any Time](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.1)**
 >
 > `ClientGroup` is now reentrant like `Client`: nested or concurrent entries reuse the group's connections, and only the last exit closes them.
 
 **FastMCP 4.0.0**
+
+August 31, 2026
 
 > **[FastMCP v4.0.0: Four Real](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0)**
 >
@@ -44500,6 +44711,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.0b5**
 
+August 28, 2026
+
 > **[FastMCP v4.0.0b5: Group Effourt](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b5)**
 >
 > FastMCP 4 beta 5 introduces client groups: coordinate several independent MCP server connections through one tool catalog, without a proxy in the middle.
@@ -44509,6 +44722,8 @@ Source: https://gofastmcp.com/updates
 > 📏 **Consistent limits** — middleware response limits now align with declared output schemas.
 
 **FastMCP 4.0.0b4**
+
+August 26, 2026
 
 > **[FastMCP v4.0.0b4: Calm Befour the Storm](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b4)**
 >
@@ -44524,6 +44739,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 4.0.0b3**
 
+August 14, 2026
+
 > **[FastMCP v4.0.0b3: Fast Fourward](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b3)**
 >
 > FastMCP 4 beta 3 moves the v4 line toward general availability with new authentication and dependency-injection capabilities, plus compatibility hardening across OAuth, proxies, OpenAPI, and Python 3.14.
@@ -44538,17 +44755,23 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.4.7**
 
+August 10, 2026
+
 > **[FastMCP v3.4.7: Know Your Audience](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.7)**
 >
 > FastMCP 3.4.7 restores CIMD `private_key_jwt` authentication for bare-origin OAuth proxy deployments by validating client assertions against the exact token endpoint advertised to clients.
 
 **FastMCP 3.4.6**
 
+August 5, 2026
+
 > **[FastMCP v3.4.6: Trust, but Proxy](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.6)**
 >
 > FastMCP 3.4.6 adds trusted-proxy support for SSRF-protected OAuth metadata and JWKS fetches on the 3.x line. Deployments can route these requests through a mandated corporate proxy while preserving custom CA certificates, and FastMCP refuses the fetch when no proxy is configured instead of risking an unprotected direct request.
 
 **FastMCP 4.0.0b1**
+
+July 28, 2026
 
 > **[FastMCP v4.0.0b1: Fourgone Conclusion](https://github.com/PrefectHQ/fastmcp/releases/tag/v4.0.0b1)**
 >
@@ -44570,11 +44793,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.4.5**
 
+July 27, 2026
+
 > **[FastMCP v3.4.5: Key Change](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.5)**
 >
 > A maintenance release for the 3.x line. A single unrecognized JWKS key — Ed25519, which Rauthy and Ory Hydra publish by default — no longer poisons the entire key cache, alongside fixes for Azure scope fallback, OpenAPI `deepObject` query serialization, schema compression, and transformed tool `required` ordering.
 
 **FastMCP 3.4.4**
+
+July 8, 2026
 
 > **[FastMCP v3.4.4: Host in Translation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.4)**
 >
@@ -44587,6 +44814,8 @@ Source: https://gofastmcp.com/updates
 > 🤗 **Hugging Face auth** — new OAuth provider support covers public and private Hugging Face apps, with docs and examples for PKCE, Dynamic Client Registration, and CIMD.
 
 **FastMCP 3.4.3**
+
+July 5, 2026
 
 > **[FastMCP v3.4.3: The Fast and the Secure-ious](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.3)**
 >
@@ -44602,17 +44831,23 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.4.2**
 
+June 6, 2026
+
 > **[FastMCP v3.4.2: Heads Up](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.2)**
 >
 > A compatibility patch. `JWTVerifier` now accepts JWTs carrying private, non-critical JWS header parameters (like Clerk's `cat`) instead of rejecting them before signature and claim validation, while unsupported critical headers are still rejected.
 
 **FastMCP 3.4.1**
 
+June 5, 2026
+
 > **[FastMCP v3.4.1: Floor It](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.1)**
 >
 > A security patch. FastMCP now floors Starlette at `>=1.0.1`, so installs can no longer resolve to a version affected by CVE-2026-48710 — previously the dependency was only constrained transitively through `mcp`. OAuthProxy also logs refresh-token cache misses instead of failing silently.
 
 **FastMCP 3.4.0**
+
+June 2, 2026
 
 > **[FastMCP v3.4.0: Remote Control](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.4.0)**
 >
@@ -44628,11 +44863,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.3.1**
 
+May 15, 2026
+
 > **[FastMCP v3.3.1: Loop There It Is](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.3.1)**
 >
 > Hotfix for the 3.3 packaging split: standalone component imports like `from fastmcp.tools import tool` no longer pull in the server stack or trip a circular import. Component-level auth and task primitives moved to lightweight utility modules, with the old import paths preserved as compatibility re-exports.
 
 **FastMCP 3.3.0**
+
+May 15, 2026
 
 > **[FastMCP v3.3.0: Slim Reaper](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.3.0)**
 >
@@ -44648,6 +44887,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.2.4**
 
+April 14, 2026
+
 > **[FastMCP v3.2.4: Patch Me If You Can](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.4)**
 >
 > A grab bag of fixes and hardening. Background tasks are now scoped to the authorization context instead of the MCP session — a breaking change for anyone relying on session-scoped semantics — and parameter descriptions are extracted from docstrings automatically.
@@ -44658,11 +44899,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.2.3**
 
+April 9, 2026
+
 > **[FastMCP v3.2.3: Redis or Not](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.3)**
 >
 > Pins `fakeredis<2.35.0` in the `tasks` extra: a 2.35.0 rename broke pydocket's `memory://` backend and made `fastmcp[tasks]` installs fail at startup with an `ImportError`.
 
 **FastMCP 3.2.2**
+
+April 9, 2026
 
 > **[FastMCP v3.2.2: Audience Appreciation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.2)**
 >
@@ -44670,11 +44915,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.2.1**
 
+April 8, 2026
+
 > **[FastMCP v3.2.1: Audience Participation](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.1)**
 >
 > A patch focused on auth-provider audience validation: Cognito validates on `client_id`, Azure honors `identifier_uri`, and consent cookies are LRU-capped to avoid header overflow. Also fixes OpenAPI 3.0 `nullable` fields leaking into tool input schemas and server-variable substitution in base URLs.
 
 **FastMCP 3.2.0**
+
+March 30, 2026
 
 > **[FastMCP v3.2.0: Show Don't Tool](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.2.0)**
 >
@@ -44690,11 +44939,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.1.1**
 
+March 14, 2026
+
 > **[FastMCP v3.1.1: 'Tis But a Patch](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.1.1)**
 >
 > Pins `pydantic-monty<0.0.8` to fix a breaking change in Monty that affects code mode.
 
 **FastMCP 3.1.0**
+
+March 3, 2026
 
 > **[FastMCP v3.1.0: Code to Joy](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.1.0)**
 >
@@ -44702,11 +44955,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.0.2**
 
+February 22, 2026
+
 > **[FastMCP v3.0.2: Threecovery Mode II](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.2)**
 >
 > Two community-contributed fixes: auth headers from MCP transport no longer leak through to downstream OpenAPI APIs, and background task workers now correctly receive the originating request ID. Plus a new docs example for context-aware tool factories.
 
 **FastMCP 3.0.1**
+
+February 20, 2026
 
 > **[FastMCP v3.0.1: Three-covery Mode](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.1)**
 >
@@ -44717,6 +44974,8 @@ Source: https://gofastmcp.com/updates
 > 🐞 **11 bug fixes** — State serialization, future annotations with `Context`/`Depends`, OpenAI handler deprecation warnings, type checker compatibility, and more.
 
 **FastMCP 3.0.0**
+
+February 18, 2026
 
 > **[FastMCP v3.0.0: Three at Last](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0)**
 >
@@ -44736,6 +44995,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.0.0rc1**
 
+February 12, 2026
+
 > **[FastMCP v3.0.0rc1: RC-ing is Believing](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0rc1)**
 >
 > FastMCP 3 RC1 means we believe the API is stable. Beta 2 drew a wave of real-world adoption — production deployments, migration reports, integration testing — and the feedback overwhelmingly confirmed that the architecture works. This release closes gaps that surfaced under load: auth flows that needed to be async, background tasks that needed reliable notification delivery, and APIs still carrying beta-era naming. If nothing unexpected surfaces, this is what 3.0.0 looks like.
@@ -44751,6 +45012,8 @@ Source: https://gofastmcp.com/updates
 > ✅ **OpenAPI Output Validation** — `validate_output=False` disables strict schema checking for imperfect backend APIs.
 
 **FastMCP 3.0.0b2**
+
+February 7, 2026
 
 > **[FastMCP v3.0.0b2: 2 Fast 2 Beta](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0b2)**
 >
@@ -44770,6 +45033,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 3.0.0b1**
 
+January 20, 2026
+
 > **[FastMCP 3.0.0b1: This Beta Work](https://github.com/PrefectHQ/fastmcp/releases/tag/v3.0.0b1)**
 >
 > FastMCP 3.0 rebuilds the framework around three primitives: components, providers, and transforms. Providers source components dynamically—from decorators, filesystems, OpenAPI specs, remote servers, or anywhere else. Transforms modify components as they flow to clients. The features that required specialized subsystems in v2 now compose naturally from these building blocks.
@@ -44786,11 +45051,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.14.7**
 
+April 13, 2026
+
 > **[FastMCP 2.14.7: Fake It Till You Break It](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.7)**
 >
 > A 2.x backport of the fakeredis pin: fakeredis 2.35.0 renamed a connection class that pydocket's `memory://` backend relied on, crashing `fastmcp[tasks]` installs at startup. Caps `fakeredis<2.35.0` on the 2.x line.
 
 **FastMCP 2.14.6**
+
+March 27, 2026
 
 > **[FastMCP 2.14.6: \$Ref Dead Redemption](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.6)**
 >
@@ -44798,17 +45067,23 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.14.5**
 
+February 3, 2026
+
 > **[FastMCP 2.14.5: Sealed Docket](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.5)**
 >
 > Fixes a memory leak in the memory:// docket broker where cancelled tasks accumulated instead of being cleaned up. Bumps pydocket to ≥0.17.2.
 
 **FastMCP 2.14.4**
 
+January 22, 2026
+
 > **[FastMCP 2.14.4: Package Deal](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.4)**
 >
 > Fixes a fresh install bug where the packaging library was missing as a direct dependency, plus backports \$ref dereferencing in tool schemas and a task capabilities location fix.
 
 **FastMCP 2.14.3**
+
+January 12, 2026
 
 > **[FastMCP 2.14.3: Time After Timeout](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.3)**
 >
@@ -44820,6 +45095,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.14.2**
 
+December 31, 2025
+
 > **[FastMCP 2.14.2: Port Authority](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.2)**
 >
 > A wave of community contributions arrives safely in the 2.x line. Important backports from 3.0 improve OpenAPI 3.1 compatibility, MCP spec compliance for output schemas and elicitation, and correct a subtle base\_url fallback issue.
@@ -44830,6 +45107,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.14.1**
 
+December 15, 2025
+
 > **[FastMCP 2.14.1: 'Tis a Gift to Be Sample](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.1)**
 >
 > FastMCP 2.14.1 introduces sampling with tools (SEP-1577), enabling servers to pass tools to `ctx.sample()` for agentic workflows where the LLM can automatically execute tool calls in a loop.
@@ -44839,6 +45118,8 @@ Source: https://gofastmcp.com/updates
 > 🔧 **AnthropicSamplingHandler** joins the existing OpenAI handler, and both are now promoted from experimental to production-ready status with a unified API.
 
 **FastMCP 2.14.0**
+
+December 11, 2025
 
 > **[FastMCP 2.14.0: Task and You Shall Receive](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.14.0)**
 >
@@ -44852,11 +45133,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.13.3**
 
+December 3, 2025
+
 > **[FastMCP 2.13.3: Pin-ish Line](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.3)**
 >
 > Pins `mcp<1.23` as a precaution due to MCP SDK changes related to the 11/25/25 protocol update that break certain FastMCP patches and workarounds. FastMCP 2.14 introduces proper support for the updated protocol.
 
 **FastMCP 2.13.2**
+
+December 1, 2025
 
 > **[FastMCP 2.13.2: Refreshing Changes](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.2)**
 >
@@ -44870,6 +45155,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.13.1**
 
+November 15, 2025
+
 > **[FastMCP 2.13.1: Heavy Meta](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.1)**
 >
 > Introduces meta parameter support for `ToolResult`, enabling tools to return supplementary metadata alongside results for patterns like OpenAI's Apps SDK.
@@ -44881,6 +45168,8 @@ Source: https://gofastmcp.com/updates
 > 🔒 **Security fixes** for CVE-2025-61920 and safer Cursor deeplink URL validation on Windows.
 
 **FastMCP 2.13.0**
+
+October 25, 2025
 
 > **[FastMCP 2.13.0: Cache Me If You Can](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.13.0)**
 >
@@ -44896,11 +45185,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.12.5**
 
+October 17, 2025
+
 > **[FastMCP 2.12.5: Safety Pin](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.5)**
 >
 > Pins MCP SDK version below 1.17 to ensure the `.well-known` payload appears in the expected location when using FastMCP auth providers with composite applications.
 
 **FastMCP 2.12.4**
+
+September 26, 2025
 
 > **[FastMCP 2.12.4: OIDC What You Did There](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.4)**
 >
@@ -44914,11 +45207,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.12.3**
 
+September 17, 2025
+
 > **[FastMCP 2.12.3: Double Time](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.3)**
 >
 > FastMCP 2.12.3 focuses on performance and developer experience improvements. This release includes optimized auth provider imports that reduce server startup time, enhanced OIDC authentication flows, and automatic inline snapshot creation for testing.
 
 **FastMCP 2.12.2**
+
+September 3, 2025
 
 > **[FastMCP 2.12.2: Perchance to Stream](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.2)**
 >
@@ -44926,11 +45223,15 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.12.1**
 
+September 3, 2025
+
 > **[FastMCP 2.12.1: OAuth to Joy](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.1)**
 >
 > FastMCP 2.12.1 strengthens OAuth proxy implementation with improved client storage reliability, PKCE forwarding, configurable token endpoint authentication methods, and expanded scope handling based on extensive community testing.
 
 **FastMCP 2.12**
+
+August 31, 2025
 
 > **[FastMCP 2.12: Auth to the Races](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.12.0)**
 >
@@ -44943,6 +45244,8 @@ Source: https://gofastmcp.com/updates
 > 🧠 **Sampling API Fallback** tackles adoption challenges by letting servers generate completions server-side when clients don't support the feature, encouraging innovation while maintaining compatibility.
 
 **FastMCP 2.11**
+
+August 1, 2025
 
 > **[FastMCP 2.11: Auth to a Good Start](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.11.0)**
 >
@@ -44958,6 +45261,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.10**
 
+July 2, 2025
+
 > **[FastMCP 2.10: Great Spec-tations](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.10.0)**
 >
 > FastMCP 2.10 achieves full compliance with the 6/18/2025 MCP specification update, introducing powerful new communication patterns.
@@ -44972,6 +45277,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.9**
 
+June 23, 2025
+
 > **[FastMCP 2.9: MCP-Native Middleware](https://www.jlowin.dev/blog/fastmcp-2-9-middleware)**
 >
 > FastMCP 2.9 is a major release that, among other things, introduces two important features that push beyond the basic MCP protocol.
@@ -44983,6 +45290,8 @@ Source: https://gofastmcp.com/updates
 > These features transform FastMCP from a simple protocol implementation into a powerful framework for building sophisticated MCP applications. Combined with the new `File` utility for binary data and improvements to authentication and serialization, this release makes FastMCP significantly more flexible and developer-friendly while maintaining full protocol compliance.
 
 **FastMCP 2.8**
+
+June 11, 2025
 
 > **[FastMCP 2.8: Transform and Roll Out](https://www.jlowin.dev/blog/fastmcp-2-8-tool-transformation)**
 >
@@ -45006,6 +45315,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.7**
 
+June 6, 2025
+
 > **[FastMCP 2.7: Pare Programming](https://github.com/PrefectHQ/fastmcp/releases/tag/v2.7.0)**
 >
 > FastMCP 2.7 has been released!
@@ -45026,6 +45337,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.6**
 
+June 2, 2025
+
 > **[FastMCP 2.6: Blast Auth](https://www.jlowin.dev/blog/fastmcp-2-6)**
 >
 > FastMCP 2.6 is here!
@@ -45033,6 +45346,8 @@ Source: https://gofastmcp.com/updates
 > This release introduces first-class authentication for MCP servers and clients, including pragmatic Bearer token support and seamless OAuth 2.1 integration. This release aligns with how major AI platforms are adopting MCP today, making it easier than ever to securely connect your tools to real-world AI models. Dive into the update and secure your stack with minimal friction.
 
 **Vibe-Testing**
+
+May 21, 2025
 
 > **[Stop Vibe-Testing Your MCP Server](https://www.jlowin.dev/blog/stop-vibe-testing-mcp-servers)**
 >
@@ -45042,17 +45357,23 @@ Source: https://gofastmcp.com/updates
 
 **10,000 Stars**
 
+May 8, 2025
+
 > **[Reflecting on FastMCP at 10k stars 🌟](https://www.jlowin.dev/blog/fastmcp-2-10k-stars)**
 >
 > In just six weeks since its relaunch, FastMCP has surpassed 10,000 GitHub stars—becoming the fastest-growing OSS project in our orbit. What started as a personal itch has become the backbone of Python-based MCP servers, powering a rapidly expanding ecosystem. While the protocol itself evolves, FastMCP continues to lead with clarity, developer experience, and opinionated tooling. Here’s to what’s next.
 
 **FastMCP 2.3**
 
+May 8, 2025
+
 > **[Now Streaming: FastMCP 2.3](https://www.jlowin.dev/blog/fastmcp-2-3-streamable-http)**
 >
 > FastMCP 2.3 introduces full support for Streamable HTTP, a modern alternative to SSE that simplifies MCP deployments over the web. It’s efficient, reliable, and now the default HTTP transport. Just run your server with transport="http" and connect clients via a standard URL—FastMCP handles the rest. No special setup required. This release makes deploying MCP servers easier and more portable than ever.
 
 **Proxy Servers**
+
+April 23, 2025
 
 > **[MCP Proxy Servers with FastMCP 2.0](https://www.jlowin.dev/blog/fastmcp-proxy)**
 >
@@ -45062,6 +45383,8 @@ Source: https://gofastmcp.com/updates
 
 **FastMCP 2.0**
 
+April 16, 2025
+
 > **[Introducing FastMCP 2.0 🚀](https://www.jlowin.dev/blog/fastmcp-2)**
 >
 > This major release reimagines FastMCP as a full ecosystem platform, with powerful new features for composition, integration, and client interaction. You can now compose local and remote servers, proxy arbitrary MCP servers (with transport translation), and generate MCP servers from OpenAPI or FastAPI apps. A new client infrastructure supports advanced workflows like LLM sampling.
@@ -45070,33 +45393,21 @@ Source: https://gofastmcp.com/updates
 
 **Official SDK**
 
+December 3, 2024
+
 > **[FastMCP is joining the official MCP Python SDK!](https://bsky.app/profile/jlowin.dev/post/3lch4xk5cf22c)**
 >
 > FastMCP 1.0 will become part of the official MCP Python SDK!
 
 **FastMCP 1.0**
 
+December 1, 2024
+
 > **[Introducing FastMCP 🚀](https://www.jlowin.dev/blog/introducing-fastmcp)**
 >
 > Because life's too short for boilerplate.
 >
 > This is where it all started. FastMCP’s launch post introduced a clean, Pythonic way to build MCP servers without the protocol overhead. Just write functions; FastMCP handles the rest. What began as a weekend project quickly became the foundation of a growing ecosystem.
-
-
-# __init__
-Source: https://gofastmcp.com/python-sdk/fastmcp-client-sampling-__init__
-
-
-
-# `fastmcp.client.sampling`
-
-## Functions
-
-### `create_sampling_callback` <sup>[https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp\_slim/fastmcp/client/sampling/\_\_init\_\_.py#L44](https://github.com/PrefectHQ/fastmcp/blob/main/fastmcp_slim/fastmcp/client/sampling/__init__.py#L44)</sup>
-
-```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
-create_sampling_callback(sampling_handler: SamplingHandler) -> SamplingFnT
-```
 
 
 # anthropic
