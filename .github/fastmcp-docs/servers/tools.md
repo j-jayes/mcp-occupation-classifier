@@ -1,5 +1,5 @@
 > ## Documentation Index
-> Fetch the complete documentation index at: https://gofastmcp.com/llms.txt
+> Fetch the complete documentation index at: https://gofastmcp.com/docs/llms.txt
 > Use this file to discover all available pages before exploring further.
 
 # Tools
@@ -85,7 +85,7 @@ def search_products_implementation(query: str, category: str | None = None) -> l
 >
 > New in version `2.13.0`
 >
-> Optional list of icon representations for this tool. See [Icons](https://gofastmcp.com/servers/icons.md) for detailed examples
+> Optional list of icon representations for this tool. See [Icons](https://gofastmcp.com/docs/servers/icons.md) for detailed examples
 >
 > **annotations** `ToolAnnotations | dict | None`
 >
@@ -129,7 +129,7 @@ def search_products_implementation(query: str, category: str | None = None) -> l
 >
 > New in version `3.0.0`
 >
-> Optional version identifier for this tool. See [Versioning](https://gofastmcp.com/servers/versioning.md) for details.
+> Optional version identifier for this tool. See [Versioning](https://gofastmcp.com/docs/servers/versioning.md) for details.
 >
 > **output\_schema** `dict[str, Any] | None`
 >
@@ -435,7 +435,7 @@ def get_user_details(user_id: str = Depends(get_user_id)) -> str:
     return f"Details for {user_id}"
 ```
 
-See [Custom Dependencies](https://gofastmcp.com/servers/dependency-injection.md#custom-dependencies) for more details on dependency injection.
+See [Custom Dependencies](https://gofastmcp.com/docs/servers/dependency-injection.md#custom-dependencies) for more details on dependency injection.
 
 ## Return Values
 
@@ -931,7 +931,7 @@ mcp.disable(tags={"admin"})
 mcp.enable(tags={"public"}, only=True)
 ```
 
-See [Visibility](https://gofastmcp.com/servers/visibility.md) for the complete visibility control API including key formats, tag-based filtering, and provider-level control.
+See [Visibility](https://gofastmcp.com/docs/servers/visibility.md) for the complete visibility control API including key formats, tag-based filtering, and provider-level control.
 
 ## MCP Annotations
 
@@ -1025,7 +1025,7 @@ For tools that write to databases, send notifications, create/update/delete reso
 
 Client-specific behavior:
 
-* **ChatGPT**: Skips confirmation prompts for read-only tools in Chat mode (see [ChatGPT integration](https://gofastmcp.com/integrations/chatgpt.md))
+* **ChatGPT**: Skips confirmation prompts for read-only tools in Chat mode (see [ChatGPT integration](https://gofastmcp.com/docs/integrations/chatgpt.md))
 * **Claude**: Uses hints to understand tool safety profiles and make better execution decisions
 
 ## Notifications
@@ -1048,7 +1048,7 @@ mcp.local_provider.remove_tool("example_tool")  # Sends tools/list_changed notif
 
 Notifications are only sent when these operations occur within an active MCP request context (e.g., when called from within a tool or other MCP operation). Operations performed during server initialization do not trigger notifications.
 
-Clients can handle these notifications using a [message handler](https://gofastmcp.com/clients/notifications.md) to automatically refresh their tool lists or update their interfaces.
+Clients can handle these notifications using a [message handler](https://gofastmcp.com/docs/clients/notifications.md) to automatically refresh their tool lists or update their interfaces.
 
 ## Accessing the MCP Context
 
@@ -1080,7 +1080,7 @@ The Context object provides access to:
 * **Resource Access**: `ctx.read_resource(uri)`
 * **Request Information**: `ctx.request_id`, `ctx.client_id`
 
-For full documentation on the Context object and all its capabilities, see the [Context documentation](https://gofastmcp.com/servers/context.md).
+For full documentation on the Context object and all its capabilities, see the [Context documentation](https://gofastmcp.com/docs/servers/context.md).
 
 ## Server Behavior
 
@@ -1119,7 +1119,7 @@ The duplicate behavior options are:
 
 New in version `2.3.4`
 
-You can dynamically remove tools from a server through its [local provider](https://gofastmcp.com/servers/providers/local.md):
+You can dynamically remove tools from a server through its [local provider](https://gofastmcp.com/docs/servers/providers/local.md):
 
 ```python theme={"theme":{"light":"snazzy-light","dark":"dark-plus"}}
 from fastmcp import FastMCP
@@ -1138,7 +1138,7 @@ mcp.local_provider.remove_tool("calculate_sum")
 
 New in version `3.0.0`
 
-Tools support versioning, allowing you to maintain multiple implementations under the same name while clients automatically receive the highest version. See [Versioning](https://gofastmcp.com/servers/versioning.md) for complete documentation on version comparison, retrieval, and migration patterns.
+Tools support versioning, allowing you to maintain multiple implementations under the same name while clients automatically receive the highest version. See [Versioning](https://gofastmcp.com/docs/servers/versioning.md) for complete documentation on version comparison, retrieval, and migration patterns.
 
 
 This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.
