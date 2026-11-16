@@ -54,7 +54,7 @@
 - [Running Your Server](https://gofastmcp.com/docs/deployment/running-server.md): Learn how to run your FastMCP server locally for development and testing
 - [HTTP Deployment](https://gofastmcp.com/docs/deployment/http.md): Deploy your FastMCP server over HTTP for remote access
 - [Sandboxed Agents](https://gofastmcp.com/docs/deployment/sandboxed-agents.md): Expose MCP tools to isolated agents without giving the sandbox long-lived credentials.
-- [Prefect Horizon](https://gofastmcp.com/docs/deployment/prefect-horizon.md): The MCP platform from the FastMCP team
+- [FastMCP Gateway](https://gofastmcp.com/docs/deployment/fastmcp-gateway.md): The MCP platform from the FastMCP team
 - [Project Configuration](https://gofastmcp.com/docs/deployment/server-configuration.md): Use fastmcp.json for portable, declarative project configuration
 - [Testing your FastMCP Server](https://gofastmcp.com/docs/servers/testing.md): How to test your FastMCP server.
 - [OpenTelemetry](https://gofastmcp.com/docs/servers/telemetry.md): Native OpenTelemetry instrumentation for distributed tracing.
@@ -128,6 +128,7 @@
 - [Client Commands](https://gofastmcp.com/docs/cli/client.md): List tools, call them, and discover configured servers
 - [Generate CLI](https://gofastmcp.com/docs/cli/generate-cli.md): Scaffold a standalone typed CLI from any MCP server
 - [Auth Utilities](https://gofastmcp.com/docs/cli/auth.md): Create and validate CIMD documents for OAuth
+- [Upgrading from FastMCP 4.1](https://gofastmcp.com/docs/getting-started/upgrading/from-fastmcp-4-1.md): What changes when you upgrade from FastMCP 4.1 to 4.2
 - [Upgrading from FastMCP 3](https://gofastmcp.com/docs/getting-started/upgrading/from-fastmcp-3.md): What changes when you upgrade to FastMCP 4, which builds on the MCP Python SDK v2
 - [Upgrading from FastMCP 2](https://gofastmcp.com/docs/getting-started/upgrading/from-fastmcp-2.md): What changed in FastMCP 3 for servers written against FastMCP 2
 - [Upgrading from MCP SDK v1](https://gofastmcp.com/docs/getting-started/upgrading/from-mcp-sdk-v1.md): Upgrade from FastMCP 1.0, bundled in v1 of the MCP Python SDK, to the standalone FastMCP framework
@@ -197,6 +198,7 @@
 - [__init__](https://gofastmcp.com/docs/python-sdk/fastmcp-client-mixins-__init__.md)
 - [prompts](https://gofastmcp.com/docs/python-sdk/fastmcp-client-mixins-prompts.md)
 - [resources](https://gofastmcp.com/docs/python-sdk/fastmcp-client-mixins-resources.md)
+- [skills](https://gofastmcp.com/docs/python-sdk/fastmcp-client-mixins-skills.md)
 - [tools](https://gofastmcp.com/docs/python-sdk/fastmcp-client-mixins-tools.md)
 - [oauth_callback](https://gofastmcp.com/docs/python-sdk/fastmcp-client-oauth_callback.md)
 - [progress](https://gofastmcp.com/docs/python-sdk/fastmcp-client-progress.md)
@@ -324,6 +326,12 @@
 - [tool_transform](https://gofastmcp.com/docs/python-sdk/fastmcp-server-transforms-tool_transform.md)
 - [version_filter](https://gofastmcp.com/docs/python-sdk/fastmcp-server-transforms-version_filter.md)
 - [visibility](https://gofastmcp.com/docs/python-sdk/fastmcp-server-transforms-visibility.md)
+- [__init__](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-__init__.md)
+- [client](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-client.md)
+- [extension](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-extension.md)
+- [models](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-models.md)
+- [provider](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-provider.md)
+- [skill](https://gofastmcp.com/docs/python-sdk/fastmcp-skills-skill.md)
 - [base](https://gofastmcp.com/docs/python-sdk/fastmcp-tools-base.md)
 - [function_parsing](https://gofastmcp.com/docs/python-sdk/fastmcp-tools-function_parsing.md)
 - [function_tool](https://gofastmcp.com/docs/python-sdk/fastmcp-tools-function_tool.md)
@@ -525,7 +533,7 @@
 - [Full OAuth Server](https://gofastmcp.com/docs/v2/servers/auth/full-oauth-server.md): Build a self-contained authentication system where your FastMCP server manages users, issues tokens, and validates them.
 - [Running Your Server](https://gofastmcp.com/docs/v2/deployment/running-server.md): Learn how to run your FastMCP server locally for development and testing
 - [HTTP Deployment](https://gofastmcp.com/docs/v2/deployment/http.md): Deploy your FastMCP server over HTTP for remote access
-- [Prefect Horizon](https://gofastmcp.com/docs/deployment/prefect-horizon.md): The MCP platform from the FastMCP team
+- [FastMCP Gateway](https://gofastmcp.com/docs/deployment/fastmcp-gateway.md): The MCP platform from the FastMCP team
 - [Project Configuration](https://gofastmcp.com/docs/v2/deployment/server-configuration.md): Use fastmcp.json for portable, declarative project configuration
 - [The FastMCP Client](https://gofastmcp.com/docs/v2/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
 - [Client Transports](https://gofastmcp.com/docs/v2/clients/transports.md): Configure how FastMCP Clients connect to and communicate with servers.
