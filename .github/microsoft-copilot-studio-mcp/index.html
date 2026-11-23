@@ -60,7 +60,7 @@
 	
 		<meta name="keywords" content="mcp, connector, tool" />
 	
-		<meta name="ms.date" content="2026-08-26T00:00:00Z" />
+		<meta name="ms.date" content="2026-11-19T00:00:00Z" />
 	
 		<meta name="ms.topic" content="how-to" />
 	
@@ -72,19 +72,29 @@
 	
 		<meta name="ms.author" content="zadesa" />
 	
-		<meta name="ms.custom" content="action, connector, mcp" />
+		<meta name="ms.custom" content="action" />
+	
+		<meta name="ms.custom" content="connector" />
+	
+		<meta name="ms.custom" content="mcp" />
+	
+		<meta name="ms.custom" content="ai-gen-docs-bap" />
+	
+		<meta name="ms.custom" content="ai-seo-date:11/18/2026" />
+	
+		<meta name="ai.usage" content="ai-assisted" />
 	
 		<meta name="document_id" content="8186e801-3422-0bae-681d-0d254c6d8618" />
 	
 		<meta name="document_version_independent_id" content="8186e801-3422-0bae-681d-0d254c6d8618" />
 	
-		<meta name="updated_at" content="2026-10-17T01:03:00Z" />
+		<meta name="updated_at" content="2026-11-20T01:04:00Z" />
 	
 		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/ab0c13d9c24dab81672b1c34ef6eb7b3aed803e4/copilot-studio/agent-extend-action-mcp.md" />
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/ba6e3b3234db6db39ee024244b077b66146a6ddc/copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="git_commit_id" content="ab0c13d9c24dab81672b1c34ef6eb7b3aed803e4" />
+		<meta name="git_commit_id" content="ba6e3b3234db6db39ee024244b077b66146a6ddc" />
 	
 		<meta name="site_name" content="Docs" />
 	
@@ -98,7 +108,7 @@
 	
 		<meta name="feedback_help_link_url" content="" />
 	
-		<meta name="word_count" content="338" />
+		<meta name="word_count" content="448" />
 	
 		<meta name="asset_id" content="agent-extend-action-mcp" />
 	
@@ -108,7 +118,7 @@
 	
 		<meta name="source_path" content="copilot-studio/agent-extend-action-mcp.md" />
 	
-		<meta name="previous_tlsh_hash" content="D5EFB84123080922FB9360DE71EEF72951F090CE19A5A6CA44357AB1E8463DF522AD3F67EF2F9250129E431203402906A5A4E7BCA0D7B390546E7859C23673E93EDC1FB7F9" />
+		<meta name="previous_tlsh_hash" content="D77D605134080922FBC364CEB09AB75960F180CE1DA4BACE44796AB1E4463DA5279D2F26DB1BA311136F431303502905E5E8E77CA0FA7394446A7D9CC13673E83ADD1FB7F9" />
 	
 		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/businessapps-copilot-docs-pr/blob/live/copilot-studio/agent-extend-action-mcp.md" />
 	
@@ -219,7 +229,7 @@
 
 			<!-- json-ld -->
 			
-		<script >bazadebezolkohpepadr="413735586"</script><script type="text/javascript" src="https://learn.microsoft.com/akam/13/18a918f3"  defer></script></head>
+		<script >bazadebezolkohpepadr="845792465"</script><script type="text/javascript" src="https://learn.microsoft.com/akam/13/3269c7ce"  defer></script></head>
 	
 			<body
 				id="body"
@@ -764,11 +774,20 @@
 </div>
 <h2 id="how-does-mcp-work">How does MCP work?</h2>
 <p>Each tool or resource that a connected MCP server publishes is automatically available for use in Copilot Studio. The server provides the name, description, inputs, and outputs. When you update or remove tools and resources on the MCP server, Copilot Studio dynamically reflects these changes. This process ensures users always have the latest versions and removes obsolete tools and resources. A single MCP server can integrate and manage multiple tools and resources. Copilot Studio agents can access each tool.</p>
-<p>When you connect to a non-Microsoft product, including an external MCP server, you're responsible for the tools and resources you access from within Copilot Studio.</p>
 <div class="NOTE">
 <p>Note</p>
 <p>You must turn on <a href="advanced-generative-actions" data-linktype="relative-path">generative orchestration</a> to use MCP.</p>
 </div>
+<h2 id="use-mcp-servers-that-you-trust">Use MCP servers that you trust</h2>
+<p>Your agent uses the tool names, descriptions, inputs, and outputs that an MCP server publishes. These details can influence how your agent behaves. When you connect to a non-Microsoft product, including an external MCP server, you're responsible for the tools and resources you access from within Copilot Studio.</p>
+<p>Only connect to MCP servers that you trust. Before you connect a server:</p>
+<ul>
+<li>Review the tools and resources that the server exposes.</li>
+<li>Confirm who operates the server.</li>
+<li>Ensure that changes to the server are controlled.</li>
+</ul>
+<p>Review your connected servers regularly, because the server operator can change the tools and resources that the server exposes.</p>
+<p>Updates to a server are reflected in your agent automatically. Learn more about when tool changes appear in your agent in <a href="mcp-troubleshooting" data-linktype="relative-path">Troubleshooting Model Context Protocol (MCP) integration</a>.</p>
 <h2 id="how-do-you-extend-an-agent-by-using-mcp-in-copilot-studio">How do you extend an agent by using MCP in Copilot Studio?</h2>
 <p>To integrate MCP in Copilot Studio:</p>
 <ol>
@@ -1004,11 +1023,11 @@
 				<li class="visibility-hidden-visual-diff">
 			<span class="badge badge-sm text-wrap-pretty">
 				<span>Last updated on <local-time format="twoDigitNumeric"
-		datetime="2026-08-26T19:04:00.000Z"
+		datetime="2026-11-20T01:04:00.000Z"
 		data-article-date-source="calculated"
 		class="is-invisible"
 	>
-		2026-08-26
+		2026-11-20
 	</local-time></span>
 			</span>
 		</li>
@@ -1474,5 +1493,5 @@
 			</ul>
 		</footer>
 	</footer>
-			<noscript><img src="https://learn.microsoft.com/akam/13/pixel_18a918f3?a=dD0yNGE3NTYwNWFiMTBjZTBhYzI1MmU0ODI0YzhmZTJkYjFmMzg0OTdmJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;" /></noscript></body>
+			<noscript><img src="https://learn.microsoft.com/akam/13/pixel_3269c7ce?a=dD1jMTg3OTA0NGZjZjc4N2Y0ZjlhODRlNGQ0YTNhYTFiMTVjMTZlMzk2JmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;" /></noscript></body>
 		</html>

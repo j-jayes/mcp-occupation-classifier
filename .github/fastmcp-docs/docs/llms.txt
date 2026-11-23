@@ -533,7 +533,6 @@
 - [Full OAuth Server](https://gofastmcp.com/docs/v2/servers/auth/full-oauth-server.md): Build a self-contained authentication system where your FastMCP server manages users, issues tokens, and validates them.
 - [Running Your Server](https://gofastmcp.com/docs/v2/deployment/running-server.md): Learn how to run your FastMCP server locally for development and testing
 - [HTTP Deployment](https://gofastmcp.com/docs/v2/deployment/http.md): Deploy your FastMCP server over HTTP for remote access
-- [FastMCP Gateway](https://gofastmcp.com/docs/deployment/fastmcp-gateway.md): The MCP platform from the FastMCP team
 - [Project Configuration](https://gofastmcp.com/docs/v2/deployment/server-configuration.md): Use fastmcp.json for portable, declarative project configuration
 - [The FastMCP Client](https://gofastmcp.com/docs/v2/clients/client.md): Programmatic client for interacting with MCP servers through a well-typed, Pythonic interface.
 - [Client Transports](https://gofastmcp.com/docs/v2/clients/transports.md): Configure how FastMCP Clients connect to and communicate with servers.
